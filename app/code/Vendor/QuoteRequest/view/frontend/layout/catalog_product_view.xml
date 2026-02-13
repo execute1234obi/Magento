@@ -1,0 +1,5 @@
+<referenceContainer name="product.info.main">
+    <block class="Magento\Framework\View\Element\Template"
+           name="rfq.button"
+           template="Vendor_QuoteRequest::rfq_button.phtml"/>
+</referenceContainer>

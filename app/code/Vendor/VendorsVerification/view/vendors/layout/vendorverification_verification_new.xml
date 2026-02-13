@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendor-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>      
+        <css src="Vendor_VendorsVerification::css/styles.css"/>
+    </head>
+    <body>      
+        <referenceContainer name="content">          
+            <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="vendor.verificationForm" template="Vendor_VendorsVerification::verification/form.phtml">
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.businessinfo" template="Vendor_VendorsVerification::verification/sections/Vendor-info.phtml" />
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.addressinfo" template="Vendor_VendorsVerification::verification/sections/Vendor-address.phtml" />
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.contactinfo" template="Vendor_VendorsVerification::verification/sections/Vendor-contact.phtml" />
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.documents" template="Vendor_VendorsVerification::verification/sections/documents.phtml" />
+            </block>      
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,13 @@
+<?php 
+$realStep = $block->getStep();
+$displayStep = 1;
+
+foreach ($block->getFieldsetBlocks() as $fieldset) {
+    $fieldset->setData('display_step', $displayStep);
+    echo $fieldset->setStep($realStep)->toHtml();
+    $realStep++;
+    $displayStep++;
+}
+
+$block->setStep($realStep);
+?>

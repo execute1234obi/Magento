@@ -1,0 +1,104 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\Form */
+
+$vendor = $block->getVendor();
+if (!$vendor) { return; }
+
+/** * Aapke Database Attributes ke hisab se data:
+ * 174 -> b_name
+ * 177 -> business_descriptions
+ * 179 -> c_code
+ * 180 -> b_ph
+ * 181 -> b_email
+ * 195 -> business_category
+ * 201 -> business_type
+ */
+
+$businessName        = $vendor->getData('b_name');
+$businessDesc        = $vendor->getData('business_descriptions');
+$businessType        = $vendor->getData('business_type');
+$businessCategory    = $vendor->getData('business_category');
+$businessWebsite     = $vendor->getData('website');
+$businessCountryCode = $vendor->getData('c_code');
+$businessPhone       = $vendor->getData('b_ph');
+$businessEmail       = $vendor->getData('b_email');
+$vendorCountry       = $vendor->getCountryId(); // id: 151 static
+
+$businessCategories = $block->getVendorCategories();
+$businessTypes      = $block->getVendorTypes();
+?>
+
+<div class="ui-block-title">
+    <legend class="legend"><span><?= $block->escapeHtml(__('Business Information')) ?></span></legend>
+</div>
+
+<div class="fields">
+    <div class="field name required">
+        <label ><span><?= $block->escapeHtml(__('Country')) ?></span></label>
+        <div class="control">
+            <select name="business-country" id="business-country" disabled="true">
+                <?php foreach ($block->getCountries() as $country): ?>
+                    <option value="<?= $block->escapeHtmlAttr($country['value']) ?>"
+                        <?= ($country['value'] == $vendorCountry) ? 'selected' : '' ?>>
+                        <?= $block->escapeHtml($country['label']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="field required">
+        <label ><span><?= $block->escapeHtml(__('Business Name')) ?></span></label>
+        <div class="control">
+            <input name="business-name" value="<?= $block->escapeHtmlAttr($businessName) ?>" readonly="true" class="input-text" type="text" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 field required">
+            <label ><span><?= $block->escapeHtml(__('Business Category')) ?></span></label>
+            <div class="control">
+                <select name="business-category" disabled="true">
+                    <?php foreach ($businessCategories as $option): ?>
+                        <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"
+                            <?= ($businessCategory == $option['value']) ? 'selected' : '' ?>>
+                            <?= $block->escapeHtml($option['label']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-6 field required">
+            <label ><span><?= $block->escapeHtml(__('Business Type')) ?></span></label>
+            <div class="control">
+                <select name="business-type" disabled="true">
+                    <?php foreach ($businessTypes as $option): ?>
+                        <option value="<?= $block->escapeHtmlAttr($option['value']) ?>"
+                            <?= ($businessType == $option['value']) ? 'selected' : '' ?>>
+                            <?= $block->escapeHtml($option['label']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="field required">
+        <label ><span><?= $block->escapeHtml(__('Business Description')) ?></span></label>
+        <div class="control">
+            <textarea name="business-description" readonly="true" class="input-text" rows="3"><?= $block->escapeHtml($businessDesc) ?></textarea>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 field">
+            <label ><span><?= $block->escapeHtml(__('Website')) ?></span></label>
+            <input name="website" value="<?= $block->escapeHtmlAttr($businessWebsite) ?>" readonly="true" class="input-text" type="text" />
+        </div>
+        <div class="col-md-6 field">
+            <label ><span><?= $block->escapeHtml(__('Business Phone')) ?></span></label>
+            <input name="b_ph" value="<?= $block->escapeHtmlAttr($businessPhone) ?>" readonly="true" class="input-text" type="text" />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <referenceContainer name="content">
+
+            <!-- DEBUG -->
+            <!-- <block class="Magento\Framework\View\Element\Text"
+                   name="xml.test.block">
+                <arguments>
+                    <argument name="text" xsi:type="string">
+                        <![CDATA[
+                        <h1 style="color:red">XML LOADED</h1>
+                        ]]>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Text"
+       name="test.after.xml">
+    <arguments>
+        <argument name="text" xsi:type="string">
+            <![CDATA[
+            <h2 style="color:green">AFTER XML BLOCK WORKS</h2>
+            ]]>
+        </argument>
+    </arguments>
+</block> -->
+            <!-- MAIN PAGE BLOCK -->
+            <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                   name="vendor.verification.view"
+                   template="Vendor_VendorsVerification::verification/view/verification.phtml">
+
+                <!-- <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                       name="form.verification.statusinfo"
+                       template="Vendor_VendorsVerification::verification/view/sections/status.phtml"/>
+
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                       name="form.verification.vendorinfo"
+                       template="Vendor_VendorsVerification::verification/view/sections/vendor-info.phtml"/>
+
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                       name="form.verification.addressinfo"
+                       template="Vendor_VendorsVerification::verification/view/sections/vendor-address.phtml"/>
+
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                       name="form.verification.contactinfo"
+                       template="Vendor_VendorsVerification::verification/view/sections/vendor-contact.phtml"/>
+
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                       name="form.verification.documents"
+                       template="Vendor_VendorsVerification::verification/view/sections/documents.phtml"/> -->
+
+            </block>
+
+        </referenceContainer>
+    </body>
+</page>

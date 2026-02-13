@@ -1,0 +1,300 @@
+<?php /** @var \Magento\Framework\View\Element\Template $block */ ?>
+<header style="
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    flex-wrap: wrap;
+    padding: 16px 32px; 
+    border-bottom: 1px solid #e5e7eb; 
+    background: #fff; 
+    position: fixed; 
+    top: 0; left: 0; right: 0; 
+    z-index: 1000;
+">
+  <!-- Logo -->
+  <div style="flex: 0 0 auto; display: flex; align-items: center;">
+    <a href="<?= $block->getUrl('') ?>">
+      <img src="<?= $block->getViewFileUrl('wysiwyg/gcc-logo.png')?>" alt="GCC Trading" style="height:40px;">
+    </a>
+  </div>
+
+  <!-- Hamburger (mobile only) -->
+  <div id="hamburgerMenu" style="
+      display: none; 
+      flex: 0 0 auto; 
+      cursor: pointer;
+  ">
+    <img src="https://img.icons8.com/ios/50/000000/menu-2.png" 
+         alt="Menu" 
+         style="width:24px; height:24px;">
+  </div>
+
+  <!-- Combined Nav + Actions -->
+  <div id="navMenu" style="
+      display: flex; 
+      align-items: center; 
+      gap: 32px; 
+      flex: 1 1 auto; 
+      justify-content: flex-end; 
+      flex-wrap: wrap;
+  ">
+
+    <!-- Primary nav -->
+    <nav style="display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+      <!-- Vendor dropdown -->
+      <div class="dropdown" style="position: relative;">
+        <a href="#" style="color:#4b5563;text-decoration:none;white-space:nowrap;" 
+           onclick="toggleDropdown(event,'vendorMenu')">
+          Vendor <span style="font-size:.8rem;">▼</span>
+        </a>
+        <ul id="vendorMenu" class="dropdown-menu" style="
+            position: absolute; top:100%; left:0;
+            background:#fff; box-shadow:0 4px 8px rgba(0,0,0,.1);
+            list-style:none; margin:8px 0 0; padding:12px;
+            min-width:220px; display:none;
+        ">
+          <li style="margin-bottom:8px;">
+            <a href="<?= $block->getUrl('vendors/dashboard')?>" style="text-decoration:none;color:inherit;">
+              <strong>Vendor Dashboard</strong>
+              <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">
+                Manage your listings & orders
+              </p>
+            </a>
+          </li>
+          <li>
+            <strong>Join as a Vendor</strong>
+            <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">
+              Start selling your products
+            </p>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Customer dropdown -->
+      <div class="dropdown" style="position: relative;">
+        <a href="#" style="color:#4b5563;text-decoration:none;white-space:nowrap;" 
+           onclick="toggleDropdown(event,'customerMenu')">
+          Customer <span style="font-size:.8rem;">▼</span>
+        </a>
+        <ul id="customerMenu" class="dropdown-menu" style="
+            position: absolute; top:100%; left:0;
+            background:#fff; box-shadow:0 4px 8px rgba(0,0,0,.1);
+            list-style:none; margin:8px 0 0; padding:12px;
+            min-width:240px; display:none;
+        ">
+          <li style="margin-bottom:12px; display:flex; align-items:center;">
+            <span style="font-size:1.25rem; margin-right:8px;">💬</span>
+            <div>
+              <strong>RFQ (Quotes)</strong>
+              <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">
+                Submit project details to suppliers
+              </p>
+            </div>
+          </li>
+          <li style="margin-bottom:12px; display:flex; align-items:center;">
+            <span style="font-size:1.25rem; margin-right:8px;">📁</span>
+            <div>
+              <strong>HS Code</strong>
+              <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">
+                Find the right HS codes for trade
+              </p>
+            </div>
+          </li>
+          <li style="display:flex; align-items:center;">
+            <span style="font-size:1.25rem; margin-right:8px;">🤝</span>
+            <div>
+              <strong>Join as Customer</strong>
+              <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">
+                Access buyer‑only features
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Static links -->
+      <a href="<?= $block->getUrl('about-us')?>" style="color:#4b5563;text-decoration:none;white-space:nowrap;">
+        About Us
+      </a>
+      <a href="<?= $block->getUrl('contact-us')?>" style="color:#4b5563;text-decoration:none;white-space:nowrap;">
+        Contact Us
+      </a>
+    </nav>
+
+    <!-- Action buttons & language -->
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap: wrap;">
+      <a href="<?= $block->getUrl('customer/account/create')?>" style="
+          background:#2563eb; color:#fff;
+          padding:8px 20px; border-radius:6px;
+          font-size:.9rem; font-weight:500;
+          text-decoration:none; white-space:nowrap;
+      ">Sign Up</a>
+       <a href="<?= $block->getUrl('customer/account/login')?>" style="
+          border:1px solid #2563eb; color:#2563eb;
+          padding:8px 20px; border-radius:6px;
+          font-size:.9rem; font-weight:500;
+          text-decoration:none; white-space:nowrap;
+      ">Sign In</a>
+      <div class="dropdown" style="position:relative;">
+        <a href="#" style="display:flex;align-items:center;color:#4b5563;text-decoration:none;font-size:.875rem;" 
+           onclick="toggleDropdown(event,'langMenu')">
+           
+          <img src="<?= $block->getViewFileUrl('wysiwyg/language.svg')?>" 
+               alt="EN" style="width:16px;height:16px;margin-right:4px;">
+          EN <span style="font-size:.8rem;margin-left:4px;">▼</span>
+        </a>
+        <ul id="langMenu" class="dropdown-menu" style="
+            position:absolute; top:100%; right:0;
+            background:#fff; box-shadow:0 4px 8px rgba(0,0,0,.1);
+            list-style:none; margin:8px 0 0; padding:8px 0;
+            min-width:140px; display:none;
+        ">
+          <li style="padding:8px 16px;display:flex;align-items:center;">
+            <img src="<?= $block->getViewFileUrl('images/flag-en.svg')?>" 
+                 alt="EN" style="width:16px;height:16px;margin-right:8px;">
+            English
+          </li>
+          <li style="padding:8px 16px;display:flex;align-items:center;">
+            <img src="<?= $block->getViewFileUrl('images/flag-ar.svg')?>" 
+                 alt="AR" style="width:16px;height:16px;margin-right:8px;">
+            العربية
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- JS for toggles -->
+<script>
+  function toggleDropdown(e, id) {
+    e.preventDefault(); e.stopPropagation();
+    var m = document.getElementById(id);
+    m.style.display = m.style.display==='block' ? 'none' : 'block';
+  }
+  document.getElementById('hamburgerMenu').addEventListener('click',function(){
+    var nav = document.getElementById('navMenu');
+    nav.style.display = nav.style.display==='flex' ? 'none' : 'flex';
+  });
+  document.addEventListener('click',function(){
+    document.querySelectorAll('.dropdown-menu')
+            .forEach(m=>m.style.display='none');
+  });
+</script>
+
+<!-- Inline responsive styles -->
+<style>
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 16px 40px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 15px;
+  }
+
+  header a {
+    color: #374151;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  header a:hover {
+    color: #1d4ed8;
+  }
+
+  nav a {
+    font-weight: 500;
+  }
+
+  .dropdown-menu {
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 6px;
+    min-width: 220px;
+    z-index: 999;
+  }
+
+  .dropdown-menu li {
+    padding: 6px 0;
+  }
+
+  .dropdown-menu p {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 4px 0 0;
+  }
+
+  .dropdown-menu strong {
+    display: block;
+    color: #111827;
+  }
+
+  /* Action buttons */
+  .btn-primary {
+    background: #2563eb;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+  }
+
+  .btn-outline {
+    border: 1px solid #2563eb;
+    color: #2563eb;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  /* Language dropdown items */
+  .lang-flag {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    #navMenu {
+      display: none !important;
+      flex-direction: column !important;
+      width: 100%;
+      background: #fff;
+      padding: 16px 0;
+      border-top: 1px solid #e5e7eb;
+    }
+
+    #hamburgerMenu {
+      display: block !important;
+      cursor: pointer;
+    }
+
+    header {
+      padding: 12px 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .btn-primary, .btn-outline {
+      padding: 6px 12px;
+      font-size: 13px;
+    }
+
+    nav {
+      gap: 16px !important;
+    }
+  }
+</style>
+

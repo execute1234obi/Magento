@@ -1,0 +1,157 @@
+<?php
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
+$filters = $block->getFilterData() ?: [];
+$selected = $block->getSelectedFilters() ?: [];
+
+$filters['countries'] = $filters['countries'] ?? [];
+$filters['verified'] = $filters['verified'] ?? [];
+$filters['business_types'] = $filters['business_types'] ?? [];
+
+$selected['country'] = $selected['country'] ?? '';
+$selected['verified'] = $selected['verified'] ?? '';
+$selected['business_type'] = $selected['business_type'] ?? '';
+?>
+   <!-- Your vendor filters -->
+
+<div class="bg-white shadow-md rounded-lg p-4">
+  <h2 class="text-xl font-bold mb-4">Filter</h2>
+
+  <!-- Country Filter -->
+  <div class="mb-4">
+    <label for="country" class="block text-gray-700 text-sm font-bold mb-2"><?= __('Country') ?></label>
+    <select id="country" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['countries'] as $country): ?>
+        <option value="<?= $block->escapeHtmlAttr($country) ?>" <?= ($selected['country'] == $country) ? 'selected' : '' ?>>
+          <?= $block->escapeHtml($country) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <!-- Verified Seller Filter -->
+  <div class="mb-4">
+    <label for="verified-seller" class="block text-gray-700 text-sm font-bold mb-2"><?= __('Verified Seller') ?></label>
+    <select id="verified-seller" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['verified'] as $key => $label): ?>
+        <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['verified'] == $key) ? 'selected' : '' ?>>
+          <?= $block->escapeHtml($label) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <!-- Business Type Filter -->
+  <div class="mb-4">
+    <label for="business-type" class="block text-gray-700 text-sm font-bold mb-2"><?= __('Business Type') ?></label>
+    <select id="business-type" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['business_types'] as $key => $label): ?>
+        <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['business_type'] == $key) ? 'selected' : '' ?>>
+          <?= $block->escapeHtml($label) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+</div>
+</div>
+
+<style>
+  #vendor-sidebar.force-show {
+    display: block;
+}
+
+  </style>
+<!-- JavaScript -->
+<script type="text/javascript">
+// require(['jquery', 'domReady!'], function($) {
+
+//     function reloadPage() {
+//         var query = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
+//         var country = $('#country').val();
+//         var verified = $('#verified-seller').val();
+//         var business = $('#business-type').val();
+
+//         var url = window.location.origin + window.location.pathname + '?q=' + encodeURIComponent(query) +
+//                   '&svendor_country_id=' + encodeURIComponent(country) +
+//                   '&svendor_is_verified=' + encodeURIComponent(verified) +
+//                   '&svendor_business_type=' + encodeURIComponent(business);
+
+//         window.location.href = url;
+//     }
+
+//     function updateVendorTab(count) {
+//         var vendorTab = $('li[role="tab"]:contains("Vendor") a');
+//         if (vendorTab.length) {
+//             vendorTab.text('Vendor (' + count + ')');
+//         }
+//     }
+
+//     function refreshVendorTab() {
+//         var count = <?= (int)$block->getSearchCollection()->getSize() ?>;
+//         updateVendorTab(count);
+//     }
+
+//     $('#country, #verified-seller, #business-type').on('change', function() {
+//         reloadPage();
+//     });
+
+//     refreshVendorTab();
+
+//     // Sidebar toggle logic
+//     function toggleSidebar(tabId) {
+//         console.log("Toggling sidebar for:", tabId);
+//         if (tabId === 'product') {
+//             $('#default-sidebar').show();
+//             $('#vendor-sidebar').hide();
+//         } else if (tabId === 'search.result.list.vendors') {
+//             $('#default-sidebar').hide();
+//             $('#vendor-sidebar').show();
+//         } else {
+//             $('#default-sidebar').hide();
+//             $('#vendor-sidebar').hide();
+//         }
+//     }
+
+//     // Handle click on tabs
+//     $('.mst-search-tabs .mst-tab').on('click', function() {
+//         var tabId = $(this).data('tab');
+//         toggleSidebar(tabId);
+//     });
+
+//     // Detect active tab on load
+//     var activeTabId = $('.mst-search-tabs .mst-tab.active').data('tab') || 'product';
+//     toggleSidebar(activeTabId);
+// });
+jQuery(document).ready(function($) {
+    function toggleSidebarByActiveTab() {
+         var activeTab = $('.mst-search__result-tabs li[aria-selected="true"] a');
+        var activeLabel = activeTab.length ? activeTab.text().trim() : '';
+
+
+       // console.log("Active Tab:", activeLabel); // debug
+        //alert("Active tab".activeLabel);
+        if (activeLabel.includes('Vendor')) {
+          //alert("Hi-if");
+            $('#default-sidebar').hide();
+             $('#vendor-sidebar').addClass('force-show');
+        } else {
+          //alert("else");
+            $('#default-sidebar').show();
+             $('#vendor-sidebar').removeClass('force-show').hide();
+        }
+    }
+
+    // On tab click → wait for class update then run
+    $('.mst-search-tabs .mst-tab').on('click', function() {
+        setTimeout(toggleSidebarByActiveTab, 50); // small delay
+    });
+
+    // On page load
+    toggleSidebarByActiveTab();
+});
+
+
+</script>

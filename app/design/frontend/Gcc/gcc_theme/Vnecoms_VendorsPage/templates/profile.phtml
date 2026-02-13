@@ -1,0 +1,780 @@
+<?php
+  //Vendor detail page 
+/** @var \Magento\Framework\View\Element\Template $block */
+/** @var \CustomVendor\Core\Block\Example $block */
+
+
+use Magento\Framework\App\ObjectManager;
+use Magento\Directory\Helper\Data as DirectoryHelper;
+
+// Vendor data
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$vendorFactory = $objectManager->get(\Vnecoms\Vendors\Model\VendorFactory::class);
+$vendorParam = $block->getRequest()->getParam('vendor_id'); // gcc1
+
+$collection = $vendorFactory->create()->getCollection();
+$collection->addAttributeToSelect('*');
+$collection->addFieldToFilter('vendor_id', $vendorParam);
+$collection->addFieldToFilter(
+    'status',
+    \Vnecoms\Vendors\Model\Vendor::STATUS_APPROVED
+);
+$collection->setPageSize(1);
+
+$vendor = $collection->getFirstItem();
+$vendorId = (int) $vendor->getId();
+
+$storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) ."pub/media/";
+$mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
+$logoPath = $vendor->getData('upload_logo');
+$logoUrl = $logoPath ? $mediaUrl . $logoPath : '';
+$varify =$mediaUrl."wysiwyg/VerificationBadgeIcon.png";
+function showData($data) {
+    return $data ? htmlspecialchars($data) : '-';
+}
+
+$name = $vendor->getData('b_name') ?: $vendor->getData('b_name');
+//business category fetching
+$eavConfig = $objectManager->get(\Magento\Eav\Model\Config::class);
+$attribute = $eavConfig->getAttribute(\Vnecoms\Vendors\Model\Vendor::ENTITY, 'business_category');
+$businessCategoryId = $vendor->getData('business_category');
+$businessCategoryLabel = $attribute->getSource()->getOptionText($businessCategoryId);
+//echo "cate".$businessCategoryLabel;
+// Website (try common keys, then fallback to VendorsConfig)
+$websiteRaw =
+    $vendor->getData('website') ?:
+    $vendor->getData('b_website') ?:
+    (function() use ($objectManager, $vendorId) {
+        $cfg = $objectManager->create(\Vnecoms\VendorsConfig\Model\ResourceModel\Config\Collection::class)
+            ->addFieldToFilter('vendor_id', $vendorId)
+            // adjust if your path differs
+            ->addFieldToFilter('path', 'page/general/website')
+            ->setPageSize(1);
+        return $cfg->getSize() ? $cfg->getFirstItem()->getValue() : null;
+    })();
+
+// Normalize (add scheme if vendor typed without http/https)
+$website = $websiteRaw
+    ? (preg_match('#^https?://#i', $websiteRaw) ? $websiteRaw : 'https://' . $websiteRaw)
+    : null;
+
+$description = $vendor->getData('business_descriptions');
+$contactName = $vendor->getData('c_name');
+$email = $vendor->getData('b_email');
+$telephone = $vendor->getData('b_ph');
+$street = $vendor->getData('street');
+$city = $vendor->getData('city');
+$region = $vendor->getData('region');
+$postcode = $vendor->getData('postcode');
+//for country name
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
+
+// Get the country code from vendor custom attribute
+$countryCode = $vendor->getData('country_id'); // e.g., 'US'
+
+// Load country model by code
+$country_id = $countryFactory->create()->loadByCode($countryCode);
+$country = $country_id->getName(); 
+//$country = $vendor->getData('country_id');
+//$fax = $vendor->getData('fax');
+$certificatePath = $vendor->getData('certificate');
+?>
+
+<style>
+ .vendor-menu-wrapper {
+    min-height: 30px;
+    margin-bottom: 10px;
+   visibility:hidden;
+    clear: both;
+}
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fb;
+    color: #333;
+  }
+
+  .breadcrumb {
+    font-size: 14px;
+    color: #9CA3AF;
+    /* padding: 15px 5%; */
+    word-wrap: break-word;
+     margin-bottom: 0;
+     font-weight: 500;
+  /* padding-bottom: 0; */
+      padding-top: 37px;
+    padding-top: 0;       
+   
+    padding-bottom: 30px; 
+    padding-left: 0;   
+
+  }
+  .breadcrumb a {
+    text-decoration: none;
+        color: #9CA3AF;
+
+  }
+ 
+  .breadcrumb span {
+    margin: 0 5px;
+        color: #9CA3AF;
+
+  }
+.custom-vendor-page-container{
+  margin-top: 108px;
+}
+  .banner-container {
+    position: relative;
+  }
+
+  .banner {
+    width: 100%;
+    height: 220px;
+    background: url("https://plus.unsplash.com/premium_photo-1738777152204-0ec9ab3502cc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center/cover;
+  }
+
+  .logo {
+    position: absolute;
+    bottom: -214px;
+    left: 4%;
+    background: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .logo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+
+  .company-info {
+    padding: 134px 5% 47px;
+  }
+
+  .company-info h1 {
+    font-size: 28px;
+    margin: 0;
+  }
+
+  .company-info p {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    border-bottom: 1px solid #DBEAFE;
+    margin: 0 5%;
+  }
+
+  .tabs a {
+    padding: 12px 0;
+    text-decoration: none;
+    font-size: 15px;
+    color: #1E40AF;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .tabs a.active {
+    color: #1E40AF;
+    font-weight: bold;
+  }
+
+  .tabs a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background: #1E40AF;
+  }
+
+  .content {
+    padding: 51px 5%;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .banner {
+      height: 180px;
+    }
+
+    .logo img {
+      width: 65px;
+      height: 65px;
+    }
+
+    .company-info h1 {
+      font-size: 22px;
+    }
+
+    .tabs {
+      gap: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+      body.vendorshop-page .page-main { 
+    padding-top: 64px !important;   /* was 48px; phones often need a bit more */
+  }
+    .banner {
+      height: 150px;
+    }
+
+    .logo {
+      bottom: -30px;
+    }
+
+    .logo img {
+      width: 55px;
+      height: 55px;
+    }
+
+    .company-info {
+      padding: 93px 5% 15px;
+    }
+
+    .tabs {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .tabs a {
+      font-size: 13px;
+    }
+
+    .content h2 {
+      font-size: 16px;
+    }
+
+    .content p {
+      font-size: 13px;
+    }
+  }
+  body.vendorshop-page .page-main {
+  padding-top: 48px !important;
+}
+.page-main {
+    padding-top: 0 !important;
+}
+.custom-breadcrumbs { padding-top: 0 !important; }
+
+.vendor-search-container {
+    padding-top: 0 !important;
+}
+@media screen and (min-width: 769px), print {
+   .page-layout-1column.page-with-filter .column.main {
+       padding-top: 0 !important;
+   }
+}
+/* Product Cards */
+/* Grid */
+  .u-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  }
+
+  /* Card */
+  .u-card {
+    background: #fff;
+    border: 1px solid #e6edf7;
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    box-shadow: 0 1px 0 rgba(16,24,40,.02);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow .18s ease, transform .18s ease;
+  }
+  .u-card:hover { box-shadow: 0 8px 24px rgba(16,24,40,.08); transform: translateY(-2px); }
+
+  /* Image area */
+  .u-imgbox{
+    position: relative;
+    border-radius: 12px;
+    background:#f6f8ff;
+    height: 170px;
+    display:flex; align-items:center; justify-content:center;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .u-imgbox img{
+    width: 120%;
+    height: 167%;
+    object-fit: contain;
+    display:block;
+  }
+
+  /* Fav (heart) */
+  .u-fav{
+    position:absolute; top:10px; right:10px;
+    width:36px; height:36px; border-radius:10px;
+    background:#fff; border:1px solid #e6edf7;
+    display:grid; place-items:center; color:#5b8bff; cursor:pointer;
+    box-shadow:0 2px 8px rgba(16,24,40,.06);
+     /* ✨ ensures it stays clickable above image/product link */
+  z-index: 2;
+  }
+  .u-fav svg{ width:18px; height:18px; }
+
+  /* Content */
+  .u-title{
+    font-size:18px; line-height:1.25; font-weight:700; color:#111827;
+    margin: 0 0 8px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height: 45px; /* two lines space so all cards align */
+  }
+  .u-price{
+    font-size:16px; color:#111827; font-weight:600; margin-bottom: 14px;
+  }
+  .u-divider{ height:1px; background:#eef2f7; margin: 2px 0 12px; border:0; }
+
+  .u-brand{
+    display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:6px;
+  }
+  .u-verified{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border-radius:999px; background:#eaf2ff; color:#2d62f0;
+  }
+  .u-country{
+    display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:14px;
+  }
+  .u-flag{
+    width:26px; height:18px; border-radius:4px; background:#e6f6ea; display:inline-block;
+  }
+
+  .u-cta{
+    margin-top: 16px;
+    width:100%; height:48px; border-radius:12px;
+    border:1px solid #2d62f0; background:#fff; color:#2d62f0;
+    font-weight:600; font-size:16px; cursor:pointer;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .u-cta:hover{ background:#f2f6ff; box-shadow:0 2px 8px rgba(45,98,240,.15); }
+  /* Pagination */
+.u-pagination{
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.u-pagination .u-page{
+  min-width:40px; height:40px; padding:0 10px;
+  display:inline-flex; align-items:center; justify-content:center;
+  border:1px solid #e6edf7; background:#fff; color:#1E40AF;
+  font-weight:600; border-radius:12px; text-decoration:none;
+  box-shadow:0 1px 0 rgba(16,24,40,.02);
+  transition: box-shadow .18s ease, transform .18s ease, background .15s ease, color .15s ease;
+}
+.u-pagination .u-page:hover{ box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-1px); background:#f2f6ff; }
+.u-pagination .u-page.is-active{
+  background:#1E40AF; color:#fff; border-color:#1E40AF; cursor:default; transform:none; box-shadow:none;
+}
+.u-pagination .u-page.is-disabled{
+  opacity:.45; pointer-events:none; background:#f7f8fc; color:#9aa4b2; border-color:#eef2f7;
+}
+.u-pagination .u-ellipsis{ padding:0 4px; color:#6b7280; }
+@media (max-width:480px){
+  .u-pagination .u-page{ min-width:36px; height:36px; border-radius:10px; }
+}
+/* Title row: brand + blue check */
+.brand-title{
+  display:flex;
+  align-items:center;
+  gap:.5rem;                 /* space between name and badge */
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  font-weight:700;
+  font-size:4rem;            /* ~32px; adjust if you need bigger */
+  line-height:1.1;
+  margin:0;
+}
+
+/* Verified badge: fixed, crisp size (don’t use % widths) */
+.brand-title .verified{
+  width:22px;
+  height:22px;
+  object-fit:contain;
+}
+
+/* Optional: scale nicely on small screens */
+@media (max-width:480px){
+  .brand-title{ font-size:1.5rem; }
+  .brand-title .verified{ width:18px; height:18px; }
+}
+.tab-link{
+  position: relative;
+  display: inline-block;
+  padding: 8px 0 6px;     /* was 12px 0 – brings the text down closer to the underline */
+  font-size: 15px;
+  color: #1E40AF;
+  cursor: pointer;
+}
+
+/* inactive look */
+.tab-link:not(.active){
+  color:#1f3ea6;                    /* same blue but lighter weight only */
+  font-weight:00;
+}
+
+/* ACTIVE: bold + short blue underline sitting on the baseline */
+.tab-link.active{
+  font-weight:700;
+  transform: translateY(-2px);   /* gives that slightly “higher” look */
+}
+
+/* create the underline, initially hidden */
+.tab-link::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-3px;            /* was -12px – moves the blue line up, nearer to the text */
+  height:3px;
+  width:0;
+  background:#1f3ea6;
+  border-radius:2px;
+  transition: width .2s ease;
+}
+
+/* active underline spans the text width (not the whole row) */
+.tab-link.active::after{
+  width: 100%;
+}
+
+/* optional hover underline for non-active tabs */
+.tab-link:not(.active):hover::after{
+  width: 100%;
+  opacity:.65;
+}
+
+/* Count badge */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:1.4em;
+  height:1.4em;
+  padding:0 .4em;
+  border-radius:.5em;        /* pill/rounded square */
+  background:#eaf1ff;        /* light blue */
+  color:#3b63ea;             /* medium blue text */
+  font: 300 12px/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
+  vertical-align:middle;
+}
+</style>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#"><?= __("Home") ?></a> <span>/</span>
+  <a href="#"><?= __("Vendors") ?></a> <span>/</span>
+  <span style="color: #111827;"><?= ucfirst(showData($name)); ?></span>
+</div>
+<div style="background-color: white;">
+
+<!-- Banner + Logo -->
+<div class="banner-container">
+  <?php
+// Get Vendor Config Model
+// Vendor Config fetch (banner)
+$configCollection = $objectManager->create(\Vnecoms\VendorsConfig\Model\ResourceModel\Config\Collection::class)
+    ->addFieldToFilter('vendor_id', $vendorId)
+    ->addFieldToFilter('path', 'page/general/banner')
+    ->setPageSize(1);
+
+$bannerUrl = '';
+if ($configCollection->getSize()) {
+    $config = $configCollection->getFirstItem();
+    $bannerValue = $config->getValue();
+    if ($bannerValue) {
+        // adjust folder path if needed (check your media/ves_vendors folder)
+        $bannerUrl = $mediaUrl . 'ves_vendors/banner/' . $bannerValue;
+    }
+}
+
+?>
+ 
+   <div class="banner">
+    <?php
+$finalBannerUrl = (!empty($bannerUrl)) ? $bannerUrl : "https://placehold.co/1200x220/cccccc/000000?text=No+Banner+Available";
+//echo $finalBannerUrl;
+?>
+<img src="<?= $finalBannerUrl ?>"
+     alt="Vendor Banner"
+     style="width:100%; height:351px; object-fit:cover;" />
+    </div>
+
+  
+
+  <div class="logo">
+    <?php if ($logoUrl): ?>
+      <img src="<?= $logoUrl ?>" alt="<?= showData($name) ?> Logo">
+    <?php else: ?>
+      <div><?= __("No Logo") ?></div>
+    <?php endif; ?>
+  </div>
+</div>
+<br/><br/><br/>
+<!-- Company Info -->
+<div class="company-info">
+<h1 class="brand-title">
+  <span style="font-size: 2.5rem"><?= ucfirst(showData($name)); ?></span>
+  
+<?php 
+    // DEBUG 1: Check if block exists in Layout
+    $verificationBlock = $block->getChildBlock('vendor.verification.block');
+   //echo "✅ Block Found! <br>";
+     //   echo "Class Name: " . get_class($verificationBlock) . "<br>"; 
+   //echo "</pre>";die();
+    
+    if ($verificationBlock):
+    $isVerified = $verificationBlock->isVendorVerified($vendorId);
+    if ($isVerified): ?>
+            <img class="verified" src="<?= $block->escapeUrl($varify); ?>" alt="Verified">
+        <?php else: ?>
+            <?php endif; 
+    else: ?>
+        <?php endif; ?>
+
+  
+</h1>
+
+  <p>
+  <?php //if ($website): ?>
+    <!-- <a href="<?= $block->escapeUrl($website) ?>" target="_blank" rel="noopener"> -->
+      <?php //$block->escapeHtml(parse_url($website, PHP_URL_HOST) ?: $website) ?>
+    <!-- </a> -->
+  <?php //else: ?>
+    
+  <?php //endif; ?>
+  <?php if (!empty($businessCategoryLabel)): ?>
+    <?= showData($businessCategoryLabel) ?>
+  <?php endif; ?>
+</p>
+</div>
+<!-- Tabs -->
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$productCollectionFactory = $objectManager->get(\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class);
+$request = $objectManager->get(\Magento\Framework\App\RequestInterface::class);
+
+$currentPage = (int) $request->getParam('p') ?: 1;   // current page (default 1)
+$pageSize    = 12;                                   // products per page
+
+$collection = $productCollectionFactory->create()
+    ->addAttributeToSelect(['name', 'price', 'small_image'])
+    ->addAttributeToFilter('vendor_id', $vendorId)
+    ->addAttributeToFilter('status', 1)
+    ->addAttributeToFilter('visibility', ['neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE])
+    ->setPageSize($pageSize)
+    ->setCurPage($currentPage);
+
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+<div class="tabs">
+  <a class="tab-link active" data-tab="about"><?= __("About") ?></a>
+  <a class="tab-link" data-tab="products">
+  <?= __("Products") ?> <span class="badge"><?php echo $collection->getSize(); ?></span>
+</a>
+
+  <a class="tab-link" data-tab="contact"><?= __("Contact Info") ?></a>
+  <a class="tab-link" data-tab="certificates"><?= __("Certificates") ?></a>
+  <a class="tab-link" data-tab="catalog"><?= __("Catalog") ?></a>
+  <a class="tab-link" data-tab="location"><?= __("Location") ?></a>
+  <a class="tab-link" data-tab="reviews"><?= __("Reviews") ?></a>
+</div>
+
+<!-- Content -->
+<div class="content" id="tab-content">
+  <div id="about" class="tab-content active">
+    <h2><?= __("ABOUT") ?></h2>
+    <p><?= showData($description) ?></p>
+  </div>
+
+   <div id="products" class="tab-content">
+     
+    
+        
+      <h2><?= __("PRODUCTS") ?></h2>
+        <div class="u-grid">
+        <?php if ($collection->getSize()): ?>
+           
+            <?php foreach ($collection as $_product): ?>
+                <article class="u-card">
+                  <?php  $imageUrl = $_imageHelper->init($_product, 'category_page_grid')->getUrl();?>
+                     <a class="u-imgbox" href="<?= $_product->getProductUrl(); ?>">
+          <img src="<?= $imageUrl; ?>"
+               alt="<?= $block->escapeHtml($_product->getName()); ?>" />
+         </a>
+         <?php
+/** @var \Magento\Wishlist\Helper\Data $wishlistHelper */
+$wishlistHelper = $this->helper(\Magento\Wishlist\Helper\Data::class);
+?>
+         <!-- Wishlist heart (independent link, but positioned on top of image) -->
+  <a href="#"
+   class="u-fav action towishlist"
+   title="<?= $block->escapeHtmlAttr(__('Add to Wishlist')) ?>"
+   data-post='<?= /* @noEscape */ $wishlistHelper->getAddParams($_product) ?>'>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
+    </svg>
+</a>
+       <h3 class="u-title"><?= $block->escapeHtml($_product->getName()); ?></h3>
+        <div class="u-price"><?= $block->getProductPrice($_product); ?> <span><?= __("/ 1 pcs") ?> </span>
+        </div>
+         <hr class="u-divider" />
+          <div class="u-brand">
+          <span><?= ucfirst(showData($name))?: 'N/A'; ?></span>
+        </div>
+
+
+           <div class="u-country">
+          <span class="u-flag" aria-hidden="true"><img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($countryCode ?: 'N/A')) ?>.svg" alt="Saudi Arabia Flag"></span>
+          <span> <?= $country ?: 'N/A'; ?></span>
+        </div>
+        <button class="u-cta" type="button"><?= $block->escapeHtml(__('Add to Quote')); ?></button>
+      </article>
+    <?php endforeach; ?>
+    </div>
+     <?php else: ?>
+            <p><?= __("No products found for this vendor.") ?></p>
+        <?php endif; ?>
+
+    <!-- Pagination -->
+<!-- <?php
+$totalProducts = $collection->getSize();
+$totalPages    = ceil($totalProducts / $pageSize);
+?>
+
+<?php if ($totalPages > 1): ?>
+    <div class="flex justify-center mt-6 space-x-2">
+        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="<?= $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => ['p' => $i]]) ?>"
+               class="px-3 py-1 rounded <?= $i == $currentPage ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' ?>">
+                <?= $i ?>
+            </a>
+        <?php endfor; ?>
+    </div>
+<?php endif; ?> -->
+
+
+<?php if ($totalPages > 1): ?>
+  <?php
+    // window size around current page
+    $window = 2;
+    $start  = max(1, $currentPage - $window);
+    $end    = min($totalPages, $currentPage + $window);
+
+    // helper to build page URL
+    $pageUrl = function ($p) use ($block) {
+        return $block->getUrl('//*', [
+            '_current'     => true,
+            '_use_rewrite' => true,
+            '_query'       => ['p' => $p]
+        ]);
+    };
+  ?>
+  <nav class="u-pagination" aria-label="Product pagination">
+    <!-- First -->
+    <a class="u-page <?= $currentPage == 1 ? 'is-disabled' : '' ?>" href="<?= $currentPage == 1 ? 'javascript:void(0)' : $pageUrl(1) ?>" aria-label="First" tabindex="<?= $currentPage == 1 ? '-1' : '0' ?>">«</a>
+
+    <!-- Prev -->
+    <a class="u-page <?= $currentPage == 1 ? 'is-disabled' : '' ?>" href="<?= $currentPage == 1 ? 'javascript:void(0)' : $pageUrl($currentPage - 1) ?>" aria-label="Previous" tabindex="<?= $currentPage == 1 ? '-1' : '0' ?>">‹</a>
+
+    <!-- Leading ellipsis -->
+    <?php if ($start > 1): ?>
+      <a class="u-page" href="<?= $pageUrl(1) ?>">1</a>
+      <?php if ($start > 2): ?><span class="u-ellipsis">…</span><?php endif; ?>
+    <?php endif; ?>
+
+    <!-- Number window -->
+    <?php for ($i = $start; $i <= $end; $i++): ?>
+      <a class="u-page <?= $i == $currentPage ? 'is-active' : '' ?>" href="<?= $i == $currentPage ? 'javascript:void(0)' : $pageUrl($i) ?>" aria-current="<?= $i == $currentPage ? 'page' : 'false' ?>"><?= $i ?></a>
+    <?php endfor; ?>
+
+    <!-- Trailing ellipsis -->
+    <?php if ($end < $totalPages): ?>
+      <?php if ($end < $totalPages - 1): ?><span class="u-ellipsis">…</span><?php endif; ?>
+      <a class="u-page" href="<?= $pageUrl($totalPages) ?>"><?= $totalPages ?></a>
+    <?php endif; ?>
+
+    <!-- Next -->
+    <a class="u-page <?= $currentPage == $totalPages ? 'is-disabled' : '' ?>" href="<?= $currentPage == $totalPages ? 'javascript:void(0)' : $pageUrl($currentPage + 1) ?>" aria-label="Next" tabindex="<?= $currentPage == $totalPages ? '-1' : '0' ?>">›</a>
+
+    <!-- Last -->
+    <a class="u-page <?= $currentPage == $totalPages ? 'is-disabled' : '' ?>" href="<?= $currentPage == $totalPages ? 'javascript:void(0)' : $pageUrl($totalPages) ?>" aria-label="Last" tabindex="<?= $currentPage == $totalPages ? '-1' : '0' ?>">»</a>
+  </nav>
+<?php endif; ?>
+</div>
+
+
+
+  <div id="contact" class="tab-content">
+    <h2><?= __("CONTACT") ?> </h2>
+    <p><strong><?= __("Contact Name:") ?></strong> <?= showData($contactName) ?></p>
+    <p><strong><?= __("Email:") ?></strong> <?= showData($email) ?></p>
+    <p><strong><?= __("Phone:") ?></strong> <?= showData($telephone) ?></p>
+    <p><strong><?= __("Address:") ?></strong> <?= showData("$street, $city, $region, $postcode, $country") ?></p>
+    
+</div>
+
+  <div id="certificates" class="tab-content">
+    <h2><?= __("CERTIFICATES") ?></h2>
+    <?php if ($certificatePath): 
+      $certificateUrl = $mediaUrl . $certificatePath; ?>
+      <a href="<?= $block->escapeUrl($certificateUrl) ?>" download><?= __("Download Certificate") ?></a>
+    <?php else: ?>
+      <p><?= __("No certificates available.") ?></p>
+    <?php endif; ?>
+  </div>
+
+  <div id="catalog" class="tab-content">
+    <h2><?= __("CATALOG") ?></h2>
+    <p><?= __("Catalog content goes here.") ?></p>
+  </div>
+
+  <div id="location" class="tab-content">
+    <h2><?= __("LOCATION") ?></h2>
+    <p><?= __("Location content goes here.") ?></p>
+  </div>
+
+  <div id="reviews" class="tab-content">
+    <h2><?= __("REVIEWS") ?></h2>
+    <p><?= __("Reviews content goes here.") ?></p>
+  </div>
+</div>
+</div>
+
+<!-- JavaScript for Tab Functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.tab-link');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function () {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  });
+</script>

@@ -1,0 +1,66 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View $block */
+$_product = $block->getProduct();
+?>
+<style>
+  .vendor-profile-container {
+    display: none !important;
+}
+.product.attribute.overview {
+    display: none !important;
+}
+  </style>
+<div class="container">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <?= $block->getLayout()->createBlock('Magento\Theme\Block\Html\Breadcrumbs')->toHtml(); ?>
+  </div>
+
+  <div class="product-main">
+
+    <!-- Left Side -->
+    <div>
+      <!-- ✅ Vendor Card (custom static example) -->
+      <div class="vendor-card">
+        <div class="vendor-left">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" alt="Adidas">
+          <button class="btn">Contact Vendor</button>
+        </div>
+        <div>
+          <span class="rating">⭐ 4/5</span> |
+          <span class="country">🇸🇦 Saudi Arabia</span>
+        </div>
+      </div>
+
+      <!-- ✅ Product Gallery -->
+      <div class="pdp-gallery">
+            <?= $block->getChildHtml('product.info.media') ?>
+</div>
+    </div>
+
+    <!-- Right Side -->
+    <div class="product-info">
+      <!-- ✅ Product Name -->
+      <h2><?= $block->escapeHtml($_product->getName()) ?></h2>
+      <!-- ✅ Short Description (HTML-formatted) -->
+<div class="short-description">
+  <?= $block->getProduct()->getShortDescription(); ?>
+</div>
+
+      <!-- ✅ Price -->
+      <?= $block->getChildHtml('product.info.price') ?>
+
+      <!-- ✅ Configurable Options (Color, Size, etc.) -->
+      <?= $block->getChildHtml('product.info.options.wrapper') ?>
+
+     
+    </div>
+  </div>
+
+  <!-- ✅ Tabs (Description, Specs, Reviews) -->
+  <div class="tabs">
+    <?= $block->getChildHtml('product.info.details') ?>
+    <?= $block->getChildHtml('reviews.tab') ?>
+  </div>
+</div>

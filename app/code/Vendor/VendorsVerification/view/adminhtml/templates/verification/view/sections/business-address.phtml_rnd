@@ -1,0 +1,155 @@
+<?php
+$vendor =  $this->getVendor();
+$vendorCustomer =  $vendor->getCustomer();
+//echo $vendor->getCompany();
+$vendorCountry = $vendor->getCountry();
+$vendorCompany = $vendor->getCompany();
+$vendorPhone = $vendor->getTelephone();
+$vendorStreet = $vendor->getStreet();
+$vendorCity = $vendor->getCity();
+$vendorRegion = $vendor->getRegion();
+$vendorPostCode = $vendor->getPostcode();
+?>
+<style>
+	#map {
+    width: 100%;
+    height: 480px;
+}
+</style>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyeKRbD9kvELUq7pLiEllFUkZF3tky0m8"></script>
+<!--<script src="https://unpkg.com/location-picker/dist/location-picker.min.js"></script>-->
+
+<legend class="legend"><span><?php echo __('Business Address') ?></span></legend><br />
+<div class="row">
+   <div class="col-md-10">
+	   <label  for="address-line-1"><span><?php echo __('Address') ?></span></label>                                   
+	   <input name="address-line-1" id="address-line-1" type="text" value="<?php echo $vendorStreet;?>" class="form-control" placeholder="<?php echo __('Address Line 2') ?>" aria-label="<?php echo __('Address Line 2') ?>" data-validate="{required:true}">
+   </div>
+</div>
+<div>&nbsp;</div>
+<div class="row">
+   <div class="col-md-10">
+	   <input name="address-line-2" id="address-line-2" type="text" class="form-control" placeholder="<?php echo __('Address Line 2') ?>" aria-label="<?php echo __('Address Line 2') ?>" data-validate="{required:false}">
+   </div>
+</div>
+<div>&nbsp;</div>
+<div class="row g-3">
+   <div class="col-md-4">
+	   <input type="text" value="<?php echo $vendorCity;?>" class="form-control" placeholder="<?php echo __('City') ?>" aria-label="<?php echo __('City') ?>" data-validate="{required:false}">
+   </div>
+  <div class="col-md-3">
+	<input type="text" class="form-control" value="<?php echo $vendorRegion;?>"  placeholder="<?php echo __('State') ?>" aria-label="<?php echo __('State') ?>" data-validate="{required:true}">
+  </div>
+  <div class="col-md-3">
+	<input type="text" class="form-control" value="<?php echo $vendorPostCode;?>"  placeholder="<?php echo __('Postcode') ?>" aria-label="<?php echo __('Postcode') ?>" data-validate="{required:false}">
+  </div>
+  <div>&nbsp;</div>
+</div> 
+<br />
+<div id="map"></div>
+<input type="hidden" name="lat" id="lat" />
+<input type="hidden" name="lng" id="lng" />	  
+<?php
+$_center_lat = 52.357971 ;
+$_center_lng = -6.516758;
+$_zoom = 7; 
+?>
+<script>
+	//map.js
+
+//Set up some of our variables.
+var map; //Will contain map object.
+var marker = false; ////Has the user plotted their location marker? 
+        
+//Function called to initialize / create the map.
+//This is called when the page has loaded.
+function initMap() {
+
+    //The center location of our map.
+    //var centerOfMap = new google.maps.LatLng(52.357971, -6.516758);
+    var address ='27/1 R.B.C Road Prosadpur, Barasat,West Bengal,PIN: 700124, India';
+    geocoder = new google.maps.Geocoder();
+    geocoder.geocode({
+        'address': address
+    }, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            /*var myOptions = {
+                zoom: 8,
+                center: results[0].geometry.location,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }*/
+            var options = {
+            center:results[0].geometry.location,
+            panControl: true,
+            zoomControl: true,
+            mapTypeControl: true,
+            scaleControl: true,
+            streetViewControl: true,
+            overviewMapControl: true,
+            zoom: <?php echo $_zoom; ?>
+        };
+
+        //Create the map object.
+           map = new google.maps.Map(document.getElementById('map'), options);
+            var marker = new google.maps.Marker({
+                map: map,
+                position: results[0].geometry.location
+            });
+        }
+    });
+    
+		/*if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+               centerOfMap = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);               
+               });
+         } else {
+              centerOfMap = new google.maps.LatLng(<?php echo $_center_lat; ?>, <?php echo $_center_lng; ?>);
+		 }*/
+
+    //Map options.
+    /*var options = {
+      center: centerOfMap, //Set center.
+      zoom: 7 //The zoom value.
+    };*/
+    
+
+    //Listen for any clicks on the map.
+    google.maps.event.addListener(map, 'click', function(event) {                
+        //Get the location that the user clicked.
+        var clickedLocation = event.latLng;
+        //If the marker hasn't been added.
+        if(marker === false){
+            //Create the marker.
+            marker = new google.maps.Marker({
+                position: clickedLocation,
+                map: map,
+                draggable: true //make it draggable
+            });
+            //Listen for drag events!
+            google.maps.event.addListener(marker, 'dragend', function(event){
+                markerLocation();
+            });
+        } else{
+            //Marker has already been added, so just change its location.
+            marker.setPosition(clickedLocation);
+        }
+        //Get the marker's location.
+        markerLocation();
+    });
+}
+        
+//This function will get the marker's current location and then add the lat/long
+//values to our textfields so that we can save the location.
+function markerLocation(){
+    //Get location.
+    var currentLocation = marker.getPosition();
+    //Add lat and lng values to a field that we can save.
+    document.getElementById('lat').value = currentLocation.lat(); //latitude
+    document.getElementById('lng').value = currentLocation.lng(); //longitude
+}
+        
+        
+//Load the map when the page has finished loading.
+google.maps.event.addDomListener(window, 'load', initMap);
+</script>
+

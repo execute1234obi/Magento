@@ -1,0 +1,266 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View $block */
+$product = $block->getProduct();
+$imageHelper = $block->getImage($product, 'product_base_image');
+?>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for a better fit and responsive design */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Active tab button styling */
+        .tab-button.active {
+            border-bottom: 2px solid #3b82f6; /* Blue border */
+            font-weight: 600; /* Semibold */
+            color: #1f2937; /* Dark gray text */
+        }
+
+        /* Inactive tab button styling */
+        .tab-button {
+            border-bottom: 2px solid transparent;
+            font-weight: 400; /* Normal weight */
+            color: #6b7280; /* Gray text */
+            transition: all 0.2s ease-in-out;
+        }
+
+        .tab-button:hover:not(.active) {
+            color: #3b82f6; /* Hover color */
+        }
+        
+        /* Hide content for inactive tabs */
+        .tab-pane.hidden {
+            display: none;
+        }
+        
+        /* Product variation buttons */
+        .variation-button {
+            border-width: 1px;
+            border-color: #d1d5db; /* gray-300 */
+            border-radius: 0.25rem; /* rounded */
+            padding: 0.25rem 0.75rem; /* px-3 py-1 */
+            font-size: 0.875rem; /* text-sm */
+            transition: all 0.2s ease-in-out;
+        }
+
+        .variation-button.active {
+            background-color: #dbeafe; /* blue-100 */
+            border-color: #bfdbfe; /* blue-200 */
+        }
+
+        /* Thumbnail active state */
+        .thumbnail-image.active {
+            border: 2px solid #3b82f6;
+            transform: scale(1.05);
+        }
+    </style>
+<!-- <body class="bg-white text-gray-800 font-sans"> -->
+<!-- Breadcrumb -->
+<div class="px-6 py-0 text-sm text-gray-600">
+    <a href="#" class="text-blue-600 hover:underline">Home</a> / 
+    <a href="#" class="text-blue-600 hover:underline">Product</a> /
+    <span><?= $block->escapeHtml($product->getName()); ?></span>
+</div>
+
+<!-- Product Container -->
+<div class="w-full px-8 py-4 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+    <!-- Left: Images -->
+    <div>
+        <!-- Main Product Image -->
+        <img id="main-product-image" src="<?= $imageHelper->getImageUrl(); ?>" alt="<?= $block->escapeHtmlAttr($product->getName()); ?>" class="w-full rounded-lg shadow-md object-cover transition-transform duration-300 ease-in-out transform hover:scale-105">
+        <div class="mt-4 flex space-x-2 overflow-x-auto pb-2">
+            <!-- Product Thumbnail Images -->
+            <?php $i = 0; ?>
+            <?php foreach ($product->getMediaGalleryImages() as $image): ?>
+                <?php $i++; ?>
+                <img src="<?= $image->getUrl(); ?>" class="w-16 h-16 object-cover border rounded-lg shadow-sm cursor-pointer thumbnail-image <?= ($i == 1) ? 'active' : ''; ?>" data-image-src="<?= $image->getUrl(); ?>" alt="<?= $block->escapeHtmlAttr($image->getLabel()); ?>">
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Right: Info -->
+    <div>
+        <!-- Product Name -->
+        <h2 class="text-xl font-bold"><?= $block->escapeHtml($product->getName()); ?></h2>
+
+        <div class="flex items-center justify-between mt-2">
+            <div class="text-gray-700">
+                <p class="text-sm">Brand: <strong>Adidas</strong></p>
+                <button class="mt-1 text-sm text-white bg-blue-500 px-3 py-1 rounded hover:bg-blue-600 transition-colors">Contact Vendor</button>
+            </div>
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center text-yellow-400">
+                    <span class="text-base">⭐⭐⭐⭐</span><span class="text-sm">★</span>
+                    <span class="text-gray-600 ml-1">4.5</span>
+                </div>
+                <div class="flex items-center space-x-1">
+                    <img src="https://flagcdn.com/sa.svg" class="w-5 h-4 rounded" alt="Saudi Arabia Flag">
+                    <span class="text-sm">Saudi Arabia</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mt-4">
+            <h3 class="text-md font-semibold">Product Description</h3>
+            <p class="mt-1 text-sm text-gray-600">
+                <?= $block->getProduct()->getShortDescription(); ?>
+                <a href="#" class="text-blue-600 text-sm">More</a>
+            </p>
+        </div>
+        
+        <!-- Variations --> 
+        <div class="mt-4">
+            <h4 class="font-medium">Product Variation</h4>
+
+            <div class="mt-2">
+                <label class="block text-sm font-semibold">Color</label>
+                <div class="flex flex-wrap gap-2 mt-1">
+                    <button class="variation-button active">Purple</button>
+                    <button class="variation-button">Pink</button>
+                    <button class="variation-button">Grey</button>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <label class="block text-sm font-semibold">Size</label>
+                <div class="grid grid-cols-7 gap-2 mt-1">
+                    <button class="variation-button active">36</button>
+                    <button class="variation-button">38</button>
+                    <button class="variation-button">39</button>
+                    <button class="variation-button">40</button>
+                    <button class="variation-button">42</button>
+                    <button class="variation-button">43</button>
+                    <button class="variation-button">45</button>
+                </div>
+            </div>
+
+            <button class="mt-6 w-full bg-blue-600 text-white py-2 rounded text-sm font-semibold hover:bg-blue-700 transition-colors shadow-lg">Add To Quote</button>
+        </div>
+    </div>
+</div>
+
+<!-- Tabs -->
+<div class="w-full px-8 mt-4 max-w-7xl mx-auto">
+    <div class="border-b flex space-x-6 text-sm">
+        <button class="py-2 tab-button active" data-tab="description-tab">Product Description</button>
+        <button class="py-2 tab-button" data-tab="specification-tab">Product Specification</button>
+        <button class="py-2 tab-button" data-tab="shipping-tab">Packing & Shipping</button>
+        <button class="py-2 tab-button" data-tab="reviews-tab">Reviews</button>
+    </div>
+
+    <!-- Tab Content Container -->
+    <div class="mt-4 text-sm text-gray-700 leading-relaxed">
+        <div id="description-tab" class="tab-pane">
+            <h3 class="font-bold mb-2">Detailed Product Description</h3>
+            <p>
+                <?= $block->getProduct()->getDescription(); ?>
+            </p>
+        </div>
+        
+        <div id="specification-tab" class="tab-pane hidden">
+            <h3 class="font-bold mb-2">Product Specifications</h3>
+            <table class="table-auto w-full text-sm text-gray-700">
+                <tbody>
+                    <!-- This section would typically be a loop over specific product attributes -->
+                    <?php 
+                    $attributes = $product->getAttributes();
+                    if (isset($attributes['manufacturer']) && $product->getManufacturer()): ?>
+                    <tr>
+                        <td class="py-2 px-4 border-b">Manufacturer</td>
+                        <td class="py-2 px-4 border-b"><?= $block->escapeHtml($product->getAttributeText('manufacturer')); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (isset($attributes['sku']) && $product->getSku()): ?>
+                    <tr>
+                        <td class="py-2 px-4 border-b">SKU</td>
+                        <td class="py-2 px-4 border-b"><?= $block->escapeHtml($product->getSku()); ?></td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+        
+        <div id="shipping-tab" class="tab-pane hidden">
+            <h3 class="font-bold mb-2">Packing & Shipping</h3>
+            <p>
+                This product is carefully packaged to ensure it arrives in perfect condition. Shipping is available to most countries. Please note the following:
+            </p>
+            <ul class="list-disc pl-6 mt-3 space-y-1 text-sm">
+                <li>Packed in a branded shoe box</li>
+                <li>Standard shipping takes 5-7 business days</li>
+                <li>Express shipping available for an additional fee</li>
+                <li>Shipping fees are calculated at checkout</li>
+            </ul>
+        </div>
+
+        <div id="reviews-tab" class="tab-pane hidden">
+            <h3 class="font-bold mb-2">Customer Reviews</h3>
+            <div class="space-y-4">
+                <!-- This section would typically be a block for customer reviews -->
+                <p>Product reviews will be displayed here.</p>
+                <button class="mt-4 w-full bg-blue-500 text-white py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">Write a Review</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        // Initially show the first tab and hide the rest
+        tabPanes.forEach((pane, index) => {
+            if (index === 0) {
+                pane.classList.remove('hidden');
+            } else {
+                pane.classList.add('hidden');
+            }
+        });
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Deactivate all buttons and panes
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                tabPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                });
+
+                // Activate the clicked button and its corresponding pane
+                button.classList.add('active');
+                const targetTabId = button.dataset.tab;
+                const targetPane = document.getElementById(targetTabId);
+                if (targetPane) {
+                    targetPane.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Image Gallery Functionality
+        const mainImage = document.getElementById('main-product-image');
+        const thumbnails = document.querySelectorAll('.thumbnail-image');
+
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                // Change the main image source
+                const newSrc = thumbnail.getAttribute('data-image-src');
+                mainImage.src = newSrc;
+
+                // Update the active thumbnail state
+                thumbnails.forEach(thumb => {
+                    thumb.classList.remove('active');
+                });
+                thumbnail.classList.add('active');
+            });
+        });
+    });
+</script>
+<!-- 
+</body> -->
+
+

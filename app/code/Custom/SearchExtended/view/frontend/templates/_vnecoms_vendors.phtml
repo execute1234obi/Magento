@@ -1,0 +1,32 @@
+<?php echo "Template loaded"; ?>
+<!-- <script id="vnecoms_vendors" type="text/x-custom-template">
+    <a class="title vendor-suggest-result" data-bind="text: title, attr: {href: url}, highlight"></a>
+    <img class="logo"width="80px" height="60px" data-bind="attr:{src: logo}" />
+    <span class="detail" data-bind="text: detail"></span>
+</script> -->
+<div style="color:red;font-weight:bold;">DEBUG TEMPLATE LOADED ✅</div>
+
+<!-- ko foreach: indexes -->
+    <!-- ko if: identifier === 'vnecoms_vendors' -->
+        <div class="mst-search-group">
+            <h3 data-bind="text: title"></h3>
+            <ul>
+                <!-- ko foreach: items -->
+                    <li class="mst-search__item">
+                        <a data-bind="attr: { href: url }">
+                            <!-- ko if: logo -->
+                                <img data-bind="attr: { src: logo, alt: title }" class="vendor-logo" />
+                            <!-- /ko -->
+
+                            <span class="vendor-title" data-bind="text: title"></span>
+
+                            <!-- ko if: detail -->
+                                <div class="vendor-detail" data-bind="text: detail"></div>
+                            <!-- /ko -->
+                        </a>
+                    </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    <!-- /ko -->
+<!-- /ko -->

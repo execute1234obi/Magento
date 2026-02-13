@@ -1,0 +1,18 @@
+.skin-blue .sidebar-menu>li:hover>a, .skin-blue .sidebar-menu>li.active>a {
+    color: #fff;
+    background: #4B78B3 !important;
+    border-left-color: #3c8dbc;
+}
+.skin-blue .sidebar-menu>li.header {
+    color: #4b646f;
+    background: #1a2226;
+    display: none !important;
+}
+.message-folders
+{
+    display: none !important;
+}
+.skin-blue .sidebar-menu>li>.treeview-menu {
+    margin: 0 1px;
+    /* background: #2c3b41; */
+}

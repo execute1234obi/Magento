@@ -1,0 +1,78 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\ListProduct $block */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+
+// Get the existing toolbar block from the layout
+$toolbarBlock = $block->getLayout()->getBlock('product_list_toolbar');
+if ($toolbarBlock) {
+    $toolbarBlock->setCollection($_productCollection);
+}
+
+// Get the Object Manager for testing (not recommended for production)
+// In a real module, you would use dependency injection in your Block class.
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+// Get the Vnecoms Vendor Factory
+$vendorFactory = $objectManager->create(\Vnecoms\Vendors\Model\VendorFactory::class);
+?>
+
+<?php if ($toolbarBlock) { echo $toolbarBlock->toHtml(); } ?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__('We can\'t find products matching the selection.')) ?></p>
+    </div>
+<?php else: ?>
+    <div class="product-grid-container">
+        <?php foreach ($_productCollection as $_product): ?>
+            <?php
+            $vendorId = $_product->getVendorId();
+            $vendorName = '';
+            $vendorLocation = '';
+            
+            if ($vendorId) {
+                try {
+                    // Create a new vendor model instance and load data by ID
+                    $vendor = $vendorFactory->create()->load($vendorId);
+                    if ($vendor && $vendor->getId()) {
+                        // Use the correct methods to get the vendor's data
+                        $vendorName = $vendor->getVendorName() ?: $vendor->getCName();
+                        $vendorLocation = $vendor->getCountryId(); // Or another attribute like getCity()
+                    }
+                } catch (\Exception $e) {
+                    // Log or handle the exception
+                }
+            }
+            ?>
+            <div class="product-card">
+                <div class="product-image">
+                    <a href="<?= $_product->getProductUrl() ?>">
+                        <img src="<?= $block->getImage($_product, 'product_page_image_large')->getImageUrl(); ?>" 
+                             alt="<?= $block->escapeHtml($_product->getName()); ?>" 
+                             style="max-width:100%;height:auto;display:block;object-fit:cover;">
+                    </a>
+                </div>
+                <div class="product-details">
+                    <h3 class="product-name"><?= $block->escapeHtml($_product->getName()); ?></h3>
+                    <p class="product-price"><?= $block->getProductPrice($_product); ?></p>
+                </div>
+                <div class="vendor-info">
+                    <div class="vendor-name">
+                        <!-- Use the fetched vendor name -->
+                        <?= $block->escapeHtml($vendorName ?: 'N/A'); ?>
+                        <span class="verified-icon">&#10004;</span>
+                    </div>
+                    <div class="vendor-location">
+                        <!-- Use the fetched vendor location -->
+                        <img src="path/to/saudi-arabia-flag.png" alt="Vendor Location">
+                        <?= $block->escapeHtml($vendorLocation ?: 'N/A'); ?>
+                    </div>
+                </div>
+                <div class="add-to-quote">
+                    <button>Add to Quote</button>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    <?php if ($toolbarBlock) { echo $toolbarBlock->toHtml(); } ?>
+<?php endif; ?>

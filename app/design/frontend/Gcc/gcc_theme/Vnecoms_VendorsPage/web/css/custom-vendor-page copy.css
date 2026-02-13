@@ -1,0 +1,16 @@
+.page-layout-1column-full-width .columns,
+.page-layout-1column-full-width .column.main,
+.page-layout-1column-full-width .page-main {
+    max-width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin: 0 !important;
+}
+
+.page-layout-1column-full-width .main.columns {
+    display: block !important;
+}
+
+.page-layout-1column-full-width .sidebar.additional {
+    display: none !important;
+}

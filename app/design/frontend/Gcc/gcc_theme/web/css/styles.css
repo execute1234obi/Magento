@@ -1,0 +1,707 @@
+.page-main {
+    padding-top: 20px;
+    /* Adjust based on your header height */
+}
+
+body.custom_result-bg {
+    background-color: #F9FAFB !important;
+}
+
+/* ================================ */
+/* Global Typography for Entire Site */
+/* ================================ */
+
+body,
+body * {
+    font-family: 'Inter', sans-serif !important;
+    /* font-weight: bold !important; */
+}
+
+body.customer-account .page-main {
+    padding-top: 150px !important;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: clamp(28px, 4vw, 33px);
+    line-height: 1.2;
+    margin: 0 0 1em 0;
+}
+
+/* Paragraphs, spans, divs, links */
+p,
+span,
+div,
+a,
+li,
+label,
+td,
+th {
+    font-size: clamp(12px, 2vw, 16px);
+    line-height: 1.5;
+}
+
+/* Links */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Optional: make input/textarea readable */
+input,
+textarea,
+select,
+button {
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: clamp(12px, 2vw, 16px);
+}
+
+/* Apply only on vendor-membership page */
+@media (min-width: 768px) {
+    .vendorsmembership-index-index .page-wrapper {
+        margin: 0;
+        position: relative;
+        transition: margin .3s ease-out 0s;
+        padding-top: 150px;
+    }
+}
+
+.pricing-heading {
+    color: #9C9E9F;
+    margin-bottom: 4rem;
+    text-align: center;
+    padding-top: 10px !important;
+}
+
+
+/* =========================================
+   GCC Trading - Modern Checkout UI (Magento)
+   Drop-in CSS (no JS)
+========================================= */
+/* 
+.checkout-index-index,
+.checkout-cart-index {
+  --gcc-primary: #1e6fb9;      
+  --gcc-primary-2: #155a97;
+  --gcc-bg: #f6f7fb;
+  --gcc-card: #ffffff;
+  --gcc-text: #0f172a;
+  --gcc-muted: #64748b;
+  --gcc-border: #e5e7eb;
+  --gcc-border-soft: #eef2f7;
+  --gcc-shadow: 0 14px 34px rgba(2, 8, 23, 0.08);
+  --gcc-shadow-soft: 0 10px 24px rgba(2, 8, 23, 0.06);
+  --gcc-radius: 16px;
+}
+
+.checkout-index-index,
+.checkout-cart-index {
+  background: var(--gcc-bg);
+}
+
+
+.checkout-index-index .page-main,
+.checkout-cart-index .page-main {
+  padding-top: 120px;
+}
+
+.checkout-index-index .page-main,
+.checkout-cart-index .page-main {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--gcc-text);
+}
+
+.checkout-index-index .checkout-container,
+.checkout-cart-index .cart-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 18px 16px 56px;
+}
+.checkout-index-index .checkout-container {
+  display: flex;
+  gap: 26px;
+  align-items: flex-start;
+}
+
+.checkout-index-index .opc-wrapper {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto !important;
+}
+
+.checkout-index-index .opc-sidebar {
+  flex: 0 0 380px;
+  width: 380px;
+}
+
+
+@media (max-width: 1024px) {
+  .checkout-index-index .checkout-container {
+    flex-direction: column;
+  }
+  .checkout-index-index .opc-sidebar {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+}
+
+.checkout-index-index .opc-wrapper,
+.checkout-index-index .opc-sidebar,
+.checkout-cart-index .cart-container .cart-summary {
+  background: var(--gcc-card);
+  border: 1px solid var(--gcc-border);
+  border-radius: var(--gcc-radius);
+  box-shadow: var(--gcc-shadow-soft);
+  overflow: hidden;
+}
+
+.checkout-index-index .opc-wrapper .step-title,
+.checkout-index-index .opc-wrapper .step-content,
+.checkout-index-index .opc-sidebar .opc-summary-wrapper {
+  padding: 18px 20px;
+}
+
+@media (min-width: 1025px) {
+  .checkout-index-index .opc-sidebar {
+    position: sticky;
+    top: 120px;
+  }
+}
+
+.checkout-index-index .page-title-wrapper .page-title,
+.checkout-index-index .step-title,
+.checkout-index-index .opc-block-summary > .title {
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 800;
+  margin: 0;
+  color: var(--gcc-text);
+}
+
+.checkout-index-index .opc-wrapper .step-title,
+.checkout-index-index .opc-block-summary > .title {
+  border-bottom: 1px solid var(--gcc-border-soft);
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.checkout-index-index input[type="text"],
+.checkout-index-index input[type="email"],
+.checkout-index-index input[type="tel"],
+.checkout-index-index select,
+.checkout-index-index textarea,
+.checkout-cart-index input[type="text"],
+.checkout-cart-index input[type="email"],
+.checkout-cart-index input[type="tel"],
+.checkout-cart-index select,
+.checkout-cart-index textarea {
+  width: 100%;
+  border: 1px solid var(--gcc-border);
+  border-radius: 12px;
+  padding: 11px 12px;
+  background: #fff;
+  color: var(--gcc-text);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.checkout-index-index input:focus,
+.checkout-index-index select:focus,
+.checkout-index-index textarea:focus,
+.checkout-cart-index input:focus,
+.checkout-cart-index select:focus,
+.checkout-cart-index textarea:focus {
+  border-color: rgba(30, 111, 185, 0.65);
+  box-shadow: 0 0 0 4px rgba(30, 111, 185, 0.16);
+}
+
+.checkout-index-index .fieldset > .legend,
+.checkout-index-index .field,
+.checkout-index-index .control {
+  margin-bottom: 10px;
+}
+
+.checkout-index-index .payment-methods {
+  margin-top: 10px;
+}
+
+.checkout-index-index .payment-methods .payment-method {
+  border: 1px solid var(--gcc-border-soft);
+  border-radius: 16px;
+  padding: 16px 16px;
+  margin: 14px 0;
+  background: #fff;
+  box-shadow: none;
+  transition: border-color 0.15s ease, box-shadow 0.18s ease, transform 0.15s ease;
+}
+
+.checkout-index-index .payment-methods .payment-method:hover {
+  border-color: rgba(30, 111, 185, 0.30);
+  box-shadow: var(--gcc-shadow-soft);
+  transform: translateY(-1px);
+}
+
+.checkout-index-index .payment-methods .payment-method._active {
+  border-color: rgba(30, 111, 185, 0.65);
+  box-shadow: var(--gcc-shadow);
+}
+
+.checkout-index-index .payment-method-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkout-index-index .payment-method-title label {
+  font-weight: 800;
+  color: var(--gcc-text);
+}
+
+.checkout-index-index input[type="radio"] {
+  transform: scale(1.05);
+  accent-color: var(--gcc-primary); 
+}
+
+.checkout-index-index .payment-method-content {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--gcc-border-soft);
+}
+
+.checkout-index-index .action.primary,
+.checkout-cart-index .action.primary {
+  background: linear-gradient(135deg, var(--gcc-primary), var(--gcc-primary-2));
+  border: 1px solid rgba(30, 111, 185, 0.85);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-weight: 800;
+  color: #fff;
+  box-shadow: 0 14px 24px rgba(30, 111, 185, 0.18);
+  transition: transform 0.08s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+.checkout-index-index .action.primary:hover,
+.checkout-cart-index .action.primary:hover {
+  filter: brightness(0.98);
+  box-shadow: 0 18px 28px rgba(30, 111, 185, 0.22);
+}
+
+.checkout-index-index .action.primary:active,
+.checkout-cart-index .action.primary:active {
+  transform: translateY(1px);
+}
+
+.checkout-index-index .action.secondary,
+.checkout-cart-index .action.secondary {
+  border-radius: 14px;
+}
+
+.checkout-index-index .opc-block-summary {
+  border: 0;
+}
+
+.checkout-index-index .opc-block-summary > .title {
+  padding: 18px 20px 14px;
+}
+
+.checkout-index-index .opc-block-summary .content,
+.checkout-index-index .opc-block-summary .items-in-cart,
+.checkout-index-index .opc-block-summary .table-totals {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.checkout-index-index .opc-block-summary .items-in-cart > .title {
+  font-weight: 800;
+  color: var(--gcc-text);
+}
+
+.checkout-index-index .opc-block-summary .table-totals {
+  margin-top: 14px;
+  border-top: 1px solid var(--gcc-border-soft);
+  padding-top: 14px;
+}
+
+.checkout-index-index .opc-block-summary .grand {
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.checkout-index-index .opc-block-summary .table-totals tr th,
+.checkout-index-index .opc-block-summary .table-totals tr td {
+  padding: 10px 0;
+  color: var(--gcc-muted);
+}
+
+.checkout-index-index .opc-block-summary .table-totals tr.grand th,
+.checkout-index-index .opc-block-summary .table-totals tr.grand td {
+  color: var(--gcc-text);
+}
+
+
+@media (max-width: 640px) {
+  .checkout-index-index .opc-wrapper .step-title,
+  .checkout-index-index .opc-wrapper .step-content,
+  .checkout-index-index .opc-sidebar .opc-summary-wrapper {
+    padding: 16px 16px;
+  }
+
+  .checkout-index-index .payment-methods .payment-method {
+    padding: 14px 14px;
+    border-radius: 14px;
+  }
+
+  .checkout-index-index .action.primary,
+  .checkout-cart-index .action.primary {
+    width: 100%;
+  }
+} */
+/* =========================================================
+   GCC Checkout - Alignment + Top Gap + Modern Trading UI
+   Add this AFTER existing css (or replace conflicting rules)
+========================================================= */
+
+input[type="text"], input[type="password"], input[type="url"], input[type="tel"], input[type="search"], input[type="number"], input[type*="date"], input[type="email"] {
+  background: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c2c2c2;
+    border-radius: 1px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    height: 43px;
+    line-height: -7.571429;
+    padding: 0 9px;
+    vertical-align: baseline;
+    width: 100%;
+    box-sizing: border-box;
+    padding-left: 14px;
+}
+
+.checkout-index-index {
+  --gcc-bg: #f5f7fb;
+  --gcc-card: #ffffff;
+  --gcc-border: #e5e7eb;
+  --gcc-border-soft: #edf1f6;
+  --gcc-text: #0f172a;
+  --gcc-muted: #6b7280;
+  --gcc-accent: #ff5a00;
+  --gcc-radius: 12px;
+}
+
+/* Page / header spacing */
+.checkout-index-index .page-main {
+  padding-top: 130px !important; /* top side same gap under sticky header */
+  background: var(--gcc-bg);
+}
+
+/* Full checkout area with balanced top margin */
+.checkout-index-index .checkout-container {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 73px 16px 36px !important; /* <-- top inner gap */
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+/* Left + right columns */
+.checkout-index-index .opc-wrapper {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.checkout-index-index .opc-sidebar {
+  flex: 0 0 420px;
+  width: 420px;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Keep summary aligned with payment block top */
+@media (min-width: 1025px) {
+  .checkout-index-index .opc-sidebar {
+    position: sticky;
+    top: 130px;
+  }
+}
+
+/* Card look */
+.checkout-index-index .opc-wrapper,
+.checkout-index-index .opc-sidebar .opc-block-summary {
+  background: var(--gcc-card);
+  border: 1px solid var(--gcc-border);
+  border-radius: var(--gcc-radius);
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(2, 8, 23, 0.04);
+}
+
+/* =========================
+   Progress Bar (Step tabs)
+========================= */
+.checkout-index-index .opc-progress-bar {
+  display: flex;
+  margin: 0 !important;
+  padding: 0 0 0 0 !important;
+  border-bottom: 1px solid var(--gcc-border-soft);
+  background: #fff;
+}
+
+.checkout-index-index .opc-progress-bar-item {
+  flex: 1;
+  margin: 0 !important;
+  padding: 16px 18px 14px !important;
+  border-bottom: 3px solid transparent;
+  text-align: left;
+  min-height: 78px;
+  box-sizing: border-box;
+}
+
+.checkout-index-index .opc-progress-bar-item > span {
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+
+.checkout-index-index .opc-progress-bar-item._active {
+  border-bottom-color: var(--gcc-accent);
+}
+
+/* hide giant default circles if theme draws them */
+.checkout-index-index .opc-progress-bar-item:before,
+.checkout-index-index .opc-progress-bar-item:after {
+  transform: scale(0.75);
+}
+
+/* =========================
+   Payment section
+========================= */
+.checkout-index-index .step-title,
+.checkout-index-index .checkout-step-title {
+  margin: 0 !important;
+  padding: 18px 22px 14px !important;
+  border-bottom: 1px solid var(--gcc-border-soft);
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+}
+
+.checkout-index-index .step-content {
+  padding: 14px 22px 18px !important;
+}
+
+/* tighter spacing between payment methods */
+.checkout-index-index .payment-methods {
+  margin: 0 !important;
+}
+
+.checkout-index-index .payment-method {
+  margin: 0 0 12px !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+
+.checkout-index-index .payment-method-title {
+  margin: 0 !important;
+}
+
+.checkout-index-index .payment-method-title .label,
+.checkout-index-index .payment-method-title label {
+  margin: 0 !important;
+  padding: 14px 16px !important;
+  display: grid !important;
+  grid-template-columns: 18px 1fr !important; /* radio + text */
+  align-items: center !important;
+  column-gap: 10px !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  cursor: pointer;
+  font-size: 16px !important;
+  line-height: 1.25 !important;
+  font-weight: 700 !important;
+  color: #0f172a !important;
+}
+/* Prevent ugly line break in method names */
+/* Keep method name tidy */
+.checkout-index-index .payment-method-title .label span,
+.checkout-index-index .payment-method-title label span {
+  display: block !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  min-width: 0 !important;
+}
+
+.checkout-index-index .payment-method-content {
+  margin: 0 !important;
+  padding: 12px 16px 14px !important;
+  border-top: 1px solid #edf1f6 !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.checkout-index-index .payment-method-content #imageContainer,
+.checkout-index-index .payment-method-content .image-container {
+  max-width: 100% !important;
+  overflow: hidden !important;
+}
+
+/* Active state */
+.checkout-index-index .payment-method._active {
+  border-color: #cbd5e1 !important;
+  box-shadow: inset 0 0 0 1px #dbeafe !important;
+}
+/* radio */
+.checkout-index-index input[type="radio"] {
+  accent-color: #1e6fb9;
+}
+
+.checkout-index-index .payment-method-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+}
+
+.checkout-index-index .payment-method-content .actions-toolbar,
+.checkout-index-index .payment-method-content .primary {
+  margin-top: 10px !important;
+}
+
+.checkout-index-index .payment-method-content p,
+.checkout-index-index .payment-method-content span,
+.checkout-index-index .payment-method-content div,
+.checkout-index-index .payment-method-content a {
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  font-weight: 400 !important;
+}
+
+/* Radio alignment/size */
+.checkout-index-index .payment-method-title input[type="radio"] {
+  margin: 0 !important;
+  width: 14px !important;
+  height: 14px !important;
+  accent-color: #1e6fb9;
+  position: relative;
+  top: 0;
+}
+
+/* =========================
+   Summary section
+========================= */
+.checkout-index-index .opc-block-summary > .title {
+  margin: 0 !important;
+  padding: 18px 20px 14px !important;
+  border-bottom: 1px solid var(--gcc-border-soft);
+  font-size: 14px !important;
+  line-height: 1.25 !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+}
+
+.checkout-index-index .opc-block-summary .content {
+  padding: 12px 20px 18px !important;
+}
+
+.checkout-index-index .opc-block-summary .table-totals th,
+.checkout-index-index .opc-block-summary .table-totals td {
+  font-size: 16px !important;
+  line-height: 1.4 !important;
+  padding: 9px 0 !important;
+}
+
+.checkout-index-index .opc-block-summary .table-totals tr.grand th,
+.checkout-index-index .opc-block-summary .table-totals tr.grand td {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+}
+
+/* Product rows inside summary */
+.checkout-index-index .minicart-items .product-item-name,
+.checkout-index-index .items-in-cart .product-item-name {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+  font-weight: 600;
+}
+
+/* =========================
+   Important reset: remove oversized global type on checkout
+========================= */
+.checkout-index-index h1,
+.checkout-index-index h2,
+.checkout-index-index h3,
+.checkout-index-index h4,
+.checkout-index-index h5,
+.checkout-index-index h6,
+.checkout-index-index p,
+.checkout-index-index span,
+.checkout-index-index div,
+.checkout-index-index a,
+.checkout-index-index li,
+.checkout-index-index label,
+.checkout-index-index td,
+.checkout-index-index th {
+  letter-spacing: 0 !important;
+    font-size: inherit !important;   /* override your global clamp */
+  line-height: inherit !important;
+}
+
+.checkout-index-index input,
+.checkout-index-index select,
+.checkout-index-index textarea,
+.checkout-index-index button {
+  font-weight: 400 !important;     /* remove global bold in checkout */
+  font-size: 14px !important;
+}
+
+
+/* =========================
+   Responsive
+========================= */
+@media (max-width: 1024px) {
+  .checkout-index-index .checkout-container {
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 14px !important;
+  }
+
+  .checkout-index-index .opc-sidebar {
+    width: 100%;
+    flex: 1 1 auto;
+    position: static;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-index-index .page-main {
+    padding-top: 96px !important;
+  }
+
+  .checkout-index-index .opc-progress-bar-item > span {
+    font-size: 15px !important;
+  }
+
+  .checkout-index-index .step-title,
+  .checkout-index-index .checkout-step-title,
+  .checkout-index-index .opc-block-summary > .title {
+    font-size: 24px !important;
+  }
+}
+.action .action-apply{
+  padding: 10px;
+}

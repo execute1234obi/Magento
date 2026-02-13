@@ -1,0 +1,269 @@
+<?php
+/** ---------------- SAFE VERIFICATION LOAD ---------------- */
+$vendorVerification = null;
+$verificationIncId  = '';
+$hasActiveVerification = false;
+$isEntireRejected = false;
+
+try {
+    if ($block->isActiveVerificationExit()) {
+        $verification = $block->getVendorVerification();
+        //echo "Haa exist";die();
+        if ($verification && is_object($verification) && $verification->getId()) {
+          //  echo "me hu na";die();
+            $vendorVerification     = $verification;
+            $verificationIncId      = $verification->getIncId();
+            $hasActiveVerification  = true;
+           if ($vendorVerification->getStatus() == 5) {
+            //echo "entire";die();
+                $isEntireRejected = true;
+                $hasActiveVerification = false;
+            } else {
+              //  echo "pending"; die();
+                // Agar status 1 (Pending) ya kuch aur hai, toh form dikhao
+                $isEntireRejected = false;
+                $hasActiveVerification = true;
+            }
+        }
+    }
+} catch (\Exception $e) {
+    $hasActiveVerification = false;
+}
+?>
+
+<?php if ($block->isActiveVerificationExit() && !$isEntireRejected) :
+//if ($hasActiveVerification && !$isEntireRejected) :
+   // echo "HI vrushali";
+?>
+
+<h2 class="verification-title">
+    <?= __('Verification Information # %1', $verificationIncId) ?>
+</h2>
+
+<!-- ================= STATUS INFO ================= -->
+<div class="row">
+    <?= $block->getChildHtml('form.verification.statusinfo'); ?>
+</div>
+
+<!-- ================= BASIC INFO ================= -->
+<div class="row">
+    <div class="col-sm-6">
+        <div class="verification-card">
+            <?= $block->getChildHtml('form.verification.businessinfo'); ?>
+        </div>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="verification-card">
+            <?= $block->getChildHtml('form.verification.contactinfo'); ?>
+        </div>
+    </div>
+</div>
+
+<!-- ================= ADDRESS + DOCUMENTS (IMAGE STYLE) ================= -->
+<div class="row verification-two-column-flex">
+    <div class="col-md-6">
+        <div class="verification-card full-height">
+            <?= $block->getChildHtml('form.verification.addressinfo'); ?>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="verification-card full-height">
+            <?= $block->getChildHtml('form.verification.documents'); ?>
+        </div>
+    </div>
+</div>
+
+
+<div id="commentslist_popup"></div>
+
+<?php else : ?>
+
+<h2><?= __('Verification Information') ?></h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="before-verificaion-center">
+            <img src="<?= $block->getMediaUrl().'/before-verification.png'; ?>" alt="No Verification" />
+            <h2><?= __('No Active Verification Process is available') ?></h2>
+            <p><?= __('Help increase transparency between business and people on') ?> <strong>GCC TRADING</strong></p>
+
+            <button type="button"
+                    id="req-verification"
+                    class="btn btn-primary verification-before"
+                    data-verificationurl="<?= $block->getUrl('vendorverification/verification/new/'); ?>">
+                <?= __('Request Verification') ?>
+            </button>
+        </div>
+    </div>
+</div>
+<script>
+	 require(
+        ['jquery'],
+        function($) {	
+	   $("#req-verification").on('click',function(){
+		   var url =  $(this).data('verificationurl');		   
+		   window.location= url;
+		})	
+	})	
+		
+	
+</script>	
+<?php endif; ?>
+
+<!-- ================= UI ONLY STYLES ================= -->
+<style>
+.verification-title {
+    margin-bottom: 20px;
+}
+
+.verification-two-column {
+    margin-top: 20px;
+}
+
+.verification-card {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.verification-equal-height {
+    height: 100%;
+}
+
+.verification-card .header h2 {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.verification-card .verification-tbl {
+    margin-top: 10px;
+}
+
+.before-verificaion-center {
+    text-align: center;
+    padding: 40px;
+}
+</style>
+
+<!-- ================= JS (UNCHANGED) ================= -->
+<script type="text/javascript">
+// require(['jquery','Magento_Ui/js/modal/modal'], function ($, modal) {
+
+//     $(".verification-edit").on('click', function () {
+//         var popupDivId = $(this).data('modal-id');
+//         modal({
+//             type: 'popup',
+//             modalClass: 'verification-modal',
+//             title: $.mage.__('Verification'),
+//             buttons: [{
+//                 text: $.mage.__('Cancel'),
+//                 click: function () {
+//                     this.closeModal();
+//                 }
+//             }]
+//         }, $('#' + popupDivId)).openModal();
+//     });
+
+//     $(".verification-showcomment").on('click', function () {
+//         var param = {
+//             id: $(this).data('verificationid'),
+//             dataid: $(this).data('verifidtlid'),
+//             grouptype: $(this).data('verifigroupid'),
+//             form_key: window.FORM_KEY
+//         };
+
+//         $.ajax({
+//             showLoader: true,
+//             url: "<?= $block->getCommentsViewUrl(); ?>",
+//             data: param,
+//             type: "GET",
+//             dataType: 'json',
+//             success: function (response) {
+//                 if (response.success) {
+//                     var html = '<h4>' + response.message + '</h4><table class="table">';
+//                     $.each(response.data, function (k, v) {
+//                         html += '<tr><td>' + v + '</td></tr>';
+//                     });
+//                     html += '</table>';
+//                     $("#commentslist_popup").html(html).modal({
+//                         title: $.mage.__('Admin Comments'),
+//                         modalClass: 'verification-modal'
+//                     }).modal('openModal');
+//                 }
+//             }
+//         });
+//     });
+
+// });
+require(['jquery','Magento_Ui/js/modal/modal'], function ($, modal) {
+
+    //console.log('Verification JS loaded');
+
+    /* ================= EDIT MODAL ================= */
+    $(document).on('click', '.verification-edit', function () {
+
+        console.log('Edit button clicked');
+
+        var popupDivId = $(this).data('modal-id');
+        console.log('Popup Div ID:', popupDivId);
+
+        modal({
+            type: 'popup',
+            modalClass: 'verification-modal',
+            title: $.mage.__('Verification'),
+            buttons: [{
+                text: $.mage.__('Cancel'),
+                click: function () {
+                    this.closeModal();
+                }
+            }]
+        }, $('#' + popupDivId)).openModal();
+    });
+
+    /* ================= COMMENTS MODAL ================= */
+    $(document).on('click', '.verification-showcomment', function () {
+
+      //  console.log('Comment button clicked');
+
+        var param = {
+            id: $(this).data('verificationid'),
+            dataid: $(this).data('verifidtlid'),
+            grouptype: $(this).data('verifigroupid'),
+            form_key: window.FORM_KEY
+        };
+
+       // console.log('AJAX Params:', param);
+        //console.log("Comments URL:", "<?= $block->getCommentsViewUrl(); ?>");
+
+       $.ajax({
+    showLoader: true,
+    url: "<?= $block->getCommentsViewUrl(); ?>",
+    data: param,
+    type: "GET",
+    dataType: 'json',
+    success: function (response) {
+        if (response.success) {
+            var html = '<h4>' + response.message + '</h4><table class="table">';
+              // Reverse array so latest comment appears first
+            var reversedData = response.data.slice().reverse();
+            $.each(response.data, function (k, v) {
+                // v ab ek object hai: {date: "...", comment: "..."}
+                html += '<tr><td><strong>' + v.date + ':</strong> ' + v.comment + '</td></tr>';
+            });
+            html += '</table>';
+            $("#commentslist_popup").html(html).modal({
+                title: $.mage.__('Admin Comments'),
+                modalClass: 'verification-modal'
+            }).modal('openModal');
+        }
+    }
+});
+    });
+
+});
+
+</script>

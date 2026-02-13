@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Vendor_VendorsVerification::vendor_verification" title="Manage Sellers Verification" translate="title" 
+        sortOrder="25" module="Vendor_VendorsVerification" parent="Vnecoms_Vendors::vendors" 
+        action="vendorverification/index" dependsOnModule="Vnecoms_Vendors" resource="Vendor_VendorsVerification::vendor_verification"/>        
+    </menu>
+</config>

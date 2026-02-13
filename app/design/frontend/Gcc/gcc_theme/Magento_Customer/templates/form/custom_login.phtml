@@ -1,0 +1,271 @@
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-main > .page-title-wrapper .page-title {
+        display: none;
+    }
+
+    .form-container {
+        width: 40%;
+        margin: 50px auto;
+        padding: 30px;
+        background-color: #ffffff;
+        border-radius: 10px;
+    }
+
+    h2 {
+        font-size: 24px;
+        color: #003366;
+        text-align: left;
+    }
+
+    .sign-in-text {
+        font-size: 14px;
+        color: #555555;
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 25px; /* Increased spacing between fields */
+    }
+
+    label {
+        font-size: 14px;
+        color: #003366;
+        font-weight: 500;
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .required {
+        color: #d02d4e;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #D2E1F1;
+        border-radius: 5px;
+        background-color: #F2F8FF;
+        color: #2A3A6D;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+        outline: none;
+        border-color: #0061F2;
+        background-color: #E6F0FF;
+    }
+
+    button.submit-btn {
+        background-color: #1e56a0;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 5px;
+        width: 100%;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button.submit-btn:hover {
+        background-color: #1e56a0;
+    }
+
+    /* Eye icon styles */
+    .eye-icon {
+        position: absolute;
+        right: 10px;
+        top: 65%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        z-index: 10;
+        font-size: 18px;
+        color: #2A3A6D;
+        user-select: none;
+    }
+
+    /* Password field container */
+    .password-container {
+        position: relative;
+    }
+
+    .forgot-password,
+    .create-account {
+        text-align: center;
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+    }
+
+    .forgot-password a,
+    .create-account a {
+        color: #1e56a0;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .forgot-password a:hover,
+    .create-account a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .form-container {
+            width: 90%;
+            padding: 20px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .form-container {
+            width: 95%;
+            padding: 15px;
+        }
+    }
+/* Arabic Store RTL Fixes */
+html[lang="ar"] body {
+    direction: rtl;
+}
+
+/* Apply only when Arabic lang is active */
+html[lang="ar"] .form-container {
+    width: 40%;
+    margin: 50px auto !important;
+    float: none !important;
+}
+
+/* Title & text right aligned ONLY in Arabic */
+html[lang="ar"] h2,
+html[lang="ar"] .sign-in-text,
+html[lang="ar"] label,
+html[lang="ar"] .forgot-password,
+html[lang="ar"] .create-account {
+    text-align: right !important;
+}
+
+/* Email & Password input RTL fix */
+html[lang="ar"] input[type="email"],
+html[lang="ar"] input[type="password"] {
+    text-align: right;
+    padding-right: 12px;
+    padding-left: 40px; /* space for eye icon */
+}
+
+/* Eye icon move RIGHT → LEFT */
+html[lang="ar"] .eye-icon {
+    right: auto !important;
+    left: 10px !important;
+    top: 50% !important;
+    transform: translateY(-50%);
+}
+
+/* Parent container center fix */
+html[lang="ar"] .column.main {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Remove padding only in Arabic */
+html[lang="ar"] .page-wrapper,
+html[lang="ar"] .column.main {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* Arabic Store – Center Alignment Fix */
+/* ARABIC STORE — FULL CENTER FIX */
+html[lang="ar"] body {
+    direction: rtl !important;
+}
+
+/* Main wrapper override (Magento pushes content left in RTL) */
+html[lang="ar"] .page-wrapper {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Column main wrapper */
+/* Prevent shrink – keep full width container */
+html[lang="ar"] .column.main {
+    flex: 0 0 100% !important; /* do not shrink, take full width */
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Columns wrapper also full width */
+html[lang="ar"] .columns {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* Page wrapper avoid shrink */
+html[lang="ar"] .page-wrapper {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+}
+
+
+
+</style>
+
+<div class="form-container">
+    <h2><?= __('Registered Customers') ?></h2>
+    <p class="sign-in-text"><?= __('If you have an account, sign in with your email address.') ?></p>
+
+    <form action="<?= $block->getUrl('customer/account/loginPost') ?>" method="post">
+        <input type="hidden" name="form_key" value="{{form_key}}" />
+
+        <div class="form-group">
+            <label for="email"><?= __('Email') ?> <span class="required">*</span></label>
+            <input type="email" id="email" name="login[username]" required />
+        </div>
+
+        <div class="form-group password-container">
+            <label for="password"><?= __('Password') ?> <span class="required">*</span></label>
+            <input type="password" id="password" name="login[password]" required />
+            <!-- Eye icon with slashed eye for hidden -->
+            <span class="eye-icon" id="toggle-password">👁️‍🗨️</span>
+        </div>
+
+        <div class="forgot-password">
+            <a href="{{store url='customer/account/forgotpassword'}}"><?= __('Forgot Your Password?') ?></a>
+        </div>
+
+        <br />
+        <button type="submit" class="submit-btn"><?= __('Sign In') ?></button>
+
+        <div class="create-account">
+            <p><?= __('Creating an account has many benefits') ?>
+                <a href="<?= $block->getUrl('customer/account/create') ?>"><?= __('Create Account') ?></a>
+            </p>
+        </div>
+    </form>
+</div>
+
+<script>
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordField = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+        const isPassword = passwordField.type === 'password';
+        passwordField.type = isPassword ? 'text' : 'password';
+        togglePassword.textContent = isPassword ? '👁️' : '👁️‍🗨️'; // Show / slashed eye
+    });
+</script>

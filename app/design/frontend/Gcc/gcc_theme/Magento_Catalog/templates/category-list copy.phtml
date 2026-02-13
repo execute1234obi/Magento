@@ -1,0 +1,28 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$categoryFactory = $objectManager->create(\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory::class);
+
+$categories = $categoryFactory->create()
+    ->addAttributeToSelect('*')
+    ->addIsActiveFilter()
+    ->addLevelFilter(2) // adjust level if needed
+    ->addOrderField('position');
+
+if ($categories && $categories->count()) :
+?>
+    <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+        <?php foreach ($categories as $category): ?>
+            <div style="display:flex;flex-direction:column;align-items:center;padding:16px;border:1px solid #e5e7eb;border-radius:8px;transition:box-shadow .2s;cursor:pointer;"
+                 onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'"
+                 onmouseout="this.style.boxShadow='none'">
+                <img src="<?= $block->escapeUrl($category->getImageUrl()) ?: 'https://via.placeholder.com/48' ?>" alt="<?= $block->escapeHtml($category->getName()) ?>" style="width:48px;height:48px;margin-bottom:12px;">
+                <span style="font-size:0.875rem; font-weight:600; color:#1f2937;">
+                    <?= $block->escapeHtml($category->getName()) ?>
+                </span>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php else: ?>
+    <p>No categories found.</p>
+<?php endif; ?>

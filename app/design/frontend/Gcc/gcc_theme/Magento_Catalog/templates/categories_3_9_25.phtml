@@ -1,0 +1,54 @@
+<?php
+/** @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory */
+use Magento\Framework\UrlInterface;
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$categoryCollectionFactory = $objectManager->get(\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory::class);
+
+// Change this to your parent category ID (e.g., defualt parent category)
+$parentCategoryId = 2; 
+
+$categories = $categoryCollectionFactory->create()
+    ->addAttributeToSelect(['name', 'image', 'url_key'])
+    ->addIsActiveFilter()
+    ->addAttributeToFilter('parent_id', $parentCategoryId);
+?>
+  <div class="text-center mb-12">
+        <h2 class="text-3xl font-semibold">Explore Key Industrial Sectors</h2>
+        <p class="text-gray-600 mt-2">Discover suppliers and products across various industries to meet your business needs efficiently and compliance with regional standards for optimal sourcing solutions.</p>
+    </div>
+    
+    <!-- Cards Grid Section -->
+    <div class="flex justify-center mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
+            <!-- Card 1 -->
+             <?php foreach ($categories as $category): ?>
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+            <a href="<?= $category->getUrl() ?>">
+
+            <?php
+               $mediaBase = $block->getBaseUrl(['_type' => UrlInterface::URL_TYPE_MEDIA])."pub/"; // e.g. http://localhost/magento_gcc/pub/media/
+
+                // Try full URL first:
+                $image = $category->getImageUrl();
+if ($image): ?>
+    <img src="<?=  $mediaBase.$image ?>" alt="<?= $category->getName() ?>" class="w-12 h-12 mb-4" />
+                    <?php else: ?>
+                        <img src="<?= $block->getViewFileUrl('Magento_Catalog::images/default-category.png') ?>" alt="No Image" class="w-12 h-12 mb-4" />
+                    <?php endif; ?>    
+                   <p class="text-lg font-semibold"><?= $category->getName() ?></p>
+            </div>
+              <?php endforeach; ?>
+                 </div>
+    </div>
+
+
+    <!-- Navigation Arrows -->
+    <div class="flex justify-between max-w-md mx-auto">
+        <button class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700">
+            <span>&lt;</span>
+        </button>
+        <button class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700">
+            <span>&gt;</span>
+        </button>
+    </div>
+</section>

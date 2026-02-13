@@ -1,0 +1,31 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
+$items = $block->getItems();
+
+// Sirf count check karo
+//echo "Related products count: " . count($items);
+
+// Har product ka sirf ID aur Name print karo
+// foreach ($items as $_item) {
+//     echo "<br>ID: " . $_item->getId() . " | Name: " . $_item->getName();
+// }
+?>
+<?php if ($exist = $block->getItems()->getSize()): ?>
+    <div class="block related">
+        <div class="block-title">
+            <strong><?php echo __('Related Products'); ?></strong>
+        </div>
+        <div class="block-content">
+            <ol class="products list items product-items">
+                <?php foreach ($block->getItems() as $_item): ?>
+                    <li class="item product product-item">
+                        <?php echo $block->getProductPrice($_item); ?>
+                        <a href="<?php echo $_item->getProductUrl(); ?>">
+                            <?php echo $block->escapeHtml($_item->getName()); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </div>
+    </div>
+<?php endif; ?>

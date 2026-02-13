@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <!-- <script src="Magento_ConfigurableProduct::js/configurable.js"/> -->
+    </head>
+
+    <body>
+        <!-- Remove default Magento PDP blocks -->
+        <referenceBlock name="product.info.media" remove="true"/>
+        <referenceBlock name="product.info.main" remove="true"/>
+        <referenceBlock name="product.info.details" remove="true"/>
+        <referenceBlock name="product.info.overview" remove="true"/>
+        <referenceBlock name="product.info.addtocart" remove="true"/>
+        <referenceBlock name="product.info.review" remove="true"/>
+        <referenceBlock name="reviews.tab" remove="true"/>
+       
+        <!-- Custom Product Detail Layout -->
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="custom.product.detail"
+                   template="Magento_Catalog::product/view.phtml">
+
+                <!-- Product Name -->
+                <block class="Magento\Catalog\Block\Product\View\Name"
+                       name="page.main.title"
+                       template="Magento_Catalog::product/view/name.phtml"/>
+
+                <!-- Product Price -->
+                <block class="Magento\Framework\Pricing\Render"
+                       name="product.info.price"
+                       template="Magento_Catalog::product/price/final_price.phtml">
+                    <arguments>
+                        <argument name="price_render" xsi:type="string">product.price.render.default</argument>
+                        <argument name="price_type_code" xsi:type="string">final_price</argument>
+                        <argument name="zone" xsi:type="string">item_view</argument>
+                    </arguments>
+                </block>
+
+                <!-- Product Gallery -->
+                <container name="product.info.media.container"
+                           as="product.info.media.container"
+                           htmlTag="div"
+                           htmlClass="product media">
+                    <block class="Magento\Catalog\Block\Product\View\Gallery"
+                           name="product.info.media.gallery"
+                           template="Magento_Catalog::product/view/gallery.phtml"/>
+                </container>
+
+                <!-- Description -->
+                <block class="Magento\Catalog\Block\Product\View\Description"
+                       name="product.info.description"
+                       template="Magento_Catalog::product/view/description.phtml"/>
+
+                <!-- Attributes -->
+                <block class="Magento\Catalog\Block\Product\View\Attributes"
+                       name="product.attributes"
+                       template="Magento_Catalog::product/view/attributes.phtml"/>
+
+                <!-- Reviews -->
+                <block class="Magento\Review\Block\Product\View\ListView"
+                       name="reviews.tab"
+                       template="Magento_Review::product/view/list.phtml"/>
+
+                <!-- Add to Cart -->
+                <block class="Magento\Catalog\Block\Product\View"
+                       name="product.info.addtocart"
+                       template="Magento_Catalog::product/view/addtocart.phtml"/>
+            </block>
+
+            <!-- Related Products -->
+           <block class="Magento\Catalog\Block\Product\ProductList\Related"
+       name="catalog.product.related"
+       template="Magento_Catalog::product/list/related.phtml"
+       after="custom.product.detail"/>
+        <!-- test message functionality -->
+       <!-- <block class="Magento\Framework\View\Element\Template" 
+           name="vendor.contact.test" 
+           template="Magento_Catalog::product/view/vendor-contact-test.phtml" 
+           after="product.info.details" /> -->
+
+
+        </referenceContainer>
+
+        <!-- Configurable Options override must be here (outside block) -->
+        <referenceBlock name="product.info.options.configurable">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">
+                    Magento_ConfigurableProduct::product/view/type/options/custom_configurable.phtml
+                </argument>
+            </action>
+        </referenceBlock>
+
+    
+    </body>
+</page>

@@ -1,0 +1,132 @@
+<?php
+
+use Mirasvit\Core\Service\CspService;
+
+/** @var \Mirasvit\Search\Block\Result $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$indexes            = $block->getIndexes();
+$tabsThreshold      = $block->getTabsThreshold();
+$lessThanMinIndexes = [];
+$tabsCnt            = 0;
+$totalCnt           = 0;
+$currentHtml        = $block->getCurrentContent();
+$currentHtml        = $block->getCurrentIndexSize() == 0 ? '' : $currentHtml;
+$productIndex       = false;
+$indexData          = [];
+$aggregations       = $block->getAggregationData();
+$nonce              = CspService::getNonce();
+?>
+
+<?php if (!empty($aggregations)) : ?>
+    <nav class="mst-search-in__wrapper" role="navigation" aria-labelledby="search-filter-title">
+        <h3 id="search-filter-title" class="mst-search-in__title"><?= $block->escapeHtml(__('Search In')) ?></h3>
+        <ul role="list">
+        <?php foreach ($block->getAggregationData() as $data) : ?>
+            <li role="listitem">
+                <a class="mst-search-in__item" href="<?= $block->escapeUrl($data['url']) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Filter by %1 (%2 results)', $data['name'], $data['count'])) ?>">
+                    <span class="name"><?= $block->escapeHtml($data['name'], ['i']) ?></span>
+                    <span class="count"><?= $block->escapeHtml($data['count']) ?></span>
+                </a>
+            </li>
+        <?php endforeach ?>
+        </ul>
+    </nav>
+<?php endif ?>
+
+<ul class="mst-search__result-tabs" role="tablist" aria-label="<?= $block->escapeHtmlAttr(__('Search result categories')) ?>">
+    <?php foreach ($indexes as $index):
+        if ($index->getIdentifier() == 'catalogsearch_fulltext') {
+            $productIndex = $index;
+        }
+
+        $collection                                 = $block->getSearchCollection($index);
+        $size                                       = $collection->getSize();
+        $indexData[$index->getIdentifier()]['size'] = $size;
+        $totalCnt                                   += $size;
+        //commented by vru          
+        // //if ($size == 0) {
+        // if ($size == 0 && $index->getIdentifier() != 'catalogsearch_fulltext') {
+
+        //     continue;
+        // }
+
+        // if ($size < $tabsThreshold && $index->getIdentifier() != 'catalogsearch_fulltext') {
+        //     $lessThanMinIndexes[] = $index;
+        //     continue;
+        // }
+          //commented by vru   
+        if (empty($currentHtml)) {
+            $currentHtml = $block->getContentBlock($index)->toHtml();
+        }
+
+        $tabsCnt++;
+        if ($index->getTitle() == $block->getCurrentIndex()->getTitle()
+            && $index->getStoreId() == $block->getCurrentIndex()->getStoreId()): ?>
+            <li role="tab" aria-selected="true">
+                <a class="active" href="#" aria-label="<?= $block->escapeHtmlAttr(__('Current tab: %1', $index->getTitle())) ?>">
+                    <?= $block->escapeHtml(__($index->getTitle())) ?>
+                </a>
+            </li>
+        <?php else: ?>
+            <li role="tab" aria-selected="false">
+                <a href="<?= $block->escapeUrl($block->getIndexUrl($index)) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Switch to %1 tab (%2 results)', $index->getTitle(), $size)) ?>">
+                    <?= $block->escapeHtml(__($index->getTitle())) ?> (<?= $block->escapeHtml($size) ?>)
+                </a>
+            </li>
+        <?php endif ?>
+    <?php endforeach ?>
+</ul>
+<!-- commented by vru  -->
+<?php //if ($tabsCnt <= 1): ?>
+    <!-- <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        .mst-search__result-tabs {
+            display: none
+        }
+    </style> -->
+<?php //endif ?>
+<!-- commented by vru  -->
+<?php if ($block->getCurrentIndex()->getIdentifier() == 'catalogsearch_fulltext' &&
+    ($indexData['catalogsearch_fulltext']['size'] > 0 || !empty($lessThanMinIndexes))): ?>
+    <?php if (!empty($lessThanMinIndexes) && $block->getSearchCollection($block->getCurrentIndex())->getCurPage() == 1): ?>
+        <div>
+            <?php foreach ($lessThanMinIndexes as $index): ?>
+                <section class="mst-search__result-index">
+                    <h3 class="mst-search__result-index-title">
+                        <?= $block->escapeHtml(__($index->getTitle())) ?>
+                    </h3>
+
+                    <?= $block->getContentBlock($index)->toHtml() ?>
+                </section>
+            <?php endforeach ?>
+        </div>
+    <?php endif ?>
+                <!-- changes by vru -->
+    <?php if ($block->getCurrentIndexSize() > 0 || $totalCnt == 0): ?>
+        <?php //if ($block->getCurrentIndexSize() > 0): ?>
+        <?= /* @noEscape */ $currentHtml ?>
+    <?php endif ?>
+<?php else : ?>
+     <?= /* @noEscape */ $currentHtml ?>
+<?php endif ?>
+
+<?php if ($totalCnt == 0): ?>
+    <?= $block->getContentBlock($productIndex)->toHtml(); ?>
+    <?= $block->getLayout()->getBlock("mst.search.no_results")->toHtml(); ?>
+<?php endif ?>
+
+<?php if ($block->getCurrentIndexSize() == 0 && $tabsCnt > 1): ?>
+    <div class="message notice">
+        <div><?= $block->escapeHtml(__('Please select other tab to see more results')) ?></div>
+    </div>
+<?php endif ?>
+
+<?php if ($block->isHighlightingEnabled()): ?>
+    <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
+        require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {
+            let query = '<?= $escaper->escapeUrl($block->getRequest()->getParam('q'))?>';
+            highlight($('.search.results .product-item-link, .mst-search__index a, .mst-search__index .mst-search__index-content'),
+                query, 'mst-search__highlight');
+        });
+    </script>
+<?php endif; ?>

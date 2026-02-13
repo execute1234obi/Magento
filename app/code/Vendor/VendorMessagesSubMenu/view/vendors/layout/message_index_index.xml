@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <!-- 1️⃣ Override MAIN messages block template -->
+        <referenceBlock name="seller.messages">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">
+                    Vendor_VendorMessagesSubMenu::messages.phtml
+                </argument>
+            </action>
+        </referenceBlock>
+        
+        <!-- 2️⃣ Override FOLDERS block template -->
+<referenceBlock name="seller.messages.folders">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">
+                    Vendor_VendorMessagesSubMenu::messages/folders.phtml
+                </argument>
+            </action>
+
+            <!-- 👇 LEFT SIDE MESSAGE SUBJECT LIST -->
+            <!-- <block class="Vnecoms\VendorsMessage\Block\Vendors\Messages\ListMessage"
+                   name="vendor.messages.left.list"
+                   template="Vendor_VendorMessagesSubMenu::messages/left-list.phtml"
+                   after="-"/> -->
+        </referenceBlock>
+
+        <!-- 3️⃣ (Optional) Grid hide karna ho to -->
+        <!--
+        <referenceBlock name="message_content" remove="true"/>
+        -->
+
+    </body>
+</page>

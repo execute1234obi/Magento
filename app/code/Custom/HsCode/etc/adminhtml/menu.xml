@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Custom. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- 
+        The top-level menu has been removed.
+        We now add our link directly under the existing Catalog menu.
+        The 'parent' attribute is changed to 'Magento_Catalog::catalog'.
+        -->
+        <add id="Custom_HsCode::manage"
+             title="HS Codes"
+             module="Custom_HsCode"
+             sortOrder="110"
+             parent="Magento_Catalog::catalog"
+             action="hscode/index/index"
+             resource="Custom_HsCode::manage" />
+      <add id="Custom_HsCode::list"
+         title="Manage HS Codes"
+         module="Custom_HsCode"
+         sortOrder="10"
+         parent="Custom_HsCode::manage"
+         action="hscode/index/list"
+         resource="Custom_HsCode::list" />        
+    </menu>
+</config>

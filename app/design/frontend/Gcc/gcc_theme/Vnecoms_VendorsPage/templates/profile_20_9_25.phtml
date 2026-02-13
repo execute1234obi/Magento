@@ -1,0 +1,477 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+// Vendor data
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$vendorFactory = $objectManager->get(\Vnecoms\Vendors\Model\VendorFactory::class);
+$vendorParam = $block->getRequest()->getParam('vendor_id');
+$vendorId = (int) str_replace('v', '', $vendorParam);
+$vendor = $vendorFactory->create()->load($vendorId);
+
+$mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) ."pub/media/";
+$logoPath = $vendor->getData('upload_logo');
+$logoUrl = $logoPath ? $mediaUrl . $logoPath : '';
+
+function showData($data) {
+    return $data ? htmlspecialchars($data) : '-';
+}
+
+$name = $vendor->getData('company') ?: $vendor->getData('b_name');
+$businessCategory = $vendor->getData('business_category');
+$description = $vendor->getData('business_descriptions');
+$contactName = $vendor->getData('c_name');
+$email = $vendor->getData('b_email');
+$telephone = $vendor->getData('telephone');
+$street = $vendor->getData('street');
+$city = $vendor->getData('city');
+$region = $vendor->getData('region');
+$postcode = $vendor->getData('postcode');
+$country = $vendor->getData('country_id');
+$fax = $vendor->getData('fax');
+$certificatePath = $vendor->getData('certificate');
+?>
+
+<style>
+ .vendor-menu-wrapper {
+    min-height: 30px;
+    margin-bottom: 10px;
+   visibility:hidden;
+    clear: both;
+}
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fb;
+    color: #333;
+  }
+
+  .breadcrumb {
+    font-size: 14px;
+    color: #666;
+    /* padding: 15px 5%; */
+    word-wrap: break-word;
+     margin-bottom: 0;
+  /* padding-bottom: 0; */
+  
+    padding-top: 0;       
+   
+    padding-bottom: 15px; 
+    padding-left: 0;   
+
+  }
+  .breadcrumb a {
+    color: #666;
+    text-decoration: none;
+  }
+  .breadcrumb span {
+    margin: 0 5px;
+  }
+
+  .banner-container {
+    position: relative;
+  }
+
+  .banner {
+    width: 100%;
+    height: 220px;
+    background: url("https://plus.unsplash.com/premium_photo-1738777152204-0ec9ab3502cc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center/cover;
+  }
+
+  .logo {
+    position: absolute;
+    bottom: -40px;
+    left: 5%;
+    background: #fff;
+    border-radius: 50%;
+    padding: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .logo img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+
+  .company-info {
+    padding: 60px 5% 20px;
+  }
+
+  .company-info h1 {
+    font-size: 28px;
+    margin: 0;
+  }
+
+  .company-info p {
+    font-size: 16px;
+    color: #666;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 0 5%;
+  }
+
+  .tabs a {
+    padding: 12px 0;
+    text-decoration: none;
+    font-size: 15px;
+    color: #1E40AF;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .tabs a.active {
+    color: #1E40AF;
+    font-weight: bold;
+  }
+
+  .tabs a.active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background: #1E40AF;
+  }
+
+  .content {
+    padding: 30px 5%;
+  }
+
+  .tab-content {
+    display: none;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  @media (max-width: 768px) {
+    .banner {
+      height: 180px;
+    }
+
+    .logo img {
+      width: 65px;
+      height: 65px;
+    }
+
+    .company-info h1 {
+      font-size: 22px;
+    }
+
+    .tabs {
+      gap: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .banner {
+      height: 150px;
+    }
+
+    .logo {
+      bottom: -30px;
+    }
+
+    .logo img {
+      width: 55px;
+      height: 55px;
+    }
+
+    .company-info {
+      padding: 45px 5% 15px;
+    }
+
+    .tabs {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .tabs a {
+      font-size: 13px;
+    }
+
+    .content h2 {
+      font-size: 16px;
+    }
+
+    .content p {
+      font-size: 13px;
+    }
+  }
+  body.vendorshop-page .page-main {
+    padding-top: 0 !important;
+}
+.page-main {
+    padding-top: 0 !important;
+}
+.custom-breadcrumbs {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+      margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+.vendor-search-container {
+    padding-top: 0 !important;
+}
+@media screen and (min-width: 769px), print {
+   .page-layout-1column.page-with-filter .column.main {
+       padding-top: 0 !important;
+   }
+}
+/* Product Cards */
+/* Grid */
+  .u-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  }
+
+  /* Card */
+  .u-card {
+    background: #fff;
+    border: 1px solid #e6edf7;
+    border-radius: 14px;
+    padding: 16px;
+    position: relative;
+    box-shadow: 0 1px 0 rgba(16,24,40,.02);
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow .18s ease, transform .18s ease;
+  }
+  .u-card:hover { box-shadow: 0 8px 24px rgba(16,24,40,.08); transform: translateY(-2px); }
+
+  /* Image area */
+  .u-imgbox{
+    position: relative;
+    border-radius: 12px;
+    background:#f6f8ff;
+    height: 170px;
+    display:flex; align-items:center; justify-content:center;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .u-imgbox img{
+    width: 88%;
+    height: 88%;
+    object-fit: contain;
+    display:block;
+  }
+
+  /* Fav (heart) */
+  .u-fav{
+    position:absolute; top:10px; right:10px;
+    width:36px; height:36px; border-radius:10px;
+    background:#fff; border:1px solid #e6edf7;
+    display:grid; place-items:center; color:#5b8bff; cursor:pointer;
+    box-shadow:0 2px 8px rgba(16,24,40,.06);
+  }
+  .u-fav svg{ width:18px; height:18px; }
+
+  /* Content */
+  .u-title{
+    font-size:18px; line-height:1.25; font-weight:700; color:#111827;
+    margin: 0 0 8px;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+    min-height: 45px; /* two lines space so all cards align */
+  }
+  .u-price{
+    font-size:16px; color:#111827; font-weight:600; margin-bottom: 14px;
+  }
+  .u-divider{ height:1px; background:#eef2f7; margin: 2px 0 12px; border:0; }
+
+  .u-brand{
+    display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:6px;
+  }
+  .u-verified{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:18px; height:18px; border-radius:999px; background:#eaf2ff; color:#2d62f0;
+  }
+  .u-country{
+    display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:14px;
+  }
+  .u-flag{
+    width:26px; height:18px; border-radius:4px; background:#e6f6ea; display:inline-block;
+  }
+
+  .u-cta{
+    margin-top: 16px;
+    width:100%; height:48px; border-radius:12px;
+    border:1px solid #2d62f0; background:#fff; color:#2d62f0;
+    font-weight:600; font-size:16px; cursor:pointer;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+  }
+  .u-cta:hover{ background:#f2f6ff; box-shadow:0 2px 8px rgba(45,98,240,.15); }
+</style>
+
+<!-- Breadcrumb -->
+<div class="breadcrumb">
+  <a href="#">Home</a> <span>/</span>
+  <a href="#">Vendors</a> <span>/</span>
+  <span><?= showData($name) ?></span>
+</div>
+
+<!-- Banner + Logo -->
+<div class="banner-container">
+  <?php
+// Get the banner URL from the block
+$bannerUrl = $block->getBannerUrl();
+//echo "ho".$bannerUrl;
+?>
+
+
+    <div class="banner">
+      <?php if ($bannerUrl): ?>
+        <img src="<?= $block->escapeUrl($bannerUrl) ?>" alt="Seller Banner" />
+        <?php endif; ?>
+    </div>
+
+  
+  <div class="logo">
+    <?php if ($logoUrl): ?>
+      <img src="<?= $logoUrl ?>" alt="<?= showData($name) ?> Logo">
+    <?php else: ?>
+      <div>No Logo</div>
+    <?php endif; ?>
+  </div>
+</div>
+
+<!-- Company Info -->
+<div class="company-info">
+  <h1><?= showData($name) ?></h1>
+  <p><?= showData($businessCategory) ?></p>
+</div>
+
+<!-- Tabs -->
+<div class="tabs">
+  <a class="tab-link active" data-tab="about">About</a>
+  <a class="tab-link" data-tab="products">Products</a>
+  <a class="tab-link" data-tab="contact">Contact Info</a>
+  <a class="tab-link" data-tab="certificates">Certificates</a>
+  <a class="tab-link" data-tab="catalog">Catalog</a>
+  <a class="tab-link" data-tab="location">Location</a>
+  <a class="tab-link" data-tab="reviews">Reviews</a>
+</div>
+
+<!-- Content -->
+<div class="content" id="tab-content">
+  <div id="about" class="tab-content active">
+    <h2>ABOUT</h2>
+    <p><?= showData($description) ?></p>
+  </div>
+
+   <div id="products" class="tab-content">
+      <?php
+        $productCollectionFactory = $objectManager->get(\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class);
+        $collection = $productCollectionFactory->create()
+            ->addAttributeToSelect(['name', 'price', 'small_image'])
+            ->addAttributeToFilter('vendor_id', $vendorId)
+            ->addAttributeToFilter('status', 1)
+            ->addAttributeToFilter('visibility', ['neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE])
+            ->setPageSize(10);
+
+        $_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+       
+        ?>
+        
+      <h2>PRODUCTS</h2>
+        <div class="u-grid">
+        <?php if ($collection->getSize()): ?>
+           
+            <?php foreach ($collection as $_product): ?>
+                <article class="u-card">
+                  <?php  $imageUrl = $_imageHelper->init($_product, 'category_page_grid')->getUrl();?>
+                    <a href="<?= $_product->getProductUrl() ?>" class="u-imgbox">
+                        <img src="<?= $imageUrl ?>" 
+                            alt="<?= $block->escapeHtml($_product->getName()); ?>" style="max-width:100%;height:auto;display:block;object-fit:cover;">
+                            <span class="u-fav" title="<?= $block->escapeHtmlAttr(__('Save')); ?>">
+                            <!-- heart outline -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
+                            </svg>
+                            </span>        
+                    </a>
+       <h3 class="u-title"><?= $block->escapeHtml($_product->getName()); ?></h3>
+        <div class="u-price"><?= $block->getProductPrice($_product); ?> <span>/ 1 pcs</span>
+        </div>
+         <hr class="u-divider" />
+          <div class="u-brand">
+          <span><?= showData($name) ?: 'N/A'; ?></span>
+        </div>
+
+
+           <div class="u-country">
+          <span class="u-flag" aria-hidden="true"></span>
+          <span> <?= $country ?: 'N/A'; ?></span>
+        </div>
+        <button class="u-cta" type="button"><?= $block->escapeHtml(__('Add to Quote')); ?></button>
+      </article>
+    <?php endforeach; ?>
+    </div>
+     <?php else: ?>
+            <p>No products found for this vendor.</p>
+        <?php endif; ?>
+</div>
+
+
+
+  <div id="contact" class="tab-content">
+    <h2>CONTACT INFO</h2>
+    <p><strong>Contact Name:</strong> <?= showData($contactName) ?></p>
+    <p><strong>Email:</strong> <?= showData($email) ?></p>
+    <p><strong>Phone:</strong> <?= showData($telephone) ?></p>
+    <p><strong>Address:</strong> <?= showData("$street, $city, $region, $postcode, $country") ?></p>
+    <p><strong>Fax:</strong> <?= showData($fax) ?></p>
+</div>
+
+  <div id="certificates" class="tab-content">
+    <h2>CERTIFICATES</h2>
+    <?php if ($certificatePath): 
+      $certificateUrl = $mediaUrl . $certificatePath; ?>
+      <a href="<?= $block->escapeUrl($certificateUrl) ?>" download>Download Certificate</a>
+    <?php else: ?>
+      <p>No certificates available.</p>
+    <?php endif; ?>
+  </div>
+
+  <div id="catalog" class="tab-content">
+    <h2>CATALOG</h2>
+    <p>Catalog content goes here.</p>
+  </div>
+
+  <div id="location" class="tab-content">
+    <h2>LOCATION</h2>
+    <p>Location content goes here.</p>
+  </div>
+
+  <div id="reviews" class="tab-content">
+    <h2>REVIEWS</h2>
+    <p>Reviews content goes here.</p>
+  </div>
+</div>
+
+<!-- JavaScript for Tab Functionality -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const tabs = document.querySelectorAll('.tab-link');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', function () {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.classList.remove('active'));
+
+        this.classList.add('active');
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  });
+</script>

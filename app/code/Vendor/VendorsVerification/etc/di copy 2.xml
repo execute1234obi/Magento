@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">        
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="vendor_verification_data_source" xsi:type="string">Vendor\VendorsVerification\Model\ResourceModel\VendorVerification\Grid\Collection</item>                
+            </argument>
+        </arguments>
+    </type>    
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="vendor_verification_admin_data_source" xsi:type="string">Vendor\VendorsVerification\Model\ResourceModel\VendorVerification\Admin\Grid\Collection</item>                
+            </argument>
+        </arguments>
+    </type>    
+    <type name="Magento\Quote\Model\Quote\Item\ToOrderItem">
+        <plugin name="verificationid_to_order_item" type="Vendor\VendorsVerification\Model\Plugin\Quote\VerificationIdToOrderItem"/>
+    </type>
+</config>

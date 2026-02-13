@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Reports:etc/reports.xml">
+    <group name="visitorcountry" label="Visitor Country Reports">
+        <report id="report_visitorcountry_visited_aggregated" 
+                label="Visitor Country Visited Report" 
+                resource="Business_VisitorcountryReport::visitorcountry" />
+    </group>
+</config>

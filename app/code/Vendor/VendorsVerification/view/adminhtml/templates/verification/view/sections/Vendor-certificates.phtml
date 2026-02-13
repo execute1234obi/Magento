@@ -1,0 +1,100 @@
+<!--START Cert and doc Edit Form-->
+<div id="verification-cert-modal" style="display:none;">
+<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS); ?>"
+      name="verification-businesscert-form"
+      id="verification-businesscerto-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>">
+    
+    <fieldset class="fieldset">
+                         <!--  Business Documents  -->            
+                           <legend class="legend"><span><?php echo __('Documents') ?>vru </span></legend><br />                       
+                              <div class="row">
+                                  <div class="fields col-md-10">
+	                                   <div class="field name required">
+		                                   <label  for="commercialregistcert'"><span><?php echo __('Commercial Registration Certificate') ?></span></label>
+		                                   <div class="control">
+                                                  <div class="upload-wrapper" data-bind="scope: 'vendorregistcert'">
+						                              <!-- ko template: getTemplate() --><!-- /ko -->
+     			                                  </div>                
+                                             </div>
+                                            <label class="">[<?php echo __('Allowd File Types') ?> :"png", "jpg", "jpeg", "gif", "pdf", "doc", "docx","PDF"]</label>
+	                                   </div>                     
+                                   </div>                                  
+                              </div>
+                              <div class="row"><div>&nbsp;</div></div>
+                              <div class="row">
+                                  <div class="fields col-md-10">
+                                      <div class="field name required">
+		                                   <label  for="verification-additional-docs"><span><?php echo __('Additional Documents ') ?></span></label>
+		                                   <div class="control">
+                                                  <div class="upload-wrapper" data-bind="scope: 'vendoradditionaldocs'">
+						                              <!-- ko template: getTemplate() --><!-- /ko -->
+     			                                  </div>                
+                                            </div>
+                                            <label class="">[<?php echo __('Allowd File Types') ?>:"png", "jpg", "jpeg", "gif", "pdf", "doc", "docx","PDF"]</label>
+	                                   </div>                     
+                                   </div>                                      
+                               </div>                                 
+                           <!--End Business Documents-->
+                        </fieldset>      
+	<div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+				 <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>		                   
+	</div>	
+</div>
+</form>
+<script type="text/x-magento-init">
+{
+".upload-wrapper": {
+   "Magento_Ui/js/core/app": {
+       "components": {
+           "vendorregistcert": {
+			   "dataScope": "vendorregistcert",
+                "source": "vendorregistcert",                
+                "component": "Vendor/js/custom-file-uploader",
+                "template": "ui/form/element/uploader/uploader",                
+                "previewTmpl":"Vendor_VendorsVerification/uploader/preview",
+                "allowedExtensions": ["png", "jpg", "jpeg", "gif","pdf","doc","docx","pdf"],                
+                "isMultipleFiles":false,                 
+                "required":true,
+                "inputName":"vendorregistcert",
+                "maxFileAllow":1,
+                "myUploadId":"vendorcert",
+               "uploaderConfig": {
+                    "url": "<?php echo $block->getUrl('vendorverification/uploader/ajax/',['fldname'=>'vendorregistcert']); ?>"
+               }               
+               
+            }
+        }
+   }
+ }
+}
+</script>
+<script type="text/x-magento-init">
+{
+".upload-wrapper": {
+   "Magento_Ui/js/core/app": {
+       "components": {
+           "vendoradditionaldocs": {
+               "dataScope": "vendoradditionaldocs",
+               "source"   : "vendoradditionaldocs",
+               "component": "Vendor_VendorsVerification/js/custom-file-uploader",
+               "template": "ui/form/element/uploader/uploader",                
+                "previewTmpl":"Vendor_VendorsVerification/uploader/preview-others",
+                "allowedExtensions": ["png", "jpg", "jpeg", "gif","pdf","doc","docx","pdf"],                
+                "isMultipleFiles":true, 
+                "inputName":"vendoradditionaldocs",
+                "maxFileAllow":2,
+                "myUploadId":"vendodocs",
+               "uploaderConfig": {
+                    "url": "<?php echo $block->getUrl('vendorverification/uploader/ajax/',['fldname'=>'vendoradditionaldocs']); ?>"
+               }
+            }
+        }
+   }
+ }
+}
+</script>
+<!--END Cert and doc Edit Form-->
+

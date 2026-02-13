@@ -1,0 +1,166 @@
+<?php
+echo '<div style="background:#fffae6;border:1px solid #f0c36d;padding:6px;">
+BLOCK: documents.phtml LOADED
+</div>';
+?>
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View */
+
+$vendor = $block->getVendor();
+$vendorVerification = $block->getVendorVerification();
+$verificationId = $vendorVerification ? (int)$vendorVerification->getId() : 0;
+
+/** ============================
+ * CERTIFICATE & DOCUMENT DATA
+ * ============================ */
+$certVerificationData = null;
+$certDetailId = 0;
+$arrCertDocsData = [];
+
+if ($verificationId) {
+    $certVerificationData = $block->getVerificationSectionData(
+        $verificationId,
+        \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+    );
+
+    if ($certVerificationData && $certVerificationData->getId()) {
+        $certDetailId = (int)$certVerificationData->getDetailId();
+        $arrCertDocsData = $block->convertVerificationData(
+            $certVerificationData->getData('vendor_data')
+        );
+    }
+}
+
+$folderName = 'vendor-verification-documents/';
+?>
+
+<!-- ================= CERTIFICATE & DOCUMENTS ================= -->
+<div class="col-md-6">
+    <div class="verification-section">
+
+        <div class="header">
+            <h2><?= __('Certificates and Documents') ?></h2>
+            <div>
+
+                <?php if (
+                    $certVerificationData &&
+                    $certVerificationData->getStatus() ==
+                    \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT
+                ): ?>
+                    <button type="button"
+                            class="btn btn-default btn-flat pull-right fa fa-pencil verification-edit"
+                            data-modal-id="verification-cert-modal">
+                        <span><?= __('Edit') ?></span>
+                    </button>
+                <?php endif; ?>
+
+                <?php
+                $commentsCount = $block->getCommentsCounts(
+                    $verificationId,
+                    $certDetailId,
+                    \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+                );
+                ?>
+                <button type="button"
+                        class="btn btn-link pull-right verification-showcomment"
+                        data-verificationid="<?= $verificationId ?>"
+                        data-verifidtlid="<?= $certDetailId ?>"
+                        data-verifigroupid="<?= \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS ?>">
+                    <i class="fa fa-comment"></i>
+                    <span><?= __('%1 Comments', $commentsCount) ?></span>
+                </button>
+            </div>
+        </div>
+
+        <div class="verification-tbl">
+            <table class="table table-striped">
+                <tbody>
+
+                <tr>
+                    <td><?= __('Status') ?></td>
+                    <td>
+                        <?= $certVerificationData && $certVerificationData->getId()
+                            ? $block->getStatusLabel($certVerificationData->getStatus())
+                            : __('Pending'); ?>
+                    </td>
+                </tr>
+
+                <!-- Commercial Certificate -->
+                <tr>
+                    <td><?= __('Commercial Registration Certificate') ?></td>
+                    <td>
+                        <?php if (!empty($arrCertDocsData['vendorregistcert'])): ?>
+                            <a target="_blank"
+                               href="<?= $block->getMediaUrl() . $folderName . '/' . $arrCertDocsData['vendorregistcert']; ?>">
+                                <i class="fa fa-file"></i>
+                                <?= $arrCertDocsData['vendorregistcert']; ?>
+                            </a>
+                        <?php else: ?>
+                            <?= __('Not Uploaded') ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+
+                <!-- Additional Documents -->
+                <?php if (!empty($arrCertDocsData['vendoradditionaldocs']) && is_array($arrCertDocsData['vendoradditionaldocs'])): ?>
+                    <tr>
+                        <td><?= __('Other Documents') ?></td>
+                        <td>
+                            <ul>
+                                <?php foreach ($arrCertDocsData['vendoradditionaldocs'] as $doc): ?>
+                                    <li>
+                                        <a target="_blank"
+                                           href="<?= $block->getMediaUrl() . $folderName . '/' . $doc; ?>">
+                                            <i class="fa fa-file"></i>
+                                            <?= $doc; ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- ================= END CERTIFICATE & DOCUMENTS ================= -->
+
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="verification-cert-modal" style="display:none;">
+    <form class="form verification"
+          action="<?= $block->getEditActionUrl(
+              $verificationId,
+              $certDetailId,
+              \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+          ); ?>"
+          method="post"
+          enctype="multipart/form-data">
+
+        <fieldset class="fieldset">
+            <legend class="legend"><span><?= __('Documents') ?></span></legend>
+
+            <div class="form-group">
+                <label><?= __('Commercial Registration Certificate') ?></label>
+                <div class="upload-wrapper" data-bind="scope: 'vendorregistcert'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><?= __('Additional Documents') ?></label>
+                <div class="upload-wrapper" data-bind="scope: 'vendoradditionaldocs'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="page-main-actions">
+            <button type="submit" class="btn btn-primary"><?= __('Update') ?></button>
+        </div>
+    </form>
+</div>
+<!-- ================= END EDIT MODAL ================= -->

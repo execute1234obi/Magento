@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Custom\HsCode\Ui\DataProvider\HsCodeDataProvider">
+        <arguments>
+            <argument name="hsCodeCollectionFactory" xsi:type="object">Custom\HsCode\Model\ResourceModel\HsCode\CollectionFactory</argument>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
+</config>

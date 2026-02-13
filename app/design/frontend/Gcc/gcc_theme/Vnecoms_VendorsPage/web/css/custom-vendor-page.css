@@ -1,0 +1,161 @@
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fb;
+      color: #333;
+    }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      font-size: 14px;
+      color: #666;
+      padding: 15px 5%;
+      word-wrap: break-word;
+    }
+    .breadcrumb a {
+      color: #666;
+      text-decoration: none;
+    }
+    .breadcrumb span {
+      margin: 0 5px;
+    }
+
+    /* Banner */
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      background: url("https://plus.unsplash.com/premium_photo-1738777152204-0ec9ab3502cc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D") no-repeat center center/cover;
+    }
+
+    /* Logo */
+    .logo {
+      position: absolute;
+      bottom: -40px;
+      left: 5%;
+      background: #fff;
+      border-radius: 50%;
+      padding: 5px;
+    }
+    .logo img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+    }
+
+    /* Company Info */
+    .company-info {
+      padding: 60px 5% 20px;
+    }
+    .company-info h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+    .company-info p {
+      font-size: 16px;
+      color: #666;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      border-bottom: 1px solid #e0e0e0;
+      margin: 0 5%;
+    }
+    .tabs a {
+      padding: 12px 0;
+      text-decoration: none;
+      font-size: 15px;
+      color: #1E40AF;
+      position: relative;
+      cursor: pointer;
+    }
+    .tabs a.active {
+      color: #1E40AF;
+      font-weight: 600;
+      font-weight: bold;
+    }
+    .tabs a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -1px;
+      width: 100%;
+      height: 2px;
+      background: #1E40AF;
+    }
+
+    /* Content */
+    .content {
+      padding: 30px 5%;
+    }
+    .content h2 {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+    .content p {
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 15px;
+      color: #444;
+    }
+
+    /* ------------------
+       Responsive Styles
+    ------------------ */
+    @media (max-width: 768px) {
+      .banner {
+        height: 180px;
+      }
+      .logo img {
+        width: 65px;
+        height: 65px;
+      }
+      .company-info h1 {
+        font-size: 22px;
+      }
+      .company-info p {
+        font-size: 14px;
+      }
+      .tabs {
+        gap: 15px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .banner {
+        height: 150px;
+      }
+      .logo {
+        bottom: -30px;
+      }
+      .logo img {
+        width: 55px;
+        height: 55px;
+      }
+      .company-info {
+        padding: 45px 5% 15px;
+      }
+      .company-info h1 {
+        font-size: 20px;
+      }
+      .tabs {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+      .tabs a {
+        font-size: 13px;
+
+      }
+      .content h2 {
+        font-size: 16px;
+      }
+      .content p {
+        font-size: 13px;
+      }
+    }

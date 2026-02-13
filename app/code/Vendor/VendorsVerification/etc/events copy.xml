@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_invoice_save_commit_after">
+    	<!-- vendor verification Update  -->
+        <observer name="Vendor_vendorverificationfees_invoice_save_after" instance="Vendor\VendorsVerification\Observer\InvoiceSaveAfterObserver" />
+    </event>
+    <event name="sales_order_save_after">
+    <observer name="auto_create_invoice"
+              instance="Vendor\VendorsVerification\Observer\AutoCreateInvoice"/>
+</event>
+     <!-- ✅ PAYMENT CONFIRMED -->
+    <event name="sales_order_invoice_pay">
+        <observer name="vendor_verification_mark_paid"
+                  instance="Vendor\VendorsVerification\Observer\InvoicePaid"/>
+    </event>
+    <event name="checkout_onepage_controller_success_action">
+    	<observer name="vefiricationfees_order_success" instance="Vendor\VendorsVerification\Observer\Success"  />    	    	
+	</event>
+</config>

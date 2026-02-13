@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="google-maps-api" type="host">https://maps.googleapis.com</value>
+                <value id="google-maps-gstatic" type="host">https://maps.gstatic.com</value>
+                <value id="google-apis" type="host">https://*.googleapis.com</value>
+                <value id="google-static" type="host">https://*.gstatic.com</value>
+                <value id="google-tag-manager" type="host">https://www.googletagmanager.com</value> </values>
+        </policy>
+
+        <policy id="style-src">
+            <values>
+                <value id="google-maps-styles" type="host">https://fonts.googleapis.com</value>
+                <value id="google-apis-styles" type="host">https://*.googleapis.com</value>
+                <value id="google-static-styles" type="host">https://*.gstatic.com</value>
+            </values>
+        </policy>
+
+        <policy id="img-src">
+            <values>
+                <value id="google-maps-images" type="host">https://maps.gstatic.com</value>
+                <value id="google-maps-images-2" type="host">https://*.google.com</value>
+                <value id="google-maps-images-3" type="host">https://*.googleapis.com</value>
+                <value id="google-maps-images-4" type="host">data:</value> </values>
+        </policy>
+
+        <policy id="connect-src">
+            <values>
+                <value id="google-maps-connect" type="host">https://maps.googleapis.com</value>
+                <value id="google-apis-connect" type="host">https://*.googleapis.com</value>
+                <value id="google-static-connect" type="host">https://*.gstatic.com</value>
+                <value id="localhost-socket-io" type="host">http://localhost:2020</value>
+            </values>
+        </policy>
+
+        <policy id="frame-src">
+            <values>
+                <value id="google-maps-frame" type="host">https://maps.googleapis.com</value>
+                <value id="google-apis-frame" type="host">https://*.googleapis.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

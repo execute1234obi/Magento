@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <!-- Removes logo, search box, minicart -->
+        <referenceBlock name="logo" remove="true"/>
+        <referenceBlock name="top.search" remove="true"/>
+        <referenceBlock name="minicart" remove="true"/>
+        <referenceContainer name="header.panel" remove="true"/>
+        <referenceContainer name="top.header" remove="true"/>
+        <referenceContainer name="header.container" remove="true"/>
+        <referenceContainer name="page.top" remove="true"/>
+
+        <!-- Optional: custom header -->
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.header"
+                   template="Magento_Theme::html/custom_header.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

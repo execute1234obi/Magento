@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <!-- Remove Top Navigation -->
+        <referenceBlock name="catalog.topnav" remove="true" />
+
+        <!-- Add Custom Search Box -->
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.search.box"
+                   template="Magento_CatalogSearch::custom-search-box.phtml"
+                   after="header.panel" />
+        </referenceContainer>
+
+        <!-- Remove Compare and Wishlist -->
+        <referenceBlock name="catalog.compare.sidebar" remove="true" />
+        <referenceBlock name="wishlist_sidebar" remove="true" />
+
+        <!-- Left Sidebar -->
+          <referenceContainer name="sidebar.main">
+         <block class="Magento\LayeredNavigation\Block\Navigation"
+                   name="catalogsearch.leftnav"
+                   template="Magento_LayeredNavigation::layer/view.phtml"
+                   before="-">
+
+                <block class="Magento\LayeredNavigation\Block\Navigation\State"
+                       name="catalogsearch.navigation.state"
+                       as="state" />
+
+                <block class="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"
+                       name="catalogsearch.navigation.renderer"
+                       as="renderer"
+                       template="Magento_LayeredNavigation::layer/filter.phtml">
+                    <arguments>
+                        <argument name="product_layer_view_model" xsi:type="object">
+                            Magento\LayeredNavigation\ViewModel\Layer\Filter
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+
+                <!-- Custom Vendor Sidebar -->
+            <container name="vendors.sidebar.wrapper"
+                       htmlTag="div"
+                       htmlId="vendor-sidebar"
+                       htmlClass="sidebar-wrapper"
+                       after="product.sidebar.wrapper">
+                <block class="Custom\SearchExtended\Block\Index\Vendors"
+                       name="custom.search.filters"
+                       template="Magento_CatalogSearch::custom-filters.phtml" />
+            </container>
+        </referenceContainer>
+
+        <!-- Main Content Area -->
+        <referenceContainer name="content">
+            <!-- You can uncomment this block if you're using the Vendors tab -->
+            <!--
+            <block class="Custom\SearchExtended\Block\Index\Vendors"
+                   name="search.result.list.vendors"
+                   before="-"
+                   cacheable="false"
+                   template="Custom_SearchExtended::index/vnecoms/vendors/vendors.phtml" />
+            -->
+
+            <block class="Magento\Framework\View\Element\Template"
+                   name="search.result.list.products"
+                   after="search.result.list.vendors"
+                   cacheable="false">
+                <arguments>
+                    <argument name="index" xsi:type="string">magento_catalog_product</argument>
+                    <argument name="title" xsi:type="string" translate="true">Products</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <!-- Newsletter Block After Main Content -->
+        <referenceContainer name="main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.newsletter"
+                   template="Magento_Theme::html/newsletter.phtml"
+                   after="content" />
+        </referenceContainer>
+
+    </body>
+</page>

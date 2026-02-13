@@ -1,0 +1,29 @@
+/* Vnecoms Header Bar (जहाँ 'VNECOMS MARKETPLACE' लिखा है) */
+body.page-vendor-dashboard .main-header .navbar-static-top {
+    background-color: #ff4500 !important; /* उदाहरण के लिए चमकीला नारंगी */
+    border-bottom: 3px solid #cc3700 !important;
+}
+
+/* बाएँ हाथ का मेन्यू बार (Dashboard, Catalog, etc.) */
+body.page-vendor-dashboard .main-sidebar {
+    background: #1a2226 !important; /* गहरा काला/ग्रे */
+}
+
+/* मेन्यू लिंक (Dashboard, Catalog) का टेक्स्ट रंग */
+body.page-vendor-dashboard .sidebar-menu > li > a {
+    color: #e6e6e6 !important; 
+    font-weight: bold !important;
+}
+
+/* 'Save Config' बटन का रंग */
+body.page-vendor-dashboard .page-actions-inner .action-save {
+    background-color: #28a745 !important; /* हरा */
+    border-color: #28a745 !important;
+}
+img, video, embed, object {
+    max-width: 100%;
+    background: aqua;
+}
+.skin-blue .main-header .navbar {
+    background-color: aqua!important;
+}

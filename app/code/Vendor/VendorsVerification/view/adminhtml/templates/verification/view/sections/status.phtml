@@ -1,0 +1,67 @@
+<?php 
+$vendorVerification = $block->getVendorVerification();
+$verificationId =  $vendorVerification->getId();
+?>
+<div class="admin__page-section-item-content">										
+ <table class="admin__table-secondary">
+  <tbody>
+	  <tr>      
+      <td><?php echo __('Verification ID #') ?></td>
+      <td>
+		  : <strong><?php echo $vendorVerification->getIncId();?></strong>
+      </td>      
+    </tr>
+	  <tr>      
+      <td><?php echo __('Seller') ?></td>
+      <td>
+		  : <strong><?php echo  $block->getVendor()->getName();?></strong> [ <a target="_blank" href="<?php echo $block->getUrl('vendors/index/edit/',array('id'=>$block->getVendor()->getId()))?>"><?php echo $block->getVendor()->getVendorId();?></a> ]
+		  
+      </td>      
+    </tr>    
+	<tr>      
+      <td><?php echo __('Verification Status') ?></td>
+      <td>
+		  : <?php echo $block->getvendorVerificationStatusLabel($vendorVerification->getIsVerified());?>
+		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Payment Status') ?></td>
+      <td>
+		  : <?php echo $block->getPaymentStatusLabel($vendorVerification->getIsPaid());?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Fees') ?></td>
+      <td>
+		  : <?php echo $block->getFormatedPrice($vendorVerification->getAmount());?>		  
+      </td>      
+    </tr>
+    <td><?php echo __('Verification Duration') ?></td>
+      <td>
+		  : <?php echo $vendorVerification->getMonthsBooked().__(' Months');?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Start Date') ?></td>
+      <td>
+		  : <?php echo ($vendorVerification->getFromDate()) ? $block->getFormatedDate($vendorVerification->getFromDate()):"N/A";?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Expire Date') ?></td>
+      <td>		  
+		  : <?php echo ($vendorVerification->getToDate()) ? $block->getFormatedDate($vendorVerification->getToDate()):"N/A";?>		  
+      </td>      
+    </tr>
+    <tr>
+		<td colspan="2">
+			<span style="color:red;font-weight:800;"><?php echo __('NOTE') ?>:</span>
+		    <?php echo __('System will not update verification start and end date after vendor fully Verified first time.') ?>
+		 </td>
+    </tr>
+   </tbody> 
+ </table>
+</div>
+
+

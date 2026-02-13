@@ -1,0 +1,51 @@
+<style>
+.mst-search__item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+}
+
+.vendor-logo {
+    width: 40px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.vendor-title {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.vendor-detail {
+    font-size: 0.9em;
+    color: #666;
+}
+</style>
+
+<div style="color:red;font-weight:bold;">DEBUG TEMPLATE LOADED ✅</div>
+
+<!-- ko foreach: indexes -->
+    <!-- ko if: identifier === 'vnecoms_vendors' -->
+        <div class="mst-search-group">
+            <h3 data-bind="text: title"></h3>
+            <ul>
+                <!-- ko foreach: items -->
+                    <li class="mst-search__item">
+                        <a data-bind="attr: { href: url }">
+                            <!-- ko if: logo -->
+                                <img data-bind="attr: { src: logo, alt: title }" class="vendor-logo" />
+                            <!-- /ko -->
+
+                            <span class="vendor-title" data-bind="text: title"></span>
+
+                            <!-- ko if: detail -->
+                                <div class="vendor-detail" data-bind="text: detail"></div>
+                            <!-- /ko -->
+                        </a>
+                    </li>
+                <!-- /ko -->
+            </ul>
+        </div>
+    <!-- /ko -->
+<!-- /ko -->

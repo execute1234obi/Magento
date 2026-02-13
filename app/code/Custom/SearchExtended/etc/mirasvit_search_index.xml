@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<indexes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:mirasvit:Search:etc/indexes.xsd">
+
+    <index name="vnecoms_vendors" instance="Custom\SearchExtended\Index\Vnecoms\Vendors\Index">
+        <title>Vendors</title>
+        <identifier>vnecoms_vendors</identifier>
+        <attributes>
+            <attribute name="name"/>
+            <attribute name="description"/>
+        </attributes>
+    </index>
+
+</indexes>

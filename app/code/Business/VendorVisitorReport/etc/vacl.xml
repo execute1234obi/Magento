@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Vnecoms_Vendors::vendor">            	
+                <resource id="Business_VendorVisitorReport::vendorvisitorreport" title="Report for Vendor Visitor" translate="title" sortOrder="25">
+                    <resource id="Business_VendorVisitorReport::vendorvisitorreport_manage" title="Visitor's Report" translate="title" sortOrder="10">
+                    	<resource id="Business_VendorVisitorReport::vendorvisitorreport_actions" title="Actions" translate="title" sortOrder="10">
+                    		<resource id="Business_VendorVisitorReport::vendorvisitorreport_action_view" title="View" translate="title" sortOrder="10" />
+                    		<resource id="Business_VendorVisitorReport::vendorvisitorreport_action_download" title="Download" translate="title" sortOrder="10" />
+                    	</resource>
+                    </resource>
+                </resource>
+            </resource>
+        </resources>
+    </acl>
+</config>

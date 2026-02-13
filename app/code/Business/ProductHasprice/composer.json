@@ -1,0 +1,20 @@
+{
+    "name": "business/ProductHasprice",
+    "description": "M2 Module For  Prouct Price",
+    "require": {
+        "php": "^8.1"
+    },
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": [
+        "EULA"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Business\\ProductHasprice\\": ""
+        }
+    }
+}

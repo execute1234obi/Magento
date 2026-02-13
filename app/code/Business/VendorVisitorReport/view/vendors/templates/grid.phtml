@@ -1,0 +1,152 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/**
+ * @var $block \Magento\Reports\Block\Adminhtml\Grid
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+?>
+
+<?php if ($block): ?>
+    <?php if ($block->canDisplayContainer()): ?>
+        <div id="<?= $block->escapeHtmlAttr($block->getId()) ?>">
+    <?php else: ?>
+        <?= $block->getLayout()->getMessagesBlock()->getGroupedHtml() ?>
+    <?php endif; ?>
+
+    <?php if ($block->getStoreSwitcherVisibility() || $block->getDateFilterVisibility()): ?>
+        <div class="admin__data-grid-header admin__data-grid-toolbar">
+            <div class="admin__data-grid-header-row">
+
+                <?php if ($block->getDateFilterVisibility()): ?>
+                    <div class="admin__filter-actions" data-role="filter-form"
+                         id="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_range')) ?>">
+
+                        <span class="field-row">
+                            <label for="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_from')) ?>"
+                                   class="admin__control-support-text">
+                                <span><?= $block->escapeHtml(__('From')) ?>:</span>
+                            </label>
+                            <input class="input-text no-changes required-entry admin__control-text"
+                                   type="text"
+                                   id="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_from')) ?>"
+                                   name="report_from"
+                                   value="<?= $block->escapeHtmlAttr($block->getFilter('report_from')) ?>">
+                            <span id="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_from_advice')) ?>"></span>
+                        </span>
+
+                        <span class="field-row">
+                            <label for="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_to')) ?>"
+                                   class="admin__control-support-text">
+                                <span><?= $block->escapeHtml(__('To')) ?>:</span>
+                            </label>
+                            <input class="input-text no-changes required-entry admin__control-text"
+                                   type="text"
+                                   id="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_to')) ?>"
+                                   name="report_to"
+                                   value="<?= $block->escapeHtmlAttr($block->getFilter('report_to')) ?>">
+                            <span id="<?= $block->escapeHtmlAttr($block->getSuffixId('period_date_to_advice')) ?>"></span>
+                        </span>
+
+                        <span class="field-row admin__control-filter">
+                            <label for="<?= $block->escapeHtmlAttr($block->getSuffixId('report_period')) ?>"
+                                   class="admin__control-support-text">
+                                <span><?= $block->escapeHtml(__('Show By')) ?>:</span>
+                            </label>
+                            <select name="report_period"
+                                    id="<?= $block->escapeHtmlAttr($block->getSuffixId('report_period')) ?>"
+                                    class="admin__control-select">
+                                <?php foreach ($block->getPeriods() as $_value => $_label): ?>
+                                    <option value="<?= $block->escapeHtmlAttr($_value) ?>"
+                                        <?php if ($block->getFilter('report_period') == $_value): ?>
+                                            selected
+                                        <?php endif; ?>>
+                                        <?= $block->escapeHtml($_label) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?= $block->getRefreshButtonHtml() ?>
+                        </span>
+
+                        <?php
+                        $scriptString = <<<script
+require(["jquery","mage/calendar"], function($){
+    $("#{$block->escapeJs($block->getSuffixId('period_date_range'))}").dateRange({
+        dateFormat:"{$block->escapeJs($block->getDateFormat())}",
+        buttonText:"{$block->escapeJs(__('Select Date'))}",
+        from:{id:"{$block->escapeJs($block->getSuffixId('period_date_from'))}"},
+        to:{id:"{$block->escapeJs($block->getSuffixId('period_date_to'))}"}
+    });
+});
+script;
+                        ?>
+                        <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($block->getChildBlock('grid.export')): ?>
+                    <?= $block->getChildHtml('grid.export') ?>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="admin__data-grid-wrap admin__data-grid-wrap-static">
+        <table class="data-grid" id="<?= $block->escapeHtmlAttr($block->getId()) ?>_table">
+            <?= $block->getChildHtml('grid.columnSet') ?>
+        </table>
+          <!-- Pagination / Footer -->
+    <div class="admin__data-grid-pager-wrap">
+        <?php if ($block->getChildBlock('grid.pager')): ?>
+            <?= $block->getChildHtml('grid.pager') ?>
+        <?php else: ?>
+            <!-- Fallback static pager UI -->
+            <div class="custom-grid-pager">
+                <div class="custom-grid-pager-left">
+                    <label for="limiter"><?= $block->escapeHtml(__('Show')) ?></label>
+                    <select id="limiter" class="admin__control-select">
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <div class="custom-grid-pager-right">
+                    <button type="button" class="pager-btn">&lsaquo;</button>
+                    <button type="button" class="pager-btn active">1</button>
+                    <button type="button" class="pager-btn">2</button>
+                    <span class="pager-dots">…</span>
+                    <button type="button" class="pager-btn">20</button>
+                    <button type="button" class="pager-btn">&rsaquo;</button>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+    </div>
+
+    </div>
+
+    <?php if ($block->canDisplayContainer()): ?>
+        <?php
+        $useAjax = $block->getUseAjax() ? $block->escapeJs($block->getUseAjax()) : '';
+        $scriptString = <<<script
+require(["jquery","validation","mage/mage","mage/adminhtml/grid"], function(jQuery){
+{$block->escapeJs($block->getJsObjectName())} = new varienGrid(
+    "{$block->escapeJs($block->getId())}",
+    "{$block->escapeJs($block->getGridUrl())}",
+    "{$block->escapeJs($block->getVarNamePage())}",
+    "{$block->escapeJs($block->getVarNameSort())}",
+    "{$block->escapeJs($block->getVarNameDir())}",
+    "{$block->escapeJs($block->getVarNameFilter())}"
+);
+{$block->escapeJs($block->getJsObjectName())}.useAjax = "{$useAjax}";
+});
+script;
+        ?>
+        <?= /* @noEscape */ $secureRenderer->renderTag('script', [], $scriptString, false) ?>
+    <?php endif; ?>
+<?php endif; ?>
+

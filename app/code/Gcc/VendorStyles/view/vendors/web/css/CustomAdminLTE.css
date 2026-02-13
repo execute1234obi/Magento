@@ -1,0 +1,333 @@
+.skin-blue .wrapper, .skin-blue .main-sidebar, .skin-blue .left-side {
+    background-color: #4B78B3;
+
+}
+/* COMMON MENU ICON STYLE */
+/* hide fontawesome */
+/* Hide font-awesome icon */
+#menu-vnecoms-vendors-dashboard i.fa-dashboard:before {
+    content: none !important;
+}
+
+/* Replace with SVG */
+#menu-vnecoms-vendors-dashboard i.fa-dashboard {
+    background: url("/pub/media/dashboard.svg") no-repeat center center;
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+/* Hide FontAwesome cube icon */
+#menu-vnecoms-vendors-catalog i.fa-cubes:before {
+    content: none !important;
+}
+
+/* Replace with SVG */
+#menu-vnecoms-vendors-catalog i.fa-cubes {
+    background: url("/pub/media/catalog.svg") no-repeat center center;
+    background-size: contain;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+/* REPORTS */
+
+/* FontAwesome icon hide */
+#menu-vnecoms-vendorsreport-report i.fa-pie-chart:before {
+    content: none !important;
+}
+
+/* SVG apply */
+#menu-vnecoms-vendorsreport-report i.fa-pie-chart {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin-right: 8px;
+
+    background-color: #ffffff;
+    -webkit-mask: url("/pub/media/reports.svg") no-repeat center;
+    mask: url("/pub/media/reports.svg") no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+/* =======================
+   MESSAGES MENU ICON
+   ======================= */
+
+/* hide font-awesome icon */
+#menu-vnecoms-vendorsmessage-messages > a > i.fa-envelope {
+    font-size: 0 !important;
+}
+
+/* add svg icon */
+#menu-vnecoms-vendorsmessage-messages > a > i.fa-envelope::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+
+    -webkit-mask: url("/pub/media/messages.svg") no-repeat center;
+    mask: url("/pub/media/messages.svg") no-repeat center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+/* =======================
+   REVIEWS MENU ICON
+   ======================= */
+
+/* hide default font-awesome circle icon */
+#menu-customvendor-hidevnecomsmenu-reviews-top-level > a > i.fa-circle-o {
+    font-size: 0 !important;
+}
+
+/* add svg icon */
+#menu-customvendor-hidevnecomsmenu-reviews-top-level > a > i.fa-circle-o::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+
+    -webkit-mask: url("/pub/media/reviews.svg") no-repeat center;
+    mask: url("/pub/media/reviews.svg") no-repeat center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+/* =======================
+   SUB ACCOUNTS MENU ICON
+   ======================= */
+
+/* hide default font-awesome users icon */
+#menu-vnecoms-vendorsquotation-subaccount > a > i.fa-users {
+    font-size: 0 !important;
+}
+
+/* add svg icon */
+#menu-vnecoms-vendorsquotation-subaccount > a > i.fa-users::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+
+    -webkit-mask: url("/pub/media/icon-sub-accounts.svg") no-repeat center;
+    mask: url("/pub/media/icon-sub-accounts.svg") no-repeat center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+/* =======================
+   CONFIGURATION MENU ICON
+   ======================= */
+
+/* hide default fa-cog icon */
+#menu-vnecoms-vendorsconfig-configuration > a > i.fa-cog {
+    font-size: 0 !important;
+}
+
+/* apply svg icon */
+#menu-vnecoms-vendorsconfig-configuration > a > i.fa-cog::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+
+    -webkit-mask: url("/pub/media/configuration.svg") no-repeat center;
+    mask: url("/pub/media/configuration.svg") no-repeat center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+#menu-vnecoms-vendors-vendorverification > a > i.icon-verifications {
+    margin-right: 8px;
+}
+
+/* =======================
+   VERIFICATION MENU ICON
+   ======================= */
+
+/* hide existing icon-verifications font icon */
+#menu-vnecoms-vendors-vendorverification > a > i.icon-verifications {
+    font-size: 0 !important;
+}
+
+/* apply verification svg */
+#menu-vnecoms-vendors-vendorverification > a > i.icon-verifications::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: #ffffff;
+
+    -webkit-mask: url("/pub/media/icon-verifications.svg") no-repeat center;
+    mask: url("/pub/media/icon-verifications.svg") no-repeat center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+/* =====================================
+   RIGHT TOGGLE ARROW – ALL PARENT MENUS
+   ===================================== */
+
+li.parent.level-0 > a > i.fa-angle-left {
+    transition: transform 0.25s ease;
+}
+
+/* open state */
+li.parent.level-0.active > a > i.fa-angle-left,
+li.parent.level-0.menu-open > a > i.fa-angle-left {
+    transform: rotate(-90deg);
+}
+/* =====================================
+   SUB MENU LEFT ICON – ALL LEVEL-1 MENUS
+   ===================================== */
+
+li.level-1 > a > i.fa-circle-o {
+    font-size: 0 !important;
+}
+
+li.level-1 > a > i.fa-circle-o::before {
+    content: "";
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+    margin-left: 6px;
+
+    background-color: #ffffff;
+
+    -webkit-mask: url("/pub/media/sub-menu-arrow.svg") no-repeat center;
+    mask: url("/pub/media/sub-menu-arrow.svg") no-repeat center;
+
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+/* consistent indentation for all sub menus */
+li.level-1 {
+    padding-left: 18px;
+}
+
+li.level-1 a {
+    position: relative;
+}
+/* spacing between icon & text (global) */
+li.level-0 > a > i:first-child {
+    margin-right: 10px;
+}
+
+/* hide default vnecoms logo image */
+.logo-lg img.logo-img {
+    display: none !important;
+}
+/* replace with custom logo */
+.logo-lg {
+    display: block;
+    width: 180px;           /* adjust if needed */
+    height: 50px;           /* adjust if needed */
+
+    background-image: url("/pub/media/Logo_large.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: contain;
+}
+
+/* hide vendor live chat / user info panel */
+#vlivechat-user-panel {
+    display: none !important;
+}
+/* hide vendor avatar upload / preview */
+label.file-uploader-preview {
+    display: none !important;
+}
+/* =====================================================
+   Dashboard Membership Card
+   ===================================================== */
+.box.box-primary {
+    background: #FFFFFF;
+    border: 1px solid #E8EAF1;
+    border-radius: 5px;
+    box-shadow: none;
+}
+.box-header.with-border {
+    border-bottom: 0px;
+}
+.box-header .box-title {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 26px;
+    color: #163172;
+    padding: 10px 10px 0;
+    margin: 0;
+}
+.box-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 10px;
+}
+.box-footer {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    border-top: 1px solid #f4f4f4;
+    padding: 10px;
+    background-color: #ffffff;
+}
+.small-box.no-bg {
+  background-color: #fff !important;
+    border: 1px solid #E8EAF1;
+    border-radius: 5px;
+    box-shadow: none;
+}
+
+.small-box.no-bg .inner {
+    font-weight: 700;
+    color: #0c2e63;
+}
+
+.small-box.no-bg .inner h3 {
+    font-size: 24px;
+    color: #1f376b;
+}
+
+.small-box.no-bg .inner p {
+    font-size: 16px;
+    color: #0c2e63;
+}
+
+.small-box.no-bg .icon {
+    color: #f0a02b; /* Customize icon color */
+    font-size: 30px;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.small-box.no-bg .icon i {
+    font-size: 40px;
+}
+/* for membership box  */
+.profile-visitor {
+    position: relative;
+}
+.block-membership-info {
+    margin-top: -110px;
+}
+@media (max-width: 767px) {
+    .block-membership-info {
+        margin-top: 0;
+    }
+}
+/* vendor-dashboard background */
+.content-wrapper, .right-side {
+    min-height: 100%;
+    background-color: #ffffff;
+    z-index: 800;
+}
+

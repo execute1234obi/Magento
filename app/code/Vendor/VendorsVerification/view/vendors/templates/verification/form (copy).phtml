@@ -1,0 +1,186 @@
+<h2>vendor verification Form</h2>
+<form class="form verification"
+      action="<?php //echo $block->getPostActionUrl(); ?>"
+      id="verification-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"
+      data-mage-init='{"validation":{}}'>
+<!--<div class="page-main-actions" style="margin-right:0;margin-left:0;">	 
+		<button type="submit" class="btn btn-primary"><?php echo __('Submit') ?></button>
+		<button type="button" class="btn btn-default btn-flat pull-right" onClick="location.href='<?php echo $block->getBackUrl();?>';"><i class="fa fa-fw fa-trash-o"></i> <?php echo __('Cancel') ?></button>		
+</div>-->
+<p>&nbsp;</p>
+<div class="row" >
+        <div class="col">			
+            <div class="vertical-tab nav-tabs-custom" role="tabpanel">
+				 <!-- Nav tabs -->
+                <ul id="myTabs"  class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#section1" aria-controls="home" role="tab" data-toggle="tab"><?php echo __('Page 1') ?></a></li>
+                    <li role="presentation"><a href="#section2" aria-controls="profile" role="tab" data-toggle="tab"><?php echo __('Page 2') ?></a></li>                    
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content tabs">					
+                    <div role="tabpanel" class="tab-pane fade in active" id="section1">
+					<div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+		                <button type="button"  class="btn btn-default btn-flat pull-right verification-nextpage"><?php echo __('Next') ?> <i class="fa fa-arrow-right"></i></button>		
+                     </div>	
+					<!--Start Page 1-->					
+					<fieldset class="fieldset">
+						<!-- ******** START Business information ******** -->						
+                       <legend class="legend"><span><?php echo __('Business Information') ?> </span></legend><br />                       
+                         <div class="fields col-md-10">
+                             <div class="field name required">
+                                 <label  for="name"><span><?php echo __('Country') ?></span></label>
+                                 <div class="control">                                     
+                                     <select name="country" id="country" title="<?php echo __('Country') ?>" data-validate="{required:true}">
+                                     </select>
+                                 </div>
+                             </div>
+                             <div class="row g-3">
+								<div class="col-md-6">
+								     <label  for="business-name"><span><?php echo __('Business Name') ?></span></label>
+                                     <div class="control">
+                                        <input name="business-name" id="business-name" title="<?php echo __('business-name') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>" class="input-text" type="text" data-validate="{required:true}"/>
+                                     </div>
+                                </div>
+                                <div class="col-md-6">
+								   <label  for="business-type"><span><?php echo __('Business Type') ?></span></label>
+                                   <div class="control">
+                                      <select name="business-type" id="business-type" title="<?php echo __('Business Type') ?>" data-validate="{required:true}">
+                                      </select>
+                                   </div>
+                                </div>                                                                                    
+                            </div>                                                                   
+                             <div class="field business-description required">
+                                <label class="business-description" for="business-description"><span><?php echo __('Business Description') ?></span></label>
+                                <div class="control">
+                                    <textarea name="business-description" id="business-description" title="<?php echo __('Business Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true}"></textarea>
+                                </div>
+                             </div>                             
+                            <div class="row g-3">
+                               <div class="col-md-4">
+								   <label  for="business-email"><span><?php echo __('Website') ?></span></label>                                  
+                                   <input name="business-website" id="business-website" title="<?php echo __('Website') ?>" value="" class="input-text" type="text" data-validate="{required:true, 'validate-email':true}" />
+                               </div>
+                               <div class="col-md-4">
+								   <label  for="business-email"><span><?php echo __('Business Phone') ?></span></label>                                   
+                                   <input name="business-phone" id="business-phone" title="<?php echo __('Business Email') ?>" value="" class="input-text" type="text" data-validate="{required:true}"/>
+                               </div>
+                               <div class="col-md-4">
+								   <label  for="business-email"><span><?php echo __('Business Email') ?></span></label>                                   
+                                   <input name="business-email" id="business-email" title="<?php echo __('Business Email') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>" class="input-text" type="text" data-validate="{required:false}"/>
+                               </div>
+                          </div>                     
+                     </div>
+                     <!-- ******** End Business information ******** -->  
+                   </fieldset>                  
+                  <div>&nbsp;</div>
+                  <fieldset class="fieldset">
+					  <!-- ******** START0 Business Addrsss ******** -->
+                       <legend class="legend"><span><?php echo __('Business Address') ?></span></legend><br />
+                       <div class="row">
+						   <div class="col-md-10">
+							   <label  for="address-line-1"><span><?php echo __('Address') ?></span></label>                                   
+							   <input name="address-line-1" id="address-line-1" type="text" class="form-control" placeholder="<?php echo __('Address Line 1') ?>" aria-label="<?php echo __('Address Line 1') ?>" data-validate="{required:true}">
+						   </div>
+                       </div>
+                       <div>&nbsp;</div>
+                       <div class="row">
+						   <div class="col-md-10">
+							   <input name="address-line-2" id="address-line-2" type="text" class="form-control" placeholder="<?php echo __('Address Line 2') ?>" aria-label="<?php echo __('Address Line 2') ?>" data-validate="{required:false}">
+						   </div>
+                       </div>
+                       <div>&nbsp;</div>
+                       <div class="row g-3">
+						   <div class="col-md-4">
+							   <input type="text" class="form-control" placeholder="<?php echo __('City') ?>" aria-label="<?php echo __('City') ?>" data-validate="{required:true}">
+						   </div>
+				          <div class="col-md-3">
+						    <input type="text" class="form-control" placeholder="<?php echo __('State') ?>" aria-label="<?php echo __('State') ?>" data-validate="{required:true}">
+					      </div>
+					      <div class="col-md-3">
+						    <input type="text" class="form-control" placeholder="<?php echo __('Postcode') ?>" aria-label="<?php echo __('Postcode') ?>" data-validate="{required:true}">
+					      </div>
+					   </div> 
+					   <!-- ******** End Business Addrsss ******** -->                      
+                   </fieldset>
+                   <div>&nbsp;</div>                   
+                   <fieldset class="fieldset">
+                   <!-- ******** START Business Contct ******** -->
+                   <legend class="legend"><span><?php echo __('Business Contact') ?></span></legend><br />
+                   <div class="row g-3">
+                               <div class="col-md-6">
+								   <label  for="contact-firstname"><span><?php echo __('Contact Name') ?></span></label>                                  
+                                   <input name="contact-firstname" id="contact-firstname"  placeholder="<?php echo __('First Name') ?>" aria-label="<?php echo __('First Name') ?>" value="" class="input-text" type="text" data-validate="{required:true}" />
+                               </div>
+                               <div class="col-md-6">								   
+								   <label  for="contact-lastname"><span>&nbsp;</span></label>                                  
+                                   <input name="contact-lastname" id="contact-lastname"  placeholder="<?php echo __('Last Name') ?>" aria-label="<?php echo __('Last Name') ?>" value="" class="input-text" type="text" data-validate="{required:true}" />
+                               </div>                               
+                   </div>
+                   <div class="row g-3">
+								<div class="col-md-6">
+								     <label  for="contact-phone"><span><?php echo __('Phone') ?></span></label>
+                                     <div class="control">
+                                        <input name="contact-phone" id="contact-phone" title="<?php echo __('Phone') ?>" value="" class="input-text" type="text" data-validate="{required:true}"/>
+                                     </div>
+                                </div>
+                                <div class="col-md-6">
+								   <label  for="contact-email"><span><?php echo __('Email') ?></span></label>
+                                   <div class="control">                                      
+                                      <input name="contact-email" id="contact-email" title="<?php echo __('Email') ?>" value="<?php echo $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>" class="input-text" type="text" data-validate="{required:true, 'validate-email':true}"/>
+                                   </div>
+                                </div>                                                                                    
+                   </div>                                                                   
+                   <!-- ******** END Business Contct ******** -->
+                   </fieldset>    
+                   <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+		                <button type="button"  class="btn btn-default btn-flat pull-right verification-nextpage"><?php echo __('Next') ?> <i class="fa fa-arrow-right"></i></button>		
+                     </div>	
+					<!--End Page 1-->						
+					</div>
+					<div role="tabpanel" class="tab-pane fade in" id="section2">						
+						<!--Start Page 2-->						
+						asasasasas Sectopm 2
+						<div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+							<button type="submit" class="btn btn-primary"><?php echo __('Submit') ?></button>
+		                   <button type="button"  class="btn btn-default btn-flat pull-right verification-prevpage"><?php echo __('Back') ?> <i class="fa fa-arrow-left"></i></button>		
+                        </div>	
+						<!--End Page 2-->	
+					</div>
+				</div>	
+            </div>
+         </div>
+</div>            
+</form>
+
+<script>
+require(['jquery'], function ($) {			 
+    $(document).ready(function(){
+		     
+     $(".verification-nextpage").click(function(){		 
+	    var next = jQuery('.nav-tabs > .active').next('li');
+         if(next.length){
+           next.find('a').trigger('click');
+         }else{
+           $('#myTabs a:first').tab('show');
+         }		 
+	  })
+	  
+	 $(".verification-prevpage").click(function(){		 
+		 var prev = jQuery('.nav-tabs > .active').prev('li')
+         if(prev.length){
+            prev.find('a').trigger('click');
+         }else{
+            jQuery('#myTabs a:last').tab('show');
+         }
+	   }) 
+	  
+		
+  });
+
+});
+
+
+
+</script>

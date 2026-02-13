@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Remove default add to cart if needed -->
+        <referenceBlock name="product.info.addtocart" remove="true"/>
+          <referenceBlock name="product.info.options.configurable" remove="true"/>
+        <!-- Override main product container -->
+        <referenceBlock name="product.info.main">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Magento_Catalog::product/view/custom_main.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <!-- Override configurable options block -->
+       <referenceBlock name="product.info.options.wrapper">
+    <block class="Magento\ConfigurableProduct\Block\Product\View\Type\Configurable" name="custom.configurable.options" template="Magento_Catalog::product/view/type/options/custom_configurable.phtml"/>
+</referenceBlock>
+
+
+        <!-- Override product price block if needed -->
+       <referenceBlock name="product.price.final">
+    <action method="setTemplate">
+        <argument name="template" xsi:type="string">Magento_Catalog::product/view/price/custom_price.phtml</argument>
+    </action>
+</referenceBlock>
+
+    </body>
+</page>

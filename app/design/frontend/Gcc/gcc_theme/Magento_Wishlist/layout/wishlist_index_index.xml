@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+     
+         <!-- Remove Add to Cart from Wishlist items -->
+        <referenceBlock name="customer.wishlist.item.cart" remove="true"/>
+
+        <!-- Remove Add All to Cart button at top -->
+        <referenceBlock name="customer.wishlist.button.toCart" remove="true"/>
+    </body>
+</page>

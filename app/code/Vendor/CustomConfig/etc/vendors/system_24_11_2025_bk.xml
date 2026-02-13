@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+
+    <system>
+        <!-- Vendor Tab -->
+        <tab id="vendor_config" translate="label" sortOrder="200">
+            <label>Vendor</label>
+        </tab>
+
+        <!-- General Section -->
+        <section id="vendor_general" translate="label" sortOrder="10" showInDefault="1" showInStore="1">
+            <label>General</label>
+            <tab>vendor_config</tab>
+            <resource>Vnecoms_VendorsConfig::general</resource>
+
+            <!-- Group 1: General -->
+            <group id="general_info" translate="label" sortOrder="10" showInDefault="1" showInStore="1">
+                <label>General</label>
+
+                 <!-- Logo (reuse Vnecoms "logo" field but rename) -->
+                <field id="upload_logo" translate="label" type="image" sortOrder="10" showInDefault="1">
+    <label>Logo</label>
+    <comment>Allowed file types: PNG, GIF, JPG, JPEG</comment>
+    <backend_model>Vendor\CustomConfig\Model\Config\Backend\VendorLogo</backend_model> 
+    
+    <!-- <frontend_model>Vnecoms\VendorsConfig\Block\System\Config\Form\Field\Image</frontend_model> -->
+    <!-- <backend_model>Vnecoms\VendorsConfig\Model\Config\Backend\Image</backend_model> -->
+    <upload_dir config="system/filesystem/media" scope_info="1">ves_vendors/attribute/upload_logo</upload_dir>
+    
+</field>                <!-- Business Name (reuse "name") -->
+                <field id="b_name" translate="label" type="text" sortOrder="20" showInDefault="1" showInStore="1">
+                    <label>Business Name</label>
+                     <backend_model>Vendor\CustomConfig\Model\Config\Backend\StoreBusinessName</backend_model>
+                </field>
+                      <!-- Logo (reuse Vnecoms "logo" field but rename) -->
+                <field id="upload_banner" translate="label" type="image" sortOrder="10" showInDefault="1">
+                    <label>Banner</label>
+                    <comment>Allowed file types: PNG, GIF, JPG, JPEG</comment>
+                   <backend_model>Vnecoms\VendorsConfig\Model\Config\Backend\Image</backend_model>
+	            	<upload_dir config="system/filesystem/media" scope_info="1">ves_vendors/banner</upload_dir>
+                    <base_url type="media">ves_vendors/banner</base_url>
+                </field>
+               <field id="short_description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInStore="1">
+                    <label>About Store</label>
+                   <backend_model>Vendor\CustomConfig\Model\Config\Backend\StoreDescription</backend_model>
+                </field>
+
+
+                <!-- Business Website (reuse "phone" field, just relabel) -->
+                <field id="website" translate="label" type="text" sortOrder="40" showInDefault="1" showInStore="1">
+                    <label>Business Website</label>
+                     <backend_model>Vendor\CustomConfig\Model\Config\Backend\Website</backend_model>
+                     <scope>vendor</scope>
+                </field>
+
+                <!-- Contact Information (new textarea) -->
+                <field id="contact_information" translate="label" type="textarea" sortOrder="50" showInDefault="1" showInStore="1">
+                    <label>Contact Information</label>
+                    <comment>Enter details like Contact Name, Phone, Email</comment>
+                </field>
+            </group>
+
+            <!-- Group 2: Upload Certificates -->
+            <group id="upload_certificates" translate="label" sortOrder="20" showInDefault="1" showInStore="1">
+                <label>Upload Certificates</label>
+
+               <field id="certificate_pdf"
+       translate="label"
+       type="image"
+       sortOrder="20"
+       showInDefault="1"
+       showInWebsite="0"
+       showInStore="0">
+    <label>Upload Certificate PDF</label>
+    <!-- <comment>Allowed file type: PDF only</comment> -->
+    <backend_model>Vendor\CustomConfig\Model\Config\Backend\VendorPdf</backend_model>
+    <frontend_model>Vendor\CustomConfig\Block\Adminhtml\System\Config\Form\Field\PdfDownload</frontend_model>
+    <upload_dir config="system/filesystem/media" scope_info="1">ves_vendors/attribute/certificate</upload_dir>
+    <base_url type="media" scope_info="1">ves_vendors/attribute/certificate</base_url>
+</field>
+
+
+
+            </group>
+
+            <!-- Group 3: Upload Catalog -->
+            <group id="upload_catalog" translate="label" sortOrder="30" showInDefault="1" showInStore="1">
+                <label>Upload Catalog</label>
+                  <field id="catalog_file" translate="label" type="file" sortOrder="10" showInDefault="1" showInStore="1">
+                    <label>Upload Catalog</label>
+                </field>
+            </group>
+
+            <!-- Group 4: Location Map -->
+            <group id="location_map" translate="label" sortOrder="40" showInDefault="1" showInStore="1">
+                <label>Location Map</label>
+                 <field id="map" translate="label" type="text" sortOrder="10" showInDefault="1" showInStore="1">
+                    <label>Location Map</label>
+                </field>
+            </group>
+
+        </section>
+        <section id="vendor_import" translate="label" sortOrder="10" showInDefault="1" showInStore="1">
+            <label>Mass Import/Export</label>
+            <tab>vendor_config</tab>
+            <resource>Vnecoms_VendorsConfig::vendor_import</resource>
+
+            <!-- Group 1: General -->
+            <group id="general_info1" translate="label" sortOrder="10" showInDefault="1" showInStore="1">
+                <label>General</label>
+
+                <field id="name" translate="label" type="text" sortOrder="10" showInDefault="1" showInStore="1">
+                    <label>Mass Import/Export</label>
+                </field>
+            </group>
+       </section>
+       <section id="vendor_catalog" translate="label" sortOrder="10" showInDefault="1" showInStore="1">
+            <label>Catalog Search</label>
+            <tab>vendor_config</tab>
+            <resource>Vnecoms_VendorsConfig::vendor_catalog</resource>
+
+            <!-- Group 1: General -->
+            <group id="general_info2" translate="label" sortOrder="10" showInDefault="1" showInStore="1">
+                <label>General</label>
+
+                <field id="name" translate="label" type="text" sortOrder="10" showInDefault="1" showInStore="1">
+                    <label>Catalog Search</label>
+                </field>
+            </group>
+       </section>
+    </system>
+</config>

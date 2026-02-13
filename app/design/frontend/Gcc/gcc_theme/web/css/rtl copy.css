@@ -1,0 +1,233 @@
+/* ================================================
+   RTL Layout — Arabic Store (GCC Theme)
+   ================================================ */
+
+html[lang="ar"],
+body[dir="rtl"] {
+    direction: rtl !important;
+    text-align: right !important;
+}
+
+/* Global text and alignment */
+html[lang="ar"] *,
+body[dir="rtl"] * {
+    font-family: "Tajawal", Arial, sans-serif !important;
+}
+
+/* Header */
+html[lang="ar"] header,
+body[dir="rtl"] header {
+    direction: rtl;
+}
+
+html[lang="ar"] header .logo,
+body[dir="rtl"] header .logo {
+    margin-right: 0;
+    margin-left: 20px;
+}
+
+/* Navigation & Menus */
+html[lang="ar"] .navigation,
+body[dir="rtl"] .navigation {
+    direction: rtl;
+    text-align: right;
+}
+
+html[lang="ar"] .navigation ul,
+body[dir="rtl"] .navigation ul {
+    flex-direction: row-reverse;
+}
+
+/* Footer */
+html[lang="ar"] footer,
+body[dir="rtl"] footer {
+    direction: rtl;
+    text-align: right;
+}
+
+html[lang="ar"] footer .footer-links,
+body[dir="rtl"] footer .footer-links {
+    flex-direction: row-reverse;
+}
+
+/* Forms */
+html[lang="ar"] input,
+html[lang="ar"] select,
+html[lang="ar"] textarea,
+body[dir="rtl"] input,
+body[dir="rtl"] select,
+body[dir="rtl"] textarea {
+    text-align: right;
+}
+
+/* Buttons */
+html[lang="ar"] .btn,
+body[dir="rtl"] .btn {
+    float: none;
+}
+
+/* Vendor Dashboard */
+html[lang="ar"] .vendor-dashboard,
+body[dir="rtl"] .vendor-dashboard {
+    direction: rtl;
+    text-align: right;
+}
+
+html[lang="ar"] .vendor-dashboard .sidebar,
+body[dir="rtl"] .vendor-dashboard .sidebar {
+    float: right;
+}
+
+html[lang="ar"] .vendor-dashboard .content,
+body[dir="rtl"] .vendor-dashboard .content {
+    margin-right: 260px;
+    margin-left: 0;
+}
+
+/* Message and Inbox */
+html[lang="ar"] .message-folders,
+body[dir="rtl"] .message-folders {
+    float: right;
+}
+
+html[lang="ar"] .message-content,
+body[dir="rtl"] .message-content {
+    float: left;
+}
+
+/* Breadcrumbs */
+html[lang="ar"] .breadcrumbs,
+body[dir="rtl"] .breadcrumbs {
+    flex-direction: row-reverse;
+}
+
+/* Newsletter / Subscribe section */
+html[lang="ar"] .newsletter,
+body[dir="rtl"] .newsletter {
+    direction: rtl;
+    text-align: right;
+}
+
+/* Pagination and Lists */
+html[lang="ar"] .pagination,
+body[dir="rtl"] .pagination {
+    direction: rtl;
+}
+
+html[lang="ar"] .pagination li,
+body[dir="rtl"] .pagination li {
+    float: right;
+}
+
+/* Tables */
+html[lang="ar"] table,
+body[dir="rtl"] table {
+    direction: rtl;
+}
+
+/* Arrows or icons using pseudo-elements */
+html[lang="ar"] .fa-angle-right:before,
+body[dir="rtl"] .fa-angle-right:before {
+    content: "\f104" !important; /* left arrow instead of right */
+}
+
+html[lang="ar"] .fa-angle-left:before,
+body[dir="rtl"] .fa-angle-left:before {
+    content: "\f105" !important; /* right arrow instead of left */
+}
+
+/* Utility classes */
+html[lang="ar"] .text-left,
+body[dir="rtl"] .text-left {
+    text-align: right !important;
+}
+
+html[lang="ar"] .text-right,
+body[dir="rtl"] .text-right {
+    text-align: left !important;
+}
+/* RTL Sidebar Fix */
+html[lang="ar"] body,
+body[dir="rtl"] {
+  direction: rtl;
+}
+
+/* Move the sidebar to the right */
+html[lang="ar"] .sidebar.sidebar-main,
+body[dir="rtl"] .sidebar.sidebar-main {
+  float: right !important;
+  right: 0 !important;
+  left: auto !important;
+  margin-right: 0 !important;
+  margin-left: 30px !important; /* optional space from content */
+}
+
+/* Adjust the content area to leave space on the right */
+html[lang="ar"] .columns,
+body[dir="rtl"] .columns {
+  display: flex;
+  flex-direction: row-reverse;
+}
+
+/* Inside the sidebar — make sure text and icons align properly */
+html[lang="ar"] .sidebar .nav.item a,
+body[dir="rtl"] .sidebar .nav.item a {
+  text-align: right !important;
+  padding-right: 15px !important;
+  padding-left: 0 !important;
+}
+
+/* Unread message count bubble or badge alignment */
+html[lang="ar"] .sidebar .vnecoms-unread-message-count,
+body[dir="rtl"] .sidebar .vnecoms-unread-message-count {
+  float: left !important;
+  margin-left: 10px !important;
+  margin-right: 0 !important;
+}
+
+/* Optional: fix the arrow/delimiter alignment if any */
+html[lang="ar"] .sidebar .delimiter,
+body[dir="rtl"] .sidebar .delimiter {
+  float: right;
+}
+/* for search result page */
+html[dir="rtl"] .columns {
+    width: 100% !important;
+    display: block !important;
+}
+
+/* Force sidebar to right with fixed width */
+html[dir="rtl"] .sidebar.sidebar-main {
+    float: right !important;
+    width: 280px !important;
+    max-width: 280px !important;
+    display: block !important;
+}
+
+/* Force main content to take remaining width */
+  .navigation, .breadcrumbs, .page-header .header.panel, .header.content, .footer.content, .page-wrapper>.widget, .page-wrapper>.page-bottom, .block.category.event, .top-container, .page-main {
+            box-sizing: border-box;
+            margin-left: 75px;
+            /* margin-right: auto; */
+            max-width: 1280px;
+            /* padding-left: 20px; */
+            padding-right: 20px;
+            width: auto;
+        }
+        .navigation,.breadcrumbs,.page-header .header.panel,.header.content,.footer.content,.page-wrapper>.widget,.page-wrapper>.page-bottom,.block.category.event,.top-container,.page-main {
+        box-sizing: border-box;
+        /* margin-left:auto; */
+        margin-right: auto;
+        max-width: 1280px;
+        /* padding-left:20px; */
+        padding-right: 20px;
+        width: auto
+    }
+       .page-layout-2columns-left .column.main {
+            width: 92%;
+            float: left;
+            -ms-flex-order: 2;
+            -webkit-order: 2;
+            order: 2;
+        }
+    

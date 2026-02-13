@@ -1,0 +1,12 @@
+<script type="text/html" id="vnecoms_vendors">
+    <li class="mst-search__item">
+        <a data-bind="attr: { href: url }">
+            <!-- ko if: logo -->
+                <img data-bind="attr: { src: logo, alt: title }" class="vendor-logo" style="width: 40px; height: auto; margin-right: 10px;" />
+            <!-- /ko -->
+              <span style="color:red;">✅ Template Loaded vru</span>
+            <span class="vendor-title" data-bind="text: title"></span>
+            <div class="vendor-detail" data-bind="text: detail"></div>
+        </a>
+    </li>
+</script>

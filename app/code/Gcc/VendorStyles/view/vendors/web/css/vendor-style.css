@@ -1,0 +1,20 @@
+/* This is your custom CSS for the VNECOM Vendor Dashboard */
+
+body {
+    background-color: aqua !important; /* Change this to your desired background color */
+}
+
+/* Example: Change the color of the main header */
+.main-header {
+    background-color: RED!important; /* AdminLTE blue */
+    color: white;
+}
+
+/* Example: Style for a specific element */
+.content-wrapper h1 {
+    color: white!important; /* Orange color for main headings */
+}
+.content-wrapper, .right-side {
+    
+    background-color: #dd4b39;
+}

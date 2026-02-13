@@ -1,0 +1,119 @@
+<!-- Subscribe block -->
+<section class="gcc-subscribe">
+  <div class="gcc-subscribe__inner">
+    <h3 class="gcc-subscribe__title">Get the Latest GCC Trade Updates</h3>
+    <p class="gcc-subscribe__desc">
+      Get the latest trade news and event updates delivered straight to your inbox.
+    </p>
+
+    <form class="gcc-subscribe__form" action="#" method="post">
+      <input
+        class="gcc-subscribe__input"
+        type="email"
+        placeholder="Enter your email address"
+        aria-label="Email address"
+        required
+      />
+      <button class="gcc-subscribe__btn" type="submit">
+        <span>Subscribe</span>
+        <svg viewBox="0 0 20 20" aria-hidden="true">
+          <path fill="currentColor" fill-rule="evenodd"
+            d="M16 10a1 1 0 0 0-.293-.707l-4-4a1 1 0 1 0-1.414 1.414L12.586 9H4a1 1 0 1 0 0 2h8.586l-2.293 2.293a1 1 0 1 0 1.414 1.414l4-4A1 1 0 0 0 16 10z"
+            clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+<style>
+/* ===== Namespaced, Magento-safe styles ===== */
+.gcc-subscribe { 
+  --gradA:#dbe6ff; 
+  --gradB:#aecaFF; 
+  --text:#0f172a; 
+  --muted:#667185;
+  --blue:#3b82f6;
+  --blueHover:#2f6fe3;
+  font-family: Inter, system-ui, -apple-system,"Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  padding: 0 16px; 
+  margin: 56px auto;
+  max-width: 1300px;
+}
+.gcc-subscribe__inner{
+  background: linear-gradient(130deg,var(--gradA),var(--gradB));
+  border-radius: 28px;
+  padding: clamp(40px,7vw,90px) clamp(18px,6vw,48px);
+  text-align:center;
+}
+.gcc-subscribe__title{
+  margin:0 0 10px 0;
+  color:var(--text);
+  font-weight:bold;
+  letter-spacing:-0.02em;
+  line-height:1.2;
+  font-size: clamp(28px, 4vw, 44px);
+}
+.gcc-subscribe__desc{
+  margin:0 auto 28px auto;
+  color:var(--muted);
+  font-size: clamp(14px, 1.8vw, 18px);
+  max-width: 760px;
+}
+
+/* pill form */
+.gcc-subscribe__form{
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  margin: 0 auto;
+  max-width: 760px;
+  background:#fff;                 /* inner white */
+  border:4px solid #fff;           /* thick white outline like mock */
+  border-radius:14px;
+  overflow:hidden;                  /* make one continuous pill */
+  box-shadow: 0 12px 28px rgba(2,6,23,0.12);
+}
+.gcc-subscribe__input{
+  flex:1 1 auto;
+  min-height: 60px;
+  padding: 0 18px;
+  font-size: 16px;
+  color:#111827;
+  background:#fff;
+  border:none !important;          /* override Magento */
+  outline:none;
+  box-shadow:none !important;      /* override Magento */
+  -webkit-appearance:none; 
+  appearance:none;
+}
+.gcc-subscribe__input::placeholder{ color:#9aa3b2; }
+
+/* button */
+.gcc-subscribe__btn{
+  flex:0 0 auto;
+  padding: 0 26px;
+  min-width: 180px;
+  background: var(--blue);
+  color:#fff;
+  font-weight:700;
+  font-size:16px;
+  border:none !important;          /* override Magento */
+  border-left: 0;
+  outline:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  cursor:pointer;
+  transition: background .2s ease, transform .02s ease;
+}
+.gcc-subscribe__btn:hover{ background: var(--blueHover); }
+.gcc-subscribe__btn:active{ transform: translateY(1px); }
+.gcc-subscribe__btn svg{ width:20px; height:20px; }
+
+@media (max-width: 520px){
+  .gcc-subscribe__btn{ min-width: 130px; padding: 0 18px; }
+  .gcc-subscribe__form{ border-width:3px; }
+}
+</style>

@@ -1,0 +1,141 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Adminhtml\Verification */
+
+$vendorVerification = $block->getVendorVerification();
+if (!$vendorVerification) { return; }
+
+$verificationId = $vendorVerification->getId();
+$groupId = \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS;
+$verificationData = $block->getVerificationSectionData($verificationId, $groupId);
+
+if (!$verificationData) {
+    echo __("No address data submitted for verification.");
+    return;
+}
+
+$detail_id = $verificationData->getDetailId();
+// Database se raw data nikal kar array mein convert karna
+$arrData = $block->convertVerificationData($verificationData->getData('vendor_data'));
+
+// --- AAPKI FIELDS YAHAN FETCH HO RAHI HAIN ---
+$vendorStreet   = isset($arrData['street']) ? $arrData['street'] : '';
+$vendorCity     = isset($arrData['city']) ? $arrData['city'] : '';
+$vendorRegion   = isset($arrData['state']) ? $arrData['state'] : '';
+$vendorPostCode = isset($arrData['postcode']) ? $arrData['postcode'] : '';
+$vendorCountry  = isset($arrData['country']) ? $arrData['country'] : '';
+
+// Map Coordinates logic (Agar DB mein lat/lng hain toh wo use honge)
+$_zoom = 15;
+$gmap_lat = (!empty($arrData['lat'])) ? $arrData['lat'] : '24.7136';
+$gmap_lng = (!empty($arrData['lng'])) ? $arrData['lng'] : '46.6753';
+
+// Google API Key fetching
+$porto_contacts = $block->getConfig('porto_settings/contacts');
+$_apikey = isset($porto_contacts['api_key']) ? $porto_contacts['api_key'] : '';
+?>
+
+<div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+        <div class="admin__page-section-item-title">
+            <span class="title"><?php echo __("Business Address Information"); ?></span>
+        </div>
+        
+        <div class="admin__page-section-item-content">
+            <div class="admin__actions-section" style="margin-bottom: 15px;">
+                <button title="<?php echo __('Approve') ?>" type="button" class="action-default verification-action" style="background:#66a80f;color:#ffffff;" data-modal-id="verification-addressapproval-modal" data-modal-action="approve">
+                    <span><?php echo __('Approve') ?></span>
+                </button>
+                <button title="<?php echo __('Resubmit') ?>" type="button" class="action-default verification-action" style="background:#ffb300;color:#ffffff;" data-modal-id="verification-addressresubmit-modal" data-modal-action="resubmit">
+                    <span><?php echo __('Request Re-submit') ?></span>
+                </button>
+                <button title="<?php echo __('Reject') ?>" type="button" class="action-default verification-action" style="background:#ff2500;color:#ffffff;" data-modal-id="verification-addressreject-modal" data-modal-action="reject">
+                    <span><?php echo __('Reject') ?></span>
+                </button>
+                
+                <button type="button" class="action-default verification-showcomment pull-right" 
+                        data-verificationid="<?php echo $verificationId; ?>" 
+                        data-verifidtlid="<?php echo $detail_id; ?>" 
+                        data-verifigroupid="<?php echo $groupId; ?>">
+                    <span><?php echo __("View Comments"); ?></span>
+                </button>
+            </div>
+
+            <table class="admin__table-secondary">
+                <tbody>
+                    <tr>
+                        <td><strong><?php echo __('Current Status') ?></strong></td>
+                        <td><span class="grid-severity-notice"><?php echo $block->getStatusLabel($verificationData->getStatus()); ?></span></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo __('Address Line 1') ?></td>
+                        <td><?php echo $block->escapeHtml($vendorStreet); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo __('Address Line 2') ?></td>
+                        <td><?php //echo $block->escapeHtml($business_address_line2); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo __('City') ?></td>
+                        <td><?php echo $block->escapeHtml($vendorCity); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo __('State/Region') ?></td>
+                        <td><?php echo $block->escapeHtml($vendorRegion); ?></td>
+                    </tr>
+                    <tr>
+                        <td><?php echo __('Post Code') ?></td>
+                        <td><?php echo $block->escapeHtml($vendorPostCode); ?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="admin__page-section-item">
+    <div class="admin__page-section-item-title">
+        <span class="title"><?php echo __("Location on Map"); ?></span>
+    </div>
+    <div id="store_map_container" style="border:1px solid #ccc; margin-top:10px;">
+        <div id="store_map" style="min-height: 400px; width: 100%;"></div>
+    </div>
+</div>
+
+<?php /* Include your existing Modal HTML code here for: 
+    #verification-addressapproval-modal, 
+    #verification-addressresubmit-modal, 
+    #verification-addressreject-modal 
+*/ ?>
+
+<script type="text/javascript">
+    require(['jquery', 'domReady!'], function($) {
+        function initializeMap() {
+            var lat = parseFloat('<?php echo $gmap_lat; ?>');
+            var lng = parseFloat('<?php echo $gmap_lng; ?>');
+            
+            if (isNaN(lat) || isNaN(lng)) return;
+
+            var pos = {lat: lat, lng: lng};
+            var map = new google.maps.Map(document.getElementById("store_map"), {
+                center: pos,
+                zoom: <?php echo $_zoom; ?>,
+                scrollwheel: false
+            });
+            var marker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                title: '<?php echo $vendorStreet; ?>'
+            });
+        }
+
+        // Load Google Maps API if not already loaded
+        if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+            $.getScript('https://maps.googleapis.com/maps/api/js?key=<?php echo $_apikey; ?>')
+                .done(function() {
+                    initializeMap();
+                });
+        } else {
+            initializeMap();
+        }
+    });
+</script>

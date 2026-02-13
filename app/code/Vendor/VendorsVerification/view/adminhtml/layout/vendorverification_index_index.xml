@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">    
+	<update handle="styles"/>
+	<head>
+        <css src="Vnecoms_Vendors::css/vendors.css"/>
+        <css src="Vnecoms_Vendors::css/glyphicon.css"/>
+    </head>
+    <body>
+        <referenceBlock name="menu">
+            <action method="setActive">
+                <argument name="itemId" xsi:type="string">Vendor_VendorsVerification::vendor_verification</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="page.title">
+            <action method="setTitleClass">
+                <argument name="class" xsi:type="string">complex</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="content">
+            <uiComponent name="vendor_verification_listing"/>
+            <!--<block class="Vendor\BookAdvertisement\Block\Adminhtml\Unapprove" name="unapprove_block_name" template="Vendor_BookAdvertisement::popup.phtml" />-->
+        </referenceContainer>
+    </body>
+</page>
+

@@ -1,0 +1,248 @@
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+?>
+
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification */
+
+$vendor = $block->getVendor();
+$vendorVerification = $block->getVendorVerification();
+
+$verificationId = ($vendorVerification && $vendorVerification->getId())
+    ? (int)$vendorVerification->getId()
+    : 0;
+//echo $verificationId;
+/** Default safe values */
+$verificationData = null;
+$arrData = [];
+$detail_id = 0;
+
+/** Fetch collection */
+if ($verificationId) {
+  
+   $verificationData = $block->getVerificationSectionData(
+    $verificationId,
+    \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+);
+// echo '<pre>';
+// print_r($verificationData->getData());
+// exit;
+//print_r( $verificationData);
+ $detail_id = (int)$verificationData->getDetailId();
+  $arrData = $block->convertVerificationData(
+            $verificationData->getData('vendor_data')
+        );
+    // if ($verificationData && $verificationData->getSize() > 0) {
+    //     //$verificationData = $collection->getFirstItem();
+    //     $detail_id = (int)$verificationData->getDetailId();
+    //   echo  $detail_id;
+    //     $arrData = $block->convertVerificationData(
+    //         $verificationData->getData('vendor_data')
+    //     );
+    //     print_r($arrData);
+    // }
+}
+
+/** Read values safely */
+// $business_country     = $arrData['country_id']          ?? '';
+// $business_name        = $arrData['business_name']       ?? '';
+// $business_description = $arrData['business_description']?? '';
+// $business_website     = $arrData['website']             ?? '';
+// $business_phone       = $arrData['business_phone']      ?? '';
+// $business_email       = $arrData['business_email']      ?? '';
+// $businessType = $arrData['business_type'] ?? '';
+// $status = $verificationData ? (int)$verificationData->getStatus() : 0;
+$business_country     = $arrData['country_id'] ?? '';
+$business_name        = $arrData['business-name'] ?? '';
+$business_description = $arrData['business-description'] ?? '';
+$business_website     = $arrData['business-website'] ?? '';
+$business_phone       = $arrData['business-phone'] ?? '';
+$business_email       = $arrData['business-email'] ?? '';
+$businessType         = $arrData['business-type'] ?? '';
+//echo $business_country;
+$status = $verificationData ? (int)$verificationData->getStatus() : 0;
+?>
+  <div >
+    <h2 style="font-size: 16px;
+    font-weight: 600;
+    color: #0c2a63;">Business Information</h2>
+  </div>
+<div class="header">
+    <div>
+        <?php if ($status == \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
+            <button type="button"
+                    class="btn btn-default verification-edit"
+                    data-modal-id="verification-info-modal">
+                <?php echo __('Edit'); ?>
+            </button>
+           <!-- <?php $vendorInfoUrl = $block->getUrl('account/index');
+           ?> 
+             <a href="<?= $block->escapeUrl($vendorInfoUrl) ?>"
+       class="btn btn-default">
+        <?= __('Edit'); ?>
+    </a> -->
+        <?php endif; ?>
+
+        <?php
+        $commentsCount = $block->getCommentsCounts(
+            $verificationId,
+            $detail_id,
+            \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+        );
+        ?>
+        <button type="button"
+                class="btn btn-link verification-showcomment"
+                data-verificationid="<?php echo $verificationId; ?>"
+                data-verifidtlid="<?php echo $detail_id; ?>"
+                data-verifigroupid="<?php echo \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION; ?>">
+            <i class="fa fa-comment"></i>
+            <?php echo __('%1 Comments', $commentsCount); ?>
+        </button>
+    </div>
+</div>
+
+<div class="verification-tbl">
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td><?php echo __('Status'); ?></td>
+            <td><?php echo $block->getStatusLabel($verificationData->getStatus());?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Country'); ?></td>
+            <td><?php echo $block->getCountryByCode($business_country); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Business Name'); ?></td>
+            <td><?php echo $block->escapeHtml($business_name); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Business Description'); ?></td>
+            <td><?php echo $block->escapeHtml($business_description); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Website'); ?></td>
+            <td><?php echo $block->escapeHtml($business_website); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Phone'); ?></td>
+            <td><?php echo $block->escapeHtml($business_phone); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Email'); ?></td>
+            <td><?php echo $block->escapeHtml($business_email); ?></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Edit Form -->
+<div id="verification-info-modal" style="display:none;">
+<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION); ?>"
+      name="verification-businessinfo-form"
+      id="verification-businessinfo-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+    <legend class="legend"><span><?php echo __('Business Information') ?> </span></legend>
+                     <div class="row">
+                         <div class="fields col-md-12">
+                             <div class="field name required">
+							   <div class="form-group">
+                                 <label  for="name"><span><?php echo __('Country') ?></span></label>
+                                 <div class="control">                                     
+<?php
+$countries = $block->getCountries();
+?>
+
+<select name="country_id" id="country_id" class="select" data-validate="{required:true}">
+    <option value=""><?php echo __('Please Select Country'); ?></option>
+
+    <?php if (!empty($countries)): ?><?php
+$countries = $block->getCountries();
+if (!is_array($countries)) {
+    $countries = [];
+}
+?>
+
+        <?php foreach ($countries as $value): ?>
+            <?php if (!empty($value['value'])): ?>
+                <option value="<?= $block->escapeHtmlAttr($value['value']); ?>"
+                    <?= ($value['value'] == $business_country) ? 'selected="selected"' : ''; ?>>
+                    <?= $block->escapeHtml($value['label']); ?>
+                </option>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</select>
+
+
+                                 </div>
+                               </div>
+                             </div>
+                             <div class="row g-3">
+								<div class="col-md-6">
+								  <div class="form-group">	
+								     <label  for="business-name"><span><?php echo __('Business Name') ?></span></label>
+                                     <div class="control">
+                                        <input name="business-name" id="business-name" title="<?php echo __('business-name') ?>" value="<?php echo $block->escapeHtml($business_name) ?>" class="input-text" type="text" data-validate="{required:true}"/>
+                                     </div>
+                                    </div> 
+                                </div>
+                                <div class="col-md-6">
+								  <div class="form-group">	
+								   <label  for="business-type"><span><?php echo __('Business Type') ?></span></label>
+                                   <div class="control">
+									   <?php $businessTypes =  $block->getVendorTypes();?>									   
+                                      <select name="business-type" id="business-type" title="<?php echo __('Business Type') ?>" data-validate="{required:true}">
+                                        <option value=""><?php echo __('Please Select') ?></option>
+                                        <?php foreach($businessTypes as $key=>$option):?>
+                                             <?php if($option['value']!='' && $option['label']!=''):?>
+                                                  <option value="<?php echo $option['value']?>" <?php echo ($businessType == $option['value'])? 'selected="selected"':'';?> > 
+                                                     <?php echo (string) $option['label'];?> 
+                                                  </option>
+                                              <?php endif;?>    
+                                        <?php endforeach;?>
+                                      </select>
+                                   </div>
+                                 </div>
+                                </div>                                                                                                                    
+                            </div>                                                                   
+                             
+                             <div class="field business-description required">
+							  <div class="form-group">		 
+                                <label class="business-description" for="business-description"><span><?php echo __('Business Description') ?></span></label>
+                                <div class="control">
+                                    <textarea name="business-description" id="business-description" title="<?php echo __('Business Description') ?>" class="input-text" cols="5" rows="8" data-validate="{required:true}"><?php echo $business_description;?></textarea>
+                                </div>
+                               </div>
+                             </div>                             
+                            <div class="row g-3">
+                               <div class="col-md-4">
+								 <div class="form-group">	  
+								   <label  for="business-email"><span><?php echo __('Website') ?></span></label>                                  
+                                   <input name="business-website" id="business-website" title="<?php echo __('Website') ?>" value="<?php echo $business_website;?>" class="input-text" type="text" data-validate="{required:false}" />
+                                 </div>  
+                               </div>
+                               <div class="col-md-4">
+								<div class="form-group">	  
+								   <label  for="business-email"><span><?php echo __('Business Phone') ?></span></label>                                   
+                                   <input name="business-phone" id="business-phone" title="<?php echo __('Business Email') ?>" value="<?php echo $business_phone;?>" class="input-text" type="text" data-validate="{required:true}"/>
+                                  </div> 
+                               </div>
+                               <div class="col-md-4">
+								 <div class="form-group">	 
+								   <label  for="business-email"><span><?php echo __('Business Email') ?></span></label>                                   
+                                   <input name="business-email" id="business-email" title="<?php echo __('Business Email') ?>" value="<?php echo $block->escapeHtml($business_email) ?>" class="input-text" type="text" data-validate="{required:true, 'validate-email':true}"/>
+                                 </div>  
+                               </div>
+                          </div>                     
+                          <div class="page-main-actions" >	  		                
+						   <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+                        </div>	   
+                     </div>
+                       </div>
+</form>
+</div>

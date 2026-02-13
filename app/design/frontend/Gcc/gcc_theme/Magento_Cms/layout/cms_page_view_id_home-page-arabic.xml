@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/styles.css"/>
+    </head>
+
+    <body>
+        <!-- Remove default header & footer -->
+        <referenceContainer name="header.container" remove="true"/>
+        <referenceContainer name="header.panel" remove="true"/>
+        <referenceContainer name="footer-container" remove="true"/>
+        <referenceContainer name="footer" remove="true"/>
+        <referenceBlock name="footer_links" remove="true"/>
+        <referenceBlock name="top.search" remove="true"/>
+        <referenceBlock name="catalog.topnav" remove="true" />
+
+        <!-- Custom Arabic Header -->
+        <referenceContainer name="page.wrapper">
+            <container name="custom.header"
+                       as="customHeader"
+                       htmlTag="header"
+                       htmlClass="custom-page-header"
+                       before="main.content">
+                <block class="Gcc\Gcc_theme\Block\CustomHeader"
+                       name="custom.header.block"
+                       template="Magento_Theme::html/custom_header-arabic.phtml"
+                       cacheable="false"/>
+            </container>
+        </referenceContainer>
+
+        <!-- Custom Arabic Footer -->
+        <referenceContainer name="page.wrapper">
+            <container name="custom.footer"
+                       as="customFooter"
+                       htmlTag="footer"
+                       htmlClass="custom-page-footer"
+                       after="main.content">
+                <block class="Magento\Framework\View\Element\Template"
+                       name="custom.footer.block"
+                       template="Magento_Theme::html/custom_footer-arabic.phtml"/>
+            </container>
+        </referenceContainer>
+    </body>
+</page>

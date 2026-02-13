@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <acl>
+        <resources>
+            <resource id="Vnecoms_Vendors::vendor"> <resource id="Vnecoms_VendorsReport::report" title="Reports" translate="title">
+                    <resource id="CustomVendor_HideVnecomsMenu::profile_visitors_resource" title="Profile Visitors" translate="title" sortOrder="10" />
+                </resource>
+            <resource id="CustomVendor_HideVnecomsMenu::reviews_top_level" title="Reviews" translate="title" sortOrder="91" />
+
+            </resource>
+        </resources>
+    </acl>
+</config>

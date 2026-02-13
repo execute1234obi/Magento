@@ -1,0 +1,267 @@
+<?php
+
+namespace Business\MostviewedVendors\Model\ResourceModel\Report\Vendor;
+
+class Createdat extends \Magento\Reports\Model\ResourceModel\Report\AbstractReport
+{
+    /**
+     * Model initialization
+     *
+     * @return void
+     */
+    protected function _construct()
+    {
+        $this->_init('business_vendor_mostview_aggregated', 'id');
+    }
+
+    /**
+     * Aggregate Orders data by order created at
+     *
+     * @param string|int|\DateTime|array|null $from
+     * @param string|int|\DateTime|array|null $to
+     * @return $this
+     */
+    /*public function aggregate($from = null, $to = null)
+    {
+        return $this->_aggregateByField('added_at', $from, $to);
+    }*/
+    
+    public function aggregate($from = null, $to = null)
+    {
+        $mainTable = $this->getMainTable();       
+        $connection = $this->getConnection();
+        $connection->beginTransaction();
+        if ($from !== null || $to !== null) {
+            $subSelect = $this->_getTableDateRangeSelect(
+                $this->getTable('report_event'),
+                'logged_at',
+                'logged_at',
+                $from,
+                $to
+            );
+        } else {
+            $subSelect = null;
+        }
+        
+          
+        
+        //echo $from->format("DD/mm/Y")."<br />"; ;
+        //echo $to->format("DD/mm/YY")."<br />"; ;
+        //echo $from."<br />"; 
+        //echo $to."<br />";
+        //echo $subSelect."<br />";
+        //die;
+        
+       $this->_clearTableByDateRange($this->getMainTable(), $from, $to, $subSelect);
+        
+        //$this->_clearTableByDateRange($mainTable, $from, $to, $subSelect);
+        // convert dates to current admin timezone
+        $periodExpr = $connection->getDatePartSql(
+            $this->getStoreTZOffsetQuery(
+                ['source_table' => $this->getTable('report_event')],
+                'source_table.logged_at',
+                $from,
+                $to
+            )
+        );
+        $select = $connection->select();
+        
+        //$select->group([$periodExpr, 'source_table.store_id', 'source_table.object_id','source_table.subtype']);
+        $select->group([$periodExpr,'source_table.store_id', 'source_table.object_id','source_table.subtype']);
+        
+        
+        
+        
+        $viewsNumExpr = new \Zend_Db_Expr('COUNT(source_table.event_id)');
+        $columns = [
+            'period' => $periodExpr,
+            'store_id' => 'source_table.store_id',
+            'vendor_id' => 'source_table.object_id',
+            'vendor_code' => new \Zend_Db_Expr(
+                sprintf('MIN(%s)', $connection->getIfNullSql('ves_vendos.vendor_id'))
+            ),
+            'mastercountry_id' => 'source_table.subtype',
+            'views_num' => $viewsNumExpr,
+        ];
+               
+
+        /*$vendorobjectod= 33;        
+        $select->from(
+            ['source_table' => $this->getTable('report_event')],
+            $columns
+        )->where(
+            'source_table.event_type_id = ? AND source_table.object_id = 33 ',
+            \Business\MostviewedVendors\Model\Event::EVENT_VES_VENDOR_PROFILE_VIEW            
+        );*/
+        
+        $select->from(
+            ['source_table' => $this->getTable('report_event')],
+            $columns
+        )->where(
+            'source_table.event_type_id = ? ',
+            \Business\MostviewedVendors\Model\Event::EVENT_VES_VENDOR_PROFILE_VIEW            
+        );
+        
+
+        
+        $select->joinInner(
+            ['ves_vendos' => $this->getTable('ves_vendor_entity')],
+            'ves_vendos.entity_id = source_table.object_id',
+            []
+        );
+
+       
+        //$select->useStraightJoin();
+        //echo "<hr /> 1<br />".$select."<hr /> <br />";
+        //die;
+       $insertQuery = $select->insertFromSelect($this->getMainTable(), array_keys($columns));
+        //echo "<hr /> 2<br />".$select."<hr /> <br />";
+        
+       // $myQuery = " SELECT `source_table`.`store_id`, `source_table`.`event_id` AS `event_id` ,`source_table`.`object_id` AS `vendor_id`, `source_table`.`subtype` AS `mastercountry_id`, COUNT(source_table.event_id) AS `views_num` FROM `report_event` AS `source_table` INNER JOIN `ves_vendor_entity` AS `ves_vendos` ON ves_vendos.entity_id = source_table.object_id WHERE (source_table.event_type_id = 7 AND source_table.object_id = 33)   ";
+       
+       /*$results = $connection->fetchAll($select);
+       $arrCountryIds =  array();
+        foreach($results as $result){
+			echo "<pre>".print_r($result,1)."</pre>";
+			$arrCountryIds[]= $result['mastercountry_id'];
+		}   
+		$arrCountryIds = array_unique($arrCountryIds);
+		echo "<br />CountryIds=". implode(",",$arrCountryIds);		
+		echo "<br />selectQuery=  ".$select."<br /><hr />";
+		echo "<br />insertQuery=  ".$insertQuery;
+        die;*/
+        
+        $connection->query($insertQuery);
+        $connection->commit();
+
+        /*$this->_resourceHelper->updateReportRatingPos(
+            $connection,
+            'day',
+            'views_num',
+            $mainTable,
+            $this->getTable(self::AGGREGATION_DAILY)
+        );
+        $this->_resourceHelper->updateReportRatingPos(
+            $connection,
+            'month',
+            'views_num',
+            $mainTable,
+            $this->getTable(self::AGGREGATION_MONTHLY)
+        );
+        $this->_resourceHelper->updateReportRatingPos(
+            $connection,
+            'year',
+            'views_num',
+            $mainTable,
+            $this->getTable(self::AGGREGATION_YEARLY)
+        );*/
+        
+        return $this;
+    }
+
+    /**
+     * Aggregate Orders data by custom field
+     *
+     * @param string $aggregationField
+     * @param string|int|\DateTime|array|null $from
+     * @param string|int|\DateTime|array|null $to
+     * @return $this
+     * @throws \Exception
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
+     */
+    /*protected function _aggregateByField($aggregationField, $from, $to)
+    {
+        $connection = $this->getConnection();
+        
+        $salesAdapter = $this->_resources->getConnection('business_report_viewed_vendors_index');
+
+        $connection->beginTransaction();
+        try {
+            if ($from !== null || $to !== null) {
+                $subSelect = $this->_getTableDateRangeSelect(
+                    $this->getTable('business_report_viewed_vendors_index'),
+                    $aggregationField,
+                    $aggregationField,
+                    $from,
+                    $to
+                );
+            } else {
+                $subSelect = null;
+            }
+            
+            
+            $this->_clearTableByDateRange($this->getMainTable(), $from, $to, $subSelect);
+
+            $periodExpr = $connection->getDatePartSql(
+                $this->getStoreTZOffsetQuery(
+                    ['e' => $this->getTable('business_report_viewed_vendors_index')],
+                    'e.' . $aggregationField,
+                    $from,
+                    $to
+                )
+            );
+            // Columns list
+            $columns = [                
+                'vendor_id' => 'e.vendor_id',
+                'vendor_code' => 'vendor.vendor_id',                                                
+                'store_id' => 'e.store_id',
+                'period' => $periodExpr,                
+                
+            ];
+            
+            //echo "<pre>".print_r($columns, 1)."</pre>";
+                        $select = $connection->select()->from(
+                ['e' => $this->getTable('business_report_viewed_vendors_index')],
+                $columns
+            )->joinInner(
+                ['vendor' => $this->getTable('ves_vendor_entity')],
+                'e.vendor_id = vendor.entity_id',
+                []
+            );
+            $select->group([$periodExpr, 'e.store_id', 'e.vendor_id']);
+            //echo "<br />".$select."<br />";
+            $aggregatedData = $salesAdapter->fetchAll($select);
+            
+      
+            
+            
+            if ($aggregatedData) {
+				
+               $issucces= $connection->insertArray($this->getMainTable(), array_keys($columns), $aggregatedData);
+               //echo ($issucces)?"Success":"Not Success";
+            }
+            
+            
+            $columns = [
+               'vendor_id' => 'vendor_id',
+               'vendor_code' => 'vendor_code',                                
+               'period' => 'period',
+               'store_id' => new \Zend_Db_Expr(\Magento\Store\Model\Store::DEFAULT_STORE_ID),               
+            ];
+            
+            $select->reset()->from($this->getMainTable(), $columns)->where('store_id <> ?', 0);
+            //echo "<br />".$select."<br />";
+            
+            if ($subSelect !== null) {
+                $select->where($this->_makeConditionFromDateRangeSelect($subSelect, 'period', $salesAdapter));
+            }
+            //echo $select."<br />";
+            
+
+            $select->group(['store_id', 'vendor_id']);
+            //$select->group(['period', 'code', 'percent', 'order_status']);
+            //echo "<br />".$select."<br />";
+            $insertQuery = $connection->insertFromSelect($select, $this->getMainTable(), array_keys($columns));
+            //echo $insertQuery."<br />";
+            //die('END');
+            $connection->query($insertQuery);
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
+        }
+
+        return $this;
+    }*/
+}

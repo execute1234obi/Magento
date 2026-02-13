@@ -1,0 +1,96 @@
+<?php
+/**
+ * Product gallery template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+$product = $block->getProduct();
+$galleryImages = $block->getGalleryImages();
+?>
+
+<div class="main-frame">
+    <!-- Main image placeholder with Magento gallery role -->
+    <img class="main-image" id="mainImage" src="" alt="" data-gallery-role="gallery-placeholder">
+</div>
+
+<div class="thumbs-wrap">
+    <button class="thumb-arrow" id="prevBtn" aria-label="Previous image">‹</button>
+    <div class="gallery-thumbs" id="thumbTrack" role="tablist" aria-label="Product images">
+        <?php foreach ($galleryImages as $image) : ?>
+            <img src="<?= $block->escapeUrl($image->getUrl()) ?>"
+                 alt="<?= $block->escapeHtmlAttr($image->getLabel()) ?>"
+                 data-full-image-url="<?= $block->escapeUrl($image->getUrl()) ?>"
+                 class="thumb-image"
+                 role="tab">
+        <?php endforeach; ?>
+    </div>
+    <button class="thumb-arrow" id="nextBtn" aria-label="Next image">›</button>
+</div>
+
+<script>
+require([
+    'jquery',
+    'Magento_Swatches/js/swatch-renderer'
+], function($) {
+    $(document).ready(function() {
+        const mainImage = $('#mainImage')[0];
+        const thumbTrack = $('#thumbTrack')[0];
+        const prevBtn = $('#prevBtn')[0];
+        const nextBtn = $('#nextBtn')[0];
+        let thumbs = Array.from(thumbTrack.querySelectorAll('img'));
+        let currentIndex = 0;
+
+        const updateGallery = (index) => {
+            currentIndex = index;
+            thumbs.forEach((t, idx) => {
+                t.classList.toggle('active', idx === index);
+                t.setAttribute('aria-selected', idx === index ? 'true' : 'false');
+            });
+            const activeThumb = thumbs[index];
+            if (activeThumb) {
+                mainImage.src = activeThumb.dataset.fullImageUrl;
+                mainImage.alt = activeThumb.alt;
+                activeThumb.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+            }
+        };
+
+        // Thumbnail click
+        thumbs.forEach((t, i) => t.addEventListener('click', () => updateGallery(i)));
+
+        // Prev/Next buttons
+        prevBtn.addEventListener('click', () => {
+            updateGallery((currentIndex - 1 + thumbs.length) % thumbs.length);
+        });
+        nextBtn.addEventListener('click', () => {
+            updateGallery((currentIndex + 1) % thumbs.length);
+        });
+
+        // Initialize gallery
+        if (thumbs.length > 0) updateGallery(0);
+
+        // Listen for configurable product changes
+        $(document).on('updateProductComplete', function(e, data) {
+            if (data.images && data.images.length > 0) {
+                mainImage.src = data.images[0].full;
+
+                // Rebuild thumbnails
+                $('#thumbTrack').empty();
+                data.images.forEach((img, idx) => {
+                    const thumb = $('<img>', {
+                        src: img.small,
+                        'data-full-image-url': img.full,
+                        class: idx === 0 ? 'thumb-image active' : 'thumb-image',
+                        alt: img.label,
+                        role: 'tab',
+                    });
+                    thumb.on('click', () => updateGallery(idx));
+                    $('#thumbTrack').append(thumb);
+                });
+
+                thumbs = Array.from($('#thumbTrack img'));
+                currentIndex = 0;
+            }
+        });
+    });
+});
+</script>

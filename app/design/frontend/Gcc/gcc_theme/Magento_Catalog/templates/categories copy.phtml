@@ -1,0 +1,82 @@
+<?php
+use Magento\Framework\UrlInterface;
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$categoryCollectionFactory = $objectManager->get(\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory::class);
+
+$parentCategoryId = 2;
+
+$categories = $categoryCollectionFactory->create()
+    ->addAttributeToSelect(['name', 'image', 'url_key'])
+    ->addIsActiveFilter()
+    ->addAttributeToFilter('parent_id', $parentCategoryId);
+
+$mediaBase = $block->getBaseUrl(['_type' => UrlInterface::URL_TYPE_MEDIA]) . 'pub/';
+?>
+
+<div class="text-center mb-12">
+    <h2 class="text-3xl font-semibold">Explore Key Industrial Sectors</h2>
+    <p class="text-gray-600 mt-2">
+        Discover suppliers and products across various industries to meet your business needs efficiently.
+    </p>
+</div>
+
+<!-- Category Wrapper -->
+<div class="flex justify-center mb-8">
+    <div class="category-scroll-wrapper overflow-hidden w-full max-w-6xl">
+        <div class="category-scroll flex transition-transform duration-500">
+            <?php foreach ($categories as $category): ?>
+                <div class="category-card flex-none w-1/5 px-4">
+                    <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                        <a href="<?= $category->getUrl() ?>">
+                            <?php if ($category->getImage()): ?>
+                                <img src="<?= $mediaBase . $category->getImage() ?>"
+                                     alt="<?= $category->getName() ?>"
+                                     class="w-12 h-12 mb-4" />
+                            <?php else: ?>
+                                <img src="<?= $block->getViewFileUrl('Magento_Catalog::images/default-category.png') ?>"
+                                     alt="No Image"
+                                     class="w-12 h-12 mb-4" />
+                            <?php endif; ?>
+                            <p class="text-lg font-semibold"><?= $category->getName() ?></p>
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation Arrows -->
+<div class="flex justify-between max-w-md mx-auto">
+    <button onclick="scrollCategories(-1)"
+            class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700">
+        &lt;
+    </button>
+    <button onclick="scrollCategories(1)"
+            class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700">
+        &gt;
+    </button>
+</div>
+
+<script>
+let currentIndex = 0;
+const visibleCount = 5; // ek time pe 5 categories
+
+function scrollCategories(direction) {
+    const container = document.querySelector('.category-scroll');
+    const card = container.querySelector('.category-card');
+    if (!card) return;
+
+    const cardWidth = card.offsetWidth; // ab exact card width milega
+    const total = container.children.length;
+
+    currentIndex += direction;
+
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex > Math.ceil(total / visibleCount) - 1) {
+        currentIndex = Math.ceil(total / visibleCount) - 1;
+    }
+
+    container.style.transform = `translateX(-${currentIndex * cardWidth * visibleCount}px)`;
+}
+</script>

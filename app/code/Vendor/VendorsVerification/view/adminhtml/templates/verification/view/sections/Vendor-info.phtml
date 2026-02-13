@@ -1,0 +1,202 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Adminhtml\Verification */
+
+$vendor = $block->getVendor();
+$vendorVerification = $block->getVendorVerification();
+
+if (!$vendor || !$vendorVerification) {
+    echo __("Vendor details not found.");
+    return;
+}
+
+$verificationId = $vendorVerification->getId();
+// Business Information Group ID constant
+$groupId = \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION;
+
+$verificationData = $block->getVerificationSectionData($verificationId, $groupId);
+$detail_id = $verificationData ? $verificationData->getDetailId() : 0;
+
+// NEW LOGIC: Direct from Vendor Attributes
+$business_name        = $vendor->getData('b_name');
+$business_description = $vendor->getData('business_descriptions');
+$businessType         = $vendor->getData('business_type');
+$business_website     = $vendor->getData('website');
+$business_country     = $vendor->getCountryId(); 
+$business_phone       = $vendor->getData('b_ph');
+$business_email       = $vendor->getData('b_email');
+?>
+
+<div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+        <div class="admin__page-section-item-title">
+            <span class="title">
+                <span><?php echo __("Business Information");?></span>           
+            </span>
+        </div>
+        <div class="admin__page-section-item-content">                                      
+             <div>
+                 <button id="print" title="<?php echo __('Approve') ?>" type="button" class="btn verification-action" style="background:#66a80f;color:#ffffff;"  data-ui-id="vendor-verification-print-button" data-modal-id="verification-infoapproval-modal" data-modal-action="approve">
+                       <span><?php echo __('Approve') ?></span>
+                 </button>                          
+                 <button id="print" title="<?php echo __('Resubmit') ?>" type="button" class="btn verification-action" style="background:#ffb300;color:#ffffff;" data-ui-id="vendor-verification-print-button" data-modal-id="verification-inforesubmit-modal" data-modal-action="resubmit">
+                       <span><?php echo __('Request Re-submit') ?></span>
+                 </button>                          
+                 <button id="print" title="<?php echo __('Reject') ?>" type="button" class="btn verification-action" style="background:#ff2500;color:#ffffff;"  data-ui-id="vendor-verification-print-button" data-modal-id="verification-inforeject-modal" data-modal-action="reject">
+                       <span><?php echo __('Reject') ?></span>
+                 </button>                                                                                                                 
+            <div class="page-actions-buttons">                  
+                    <button id="back" title="Comments" type="button" class="action-default verification-showcomment" 
+                    data-verificationid="<?php echo  $verificationId;?>" 
+                    data-verifidtlid="<?php echo  $detail_id;?>" 
+                    data-verifigroupid="<?php echo  \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION;?>"  >                    
+                        <span><?php echo __("Comments");?></span>
+                    </button>                     
+             </div>
+            </div> 
+            <br />     
+            
+            <table class="admin__table-secondary">
+                <tbody>                                                 
+                    <tr>      
+                      <td><?php echo __('Status') ?></td>
+                      <td>
+                           <?php echo $block->getStatusLabel($verificationData->getStatus());?>
+                        </td>      
+                    </tr>
+                    <tr>      
+                      <td><?php echo __('Country') ?></td>
+                      <td><?php echo $block->getCountriByCode($business_country );?></td>      
+                    </tr>
+                    <tr>      
+                      <td><?php echo __('Business Name') ?></td>
+                      <td><?php echo $business_name ;?></td>      
+                    </tr>
+                    <tr>
+                      <td><?php echo __('Business Type') ?></td>
+                            <td><?php echo $block->getBusinessTypeLebalbyId($businessType);;?></td>      
+                    </tr>
+                    <tr>
+                      <td><?php echo __('Business Description') ?></td>
+                      <td><?php echo $business_description;?></td>      
+                    </tr>    
+                    <tr>
+                      <td><?php echo __('Business Website') ?></td>
+                      <td><?php echo $business_website;?></td>      
+                    </tr>    
+                    <tr>
+                      <td><?php echo __('Business Phone') ?></td>
+                      <td><?php echo $business_phone;?></td>      
+                    </tr>    
+                    <tr>
+                      <td><?php echo __('Business Email') ?></td>
+                      <td><?php echo $business_email;?></td>      
+                    </tr>    
+                </tbody>      
+                </table>        
+          </div>
+    </div>
+</div>
+
+<div id="verification-infoapproval-modal" style="display:none;">
+<table class="admin__table-secondary">
+                <tbody>                                                 
+                    <tr>      
+                      <td><?php echo __('Status') ?></td>
+                      <td>
+                           <?php echo $block->getStatusLabel($verificationData->getStatus());?>                        
+                        </td>      
+                    </tr>
+                    <tr>      
+                      <td><?php echo __('Country') ?></td>
+                      <td><?php echo $block->getCountriByCode($business_country );?></td>      
+                    </tr>
+                    <tr>      
+                      <td><?php echo __('Business Name') ?></td>
+                      <td><?php echo $business_name;?></td>      
+                    </tr>
+                    <tr>
+                      <td><?php echo __('Business Type') ?></td>
+                      <td><?php echo $block->getBusinessTypeLebalbyId($businessType);?></td>      
+                    </tr>
+                    <tr>
+                      <td><?php echo __('Business Description') ?></td>
+                      <td><?php echo $business_description;?></td>      
+                    </tr>    
+                    <tr>
+                      <td><?php echo __('Business Website') ?></td>
+                      <td><?php echo $business_website;?></td>      
+                    </tr>    
+                    <tr>
+                      <td><?php echo __('Business Phone') ?></td>
+                      <td><?php echo $business_phone;?></td>      
+                    </tr>    
+                    <tr>
+                      <td><?php echo __('Business Email') ?></td>
+                      <td><?php echo $business_email;?></td>      
+                    </tr>    
+                </tbody>      
+</table>            
+<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id,
+      \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__VERIFIED); ?>"
+      name="verification-businessinfo-form"
+      id="verification-businessinfo-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}' >
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+      <legend class="legend"><span><?php echo __('Business Information') ?> </span></legend><br />                       
+                   <div class="fields col-md-10">                             
+                          <div class="page-main-actions" style="margin-right:0;margin-left:0;">                         
+                           <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+                        </div>     
+                     </div>
+</form>
+</div>
+<div id="verification-inforesubmit-modal" style="display:none;">    
+    <h2><?php echo __('Business Information') ?></h2>
+    <form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id,\Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT); ?>"
+      name="verification-businessinforesubmit-form"
+      id="verification-businessinforesubmit-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+                         <div class="fields col-md-10">
+                             <div class="field comments required">
+                                 <label  for="comments"><span><?php echo __('Comments For Re-submit') ?></span></label>
+                                 <div class="control">                                     
+                                     <textarea name="comments" id="comments" rows="10" cols="80" data-validate="{required:true}"></textarea>
+                                 </div>
+                             </div>                             
+                          <div class="page-main-actions" style="margin-right:0;margin-left:0;">                         
+                           <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+                        </div>     
+                     </div>
+      
+</form>
+</div>
+<div id="verification-inforeject-modal" style="display:none;">      
+    <h2><?php echo __('Business Information') ?></h2>
+    <form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id,\Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__REJECTED); ?>"
+      name="verification-businessinforeject-form"
+      id="verification-businessinforeject-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />       
+                         <div class="fields col-md-10">
+                             <div class="field comments required">
+                                 <label  for="comments"><span><?php echo __('Comments For Reject') ?></span></label>
+                                 <div class="control">                                     
+                                     <textarea name="comments" id="comments" rows="10" cols="80"></textarea>
+                                 </div>
+                             </div>                             
+                          <div class="page-main-actions" style="margin-right:0;margin-left:0;">                         
+                           <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+                        </div>     
+                     </div>
+</form>
+</div>

@@ -1,0 +1,83 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$products = $block->getProductCollection();
+$productCount = count($products);
+?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
+<div class="container mx-auto px-4 py-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-sm font-semibold text-gray-900">Other Products from the Same Vendor</h2>
+    <div class="flex items-center space-x-2">
+      <button id="prevBtn" class="text-blue-500 hover:text-blue-700 disabled:opacity-40" aria-label="Previous">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+      <button id="nextBtn" class="text-blue-500 hover:text-blue-700 disabled:opacity-40" aria-label="Next">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="product-carousel">
+    <?php foreach ($products as $_item): ?>
+      <?php $imgUrl = $block->getImage($_item, 'category_page_list')->getImageUrl(); ?>
+      <div class="p-2">
+        <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition p-3 text-center">
+          <img src="<?= $imgUrl ?>" alt="<?= $block->escapeHtml($_item->getName()) ?>"
+               class="w-full h-40 object-cover rounded-lg mb-2">
+          <p class="text-sm font-medium text-gray-800 truncate"><?= $block->escapeHtml($_item->getName()) ?></p>
+          <p class="text-blue-600 font-semibold mt-1">
+            <?= $block->escapeHtml($_item->getFinalPrice()) ?> <?= $block->escapeHtml($block->getCurrencySymbol()) ?>
+          </p>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
+
+<script>
+require(['jquery'], function($) {
+  $(document).ready(function() {
+    var $carousel = $('.product-carousel');
+    var productCount = <?= $productCount ?>;
+    var slidesToShow = 4;
+
+    $carousel.slick({
+      slidesToShow: slidesToShow,
+      slidesToScroll: 1,
+      infinite: false,
+      arrows: false,
+      dots: false,
+      responsive: [
+        { breakpoint: 1024, settings: { slidesToShow: 3 } },
+        { breakpoint: 768, settings: { slidesToShow: 2 } },
+        { breakpoint: 480, settings: { slidesToShow: 1 } }
+      ]
+    });
+
+    // Disable arrows if total slides <= visible
+    function updateArrows() {
+      if (productCount <= slidesToShow) {
+        $('#prevBtn, #nextBtn').prop('disabled', true).addClass('opacity-40 cursor-not-allowed');
+      } else {
+        $('#prevBtn, #nextBtn').prop('disabled', false).removeClass('opacity-40 cursor-not-allowed');
+      }
+    }
+    updateArrows();
+
+    $('#prevBtn').click(function() {
+      $carousel.slick('slickPrev');
+    });
+    $('#nextBtn').click(function() {
+      $carousel.slick('slickNext');
+    });
+  });
+});
+</script>

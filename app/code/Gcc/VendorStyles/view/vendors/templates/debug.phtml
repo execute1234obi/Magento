@@ -1,0 +1,7 @@
+<?php 
+/** @var \Magento\Framework\View\Element\Template $block */
+$layout = $block->getLayout();
+echo "<pre>CURRENT LAYOUT HANDLES:\n";
+print_r($layout->getUpdate()->getHandles());
+echo "</pre>";
+?>

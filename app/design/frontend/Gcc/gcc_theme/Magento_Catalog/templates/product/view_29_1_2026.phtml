@@ -1,0 +1,1484 @@
+<?php
+/**
+ * @var \Magento\Catalog\Block\Product\View\AbstractView $block
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ * @var \Magento\Catalog\Helper\Image $imageHelper
+ * @var \Magento\Catalog\Model\Product $product
+ */
+
+$product = $block->getProduct();
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+
+// Fetching configurable product data if available
+$configurableData = '';
+if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+    $configurableData = $block->getJsonConfig();
+}
+
+// In a real module, you would use Dependency Injection.
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$vendorFactory = $objectManager->create(\Vnecoms\Vendors\Model\VendorFactory::class);
+$vendorsVerificationHelper = $objectManager->get(\Business\VendorsVerification\Helper\Data::class);
+$wishlistHelper = $this->helper(\Magento\Wishlist\Helper\Data::class); // Added dependency on wishlist helper
+
+$vendor = null;
+$isVerified = false;
+$vendorName = 'N/A';
+$vendorLocation = 'N/A';
+$logoUrl = '';
+
+if ($product->getVendorId()) {
+    try {
+        $vendor = $vendorFactory->create()->load($product->getVendorId());
+        
+        if ($vendor && $vendor->getId()) {
+          //print_r($vendor->getData('vendor_id'));
+          //exit();
+             $vendorName = $vendor->getData('b_name') ?: $vendor->getData('name'); // Fallback to 'name' if 'b_name' is empty
+             $vendorLocation = $vendor->getCountryId() ?: $vendor->getData('country_id');
+             //$country_id = $countryFactory->create()->loadByCode($vendorLocation);
+//$country = $country_id->getName(); 
+            // $country = $vendorLocation->getName(); 
+             $isVerified = $vendorsVerificationHelper->isVerifiedVendor($product->getVendorId());
+             // Get media URL using $block helper method
+            $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . "pub/media/";
+            $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
+            $varify =$mediaUrl."wysiwyg/VerificationBadgeIcon.png";
+            $logoPath = $vendor->getData('upload_logo');
+            $logoUrl = $logoPath ? $mediaUrl . $logoPath : '';
+            $vendor_id= $vendor->getData('vendor_id');
+                       
+          //  echo  $vendor_id;
+        }
+    } catch (\Exception $e) {
+        // Log this error in a production environment
+    }
+}
+
+// Prepare Wishlist data outside the HTML block for cleaner code
+$addToWishlistParams = $wishlistHelper->getAddParams($product);
+$title = (string)$product->getName();
+$shortTitle = mb_strimwidth($title, 0, 69, '..', 'UTF-8');
+?>
+
+<style>
+/* ... your CSS code here (no changes needed) ... */
+.page-layout-1column .product-info-main {
+    width: 100%;
+    background: white;
+    padding: 15px 15px;
+    border-radius: 12px;
+}
+/* Reset + helpers */
+*, *::before, *::after { box-sizing: border-box; }
+img { display: block; max-width: 100%; height: auto; }
+
+body {
+ font-family: Arial, sans-serif;
+ background: #f9fafb;
+ margin: 0;
+ color: #333;
+}
+.breadcrumbs .item:not(:last-child) {
+    display: none;
+    /* text-decoration: none; */
+}
+
+.breadcrumb {
+     font-size: 14px;
+    color: #9CA3AF !important;
+    margin-bottom: 27px !important;
+    overflow-wrap: anywhere;
+    padding-top: 50px;
+    padding-top: 84px !important;
+
+}
+.breadcrumbs .items > li {
+    display: none;
+    /* vertical-align: top; */
+}
+
+.page-main {
+     padding-top: 50px;
+}
+.page-layout-1column.page-with-filter .column.main {
+            padding-top: 0px;
+            
+}
+.container { width: 95%; max-width: 1200px; margin: 20px auto; }
+.breadcrumb { font-size: 14px; color: #777; margin-bottom: 20px; overflow-wrap: anywhere; }
+.breadcrumb span { margin-right: 13px; margin-left: 13px;}
+
+.product-main {
+ display: grid;
+  grid-template-columns: 1fr 1fr;
+ gap: 20px;
+ margin-bottom: 30px;
+}
+.price-as-configured,
+.price-from,
+.price-label {
+    display: none !important;
+}
+
+
+.vendor-card {
+ /* display: flex; */
+     /* align-items: center; */
+     /* justify-content: space-between; */
+     /* gap: 16px; */
+     /* padding: 12px 16px; */
+     border-radius: 12px;
+     background: #fff;
+     box-shadow: 0 1px 3px rgba(16, 24, 40, .06);
+}
+.vendor-left { 
+  /* display: flex; */
+     /* align-items: center; Align all items vertically (logo, meta) */
+     /* gap: 12px; */
+     min-width: 0;
+    }
+.vendor-left img { width: 50px; }
+.btn { background: #2563eb; color: #fff; padding: 6px 12px; border: none; border-radius: 6px; cursor: pointer; }
+.btn-outline { background: none; border: 1px solid #ccc; color: #333; padding: 6px 12px; border-radius: 6px; cursor: pointer; }
+.btn:focus-visible, .btn-outline:focus-visible, .variation .options button:focus-visible { outline: 3px solid #93c5fd; outline-offset: 2px; }
+.rating, .country { font-size: 14px; color: #444; white-space: nowrap; }
+
+/* ---------- Product gallery (carousel) ---------- */
+.product-gallery {
+ /* background: #fff;  */
+ border-radius: 12px;
+  padding: 20px;
+ /* box-shadow: 0 2px 6px rgba(0, 0, 0, .05); */
+}
+.main-frame {
+ background: #eef2f7;
+ border-radius: 16px;
+ padding: 24px;
+}
+.main-image {
+ max-height: 500px;
+ margin: 0 auto;
+ object-fit: contain;
+ border-radius: 12px;
+ transition: opacity .15s ease;
+}
+
+.thumbs-wrap {
+ display: grid;
+ grid-template-columns: auto 1fr auto;
+ align-items: center;
+ gap: 10px;
+ margin-top: 16px;
+}
+.thumb-arrow {
+ width: 36px; height: 36px; border-radius: 9999px; border: 1px solid #d1d5db; background: #fff;
+ display: grid; place-items: center; cursor: pointer; font-size: 18px; line-height: 0;
+ box-shadow: 0 1px 3px rgba(0, 0, 0, .08);
+}
+.thumb-arrow:disabled { opacity: .4; cursor: not-allowed; }
+
+.gallery-thumbs {
+ display: flex; gap: 12px; overflow-x: auto; padding: 6px; scroll-snap-type: x mandatory;
+}
+.gallery-thumbs::-webkit-scrollbar { height: 8px; }
+.gallery-thumbs::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 8px; }
+
+.gallery-thumbs img {
+ width: 72px; height: 72px; object-fit: cover; border-radius: 10px; border: 1px solid #e5e7eb;
+ background: #f3f4f6; cursor: pointer; flex: 0 0 auto; scroll-snap-align: start;
+ transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+.gallery-thumbs img.active {
+ border: 2px solid #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+ transform: translateY(-2px);
+}
+
+.product-info {
+ background: #fff; padding: 20px; border-radius: 12px;
+ box-shadow: 0 2px 6px rgba(0, 0, 0, .05);
+}
+.product-info h2 { margin: 0 0 10px; line-height: 1.25; }
+.product-info p { font-size: 14px; color: #555; line-height: 1.6; }
+
+.variation { margin: 15px 0; }
+.variation label { font-weight: bold; margin-bottom: 6px; display: block; }
+.variation .options { display: flex; flex-wrap: wrap; gap: 10px; }
+.variation .options button { padding: 8px 14px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }
+.variation .options button.active { border: 2px solid #2563eb; color: #2563eb; font-weight: bold; }
+
+.add-quote-btn {
+ display: block; width: 100%; padding: 28px; background: #2563eb; color: #fff; border: none;
+ border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 16px;
+}
+
+/* Tabs */
+.tabs { margin-top: 30px; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(0, 0, 0, .05); }
+.tab-header { display: flex; gap: 20px; border-bottom: 1px solid #ddd; margin-bottom: 15px; flex-wrap: wrap; overflow-x: auto; padding-bottom: 6px; }
+.tab-header button { background: none; border: none; font-weight: bold; padding: 10px 0; cursor: pointer; white-space: nowrap; }
+.tab-header button.active { color: #2563eb; border-bottom: 2px solid #2563eb; }
+.tab-content { font-size: 14px; color: #444; line-height: 1.6; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* Product lists */
+.product-list { margin-top: 30px; }
+.product-list h3 { margin-bottom: 15px; }
+.product-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.card { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 6px rgba(0, 0, 0, .05); text-align: center; }
+.card img { width: 100%; border-radius: 8px; margin-bottom: 10px; }
+.card p { font-size: 14px; margin: 5px 0; }
+.card .btn-outline { margin-top: 10px; display: inline-block; }
+
+
+/* Reviews (exact UI like screenshot) */
+.reviews-header {
+ background: #eaf2ff;
+ border-radius: 12px;
+ padding: 16px;
+ display: flex;
+ flex-wrap: wrap;
+ align-items: center;
+ gap: 16px 20px;
+ margin-bottom: 20px;
+}
+.avg-block { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+.avg-score { font-weight: 700; font-size: 28px; }
+.stars { display: flex; gap: 4px; align-items: center; }
+.stars svg { width: 18px; height: 18px; }
+.star-empty { fill: #e5e7eb; }
+.star-full { fill: #f59e0b; }
+.star-half { fill: url(#halfGrad); }
+.chip-row { display: flex; flex-wrap: wrap; gap: 12px; }
+.chip {
+ background: #fff; border: 1px solid #d1d5db; border-radius: 10px;
+ padding: 8px 14px; cursor: pointer; font-weight: 600;
+}
+.chip.active { background: #2563eb; color: #fff; border-color: #2563eb; }
+
+.reviews-grid {
+ display: grid;
+ grid-template-columns: repeat(2, 1fr);
+ gap: 18px;
+}
+.review-card {
+ position: relative;
+ background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+ padding: 16px; box-shadow: 0 1px 3px rgba(0, 0, 0, .04);
+}
+.kebab {
+ position: absolute; top: 10px; right: 10px; border: none; background: none; cursor: pointer;
+ font-size: 18px; color: #9ca3af;
+}
+.reviewer { font-weight: 700; margin: 8px 0; }
+.review-text { color: #555; line-height: 1.6; }
+.quote::before, .quote::after { content: '"'; }
+.muted { color: #6b7280; }
+
+/* Responsive */
+@media (max-width: 1280px) {
+ .product-cards { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+}
+@media (max-width: 1024px) {
+ .product-main { grid-template-columns: 1fr; }
+ .main-image { max-height: 420px; }
+}
+@media (max-width: 768px) {
+ .container { width: 92%; margin: 16px auto; }
+ .gallery-thumbs img { width: 64px; height: 64px; }
+ .product-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+ .vendor-card { flex-direction: column; align-items: stretch; gap: 10px; }
+ .vendor-left img { width: 42px; }
+ .btn { width: 100%; text-align: center; }
+ .main-frame { padding: 16px; }
+ .main-image { max-height: 340px; }
+ .product-cards { grid-template-columns: 1fr; }
+}
+.product-title{
+    font-size: 35px !important;
+}
+.price-container .price {
+    font-size: 3.4rem !important;
+    font-weight: 700 !important;
+}
+.vendor-meta{display: flex;
+    /* Override your previously defined vendor-meta */
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+ }
+.vendor-name{ /* Override your previously defined vendor-name */
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+ }
+  /* Logo and Button Row (Side-by-side) */
+.vendor-logo-and-button-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.verified-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:999px;background:#eaf2ff;color:#1E40AF;font-size:12px}
+.meta-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.divider-v{width:1px;height:18px;background:#e5e7eb}
+.meta-item{display:inline-flex;align-items:center;gap:6px;color:#444;font-size:14px}
+/* Title row: make it the positioning context */
+.title-row{
+  position: relative;
+  display: block;      /* flex not required when using absolute icon */
+}
+
+/* Leave space so long titles don’t run under the icon */
+.product-title{
+  margin: 0;
+  line-height: 1.2;
+  padding-right: 56px; /* = fav-btn width + gap */
+}
+
+/* Heart pinned to top-right */
+.fav-btn{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  border: 1px solid #e6edf7;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16,24,40,.08);
+}
+
+.fav-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(16,24,40,.10)}
+
+/* Whole strip laid out as a grid */
+/* Whole bar */
+.vendor-card{
+  /* display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px; */
+  padding:12px 16px;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 1px 3px rgba(16,24,40,.06);
+}
+
+/* Left corner = 2x2 grid: name on row 1; logo + button on row 2 */
+.vendor-left{
+  display:grid;
+  grid-template-columns:44px auto;  /* logo | text */
+  grid-template-rows:auto auto;     /* row1 name, row2 button */
+  column-gap:12px;
+  row-gap:6px;
+  align-items:start;              /* << top-align everything in this grid */
+}
+
+/* Logo */
+.vendor-logo{
+  width: 44px;
+    height: 44px;
+    border-radius: 8px; /* Square/slightly rounded logo */
+    border: 1px solid #E6EDF7;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background: #fff;           /* keep logo aligned to top */
+}
+.vendor-logo img{ width:100%; height:100%; object-fit:contain; }
+
+/* Name + badge (top row) */
+.vendor-name{
+  grid-column: 2; /* Changed to column 2 to be next to logo */
+    grid-row: 1;                     /* << top row */
+  margin:0;
+  line-height:1.1;
+  display:inline-flex; align-items:center; gap:8px;
+  align-self:start;               /* << force name to top-left */
+}
+.verified-dot{
+  width:18px; height:18px; border-radius:9999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  background:#EAF2FF; color:#1E40AF; font-size:12px; font-weight:700;
+}
+
+/* Button (second row, next to logo) */
+.btn.btn-primary{
+ height: 38px;
+    padding: 0 16px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff;
+    border: 0;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 2; /* Placed in the second column */
+    grid-row: 2; /* Placed in the second row */
+}
+
+
+/* Right rail: keep single line */
+.vendor-rail{
+  display: flex;
+    align-items: center;
+    gap: 16px;
+    white-space: nowrap;
+    border-left: 1px solid #e5e7eb; /* Vertical Divider */
+    padding-left: 16px;
+}
+.meta-item{ display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #374151;
+    font-size: 14px;
+   }
+   .rating-star-svg {
+    fill: #f59e0b; /* Filled star color */
+    stroke: none;
+}
+.country-flag {
+    /* width: 24px; 
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover; */
+     width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  background-color: #e6f6ea;
+  display: inline-block;
+}
+.rail-divider{ 
+    /* Hide the old divider */
+    display: none;
+}
+
+
+@media (max-width:560px){
+  .vendor-card{ flex-direction:column; align-items:flex-start; gap:12px; }
+  .vendor-rail{ gap:12px; }
+  .vendor-left {
+    display: flex; /* Revert to flex on mobile for simpler layout */
+    align-items: center;
+    gap: 12px;
+  }
+  .vendor-name {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .btn.btn-primary {
+    grid-column: auto;
+    grid-row: auto;
+  }
+  .vendor-logo-and-button-row {
+    display: flex; /* Ensure logo and button stay together if needed */
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+/* Description clamp + fade */
+.desc-wrap { position: relative; }
+
+.desc-text {
+  font-size: 14px; color: #444; line-height: 1.6;
+  transition: max-height .2s ease;
+}
+
+/* 3-line clamp with real ellipsis */
+.desc-text.is-clamped{
+  display: -webkit-box;
+  -webkit-line-clamp: 3;          /* change to 4 if you want 4 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative;
+}
+
+/* soft fade at bottom like the screenshot */
+.desc-text.is-clamped::after{
+  content:"";
+  position:absolute; left:0; right:0; bottom:0;
+  height:2.1em;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), #fff);
+  pointer-events:none;
+}
+
+/* Inline “More/Less” control */
+.desc-toggle{
+  background: none; border: 0;
+  color: #848484; font-weight: 600;
+  padding: 6px 0 0; cursor: pointer;
+}
+.desc-toggle:focus-visible{ outline: 3px solid #93c5fd; outline-offset: 2px; }
+/* Keep other existing styles for title-row, fav-btn, and responsiveness */
+
+/* @media (max-width:560px){
+     .vendor-card{ flex-direction: column; align-items: flex-start; gap: 12px; }
+     .vendor-rail{
+         gap: 12px;
+         border-left: none; 
+         padding-left: 0;
+         border-top: 1px solid #e5e7eb;
+         padding-top: 12px;
+         width: 100%;
+     }
+} */
+ .btn { 
+            background: #2563eb; 
+            color: #fff; 
+            padding: 6px 12px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+        }
+        .rating, .country { 
+            font-size: 14px; 
+            color: #444; 
+            white-space: nowrap; 
+        }
+        
+        /* VERIFIED BADGE (from provided CSS) */
+        .verified-dot{
+            width:18px; 
+            height:18px; 
+            border-radius:9999px;
+            display:inline-flex; 
+            align-items:center; 
+            justify-content:center;
+            background:#EAF2FF; 
+            color:#1E40AF; 
+            font-size:12px; 
+            font-weight:700;
+        }
+
+        /* VENDOR CARD CONTAINER (from provided CSS) */
+        .vendor-card{
+            /* display:flex;
+            align-items:center;
+            justify-content:space-between;
+            gap:24px; */
+            padding:12px 16px;
+            border-radius:12px;
+            background:#fff;
+            box-shadow:0 1px 3px rgba(16,24,40,.06);
+            /* Match the width of the screenshot's container */
+            max-width: 500px; 
+            margin: 0 auto; 
+        }
+
+        /* VENDOR LEFT - THE 2x2 GRID (from provided CSS) */
+        .vendor-left{
+            display:grid;
+            grid-template-columns:44px auto;  /* logo | text */
+            grid-template-rows:auto auto;     /* row1 name, row2 button */
+            column-gap:12px;
+            row-gap:6px;
+            align-items:start;              
+        }
+
+        /* LOGO STYLES (from provided CSS) */
+        .vendor-logo{
+            width: 44px;
+            height: 44px;
+            border-radius: 8px; 
+            border: 1px solid #E6EDF7;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: #fff;
+            grid-column: 1; /* Explicitly place the logo */
+            grid-row: 1 / span 2; /* Span both rows (name and button) */
+        }
+        .vendor-logo img{ 
+            width:60%; /* Adjusted for a closer match to the Adidas logo size/padding */
+            height:60%; 
+            object-fit:contain; 
+        }
+
+        /* VENDOR NAME (from provided CSS) */
+        .vendor-name{
+            grid-column: 2; 
+            grid-row: 1;                     
+            margin:0;
+            line-height:1.1;
+            display:inline-flex; 
+            align-items:center; 
+            gap:8px;
+            align-self:start;
+            font-size: 22px; /* Adjusted size to match screenshot's 'Adidas' */
+            font-weight: 700; /* Adjusted for boldness */
+        }
+        /* Ensure the verified dot is visually aligned with the name text */
+        .vendor-name .verified-dot {
+            margin-top: 2px; /* Fine-tuning vertical alignment */
+        }
+
+        /* CONTACT BUTTON (from provided CSS) */
+        .btn.btn-primary{
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 8px;
+            background: #2563eb;
+            color: #fff;
+            border: 0;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            grid-column: 2; 
+            grid-row: 2; 
+            font-size: 15px; /* Adjusted font size */
+        }
+        .vendor-info {
+            /* This div wraps the button and needs to align the button correctly in the grid cell */
+            display: contents; /* Allows children to be placed directly in the grid */
+        }
+
+        /* VENDOR RAIL - RIGHT SIDE (from provided CSS) */
+        .vendor-rail{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            white-space: nowrap;
+            border-left: 1px solid #e5e7eb; /* Vertical Divider */
+            padding-left: 16px;
+            height: 100%; /* Ensure rail spans full height to center items vertically against the left side */
+        }
+        .meta-item{ 
+            display: flex;
+            flex-direction: column; /* Stack the icon and text vertically */
+            align-items: center;
+            justify-content: center; /* Center them within the meta item */
+            gap: 4px; /* Reduced gap for a tighter look */
+            color: #374151;
+            font-size: 14px;
+            height: 100%;
+            padding: 4px 0; /* Add padding for vertical spacing */
+        }
+
+        /* RATING STYLES */
+        .rating-item {
+            /* The rating in the screenshot is centered under the star */
+            text-align: center;
+        }
+        .rating-star-svg {
+            fill: #f59e0b; /* Filled star color */
+            stroke: none;
+            width: 22px; /* Increased size to match screenshot */
+            height: 22px;
+            margin-bottom: -4px; /* Move star closer to text */
+        }
+        .rating-item span {
+            font-weight: 600; /* Boldness for the score '4/5' */
+            color: #374151;
+        }
+
+
+        /* COUNTRY STYLES */
+        .country-item {
+            /* The country in the screenshot is centered under the flag */
+            text-align: center;
+            /* Match the text color in the screenshot (appears slightly darker) */
+            color: #525252;
+        }
+        .country-flag {
+            width: 24px;
+            height: 16px;
+            border-radius: 3px;
+            object-fit: cover;
+            /* Flag is a full image in the screenshot, not the placeholder style */
+        }
+
+        /* RESPONSIVENESS (Mobile handling from provided CSS, simplified) */
+        @media (max-width:560px){
+            .vendor-card{ 
+                flex-direction:column; 
+                align-items:flex-start; 
+                gap:12px; 
+            }
+            .vendor-left {
+                display: flex; /* Revert to flex on mobile for simpler layout */
+                align-items: center;
+                gap: 12px;
+            }
+            .vendor-left .vendor-logo {
+                grid-column: auto;
+                grid-row: auto;
+                /* Revert logo size if needed for mobile */
+                width: 44px;
+                height: 44px;
+            }
+            .vendor-name {
+                /* Reset name layout for mobile */
+                order: -1; /* Move name above logo/button in flex */
+                font-size: 20px;
+                margin-bottom: 4px;
+            }
+            .vendor-info {
+                /* Make button full width on mobile */
+                width: 100%;
+                margin-top: 8px; /* Space below name/logo */
+            }
+            .btn.btn-primary {
+                width: 100%;
+                grid-column: auto;
+                grid-row: auto;
+            }
+            .vendor-rail{
+                gap: 12px;
+                border-left: none; 
+                padding-left: 0;
+                border-top: 1px solid #e5e7eb; 
+                padding-top: 12px;
+                width: 100%;
+            }
+        }
+#new-message-container {
+       margin-left: 0;
+    margin-right: 0;
+     height: 30em; /* Adjust this value to make the form smaller */
+    resize: vertical;
+    overflow-y: auto;
+}
+</style>
+
+<div class="container">
+    <div class="breadcrumb">
+        <span><?= __("Home") ?></span> / <span><?= __("Product") ?></span> / <span style="color: #111827;"><?= $block->escapeHtmlAttr($product->getName()); ?></span>
+    </div>
+    
+    <div class="product-main">
+        <div>
+            <!-- <div class="vendor-card">
+              <div class="vendor-name">
+                        <?= ucfirst($block->escapeHtml($vendorName)); ?>
+                        <?php if ($isVerified): ?><span class="verified-dot" title="Verified">✔</span><?php endif; ?>
+               </div>
+               <div style="display: flex;">
+                <div style="display: flex;">
+                    <div class="vendor-logo">
+                        <?php if ($logoUrl): ?>
+                            <img src="<?= $block->escapeUrl($logoUrl) ?>" alt="<?= $block->escapeHtmlAttr($vendorName) ?> Logo">
+                        <?php else: ?>
+                            <div class="placeholder-logo" style="font-size: 24px;">&#9881;</div> 
+                        <?php endif; ?>
+                    </div>
+                    
+                  <?php 
+                  //$vendorId= $product->getVendorId();
+                  //$vendor_id= $vendor->getData('vendor_id');
+                  $contactUrl = $vendor_id ? $block->getUrl('vendors/contact/form', ['vendor_id' => $vendor_id]) : '';
+                  //echo $contactUrl;
+                  ?>
+                   
+  <div class="vendor-info custom-message-contact">
+    <button 
+        type="button" 
+        class="btn btn-primary" 
+        data-vendor-id="<?php echo $vendor_id; ?>" 
+        id="custom-vnecoms-msg-btn-<?php echo $vendor_id; ?>" 
+        
+        data-mage-init='{
+                "vnecoms-vendor-contact-message": {
+                "vendorId": "<?php echo $vendor_id; ?>"
+            }
+        }'
+    >
+        Contact Vendor
+    </button>
+   </div>
+  </div>
+
+                <div class="vendor-rail">
+                    <span class="meta-item rating-item">
+                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" class="rating-star-svg">
+                            <path d="M12 17.3l-6.18 3.64 1.64-6.99L2 9.77l7.09-.61L12 2.5l2.91 6.66 7.09.61-5.46 4.18 1.64 6.99z" fill="#f59e0b"/>
+                        </svg>
+                        4/5
+                    </span>
+                
+                    <span class="meta-item country-item">
+                        <img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($vendorLocation ?: 'N/A')) ?>.svg" alt="Saudi Arabia Flag">
+                        <?= $block->escapeHtml($vendorLocation ?: 'N/A') ?>
+                    </span>
+                </div>
+                </div>
+            </div> -->
+            <div  style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    border: 1px solid #FFFFFF;
+">
+    <div style="
+        display: flex;
+        flex-direction: column;
+        gap: 8px; /* Gap between Name/Badge row and Logo/Button row */
+        min-width: 0;
+    ">
+        <div class="vendor-name" style="
+            font-weight: 700;
+            font-size: 22px;
+            line-height: 1.1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+        ">
+            <?= ucfirst($block->escapeHtml($vendorName)); ?>
+            <?php if ($isVerified ?? true): ?>
+                <img src="<?= $block->escapeUrl($varify); ?>" alt="Verified" width="7%">
+            <?php endif; ?>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <div class="vendor-logo" style="
+                width: 44px; height: 44px; border-radius: 9999px;
+                border: 1px solid #d1d5db;
+                display: flex; align-items: center; justify-content: center;
+                background: #fff;
+                flex-shrink: 0;
+            ">
+                <?php if ($logoUrl): ?>
+                    <img src="<?= $block->escapeUrl($logoUrl) ?>" alt="<?= $block->escapeHtmlAttr($vendorName) ?> Logo" style="width: 28px; height: 28px; object-fit: contain;">
+                <?php else: ?>
+                    <svg viewBox="0 0 100 100" width="28" height="28">
+                        <rect x="18" y="28" width="8" height="44" transform="rotate(-15 22 50)" fill="#000"/>
+                        <rect x="42" y="26" width="8" height="44" transform="rotate(-5 46 50)" fill="#000"/>
+                        <rect x="62" y="32" width="8" height="44" transform="rotate(5 66 50)" fill="#000"/>
+                    </svg>
+                <?php endif; ?>
+            </div>
+            <?php
+                // Initialize the required sessions
+                $customerSession = $objectManager->get(\Magento\Customer\Model\Session::class);
+                $vendorSession = $objectManager->get(\Vnecoms\Vendors\Model\Session::class);
+
+                // Check if the customer and/or vendor is logged in
+                $isCustomerLoggedIn = $customerSession->isLoggedIn();
+                $isVendorLoggedIn = $vendorSession->isLoggedIn();
+
+                // Contact URL for vendor
+                $contactUrl = $this->getUrl('vendor/contact'); // Default contact URL
+            ?>
+
+           <div class="vendor-info custom-message-contact">
+                <button 
+                    type="button" 
+                    class="btn btn-primary" 
+                    style="
+                        height: 38px; padding: 0 16px; border-radius: 8px;
+                        background: #4285F4; color: #fff; border: 0; 
+                        font-weight: 600; font-size: 15px;
+                        display: inline-flex; align-items: center; justify-content: center;
+                        cursor: pointer;
+                    "
+                    id="contactVendorBtn"
+                >
+                    <a id="vnecoms-msg-btn" href="javascript: void(0);"><?= __("Contact Vendor") ?></a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- message form -->
+     <div class="new-message-container hide" id="new-message-container">
+    <div class="block block-new-message">
+        <div class="block-title"><strong><?php echo __("New Message")?></strong></div>
+        <div class="block-content">
+            <form id="new-msg-form">
+                <fieldset class="fieldset info">
+                    <div class="field">
+                        <label class="label" for="firstname">
+                            <span><?php echo __("Recipient")?></span>
+                        </label>
+                        <div class="control">
+                            <span><?php echo  $vendorName;?></span> <!-- Vendor ID -->
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <label class="label" for="firstname">
+                            <span><?php echo __("Subject")?></span>
+                        </label>
+                        <div class="control">
+                            <input id="msg_subject" name="message[subject]" value="" title="<?php echo __("Subject")?>" class="input-text" type="text"  data-validate="{required:true}">
+                        </div>
+                    </div>
+                    <div class="field required">
+                        <div class="control">
+                            <textarea name="message[content]" id="msg_content" class="textarea input-text" rows="2" cols="15" data-validate="{required:true}"></textarea>
+                        </div>
+                    </div>
+                    <div class="actions-toolbar">
+                        <div class="send-btn-container">
+                            <button type="button" class="message-icon-paper-plane-o action save btn-primary primary" id="new-msg-send-btn" title="<?php echo __("Send")?>"><span> <?php echo __("Send")?></span></button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="block-control"><a href="javascript: void(0)" class="close-btn" id="new-msg-close-btn"><i class="message-icon-discard"></i></a></div>
+    </div>
+</div>
+
+<!-- Sending notification -->
+<!-- end message form -->
+ 
+<div class="message-notification-box hide" id="vnecoms-msg-notification"><?php echo __("Sending ...")?></div>
+
+    <div  style="
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        white-space: nowrap;
+       
+        padding-left: 16px;
+        align-self: stretch;
+        margin-top: 20px;
+        margin-right:21px;
+    ">
+        <span class="meta-item rating-item" style="
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 4px; color: #525252; font-size: 14px; height: 100%;
+        ">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="
+                stroke: #374151; fill: none; stroke-width: 1.5; 
+                margin-bottom: -2px;
+            ">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442a.563.563 0 01.324.938l-4.267 3.974a.564.564 0 00-.182.557l1.268 5.438a.563.563 0 01-.845.601l-4.722-2.883a.564.564 0 00-.53 0l-4.722 2.883a.563.563 0 01-.845-.601l1.268-5.438a.563.563 0 00-.182-.557l-4.268-3.974a.563.563 0 01.324-.938l5.518-.442a.564.564 0 00.475-.345l2.125-5.111z"/>
+            </svg>
+            <span style="font-weight: 600; color: #374151; font-family:Inter;">4/5</span>
+        </span>
+<span style="border-left: 1px solid #D1D5DB; height: 80%; align-self: center;"></span>
+        <span class="meta-item country-item" style="
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 4px; color: #525252; font-size: 14px; height: 100%;
+        ">
+            <img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($vendorLocation ?: 'N/A')) ?>.svg" alt="<?= $block->escapeHtmlAttr($vendorLocation ?: 'N/A') ?> Flag" style="
+                width: 28px; height: 19px; border-radius: 3px; object-fit: cover;
+                border: 1px solid #e5e7eb;
+            ">
+            <?php 
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
+            $country_id = $countryFactory->create()->loadByCode($vendorLocation);
+$country = $country_id->getName(); 
+            ?>
+            <span style="font-family:Inter; color:#374151;"><?= $block->escapeHtml($country ?: 'N/A') ?></span>
+        </span>
+    </div>
+</div>
+                   
+            
+            <div class="product-gallery">
+                <div class="main-frame">
+                    <?php $mainImage = $block->getImage($product, 'product_page_image_large'); ?>
+                    <img class="main-image" id="mainImage" src="<?= $block->escapeUrl($mainImage->getImageUrl()) ?>" alt="<?= $block->escapeHtmlAttr($mainImage->getLabel() ?: $product->getName()); ?>">
+                </div>
+                <div class="thumbs-wrap">
+                    <button class="thumb-arrow" id="prevBtn" aria-label="Previous image">‹</button>
+                    <div class="gallery-thumbs" id="thumbTrack" role="tablist" aria-label="Product images">
+                        <?php foreach ($product->getMediaGalleryImages() as $index => $image) : ?>
+                            <?php
+                            $imageUrl = $block->escapeUrl($image->getUrl());
+                            $imageLabel = $block->escapeHtmlAttr($image->getLabel() ?: $product->getName());
+                            $isActive = ($imageUrl === $block->escapeUrl($mainImage->getImageUrl()));
+                            ?>
+                            <img
+                                src="<?= $imageUrl ?>"
+                                alt="<?= $imageLabel ?>"
+                                data-index="<?= $index ?>"
+                                role="tab"
+                                aria-selected="<?= $isActive ? 'true' : 'false' ?>"
+                                class="thumb-image <?= $isActive ? 'active' : '' ?>">
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="thumb-arrow" id="nextBtn" aria-label="Next image">›</button>
+                </div>
+            </div>
+        </div>
+        <div class="product-info-main">
+            <form id="product_addtocart_form"
+                  data-product-sku="<?= $block->escapeHtmlAttr($product->getSku()) ?>"
+                  action="<?= $block->escapeUrl($block->getSubmitUrl($product)) ?>"
+                  method="post">
+                <?= $block->getBlockHtml('formkey'); ?>
+                
+                <div class="title-row">
+                    <h6 class="product-title" title="<?= $block->escapeHtmlAttr($title); ?>">
+                        <?= $block->escapeHtml($shortTitle); ?>
+                    </h6>
+
+                    <a class="fav-btn"
+                       title="Add to wishlist"
+                       data-post='<?= /* @noEscape */ $addToWishlistParams ?>'
+                       aria-label="Add to wishlist">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
+                        </svg>
+                    </a>
+                </div>
+                <br />
+
+                <h4><?= __("Product Description") ?></h4>
+
+                <br />
+
+                <div class="desc-wrap">
+                    <div id="descText" class="desc-text is-clamped">
+                        <?= /* @noEscape */ ($block->getProduct()->getShortDescription() ?: $product->getDescription()); ?>
+                    </div>
+
+                    <button type="button"
+                             id="descToggle"
+                             class="desc-toggle"
+                             aria-expanded="false">
+                        <?= __("More") ?>
+                    </button>
+                </div>
+                
+                <div class="price-box price-final_price"
+                     data-role="priceBox"
+                     data-product-id="<?= $product->getId() ?>"
+                     data-price-box="product-id-<?= $product->getId() ?>">
+                    <?= $block->getProductPriceHtml($product, 'final_price'); ?>
+                </div>
+                <div class="product-info-configurable" id="product-info-configurable">
+                    <?= $block->getChildHtml('product.info.options.wrapper'); ?> 
+                    <?php
+                    if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+                        echo $block->getLayout()
+                                   ->createBlock(\Magento\ConfigurableProduct\Block\Product\View\Type\Configurable::class)
+                                   ->setProduct($product)
+                                   ->setTemplate('Magento_ConfigurableProduct::product/view/type/options/custom_configurable.phtml')
+                                   ->toHtml();
+                    } ?>
+                </div>
+                <?php if ($product->getTypeId() !== \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE): ?>
+                    <button type="button" id="add-to-quote-btn" class="add-quote-btn"><?= __("Add To Quote") ?></button>
+                <?php endif; ?>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="tabs" id="productTabs">
+    <h4><?= __("Product Details") ?></h4>
+    <div class="tab-header" role="tablist" aria-label="Product details">
+        <button class="active" role="tab" aria-selected="true" aria-controls="tab-desc" id="tab-btn-desc"><?= __("Product Description") ?></button>
+        <button role="tab" aria-selected="false" aria-controls="tab-spec" id="tab-btn-spec"><?= __("Product Specification") ?></button>
+        <button role="tab" aria-selected="false" aria-controls="tab-pack" id="tab-btn-pack"> <?= __("Packing & Shipping") ?></button>
+        <button role="tab" aria-selected="false" aria-controls="tab-rev" id="tab-btn-rev"><?= __("Reviews") ?></button>
+    </div>
+    <div class="tab-content tab-panel active" id="tab-desc" role="tabpanel" aria-labelledby="tab-btn-desc">
+        <?= /* @noEscape */ $product->getDescription(); ?>
+    </div>
+    <div class="tab-content tab-panel" id="tab-spec" role="tabpanel" aria-labelledby="tab-btn-spec">
+        <table>
+            <tbody>
+                <?php
+                $whitelist = [
+                    'sku',
+                    'manufacturer',
+                    'brand',
+                    'color',
+                    'size',
+                ];
+                $attributes = $product->getAttributes();
+                foreach ($attributes as $attribute) {
+                    $attributeCode = $attribute->getAttributeCode();
+                    // Only allow attributes in whitelist
+                    if (!in_array($attributeCode, $whitelist)) {
+                        continue;
+                    }
+                    $label = $attribute->getStoreLabel();
+                    $value = $product->getData($attributeCode);
+                    // Skip if value is empty
+                    if ($value === null || $value === '') {
+                        continue;
+                    }
+                    $displayValue = $attribute->getFrontend()->getValue($product);
+                    // Handle arrays and objects safely
+                    if (is_array($displayValue)) {
+                        $displayValue = implode(', ', array_map(function ($item) {
+                            return is_scalar($item) ? (string)$item : '[Complex Data]';
+                        }, $displayValue));
+                    } elseif (is_object($displayValue)) {
+                        $displayValue = method_exists($displayValue, '__toString') ? (string)$displayValue : '[Object]';
+                    }
+                    ?>
+                    <tr>
+                        <td class="py-2 px-4 border-b"><?= $block->escapeHtml(__($label)) ?>:</td>
+                        <td class="py-2 px-4 border-b"><?= $block->escapeHtml($displayValue) ?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-content tab-panel" id="tab-pack" role="tabpanel" aria-labelledby="tab-btn-pack">
+        <p><?= __("Packing and shipping information goes here") ?>.</p>
+    </div>
+    <div class="tab-content tab-panel" id="tab-rev" role="tabpanel" aria-labelledby="tab-btn-rev">
+        <?= $block->getChildHtml('reviews.tab') ?>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Carousel logic ---
+    const mainImage = document.getElementById('mainImage');
+    const thumbTrack = document.getElementById('thumbTrack');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const thumbs = Array.from(thumbTrack ? thumbTrack.querySelectorAll('img') : []);
+    let currentIndex = 0;
+
+    // Set initial index based on active thumb
+    const initialActiveThumb = thumbs.find(t => t.classList.contains('active'));
+    if (initialActiveThumb) {
+        currentIndex = parseInt(initialActiveThumb.dataset.index) || 0;
+    }
+
+    const setActiveThumb = (newIndex) => {
+        currentIndex = newIndex;
+        thumbs.forEach((t, idx) => {
+            const isActive = idx === newIndex;
+            t.classList.toggle('active', isActive);
+            t.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        });
+        const activeThumb = thumbs[newIndex];
+        if (activeThumb) {
+            mainImage.style.opacity = '0.1'; // Fade out for transition
+            setTimeout(() => {
+                mainImage.src = activeThumb.src;
+                mainImage.alt = activeThumb.alt;
+                mainImage.style.opacity = '1'; // Fade back in
+            }, 100);
+            activeThumb.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+        }
+    };
+    thumbs.forEach((t, i) => t.addEventListener('click', () => setActiveThumb(i)));
+    
+    if (thumbs.length > 0) {
+        prevBtn.addEventListener('click', () => {
+            const newIndex = (currentIndex - 1 + thumbs.length) % thumbs.length;
+            setActiveThumb(newIndex);
+        });
+        nextBtn.addEventListener('click', () => {
+            const newIndex = (currentIndex + 1) % thumbs.length;
+            setActiveThumb(newIndex);
+        });
+    } else {
+         // Disable carousel if no images found
+         if (prevBtn) prevBtn.disabled = true;
+         if (nextBtn) nextBtn.disabled = true;
+    }
+    
+    // --- Tabs logic ---
+    const tabsContainer = document.getElementById('productTabs');
+    if (tabsContainer) {
+        const tabButtons = tabsContainer.querySelectorAll('.tab-header button');
+        const tabPanels = tabsContainer.querySelectorAll('.tab-panel');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetPanelId = button.getAttribute('aria-controls');
+                
+                // Deactivate all tabs and panels
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                    btn.setAttribute('aria-selected', 'false');
+                });
+                tabPanels.forEach(panel => panel.classList.remove('active'));
+                
+                // Activate the selected tab and panel
+                button.classList.add('active');
+                button.setAttribute('aria-selected', 'true');
+                const targetPanel = document.getElementById(targetPanelId);
+                if (targetPanel) {
+                    targetPanel.classList.add('active');
+                }
+            });
+        });
+    }
+
+    // --- Description Toggle Logic (More/Less) ---
+    // const descText = document.getElementById('descText');
+    // const descToggle = document.getElementById('descToggle');
+
+    // if (descText && descToggle) {
+    //     // Function to check if content is actually clamped
+    //     const isContentClamped = () => {
+    //         // Must temporarily remove clamping to check full height
+    //         descText.classList.remove('is-clamped');
+    //         const isClamped = descText.scrollHeight > descText.clientHeight;
+    //         descText.classList.add('is-clamped');
+    //         return isClamped;
+    //     };
+
+    //     const updateToggleVisibility = () => {
+    //         // Only show the toggle button if the content is actually cut off
+    //         if (isContentClamped()) {
+    //             descToggle.style.display = 'block';
+    //         } else {
+    //             descToggle.style.display = 'none';
+    //         }
+    //     };
+
+    //     const toggleDescription = () => {
+    //         const isClamped = descText.classList.contains('is-clamped');
+    //         if (isClamped) {
+    //             // Show more
+    //             descText.classList.remove('is-clamped');
+    //             descToggle.textContent = 'Less';
+    //             descToggle.setAttribute('aria-expanded', 'true');
+    //         } else {
+    //             // Show less
+    //             descText.classList.add('is-clamped');
+    //             descToggle.textContent = 'More';
+    //             descToggle.setAttribute('aria-expanded', 'false');
+    //         }
+    //     };
+
+    //     descToggle.addEventListener('click', toggleDescription);
+        
+    //     // Initial check and on window resize
+    //     updateToggleVisibility();
+    //     window.addEventListener('resize', updateToggleVisibility);
+    // }
+});
+document.addEventListener('DOMContentLoaded', function () {
+  const text = document.getElementById('descText');
+  const toggle = document.getElementById('descToggle');
+  if (!text || !toggle) return;
+
+  toggle.addEventListener('click', function (e) {
+    e.preventDefault();
+    const clamped = text.classList.contains('is-clamped');
+
+    if (clamped) {
+      text.classList.remove('is-clamped');      // expand
+      toggle.textContent = 'Show less';
+      toggle.setAttribute('aria-expanded', 'true');
+    } else {
+      text.classList.add('is-clamped');         // collapse
+      toggle.textContent = 'More';
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+});
+</script>
+
+<?php if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE): ?>
+<script type="text/javascript">
+
+require(['jquery'], function($) {
+    // This script block handles configurable product updates for price and image
+    // You should use the Magento_Swatches/js/swatch-renderer if available, 
+    // but this custom script simulates the necessary updates based on your original logic.
+
+    // 1. Swatch Option Click (for basic swatch update)
+    $(document).on('click', '.swatch-option', function() {
+        let img = $(this).data('thumb');
+        if (img) {
+            // Find the main image element and update its source
+            const mainImageElement = document.getElementById('mainImage');
+            if (mainImageElement) {
+                mainImageElement.style.opacity = '0.1';
+                setTimeout(() => {
+                    mainImageElement.src = img;
+                    mainImageElement.style.opacity = '1';
+                }, 100);
+                
+                // Remove 'active' from all thumbs and ensure the main image is not an active thumb
+                document.querySelectorAll('#thumbTrack img').forEach(t => t.classList.remove('active'));
+            }
+        }
+        
+        // Price update (This relies on specific data-attributes on the swatch)
+        let priceBox = $('.price-box');
+        if ($(this).data('price-amount')) {
+             // In a real Magento context, you should trigger reloadPrice or use knockout observables.
+             // This is a minimal JS update, but the Magento price box might overwrite it.
+             // For this custom template, we'll try to target the main price display.
+             priceBox.find('.price').text($(this).data('price-amount'));
+        }
+    });
+
+    // 2. Custom configurable update listener (triggered by Magento's configurable.js)
+    require(['Magento_ConfigurableProduct/js/configurable'], function(){
+        $('#product_addtocart_form').on('updateProductData', function(event, data){
+            // Update main image on configurable option change
+            if (data.images && data.images.length > 0) {
+                var newImg = data.images[0].full;
+                if (newImg) {
+                     const mainImageElement = document.getElementById('mainImage');
+                     if (mainImageElement) {
+                         mainImageElement.style.opacity = '0.1';
+                         setTimeout(() => {
+                             mainImageElement.src = newImg;
+                             mainImageElement.style.opacity = '1';
+                         }, 100);
+                         
+                         // Remove active state from thumbnail track
+                         document.querySelectorAll('#thumbTrack img').forEach(t => t.classList.remove('active'));
+                     }
+                }
+            }
+        });
+    });
+});
+</script>
+<?php endif; ?>
+
+<script type="text/javascript">
+require([
+    'jquery',
+    'mage/url',
+    'Magento_Catalog/js/catalog-add-to-cart'
+], function ($, urlBuilder) {
+    // Empty block for Add to Quote logic placeholder (as in your original code)
+    $('#add-to-quote-btn').on('click', function(e) {
+        e.preventDefault();
+        // Placeholder for Add to Quote functionality
+        alert('Add to Quote functionality triggered.');
+    });
+});
+</script>
+<script>
+    require(['jquery'], function ($) {
+        'use strict';
+        
+        var button = $('#my-contact-supplier-btn');
+        var vendorId = button.data('vendor-id');
+
+        if (button.length && vendorId) {
+            button.on('click', function () {
+               
+                if (typeof Vnecoms !== 'undefined' && Vnecoms.openContactForm) {
+                    Vnecoms.openContactForm(vendorId);
+                } else {
+                   
+                    var $tempBtn = $('<a class="vnecoms-msg-btn" href="javascript:void(0);"></a>');
+                    
+                 
+                    $tempBtn.data('vendor-id', vendorId);
+                    
+                   
+                    $('body').append($tempBtn);
+                    $tempBtn.trigger('click');
+                    
+                    
+                    setTimeout(function() {
+                        $tempBtn.remove();
+                    }, 100); 
+                }
+            });
+        }
+    });
+    //message box  
+    require([
+    "jquery",
+    'uiRegistry',
+    'wysiwygAdapter',
+    "Magento_Ui/js/modal/alert",
+    "mage/translate",
+    'mage/adminhtml/wysiwyg/tiny_mce/setup'
+], function($, registry, tinyMCE, alert) {
+    /* Initialize TinyMCE for the message content */
+    var wysiwygpage_msg_content = new wysiwygSetup(
+        "msg_content", 
+        {
+            "width": "100%",
+            "height": "20em",
+            "plugins":[], // No plugins used
+            "tinymce4": {
+                "toolbar": "formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap",
+                "plugins": "",
+                "content_css": "<?php echo $block->getContentCss()?>"
+            },
+            "tinymce": {
+                "toolbar": "formatselect | bold italic underline | alignleft aligncenter alignright | bullist numlist | link table charmap",
+                "plugins": "",
+                "content_css": "<?php echo $block->getContentCss()?>"
+            }
+        }
+    );
+
+    wysiwygpage_msg_content.setup("exact");
+
+    /* Show New Message Form when the Contact button is clicked */
+    $("#vnecoms-msg-btn, .vnecoms-vendor-msg-btn").click(function() {
+        <?php 
+             // Check if the customer and/or vendor is logged in
+                $isCustomerLoggedIn = $customerSession->isLoggedIn();
+                $isVendorLoggedIn = $vendorSession->isLoggedIn();
+                $messageBlock = $this->getLayout()->createBlock('Vnecoms\VendorsMessage\Block\Profile\Message');
+
+            if($isCustomerLoggedIn && $messageBlock->canSendMessage()):?>
+            $("#new-message-container").removeClass("hide"); // Show form
+        <?php else:?>
+            <?php if(!$isCustomerLoggedIn){$title = __("Login Required"); $msg = __("You need to login to use this feature.");} else{$title = __("Error"); $msg = __("You cannot send a message to yourself.");}?>
+            alert({
+                modalClass: 'alert ves-error',
+                title: '<?php echo $title;?>',
+                content: '<?php echo $msg;?>',
+            });
+        <?php endif;?>
+    });
+
+    /* Close the New Message Form */
+    $("#new-msg-close-btn").click(function() {
+        $("#new-message-container").addClass('hide');
+    });
+
+    /* Send Message functionality */
+    $("#new-msg-send-btn").click(function() {
+        if(dataForm.valid()) {
+           
+            if (!$('#msg_content').val()) {
+                alert({
+                    modalClass: 'alert ves-error',
+                    title: '<?php echo __("Error...");?>',
+                    content: '<?php echo __("Please enter your message body.");?>',
+                });
+                return;
+            }
+             
+
+            $('#vnecoms-msg-notification').removeClass('hide');
+            $("#new-message-container").addClass('hide');
+
+           $.ajax({
+                method: "POST",
+                url: "<?php echo $messageBlock->getSendUrl(); ?>", // Vnecoms URL for handling message sending
+                data: {
+                    subject: $("#msg_subject").val(),
+                    content: tinyMCE.get('msg_content').getContent(),
+                    attachments: getUploadedValues() // Handle file uploads if needed
+                },
+                   success: function(response) {
+                $('#vnecoms-msg-notification').addClass('hide');
+                $("#msg_subject").val('');
+                tinyMCE.get('msg_content').setContent('<p></p>');
+                alert("Message sent successfully!");
+            },
+            error: function(xhr, status, error) {
+                $('#vnecoms-msg-notification').addClass('hide');
+                alert("An error occurred while sending the message. Please try again later.");
+            }
+        });
+     /* Form Validation */
+    var dataForm = $('#new-msg-form');
+    dataForm.mage('validation');
+});
+
+</script>

@@ -1,0 +1,99 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$storeCode = $block->getStore() ? $block->getStore()->getCode() : '';
+$isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
+?>
+  <?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+
+// Get correct media base URL (no /default/)
+$mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+<footer   <?php if ($isArabic): ?> dir="rtl" lang="ar" <?php endif; ?>  style="
+    background: #fff;
+    padding: 16px 32px 48px 32px;
+    color: #374151;
+    font-family: Arial, sans-serif;
+   direction:<?= $isArabic ? 'rtl' : 'ltr' ?>;
+    text-align:<?= $isArabic ? 'right' : 'left' ?>;
+">
+  <div style="max-width:1200px; margin:0 auto;">
+
+    <!-- Logo + Divider -->
+    <div style="margin-bottom:32px; display:flex; align-items:center; <?= $isArabic ? 'flex-direction:row-reverse; justify-content:flex-end;' : '' ?>">
+      <img src="<?= $mediaUrl ?>/wysiwyg/gcc-logo.png" alt="GCC Trading Logo" style="height: 40px; <?= $isArabic ? 'margin-left:12px;' : 'margin-right:12px;' ?>">
+      <div style="flex-grow: 1; height: 1px; background-color: #e5e7eb; <?= $isArabic ? 'margin-right:24px;' : 'margin-left:24px;' ?>"></div>
+    </div>
+
+    <!-- 4-column layout -->
+    <div style="display:flex; flex-wrap:wrap; gap:32px; justify-content:space-between; <?= $isArabic ? 'flex-direction:row-reverse;' : '' ?>">
+
+
+      <!-- Pages -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#374151;"><?= __('Pages') ?></h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li><a href="<?= $block->getUrl('vendor-page') ?>" style="color:#374151; text-decoration:none;"><?= __('Vendors') ?></a></li>
+          <li><a href="<?= $block->getUrl('customer-page') ?>" style="color:#374151; text-decoration:none;"><?= __('Customers') ?></a></li>
+          <li><a href="<?= $block->getUrl('about-us') ?>" style="color:#374151; text-decoration:none;"><?= __('About Us') ?></a></li>
+          <li><a href="<?= $block->getUrl('contact-us') ?>" style="color:#374151; text-decoration:none;"><?= __('Contact Us') ?></a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#111827;"><?= __('Services') ?></h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li><a href="#" style="color:#374151; text-decoration:none;"><?= __('Request for quotes') ?></a></li>
+          <li><a href="#" style="color:#374151; text-decoration:none;"><?= __('HS Code') ?></a></li>
+        </ul>
+      </div>
+
+      <!-- Support & Contact -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#111827;"><?= __('Support & Contact') ?></h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li><a href="<?= $block->getUrl('contact-us') ?>" style="color:#374151; text-decoration:none;"><?= __('Contact Us') ?></a></li>
+          <li><a href="#" style="color:#374151; text-decoration:none;"><?= __('Help Center') ?></a></li>
+          <li><a href="#" style="color:#374151; text-decoration:none;"><?= __('Feedback') ?></a></li>
+        </ul>
+      </div>
+
+      <!-- Connect -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#111827;"><?= __('Connect') ?></h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <?php
+          $socials = [
+            ['insta.svg', __('Instagram')],
+            ['facebook.svg', __('Facebook')],
+            ['twitter.svg', __('Twitter / X')],
+            ['linkdin.svg', __('LinkedIn')],
+          ];
+          foreach ($socials as [$icon, $label]): ?>
+            <li style="display:flex; align-items:center; gap:8px; <?= $isArabic ? 'flex-direction:row-reverse;' : '' ?>">
+              <img src="<?= $mediaUrl ?>/wysiwyg/<?= $icon ?>" alt="<?= $label ?>" style="width:16px;height:16px;">
+              <a href="#" style="color:#374151; text-decoration:none;"><?= $label ?></a>
+            </li>
+          <?php endforeach; ?>
+        </ul>
+      </div>
+    </div>
+
+    <hr style="border:none; border-top:1px solid #e5e7eb; margin:32px 0;" />
+
+    <!-- Bottom bar -->
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; font-size:0.875rem; color:#6b7280;">
+      <div style="margin-bottom:8px;">
+        &copy; <?= date('Y') ?> <?= __('GCC Trading · All rights reserved.') ?>
+      </div>
+      <div style="display:flex; gap:24px; <?= $isArabic ? 'flex-direction:row-reverse;' : '' ?>">
+        <a href="#" style="color:#6b7280; text-decoration:none;"><?= __('Terms of use') ?></a>
+        <a href="#" style="color:#6b7280; text-decoration:none;"><?= __('Privacy policy') ?></a>
+        <a href="#" style="color:#6b7280; text-decoration:none;"><?= __('Security') ?></a>
+      </div>
+    </div>
+
+  </div>
+</footer>

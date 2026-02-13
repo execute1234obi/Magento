@@ -1,0 +1,270 @@
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+             .page-main > .page-title-wrapper .page-title {
+            display: none;
+        }
+   
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9fcff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            width: 40%;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #003366;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .sign-in-text {
+            font-size: 14px;
+            color: #455a8e;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #003366;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D2E1F1; /* Light blue border */
+            border-radius: 5px;
+            background-color: #F2F8FF; /* Light background color */
+            color: #2A3A6D; /* Darker text color for contrast */
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        select {
+    width: 100%;
+    padding: 12px;
+    height: 44px;
+    border: 1px solid #D2E1F1;
+    border-radius: 5px;
+    background-color: #F2F8FF;
+    color: #2A3A8D;
+    font-size: 14px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, select:focus {
+            outline: none;
+            border-color: #0061F2; /* Blue border on focus */
+            background-color: #E6F0FF; /* Slightly darker background on focus */
+        }
+
+        .password-strength {
+            font-size: 12px;
+            color: #0abf53;
+            padding-top: 7px;
+            font-weight: bold;
+        }
+
+        button.submit-btn {
+            background-color: #003366;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button.submit-btn:hover {
+            background-color: #00509e;
+        }
+
+        .captcha {
+            margin-bottom: 20px;
+        }
+
+        /* Adjustments for reCAPTCHA */
+        .g-recaptcha {
+            margin: 20px 0;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        /* Eye icon styles */
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+            color: #2A3A6D;
+            font-family: "Font Awesome 6 Free" !important;
+        }
+
+        /* Password field container */
+        .password-container {
+            position: relative;
+        }
+
+        /* Error message style */
+        .error-message {
+            color: red;
+            font-size: 12px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                width: 90%; /* Full width on mobile */
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                width: 95%; /* Slightly smaller on very small screens */
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+            <h2>Create New Customer Account</h2>
+
+    <div class="form-container">
+        <p class="sign-in-text">If you have an account, sign in with your email address</p>
+        
+       <form class="form-create-account" action="<?= $block->getUrl('customer/account/createpost') ?>" method="post" id="form-validate" autocomplete="off">
+    <?= $block->getBlockHtml('formkey') ?>
+            <div class="form-group">
+                <label for="first-name">First Name <span class="required text-[#d02d4e]">*</span></label>
+                <input type="text" id="firstname" name="firstname" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last-name">Last Name  <span class="required text-[#d02d4e]">*</span></label>
+                <input type="text" id="lastname" name="lastname" required>
+            </div>
+            <!-- <div class="form-group">
+                <label for="field-of-interest">Field of Interest  <span class="required text-[#d02d4e]">*</span></label>
+                <select id="field-of-interest" name="field-of-interest" required>
+                    <option value="" disabled selected>Select your field</option>
+                    <option value="tech">Technology</option>
+                    <option value="science">Science</option>
+                    <option value="art">Art</option>
+                </select>
+            </div> -->
+             <?= $block->getLayout()
+                ->createBlock(\Business\CustomerFieldofinterest\Block\FieldofInterest::class)
+                ->setTemplate('Business_CustomerFieldofinterest::form/additionalinfocustomer.phtml')                
+                ->toHtml() ?>    
+            <div class="form-group">
+                <label for="email">Email  <span class="required text-[#d02d4e]">*</span></label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group password-container">
+                <label for="password">Password  <span class="required text-[#d02d4e]">*</span></label>
+                <input type="password" id="password" name="password" required>
+                 <span class="eye-icon toggle-password"><i class="fas fa-eye"></i></span>
+                <div class="password-strength">Password Strength: No Password</div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirm-password">Confirm Password  <span class="required text-[#d02d4e]">*</span></label>
+                <input type="password"  id="password-confirmation" name="password_confirmation" required>
+                
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="is_subscribed" value="1" id="newsletter">
+                    Sign up for Newsletter
+                </label>
+            </div>
+
+            <div class="captcha">
+                <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+            </div>
+
+            <button type="submit" class="submit-btn">Create an Account</button>
+        </form>
+    </div>
+
+    <!-- <script>
+        const togglePassword = document.getElementById('toggle-password');
+        const passwordField = document.getElementById('password');
+        const toggleConfirmPassword = document.getElementById('toggle-confirm-password');
+        const confirmPasswordField = document.getElementById('confirm-password');
+
+        togglePassword.addEventListener('click', function() {
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+        });
+
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordField.type === 'password' ? 'text' : 'password';
+            confirmPasswordField.type = type;
+        });
+    </script> -->
+    <script>
+    require([
+        'jquery',
+        'mage/mage'
+    ], function($) {
+        $('#form-validate').mage('validation', {});
+    });
+</script>
+
+<script>
+require(['jquery'], function($) {
+    // Toggle password
+    $('.toggle-password').on('click', function() {
+        const input = $('#password');
+        const icon = $(this).find('i');
+        if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            input.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+
+    // Toggle confirm password
+    $('.toggle-confirm-password').on('click', function() {
+        const input = $('#password-confirmation');
+        const icon = $(this).find('i');
+        if (input.attr('type') === 'password') {
+            input.attr('type', 'text');
+            icon.removeClass('fa-eye').addClass('fa-eye-slash');
+        } else {
+            input.attr('type', 'password');
+            icon.removeClass('fa-eye-slash').addClass('fa-eye');
+        }
+    });
+});
+</script>

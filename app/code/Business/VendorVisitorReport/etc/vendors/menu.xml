@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Menu/etc/menu.xsd">
+    <menu>
+
+        <!-- SAME menu id, SAME position -->
+      <update id="CustomVendor_HideVnecomsMenu::profile_visitors"
+            title="Profile Visitors"
+            module="Business_VendorVisitorReport"
+            action="vendors/report/visitor"
+            sortOrder="100"
+            resource="Business_VendorVisitorReport::vendorvisitorreport_manage"
+
+        />
+
+    </menu>
+</config>

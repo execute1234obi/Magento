@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+	<!--<event name="ves_vendorsconfig_form_fieldset_prepare_before">
+		<observer name="ves_vendorpage_config_google_map" instance="Vendor\VendorsVerification\Observer\LoctionMap" />
+	</event>-->
+	<event name="ves_vendors_vendor_tab_info_prepare_after">    	
+        <observer disabled="true" name="vnecoms_vendorgooglemap_vendor_tab_info_prepare_after" instance="Vendor\VendorsVerification\Observer\AccountFormObserver" />
+    </event>
+</config>

@@ -1,0 +1,264 @@
+<h2><?php echo __('Verification Information') ?></h2>
+<?php
+//$vendor =  $this->getVendor();
+//$vendorCustomer =  $vendor->getCustomer();
+//$verificationId =  $block->getVendorVerification()->getId();
+$verification = $block->getVendorVerification();
+$verificationId = $verification ? $verification->getId() : null;
+
+?>
+<main id="anchor-content" class="page-content">
+<div class="page-main-actions">    
+        <div class="page-actions-placeholder"></div>
+        <div class="page-actions" data-ui-id="page-actions-toolbar-content-header">
+			<div class="page-actions-inner" data-title="<?php echo __("Reject Entire Verification Request");?>">
+                <div class="page-actions-buttons">					
+                    <!-- <button  id="delete_verification" title="<?php //echo __("Reject Entire Verification Request");?>" type="button" class="action- scalable delete primary" >                   
+                        <span><?php //echo __("Reject Entire Verification Request");?></span>
+                    </button>  
+                                        -->
+<?php if ($verification && (int)$verification->getStatus() === 5): ?>
+        <!-- DELETE BUTTON -->
+       <button type="button"
+        id="delete_verification_admin"
+        class="action- scalable delete primary"
+        data-id="<?= (int)$verificationId ?>">
+    <span><?= __('Delete') ?></span>
+</button>
+    <?php else: ?>
+        <!-- DEFAULT BUTTON -->
+       <button  id="delete_verification" title="<?php echo __("Reject Entire Verification Request");?>" type="button" class="action- scalable delete primary" >                   
+                        <span><?php echo __("Reject Entire Verification Request");?></span>
+                    </button>
+    <?php endif; ?>
+                 </div>  
+            </div>
+            
+            <div class="page-actions-inner" data-title="<?php echo __("Back to Grid");?>">
+                <div class="page-actions-buttons">					
+                    <button id="back"  title="<?php echo __("Back to Grid");?>" type="button" class="action-default scalable back" onclick="setLocation('<?php echo $block->getBackUrl(); ?>')">                   
+                        <span><?php echo __("Back to Grid");?></span>
+                    </button>                     
+                 </div>  
+            </div>
+        </div>
+    </div>
+    <div id="page:main-container" class="page-columns">
+		<div class="row" style="border:1px solid #5e81ac;background:#ffffff;padding:2px;">
+	    <?php //echo $block->getChildHtml('form.verification.statusinfo'); ?>  
+        <?php echo $block->getChildHtml('status_info'); ?>                                              
+    </div>                                            
+     </div>
+    <br />
+
+        <div class="admin__old">
+            <div id="container" class="main-col">
+				<?php //echo $block->getChildHtml('verification.businessinfo'); ?>
+                <?php echo $block->getChildHtml('business_info'); ?>      
+				<hr />
+				<br />
+				<?php //echo $block->getChildHtml('form.verification.contactinfo'); ?>  
+                <?php echo $block->getChildHtml('contact_info'); ?>
+				<hr />
+				<br />
+				<?php //echo $block->getChildHtml('form.verification.addressinfo'); ?>	
+                <?php echo $block->getChildHtml('address_info'); ?>
+				<hr />
+				<br />
+				<?php //echo $block->getChildHtml('form.verification.documents'); ?>
+                <?php echo $block->getChildHtml('documents_info'); ?>					
+				<hr />
+				<br />
+				<?php echo $block->getChildHtml('activity_info'); ?>
+
+            </div>
+        </div>
+    </div>        
+    <div id="commentslist_popup"></div>
+</main> 
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal',
+            'mage/url',
+            'Magento_Ui/js/modal/confirm',
+            'jquery/ui'            
+        ],
+        function(
+            $,
+            modal,
+            urlBuilder,
+            confirmation
+        ) {			
+			
+			$("#delete_verification").on('click',function(){
+				
+               confirmation({
+                      title: $.mage.__('Reject Entire Verification Request'),
+                      content: $.mage.__('Verification entry will be remove from system and vendor need to go through the whole verification process again '),                                            
+                      buttons: [
+                        {
+                        text: $.mage.__('Cancel'),
+                        class: 'action',
+                        click: function (event) {
+                               this.closeModal(event, true);
+                              }
+                         },
+                         {
+                         text: $.mage.__('Reject Entire Verification'),
+                         class: 'action primary action',
+                         click: function (event) {
+                               //setLocation('<?php //echo $block->getDeleteActionUrl($verificationId); ?>');
+                               setLocation('<?php echo $block->getUrl('vendorverification/index/rejectEntire', ['id' => $verificationId]); ?>');
+                              }
+                        }]
+                });   
+    				
+		});
+            
+			
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: false,
+                title: $.mage.__('Verification'),
+                buttons: [{
+                    text: $.mage.__('Cancel'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };            
+            
+            $(".verification-action").on('click',function(){				
+				var popupDivId =  $(this).data('modal-id');	
+				var actionType =  $(this).data('modal-action');	
+				options.title = $.mage.__('Verification') + ' :: ' + actionType.toUpperCase();
+				/*if( actionType=== 'approve'){
+				} else {
+                   var popup = modal(options, $('#'+popupDivId));
+                   $('#'+popupDivId).modal('openModal');
+			   }*/
+			   var popup = modal(options, $('#'+popupDivId));
+                   $('#'+popupDivId).modal('openModal');
+                
+            });
+            
+           $(".verification-showcomment").on('click',function(){
+			   var verificationId = $(this).data('verificationid');	
+			   var dataid = $(this).data('verifidtlid');
+			   var dataGroupType = $(this).data('verifigroupid');
+			   param = {
+				   id : verificationId,
+				   dataid : dataid,
+				   grouptype: dataGroupType,
+				   form_key: window.FORM_KEY
+			   };
+			   
+			   var options = {
+				       title: $.mage.__('Admin Comments'),
+                       type: 'popup',
+                       responsive: true,
+                       innerScroll: true,
+                       buttons: [{
+                           text: $.mage.__('Cancel'),
+                           class: 'primary action  btn btn-default',
+                           click: function () {
+                               this.closeModal();
+                           }
+                       }]
+                   };
+                  
+			    $.ajax({
+					showLoader: true,
+					url: <?php echo '"'. $block->getCommentsViewUrl().'"' ;?>,
+					data: param,
+					type: "GET",
+					dataType: 'json',
+					success: function(response) { 
+						if(response.success){
+							 //console.log(response.data);
+							var count = 0;
+							var htmlout;
+                             var commentsTbl = '<table>';                             
+                             $.each(response.data, function(k, v) {
+								 count++;
+								 commentsTbl +='<tr>'								 
+								commentsTbl += '<td><strong>' + v.date + '</strong></td>'; // show date
+                                commentsTbl += '<td>' + v.comment + '</td>';             // show comment								 
+								 commentsTbl +='</tr>';
+						     });
+                             commentsTbl +='</table>';                             
+                             if(count>0){
+                                htmlout   =  '<span style="color:#2f9e44;" >' + response.message + '</span><br />';
+                                htmlout += commentsTbl;
+						     } else {
+								  htmlout   =  '<span style="color:red;" >' + response.message + '</span><br />';
+							 }
+                             
+                             $("#commentslist_popup").html('');
+                             $("#commentslist_popup").html(htmlout).modal(options).modal('openModal');
+						}else {
+							alert(response.message);
+						}
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log(errorThrown);
+                     }
+					})
+			   
+		   })
+        
+        }
+    );    
+   </script>
+<script>
+    //for delete functionality for entire reject data
+
+require([
+    'jquery',
+    'Magento_Ui/js/modal/confirm'
+], function ($, confirmation) {
+
+    $('#delete_verification_admin').on('click', function () {
+
+        var verificationId = $(this).data('id');
+
+        confirmation({
+            title: $.mage.__('Delete Verification'),
+            content: $.mage.__(
+                'This verification will be permanently deleted. Are you sure?'
+            ),
+            buttons: [
+                {
+                    text: $.mage.__('Cancel'),
+                    class: 'action-secondary',
+                    click: function (event) {
+                        this.closeModal(event);
+                    }
+                },
+                {
+                    text: $.mage.__('Delete'),
+                    class: 'action-primary',
+                    click: function () {
+                        setLocation(
+                            '<?= $block->getUrl(
+                                "vendorverification/index/delete",
+                                [
+                                    "id" => $verificationId,
+                                    "form_key" => $block->getFormKey()
+                                ]
+                            ); ?>'
+                        );
+                    }
+                }
+            ]
+        });
+
+    });
+
+});
+</script>
+

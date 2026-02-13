@@ -1,0 +1,116 @@
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+
+// Product IDs for membership plans
+$goldId   = 93;
+$silverId = 94;
+
+// Load products using ObjectManager (safe for PHTML)
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$productRepository = $objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
+
+try {
+    $goldProduct   = $productRepository->getById($goldId);
+    $silverProduct = $productRepository->getById($silverId);
+} catch (\Exception $e) {
+    echo "<div style='color:red;'>Membership products not found.</div>";
+    return;
+}
+
+?>
+
+<section id="pricePlans">
+    <ul id="plans">
+
+        <!-- GOLD PLAN -->
+        <li class="plan">
+            <ul class="planContainer">
+                <li class="title">
+                    <h2><?= $goldProduct->getName(); ?></h2>
+                </li>
+
+                <li class="price">
+                    <p>
+                        <?= $block->escapeHtml($goldProduct->getFinalPrice()); ?> AED
+                        <span>/ Month</span>
+                    </p>
+                </li>
+
+                <li>
+                    <ul class="options">
+                        <li>400 Products <span>in your shop</span></li>
+                        <li>6% <span>Commission</span></li>
+                        <li>Premium Support</li>
+                        <li>Custom CMS Pages</li>
+                        <li>Multiple Staff Users</li>
+                    </ul>
+                </li>
+
+                <li class="button">
+                    <a href="<?= $block->getUrl('vendors/membership/index/buy/', ['product' => $goldId, 'qty' => 1]); ?>">
+                        Purchase
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <!-- SILVER PLAN -->
+        <li class="plan">
+            <ul class="planContainer">
+                <li class="title">
+                    <h2><?= $silverProduct->getName(); ?></h2>
+                </li>
+
+                <li class="price">
+                    <p>
+                        <?= $block->escapeHtml($silverProduct->getFinalPrice()); ?> AED
+                        <span>/ Month</span>
+                    </p>
+                </li>
+
+                <li>
+                    <ul class="options">
+                        <li>200 Products <span>in your shop</span></li>
+                        <li>7% <span>Commission</span></li>
+                        <li>Live Chat Support</li>
+                        <li>Custom CMS Pages</li>
+                        <li>2 Staff Users</li>
+                    </ul>
+                </li>
+
+                <li class="button">
+                    <a href="<?= $block->getUrl('vendors/membership/index/buy/', ['product' => $silverId, 'qty' => 1]); ?>">
+                        Purchase
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+</section>
+
+<style>
+#plans, #plans ul, #plans ul li { margin:0; padding:0; list-style:none; }
+#pricePlans { margin:20px auto; }
+#plans .plan {
+    background:#fff; padding:10px; width:45%; float:left;
+    margin-right:5%; text-align:center; border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+#plans .plan:last-child { margin-right:0; }
+
+.planContainer .title h2 { font-size:22px; font-weight:700; }
+
+.planContainer .price p {
+    background:#333; color:#fff; padding:10px;
+    font-size:16px; border-radius:5px;
+}
+
+.planContainer .options li { padding:5px 0; font-size:14px; }
+
+.planContainer .button a {
+    display:block; background:#007bff; color:#fff;
+    padding:10px; border-radius:5px; text-decoration:none; margin-top:15px;
+}
+.planContainer .button a:hover { background:#0056b3; }
+</style>

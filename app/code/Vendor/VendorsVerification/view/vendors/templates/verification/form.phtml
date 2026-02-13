@@ -1,0 +1,625 @@
+<?php
+$vendor = $block->getVendor();
+if (!$vendor || !$vendor->getId()) {
+    echo '<div class="message error">Vendor session expired. Please login again.</div>';
+    return;
+}
+
+$uploaedCertificate = json_encode([]);
+$uploaedLogoOthers  = json_encode([]);
+
+$registrationCertificate = $vendor->getData('certificate') ?: '';
+if ($registrationCertificate) {
+    $attachements = $block->populateAttachements([$registrationCertificate]);
+    $uploaedCertificate = json_encode($attachements);
+}
+
+$registrationLogo = $vendor->getLogo() ?: '';
+if ($registrationLogo) {
+    $otherFiles = $block->populateAttachements([$registrationLogo]);
+    $uploaedLogoOthers = json_encode($otherFiles);
+}
+?>
+
+<form class="form verification"
+      action="<?php echo $block->getPostActionUrl(); ?>"
+      name="verification-form"
+      id="verification-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"
+      enctype="multipart/form-data">
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <h3 class="page-heading-book"><?php echo __('Verification Information') ?></h3>
+
+            <!-- Main Card -->
+            <div class="custom-tab verification-ui-card">
+
+                <!-- CARD HEAD (matches 3rd screenshot spacing) -->
+                <div class="verification-card-head">
+                    <p class="requare-text"><?php echo __('Seller Request Verification') ?></p>
+
+                    <div class="vertical-tab nav-tabs-custom" role="tabpanel">
+                        <ul id="myTabs" class="nav nav-tabs verification-steps" role="tablist">
+                            <li role="presentation" class="active">
+                                <a href="#section1" aria-controls="home" role="tab" data-toggle="tab">
+                                    <span class="icon-no">1</span>
+                                    <?php echo __('Business Information') ?>
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#section2" aria-controls="profile" role="tab" data-toggle="tab">
+                                    <span class="icon-no">2</span>
+                                    <?php echo __('Documents') ?>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CARD BODY -->
+                <div class="verification-card-body">
+
+                    <div class="tab-content tabs verification-tab-content">
+
+                        <!-- ================= TAB 1 ================= -->
+                        <div role="tabpanel" class="tab-pane fade in active" id="section1">
+
+                            <fieldset class="fieldset">
+                                <?php echo $block->getChildHtml('verification.businessinfo'); ?>
+                            </fieldset>
+
+                            <fieldset class="fieldset">
+                                <?php echo $block->getChildHtml('verification.addressinfo'); ?>
+                            </fieldset>
+
+                            <fieldset class="fieldset">
+                                <?php echo $block->getChildHtml('verification.contactinfo'); ?>
+                            </fieldset>
+
+                            <div class="page-main-actions verification-actions">
+                                <button type="button" class="btn btn-primary verification-nextpage">
+                                    <?php echo __('Next Step') ?>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- ================= TAB 2 ================= -->
+                        <div role="tabpanel" class="tab-pane fade in" id="section2">
+
+                            <fieldset class="fieldset">
+                                <legend class="legend"><span><?php echo __('Documents') ?></span></legend>
+
+                                <div class="row">
+                                    <div class="fields col-md-12">
+                                        <div class="field name required">
+                                            <label for="commercialregistcert">
+                                                <span><?php echo __('Commercial Registration Certificate') ?></span>
+                                            </label>
+
+                                            <div class="control">
+                                                <div class="upload-wrapper" data-bind="scope: 'vendorregistcert'">
+                                                    <!-- ko template: getTemplate() --><!-- /ko -->
+                                                </div>
+                                            </div>
+
+                                            <div class="field-note noncatrfq-uploadnotice">
+                                                <span>[Allowed File Types: "png","jpg","jpeg","gif","pdf","doc","docx"]</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row"><div>&nbsp;</div></div>
+
+                                <div class="row">
+                                    <div class="fields col-md-12">
+                                        <div class="field name required">
+                                            <label for="verification-additional-docs">
+                                                <span><?php echo __('Additional Documents') ?></span>
+                                            </label>
+
+                                            <div class="control">
+                                                <div class="upload-wrapper" data-bind="scope: 'vendoradditionaldocs'">
+                                                    <!-- ko template: getTemplate() --><!-- /ko -->
+                                                </div>
+                                            </div>
+
+                                            <div class="field-note noncatrfq-uploadnotice">
+                                                <span>[Allowed File Types: "png","jpg","jpeg","gif","pdf","doc","docx"]</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </fieldset>
+
+                            <div class="page-main-actions verification-actions verification-actions-docs">
+                                <button type="button" id="mysubmit-button" class="btn btn-primary">
+                                    <?php echo __('Submit') ?>
+                                </button>
+
+                                <button type="button" class="btn btn-primary verification-prevpage">
+                                    <?php echo __('Back') ?>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div><!-- /card-body -->
+            </div><!-- /card -->
+
+        </div>
+    </div>
+</form>
+
+<input type="hidden" id="is-certselected" name="is-certselected" value="" />
+
+<!-- ================= UI STYLES (MATCH 3rd & 4th SCREENSHOTS) ================= -->
+<style>
+/* ========================
+   Page heading (smaller, like screenshot)
+   ======================== */
+#verification-form .page-heading-book{
+    margin: 4px 0 10px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #0b1f4b;
+}
+
+/* ========================
+   Main card (thin border, subtle shadow)
+   ======================== */
+#verification-form .verification-ui-card{
+    max-width: 760px;                 /* similar visual width to screenshot */
+    background: #ffffff;
+    border: 1px solid #eef2f7;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+    overflow: hidden;
+}
+
+/* head + body padding matches screenshot */
+#verification-form .verification-card-head{
+    padding: 14px 16px 0;
+}
+
+#verification-form .verification-card-body{
+    padding: 16px;
+}
+
+/* "Seller Request Verification" */
+#verification-form .requare-text{
+      color: #0b1f4b !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+}
+
+/* ========================
+   Step tabs (exact look)
+   ======================== */
+#verification-form .verification-steps{
+    border-bottom: 1px solid #eef2f7;
+    margin: 0;
+    padding: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 0;  
+}
+
+#verification-form .verification-steps > li{
+     float: none;
+    margin: 0;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding-right: 18px;
+    margin-right: 18px;
+}
+
+#verification-form .verification-steps > li > a{
+    border: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #0b1f4b !important;
+    margin: 0 !important;
+    text-decoration: none !important;
+}
+#verification-form .verification-steps > li:not(.active) > a{
+    opacity: 0.78;
+}
+
+#verification-form .verification-steps > li:not(:last-child)::after{
+    content: ">";
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b9c6dc;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+#verification-form .verification-steps > li > a:hover{
+    color: #1f57a6;
+}
+
+/* number circle */
+#verification-form .verification-steps .icon-no{
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+
+    /* inactive bubble look from screenshot */
+    background: #fde7d6;
+    border: 1px solid #fde7d6;
+    color: #ff8a00;
+}
+
+/* active */
+#verification-form .verification-steps > li.active > a{
+     opacity: 1;
+    font-weight: 700;
+}
+
+#verification-form .verification-steps > li.active .icon-no{
+    background: #ff8a00;
+    border-color: #ff8a00;
+    color: #ffffff;
+}
+
+/* tab content spacing */
+#verification-form .verification-tab-content{
+    padding-top: 12px;
+}
+#verification-form .verification-steps > li > a:focus,
+#verification-form .verification-steps > li > a:hover{
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* ========================
+   Headings / legends
+   ======================== */
+#verification-form fieldset.fieldset{
+    border: 0;
+    padding: 0;
+    margin: 0 0 14px;
+}
+
+#verification-form .legend{
+    border: 0;
+    margin: 6px 0 10px;
+    padding: 0;
+}
+
+#verification-form .legend span{
+    font-size: 13px;
+    font-weight: 700;
+    color: #0b1f4b;
+}
+
+/* ========================
+   Fields (WHITE like screenshot)
+   ======================== */
+#verification-form .field{
+    margin-bottom: 12px;
+}
+
+#verification-form label,
+#verification-form .field > .label{
+    font-size: 11px;
+    font-weight: 600;
+    color: #0b1f4b;
+    margin-bottom: 6px;
+}
+
+/* inputs/select/textarea – white bg, thin border */
+#verification-form .control input,
+#verification-form .control select,
+#verification-form .control textarea,
+#verification-form input.input-text,
+#verification-form select,
+#verification-form textarea{
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e3ebf5;
+    border-radius: 4px;
+    color: #0b1f4b;
+    font-size: 12px;
+    outline: none;
+    box-shadow: none;
+}
+
+/* consistent height */
+#verification-form .control input,
+#verification-form .control select,
+#verification-form input.input-text,
+#verification-form select{
+    height: 36px;
+    padding: 8px 10px;
+}
+
+#verification-form .control textarea,
+#verification-form textarea{
+    min-height: 120px;
+    padding: 10px;
+    resize: vertical;
+}
+
+/* focus – soft blue ring */
+#verification-form .control input:focus,
+#verification-form .control select:focus,
+#verification-form .control textarea:focus,
+#verification-form input.input-text:focus,
+#verification-form select:focus,
+#verification-form textarea:focus{
+    border-color: #1f57a6;
+    box-shadow: 0 0 0 2px rgba(31, 87, 166, 0.12);
+}
+
+/* Disabled (light grey like screenshot) */
+#verification-form input[disabled],
+#verification-form select[disabled],
+#verification-form textarea[disabled]{
+    background: #f5f7fb !important;
+    color: #6f7f99 !important;
+}
+
+/* WYSIWYG editors */
+#verification-form .note-editor,
+#verification-form .mce-tinymce,
+#verification-form .tox-tinymce{
+    border: 1px solid #e3ebf5 !important;
+    border-radius: 4px !important;
+    overflow: hidden;
+    box-shadow: none !important;
+}
+
+/* ========================
+   Map area + "Show Map" link style (orange text)
+   ======================== */
+#verification-form .map-canvas,
+#verification-form #map,
+#verification-form .google-map{
+    border: 1px solid #eef2f7;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#verification-form .show-map,
+#verification-form .showMap,
+#verification-form .show_map,
+#verification-form button.show-map,
+#verification-form button.showMap,
+#verification-form button.show_map{
+    background: transparent !important;
+    border: 0 !important;
+    padding: 0 !important;
+    color: #ff8a00 !important;
+    font-weight: 600;
+    font-size: 12px;
+    text-decoration: none;
+    box-shadow: none !important;
+}
+
+/* If the map toggle sits in a button container, keep it aligned right like screenshot */
+#verification-form .map-toggle,
+#verification-form .map-actions{
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* ========================
+   Buttons (size + radius like screenshot)
+   ======================== */
+#verification-form .verification-actions{
+    margin: 14px 0 0 !important;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#verification-form .verification-actions-docs{
+    justify-content: space-between;
+}
+
+#verification-form .btn.btn-primary{
+    background: #1f57a6 !important;
+    border: 1px solid #1f57a6 !important;
+    border-radius: 4px !important;
+    height: 36px;
+    padding: 0 18px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #fff !important;
+    transition: 0.15s ease;
+}
+
+#verification-form .btn.btn-primary:hover{
+    background: #184a8f !important;
+    border-color: #184a8f !important;
+}
+
+/* Back button in docs tab = white outlined */
+#verification-form .verification-prevpage{
+    background: #ffffff !important;
+    color: #1f57a6 !important;
+    border: 1px solid #e3ebf5 !important;
+}
+
+/* Upload wrapper */
+#verification-form .upload-wrapper{
+    background: #ffffff;
+    border: 1px dashed #e3ebf5;
+    border-radius: 4px;
+    padding: 10px;
+}
+
+#verification-form .noncatrfq-uploadnotice{
+    margin-top: 6px;
+    font-size: 11px;
+    color: #7a8aa6;
+}
+
+/* Tighter gutters inside card */
+#verification-form .verification-card-body .row{
+    margin-left: -8px;
+    margin-right: -8px;
+}
+#verification-form .verification-card-body [class*="col-"]{
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px){
+    #verification-form .verification-ui-card{
+        max-width: 100%;
+    }
+    #verification-form .verification-card-head,
+    #verification-form .verification-card-body{
+        padding: 12px;
+    }
+    #verification-form .verification-steps{
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+    #verification-form .verification-actions,
+    #verification-form .verification-actions-docs{
+        flex-direction: column;
+        align-items: stretch;
+    }
+      #verification-form .verification-steps > li{
+        margin-right: 12px;
+        padding-right: 12px;
+    }
+}
+</style>
+
+<!-- ================= JS (UNCHANGED) ================= -->
+<script>
+require(['jquery','Magento_Ui/js/modal/alert','mage/translate','mage/mage'],
+function ($, uiAlert, $t,$mage) {
+
+    var dataForm = jQuery('#verification-form');
+    dataForm.mage('validation', {});
+
+    $('#mysubmit-button').click(function() {
+        var validationFailed = false;
+
+        if($("#is-certselected").val() == ''){
+            validationFailed = true;
+            var data = { content: $t('Please upload Commercial Registration Certificate.') };
+            data.modalClass = '_image-box';
+            uiAlert(data);
+        }
+
+        if(validationFailed){ return; }
+
+        validationFailed = dataForm.validation('isValid');
+        if(validationFailed){
+            dataForm.submit();
+        }
+    });
+
+    $(document).ready(function(){
+
+        $(".verification-nextpage").click(function(){
+            var next = jQuery('.nav-tabs > .active').next('li');
+            if(next.length){
+                next.find('a').trigger('click');
+            }else{
+                $('#myTabs a:first').tab('show');
+            }
+        });
+
+        $(".verification-prevpage").click(function(){
+            var prev = jQuery('.nav-tabs > .active').prev('li');
+            if(prev.length){
+                prev.find('a').trigger('click');
+            }else{
+                jQuery('#myTabs a:last').tab('show');
+            }
+        });
+
+        $("#business-country").change(function(){
+            var countryCode = $(this).val();
+            $("#business-countrycode").val(countryCode);
+            $("#contact-countrycode").val(countryCode);
+        });
+
+    });
+
+});
+</script>
+
+<script type="text/x-magento-init">
+{
+".upload-wrapper": {
+   "Magento_Ui/js/core/app": {
+       "components": {
+           "vendorregistcert": {
+               "dataScope": "vendorregistcert",
+               "source": "vendorregistcert",
+               "component": "Vendor_VendorsVerification/js/custom-file-uploader",
+               "template": "ui/form/element/uploader/uploader",
+               "previewTmpl":"Vendor_VendorsVerification/uploader/preview",
+               "allowedExtensions": ["png", "jpg", "jpeg", "gif","pdf","doc","docx","pdf"],
+               "isMultipleFiles":false,
+               "required":true,
+               "inputName":"vendorregistcert",
+               "maxFileAllow":1,
+               "myUploadId":"vendorcert",
+               "uploaderConfig": {
+                    "url": "<?php echo $block->getUrl('vendorverification/uploader/ajax/',['fldname'=>'vendorregistcert']); ?>"
+               },
+               "savedFiles":<?php echo $uploaedCertificate;?>
+            }
+        }
+   }
+ }
+}
+</script>
+
+<script type="text/x-magento-init">
+{
+".upload-wrapper": {
+   "Magento_Ui/js/core/app": {
+       "components": {
+           "vendoradditionaldocs": {
+               "dataScope": "vendoradditionaldocs",
+               "source"   : "vendoradditionaldocs",
+               "component": "Vendor_VendorsVerification/js/custom-file-uploader",
+               "template": "ui/form/element/uploader/uploader",
+               "previewTmpl":"Vendor_VendorsVerification/uploader/preview-others",
+               "allowedExtensions": ["png", "jpg", "jpeg", "gif","pdf","doc","docx","pdf"],
+               "isMultipleFiles":true,
+               "inputName":"vendoradditionaldocs",
+               "maxFileAllow":2,
+               "myUploadId":"vendodocs",
+               "uploaderConfig": {
+                    "url": "<?php echo $block->getUrl('vendorverification/uploader/ajax/',['fldname'=>'vendoradditionaldocs']); ?>"
+               },
+               "savedFiles":<?php echo $uploaedLogoOthers;?>
+            }
+        }
+   }
+ }
+}
+</script>

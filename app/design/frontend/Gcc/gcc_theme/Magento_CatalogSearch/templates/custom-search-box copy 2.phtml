@@ -1,0 +1,264 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+ <script>
+  // Disable Tailwind's global resets so 3rd-party widgets (Mirasvit) are not altered
+  window.tailwind = window.tailwind || {};
+  window.tailwind.config = { corePlugins: { preflight: false } };
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  /* ---- Base ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #f6f7fb;
+  color: #111827;
+}
+/* ===== Search bar (kept) ===== */
+.search-container{ width:95%; max-width:1320px; margin:24px auto; }
+.search-wrap{ margin-bottom:18px; }
+.search-bar{
+  position:relative; display:flex; align-items:center;
+  width:100%; height:56px; border-radius:14px;
+  background:#f9fbfd; box-shadow:inset 0 1px 0 rgba(17,24,39,.02);
+}
+.search-bar:hover{ border-color:#b0c7e1; }
+.search-bar:focus-within{ border-color:#cfe0ff; box-shadow:0 0 0 3px rgba(59,130,246,.15); background:#fbfdff; }
+.search-icon{ position:absolute; left:16px; width:20px; height:20px; stroke:#7f8a9b; stroke-width:2; fill:none; }
+.search-input{
+  width:100% !important; height:100% !important; padding:0 64px 0 46px !important;
+  border:0; background:transparent; outline:none; font-size:16px; color:#0f172a;
+}
+.search-input::placeholder{ color:#9aa3b2; }
+.shortcut{ position:absolute; right:18px; top:50%; transform:translateY(-50%); color:#98a1af; font-weight:600; letter-spacing:.02em; font-size:14px; }
+
+/* ===== Autocomplete panel chrome ===== */
+.search-wrap .mst-search-autocomplete__wrapper{
+  z-index:9999 !important;
+  width:100%;
+  border-radius:12px;
+  background:#fff;
+  box-shadow:0 10px 30px rgba(17,24,39,.12);
+  overflow:visible !important;         /* allow our inner grid to control scroll */
+}
+.mst-search-autocomplete__typeahead-overlay{ z-index:9998 !important; }
+
+/* ===== Our injected 2-column grid ===== */
+.ms-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  padding:12px;
+  box-sizing:border-box;
+  max-height:80vh;                     /* total panel height */
+  overflow:hidden;                     /* columns will scroll */
+}
+.ms-col{
+  background:#fff;
+  border:1px solid #eef1f5;
+  border-radius:10px;
+  padding:12px;
+  min-height:160px;
+  max-height:76vh;                     /* within panel */
+  overflow:auto;                       /* each column scrolls */
+}
+.ms-full{
+  grid-column:1 / -1;
+  background:#fff;
+  border:1px solid #eef1f5;
+  border-radius:10px;
+  padding:12px;
+  max-height:76vh;
+  overflow:auto;
+}
+
+/* sticky titles inside blocks */
+.ms-col .mst-search-autocomplete__title,
+.ms-full .mst-search-autocomplete__title{
+  position:sticky; top:0; z-index:1;
+  background:#fff;
+  padding-bottom:8px; margin-bottom:8px;
+  border-bottom:1px solid #f0f2f6;
+}
+
+/* never collapse lists/items */
+[class*="__items"], [class*="__list"]{
+  display:block !important;
+  height:auto !important; max-height:none !important;
+  overflow:visible !important; opacity:1 !important; transform:none !important;
+}
+[class*="__item"]{ display:block !important; opacity:1 !important; transform:none !important; }
+
+/* neat row divider */
+[class*="__item"] + [class*="__item"]{ border-top:1px solid #f1f3f7; margin-top:10px; padding-top:10px; }
+
+/* mobile: stack */
+@media (max-width:768px){
+  .ms-grid{ grid-template-columns:1fr; gap:12px; }
+  .ms-col, .ms-full{ max-height:unset; }
+}
+.mst-searchautocomplete__autocomplete .mst-searchautocomplete__results.__all {
+    margin-bottom: 0px !important;
+}
+  </style>
+<div class="search-container">
+    <!-- Search -->
+    <div class="search-wrap">
+     <form class="flex justify-center"
+      action="<?= $block->getUrl('catalogsearch/result/index') ?>"
+      method="get"
+      id="custom_search_form">
+      <div class="search-bar" role="search" >
+        <!-- search icon -->
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <!-- input -->
+        <input id="search" class="search-input" type="text"  name="q"  value="<?= $block->escapeHtml($this->getRequest()->getParam('q')) ?>"
+  placeholder="Search for vendors or products..." aria-label="Search for vendors or products..."  autocomplete="off"/>
+        <!-- shortcut hint -->
+        <span id="shortcutHint" class="shortcut">⌘K</span>
+      </div>
+      </form>
+    </div>
+</div>
+<script>
+  // Show ⌘K on macOS and Ctrl K elsewhere
+  (function(){
+    const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+    document.getElementById('shortcutHint').textContent = isMac ? '⌘K' : 'Ctrl K';
+
+    // Focus the search when pressing the shortcut
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      if ((isMac && e.metaKey && key === 'k') || (!isMac && e.ctrlKey && key === 'k')) {
+        e.preventDefault();
+        document.getElementById('search').focus();
+      }
+    });
+
+    // Optional: update breadcrumb query when submitting with Enter
+    const input = document.getElementById('search');
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('qText').textContent = input.value || 'All';
+      }
+    });
+  })();
+
+</script>
+
+<script>
+(function () {
+  // Utility: safe text content
+  const txt = el => (el && (el.innerText || el.textContent) || '').trim().toLowerCase();
+
+  // Find the element that currently holds blocks (skin-agnostic)
+  function findHost(wrapper){
+    return wrapper.querySelector('[class*="__blocks"]')
+        || wrapper.querySelector('[class*="__content"]')
+        || wrapper; // fallback
+  }
+
+  // Collect "blocks" by class fragment regardless of skin
+  function findBlocks(host){
+    // limit to immediate descendants first; fallback to deep search
+    let blocks = Array.from(host.children).filter(n => n.className && String(n.className).includes('__block'));
+    if (!blocks.length) blocks = Array.from(host.querySelectorAll('[class*="__block"]'));
+    return blocks;
+  }
+
+  function buildTwoColumns(wrapper){
+    if (!wrapper) return;
+
+    const host = findHost(wrapper);
+    const blocks = findBlocks(host);
+    if (!blocks.length) return;
+
+    // Already enhanced? If our grid exists, don't double nest
+    if (host.querySelector('.ms-grid')) return;
+
+    // Create grid shells
+    const grid  = document.createElement('div'); grid.className = 'ms-grid';
+    const left  = document.createElement('div'); left.className = 'ms-col';
+    const right = document.createElement('div'); right.className = 'ms-col';
+    const full  = document.createElement('div'); full.className = 'ms-full';
+
+    // Route blocks by their title text (covers "Vendor (n)" / "Products (n)")
+    blocks.forEach(block => {
+      const title = block.querySelector('[class*="__title"]');
+      const t = txt(title);
+      if (t.includes('vendor')) {
+        left.appendChild(block);
+      } else if (t.includes('product')) {
+        right.appendChild(block);
+      } else {
+        full.appendChild(block);
+      }
+    });
+
+    if (!left.children.length)  left.style.display = 'none';
+    if (!right.children.length) right.style.display = 'none';
+    if (!full.children.length)  full.style.display = 'none';
+
+    grid.appendChild(left);
+    grid.appendChild(right);
+    grid.appendChild(full);
+
+    // Replace host contents with grid
+    host.innerHTML = '';
+    host.appendChild(grid);
+  }
+
+  // Enhance all visible wrappers
+  function enhanceAll(){
+    document.querySelectorAll('.mst-search-autocomplete__wrapper').forEach(buildTwoColumns);
+  }
+
+  // Trigger on input activity (Mirasvit re-renders per keystroke)
+  const input = document.getElementById('search');
+  if (input){
+    ['focus','input','keyup'].forEach(ev => input.addEventListener(ev, () => setTimeout(enhanceAll, 50)));
+  }
+
+  // Also watch DOM changes globally (covers AJAX updates)
+  const mo = new MutationObserver(() => enhanceAll());
+  mo.observe(document.body, { childList:true, subtree:true });
+
+  // First attempt (in case it is already open)
+  enhanceAll();
+})();
+
+//for hiding double searchbox
+require(['jquery'], function($) {
+  $(document).ready(function() {
+
+    // Function to hide all autocomplete overlays
+    function hideAutocomplete() {
+      $('.mst-search-autocomplete__typeahead-overlay').each(function() {
+        $(this).hide(); // Hide existing overlay
+      });
+    }
+
+    // Hide immediately if already rendered
+    hideAutocomplete();
+
+    // Observe DOM changes so even dynamically created overlays are hidden
+    const observer = new MutationObserver(function() {
+      hideAutocomplete();
+    });
+
+    // Start observing entire body for any new elements added dynamically
+    observer.observe(document.body, { childList: true, subtree: true });
+
+  });
+});
+</script>

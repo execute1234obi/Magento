@@ -1,0 +1,122 @@
+{
+    "name": "magento/project-community-edition",
+    "description": "eCommerce Platform for Growth (Community Edition)",
+    "type": "project",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "laminas/laminas-dependency-plugin": true,
+            "magento/*": true,
+            "php-http/discovery": true
+        },
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "version": "2.4.6-p9",
+    "require": {
+        "brick/math": "0.10",
+        "elasticsearch/elasticsearch": "^8.5",
+        "magento/composer-dependency-version-audit-plugin": "~0.1",
+        "magento/composer-root-update-plugin": "~2.0",
+        "magento/module-elasticsearch-8": "100.4",
+        "magento/product-community-edition": "2.4.6-p9",
+        "mageplaza/module-smtp": "^4.7",
+        "mirasvit/module-search-ultimate": "^2.6",
+        "vnecoms/marketplace-platinum": "2.4.*",
+        "vnecoms/module-vendors-api": "2.4.*",
+        "vnecoms/module-vendors-avatar-profile": "2.0.*",
+        "vnecoms/module-vendors-credit-graphql": "2.0.*",
+        "vnecoms/module-vendors-dashboard-graphql": "2.0.*",
+        "vnecoms/module-vendors-graphql": "2.0.*",
+        "vnecoms/module-vendors-group": "2.4.*",
+        "vnecoms/module-vendors-membership": "2.4.*",
+        "vnecoms/module-vendors-notification-graphql": "2.0.*",
+        "vnecoms/module-vendors-page-builder": "2.4.*",
+        "vnecoms/module-vendors-product-form": "2.4.*",
+        "vnecoms/module-vendors-product-graphql": "2.0.*",
+        "vnecoms/module-vendors-product-inventory": "2.0.*",
+        "vnecoms/module-vendors-report-graphql": "2.0.*",
+        "vnecoms/module-vendors-sales-graphql": "2.0.*",
+        "vnecoms/module-vendors-shipping-dhl": "2.4.*",
+        "vnecoms/module-vendors-shipping-fedex": "2.4.*",
+        "vnecoms/module-vendors-shipping-pickup": "2.4.*",
+        "vnecoms/module-vendors-shipping-ups": "2.4.*",
+        "vnecoms/module-vendors-shipping-usps": "2.4.*",
+        "vnecoms/module-vendors-smtheme": "2.0.*",
+        "vnecoms/module-vendors-subaccount": "2.4.*"
+    },
+    "autoload": {
+        "exclude-from-classmap": [
+            "**/dev/**",
+            "**/update/**",
+            "**/Test/**"
+        ],
+        "files": [
+            "app/etc/NonComposerComponentRegistration.php"
+        ],
+        "psr-0": {
+            "": [
+                "app/code/",
+                "generated/code/"
+            ]
+        },
+        "psr-4": {
+            "Magento\\": "app/code/Magento/",
+            "Magento\\Framework\\": "lib/internal/Magento/Framework/",
+            "Magento\\Setup\\": "setup/src/Magento/Setup/",
+            "Magento\\Fedex\\": "app/code/Fix/Fedex/"
+        }
+    },
+    "require-dev": {
+        "allure-framework/allure-phpunit": "^2",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
+        "dg/bypass-finals": "^1.4",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "lusitanian/oauth": "^0.8",
+        "magento/magento-coding-standard": "*",
+        "magento/magento2-functional-testing-framework": "^4.3.1",
+        "pdepend/pdepend": "^2.10",
+        "phpmd/phpmd": "^2.12",
+        "phpstan/phpstan": "^1.9",
+        "phpunit/phpunit": "^9.5",
+        "sebastian/comparator": "<=4.0.6",
+        "sebastian/phpcpd": "^6.0",
+        "symfony/finder": "^5.4"
+    },
+    "conflict": {
+        "gene/bluefoot": "*"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Magento\\PhpStan\\": "dev/tests/static/framework/Magento/PhpStan/",
+            "Magento\\Sniffs\\": "dev/tests/static/framework/Magento/Sniffs/",
+            "Magento\\TestFramework\\Inspection\\": "dev/tests/static/framework/Magento/TestFramework/Inspection/",
+            "Magento\\TestFramework\\Utility\\": "dev/tests/static/framework/Magento/TestFramework/Utility/",
+            "Magento\\Tools\\": "dev/tools/Magento/Tools/",
+            "Magento\\Tools\\Sanity\\": "dev/build/publication/sanity/Magento/Tools/Sanity/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "repositories": {
+        "mirasvit-esu2": {
+            "type": "composer",
+            "url": "https://54501:QYELJBH52D@packages.mirasvit.com/54501:QYELJBH52D/"
+        },
+        "vnecoms-repo": {
+            "type": "composer",
+            "url": "https://repo.vnecoms.com"
+        },
+        "0": {
+            "type": "composer",
+            "url": "https://repo.magento.com/"
+        }
+    },
+    "extra": {
+        "magento-force": "override"
+    }
+}

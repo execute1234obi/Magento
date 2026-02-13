@@ -1,0 +1,98 @@
+<?php $vendors = $block->getVendorDetails(); //print_r( $vendors); ?>
+
+<style>
+.vendor-card {
+    width: 320px;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s;
+    padding: 32px 20px 20px 20px;
+    margin: 0; /* Remove margin for Swiper spacing */
+    overflow: hidden;
+    position: relative;
+}
+.vendor-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.vendor-logo {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    margin-bottom: 18px;
+}
+.vendor-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 4px;
+}
+.vendor-category {
+    font-size: 1rem;
+    color: #666;
+    text-align: center;
+    margin-bottom: 18px;
+}
+.vendor-description {
+    font-size: 1rem;
+    color: #444;
+    text-align: center;
+    margin-bottom: 18px;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+.vendor-country {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: #1a7f37;
+    margin-top: auto;
+    font-weight: 500;
+    gap: 6px;
+}
+.vendor-country img {
+    width: 20px;
+    height: 14px;
+    object-fit: cover;
+}
+</style>
+
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    <?php foreach ($vendors as $vendor): ?>
+      <div class="swiper-slide">
+        <div class="vendor-card">
+      <?php
+            $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)."pub/media/";
+            $logoPath = !empty($vendor['vendor_logo']) ? trim($vendor['vendor_logo'], '/') : 'default/logo.png';
+            $fullLogoUrl = $mediaUrl . $logoPath;
+      ?>
+        <img src="<?= $fullLogoUrl ?>" alt="<?= $block->escapeHtml($vendor['company_name'] ?? '-') ?>" class="vendor-logo">
+        <h3 class="vendor-title"><?= $block->escapeHtml($vendor['company_name'] ?? '-') ?></h3>
+        <p class="vendor-category"><?= $block->escapeHtml($vendor['business_category'] ?? '-') ?></p>
+        <div class="vendor-description">
+            <?= $block->escapeHtml($vendor['business_description'] ?? 'No description available') ?>
+        </div>
+        <div class="vendor-country">
+            <img src="/pub/media/flags/saudi-arabia.png" alt="Saudi Arabia">
+            Saudi Arabia
+        </div>
+      </div>  
+      </div>
+    <?php endforeach; ?>
+  </div>
+  <div class="swiper-button-next"></div>
+  <div class="swiper-button-prev"></div>
+  <div class="swiper-pagination"></div>
+</div>

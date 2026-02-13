@@ -1,0 +1,146 @@
+<?php
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
+// Get the vendor collection using the method from our block
+$vendors = $block->getSearchCollection();
+?>
+<style>
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      background-color: #f5f7fb;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px; /* You can adjust this width as needed */
+       margin: 0; /* Changed from auto to 0 to align left */
+       padding-top: 40px; /* Added padding to the top */
+
+    }
+
+    .brand {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo img {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      object-fit: contain;
+    }
+
+    .brand-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-name {
+      font-size: 18px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .verified {
+      color: #1d9bf0;
+      font-size: 16px;
+    }
+
+    .brand-info {
+      font-size: 14px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .website-link {
+      background-color: #f0f4ff;
+      color: #2a5ee4;
+      font-size: 14px;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .website-link:hover {
+      background-color: #dce7ff;
+    }
+
+    .brand p {
+      font-size: 14px;
+      color: #444;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+  </style>
+  <?php if ($vendors && $vendors->getSize() > 0): ?>
+  <div class="container">
+
+    <?php foreach ($vendors as $vendor): ?>
+    <div class="brand">
+      <div class="brand-header">
+        <div class="brand-left">
+          <div class="brand-logo">
+            <?php
+           $vendorurl= $this->getBaseUrl() . 'shop/v' . $vendor->getId() 
+            ?>
+            <a href="<?= $block->escapeUrl($vendorurl) ?>">
+             <?php
+                    $logo = $vendor->getData('upload_logo');
+                    if ($logo):
+                        $mediaUrl = $block->getUrl('pub/media/') . $logo;
+                    ?>
+            <img src="<?= $block->escapeUrl($mediaUrl); ?>"
+                        alt="<?= $block->escapeHtml($block->getVendorName($vendor)); ?>">
+                        <?php endif; ?>
+                    </a>
+          </div>
+          <div class="brand-details">
+            <?php
+                // Get country and category from the vendor
+                $country = $vendor->getData('country_id'); // Assuming 'country' is the field name
+                $category = $vendor->getData('business_category');// Assuming 'category' is the field name
+                $website = $vendor->getData('website');
+                ?>
+            <div class="brand-name"><?= $block->escapeHtml($block->getVendorName($vendor)); ?></div>
+            <div class="brand-info">  <?= $block->escapeHtml($country); ?> · <?= $block->escapeHtml($category); ?></div>
+          </div>
+        </div>
+        <a class="website-link" href=" <?= $block->escapeHtml($website); ?>">Visit Website ➔</a>
+      </div>
+      <p>
+         <?= $block->escapeHtml($block->getBusinessDescriptions($vendor)); ?>
+      </p>
+    </div>
+       <?php endforeach; ?>
+    </div>
+    <div class="pager-wrap mt-4">
+        <?= $block->getPager(); ?>
+    </div>
+
+<?php else: ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__("We can't find vendors matching the selection.")) ?></p>
+    </div>
+<?php endif; ?>

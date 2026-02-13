@@ -1,0 +1,12 @@
+<?php
+/**
+ * @var \VendorName\VendorDashboardLink\Block\Customer\DashboardLink $block
+ */
+?>
+<?php if ($block->getCustomerSession()->isLoggedIn()): ?>
+    <li class="nav item">
+        <a class="nav-link" href="<?= $block->escapeUrl($block->getLinkUrl()) ?>">
+            <?= $block->escapeHtml($block->getLinkText()) ?>
+        </a>
+    </li>
+<?php endif; ?>

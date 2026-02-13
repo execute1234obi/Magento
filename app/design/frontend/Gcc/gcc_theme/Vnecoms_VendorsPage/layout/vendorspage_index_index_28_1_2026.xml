@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Vnecoms_VendorsPage::css/custom-vendor-page.css"/>
+        <script src="https://cdn.tailwindcss.com" src_type="url"/>
+         <script src="Vnecoms_VendorsPage::js/vendor-tabs.js"/>
+    </head>
+    <body>
+        <attribute name="class" value="page-layout-1column-full-width"/>
+        <!-- <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.search.box"
+                   template="Magento_CatalogSearch::custom-search-box.phtml"
+                   after="header.panel" />
+        </referenceContainer> -->
+    
+       <referenceContainer name="sidebar.main" remove="true"/>
+        <referenceContainer name="sidebar.additional" remove="true"/>
+        <attribute name="class" value="page-layout-1column-full-width"/>
+
+        <referenceBlock name="vendor.home.shipping" remove="true"/>
+        <referenceBlock name="vendor.home.refund" remove="true"/>
+        <referenceBlock name="vendor.home.about" remove="true"/>
+        <referenceBlock name="vendor.home.businessreviewform" remove="true"/>
+        <referenceBlock name="vendor.home.contact" remove="true"/>
+        <referenceBlock name="vendor.home.certificates" remove="true"/>
+        <referenceBlock name="vendor.home.catalog" remove="true"/>
+        <referenceBlock name="vendor.home.locationmap" remove="true"/>
+        <referenceBlock name="vendor.home.banner" remove="true"/>
+        <referenceBlock name="vendor.products" remove="true"/>
+        <referenceContainer name="vendor.home.review.container" remove="true" />
+        <referenceContainer name="vendor.featured.product.container" remove="true" />
+
+
+
+        <referenceContainer name="content">
+            <container name="custom.vendor.page.container" htmlTag="div" htmlClass="custom-vendor-page-container" before="-">
+                <block   class="Magento\Framework\View\Element\Template" name="custom.vendor.profile" template="Vnecoms_VendorsPage::profile.phtml"/>
+            </container>
+        </referenceContainer>
+        <block class="Vnecoms\VendorsPage\Block\Product" name="vendor.products" template="Magento_Catalog::product/list.phtml">
+    <block class="Vnecoms\VendorsPage\Block\Product\ProductList\Toolbar" name="product_list_toolbar" template="Vnecoms_VendorsPage::product/list/toolbar.phtml">
+        <block class="Magento\Theme\Block\Html\Pager" name="product_list_toolbar_pager"/>
+    </block>
+    <action method="setToolbarBlockName">
+        <argument name="name" xsi:type="string">product_list_toolbar</argument>
+    </action>
+</block>
+       <!-- <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.vendor.data"
+                   template="Magento_Theme::vendor/custom_vendor_data.phtml" />
+        </referenceContainer> -->
+
+         <referenceContainer name="main">
+            <block class="Magento\Framework\View\Element\Template"
+                    name="custom.newsletter"
+                    template="Magento_Theme::html/newsletter.phtml"
+                    after="content" />
+        </referenceContainer>
+    </body>
+</page>

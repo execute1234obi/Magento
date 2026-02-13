@@ -1,0 +1,193 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+   <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+         .page-main > .page-title-wrapper .page-title {
+            display: none;
+        }
+        .form-container {
+            width: 40%;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #003366;
+            text-align: left;
+        }
+
+        .sign-in-text {
+            font-size: 14px;
+            color: #555555;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #003366;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .required {
+            color: #d02d4e;
+        }
+
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D2E1F1; /* Light blue border */
+            border-radius: 5px;
+            background-color: #F2F8FF; /* Light background color */
+            color: #2A3A6D; /* Darker text color for contrast */
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input[type="email"]:focus, input[type="password"]:focus {
+            outline: none;
+            border-color: #0061F2; /* Blue border on focus */
+            background-color: #E6F0FF; /* Slightly darker background on focus */
+        }
+
+        .password-strength {
+            font-size: 12px;
+            color: #0abf53;
+            padding-top: 7px;
+            font-weight: bold;
+        }
+
+        button.submit-btn {
+            background-color: #1e56a0;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button.submit-btn:hover {
+            background-color: #1e56a0;
+        }
+
+        .captcha {
+            margin-bottom: 20px;
+        }
+
+        .g-recaptcha {
+            margin: 20px 0;
+        }
+
+        /* Eye icon styles */
+        .eye-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+            color: #2A3A6D;
+        }
+
+        /* Password field container */
+        .password-container {
+            position: relative;
+        }
+
+        /* Forgot password and create account link styles */
+        .forgot-password, .create-account {
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .forgot-password a, .create-account a {
+            color: #1e56a0;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .forgot-password a:hover, .create-account a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-container {
+                width: 90%; /* Full width on mobile */
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                width: 95%; /* Slightly smaller on very small screens */
+                padding: 15px;
+            }
+        }
+    </style>
+
+<div class="form-container">
+    <h2>Registered Customers</h2>
+    <p class="sign-in-text">If you have an account, sign in with your email address.</p>
+
+    <!-- ✅ Use Magento login post action -->
+    <form action="<?= $block->getUrl('customer/account/loginPost') ?>"
+ method="post">
+        <!-- Magento form key required -->
+        <input type="hidden" name="form_key" value="{{form_key}}" />
+
+        <div class="form-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" name="login[username]" required />
+        </div>
+
+        <div class="form-group password-container">
+            <label for="password">Password <span class="required">*</span></label>
+            <input type="password" id="password" name="login[password]" required />
+            <span class="eye-icon" id="toggle-password"><i class="fas fa-eye"></i></span>
+        </div>
+
+        <!-- Forgot Password -->
+        <div class="forgot-password">
+            <a href="{{store url='customer/account/forgotpassword'}}">Forgot Your Password?</a>
+        </div>
+
+        <br/>
+        <button type="submit" class="submit-btn">Sign In</button>
+
+        <!-- Create Account -->
+        <div class="create-account">
+            <p>Creating an account has many benefits
+                <a href="<?= $block->getUrl('customer/account/create') ?>">Create Account</a>
+            </p>
+        </div>
+    </form>
+</div>
+
+<script>
+    const togglePassword = document.getElementById('toggle-password');
+    const passwordField = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function() {
+        const type = passwordField.type === 'password' ? 'text' : 'password';
+        passwordField.type = type;
+    });
+</script>

@@ -1,0 +1,54 @@
+############################
+# Magento 2 Gitignore File #
+############################
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*.bak
+
+# Composer
+/vendor/
+
+# Magento generated files
+/generated/
+/var/*
+!/var/.htaccess
+
+/pub/static/
+!/pub/static/.htaccess
+
+# Media (except .htaccess)
+/pub/media/*
+!/pub/media/.htaccess
+
+# Local config
+/app/etc/env.php
+.env
+
+# Logs
+*.log
+
+# Cache & temp
+/.cache
+/var/cache/
+/var/page_cache/
+/var/session/
+/var/view_preprocessed/
+
+# PHPUnit
+.phpunit.result.cache
+.phpunit.cache
+
+# Node
+/node_modules/
+
+# Archives
+app.7z

@@ -1,0 +1,123 @@
+<!-- Subscribe block -->
+<section class="gcc-subscribe">
+  <div class="gcc-subscribe__inner">
+    <h3 class="gcc-subscribe__title"><?= __('Get the Latest GCC Trade Updates') ?></h3>
+    <p class="gcc-subscribe__desc">
+     <?= __('Get the latest trade news and event updates delivered straight to your inbox') ?>.
+    </p>
+
+    <form class="gcc-subscribe__form" action="#" method="post">
+      <input
+        class="gcc-subscribe__input"
+        type="email"
+        placeholder="<?= __('Enter your email address') ?>"
+        aria-label="Email address"
+        required
+      />
+      <button class="gcc-subscribe__btn" type="submit">
+        <span><?= __('Subscribe') ?></span>
+        
+<svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.73542 16.7877V13.4627C4.73542 13.0874 5.10046 12.8206 5.45798 12.9345L9.28315 14.1533C9.74697 14.3011 9.80865 14.9322 9.38223 15.167L5.55706 17.2732C5.18765 17.4767 4.73542 17.2094 4.73542 16.7877Z" fill="white"/>
+<path d="M5.76957 11.2881C5.57117 11.493 5.27261 11.5654 5.0024 11.4742L0.924609 10.0981C-0.228529 9.69114 -0.327661 8.09887 0.766092 7.552L15.5711 0.149511C16.6091 -0.369523 17.7872 0.541139 17.5463 1.67647L15.0822 13.2931C14.9106 14.1021 14.073 14.5817 13.2884 14.3201L7.62083 12.4267C7.23962 12.2993 7.11645 11.8213 7.38864 11.5256L11.966 6.55266C12.2685 6.20716 12.4917 5.84401 12.1462 5.54154C11.8007 5.23908 11.3486 5.49483 11.0461 5.84032L5.76957 11.2881Z" fill="white"/>
+</svg>
+
+      </button>
+    </form>
+  </div>
+</section>
+
+<style>
+/* ===== Namespaced, Magento-safe styles ===== */
+.gcc-subscribe { 
+  --gradA:#dbe6ff; 
+  --gradB:#aecaFF; 
+  --text:#0f172a; 
+  --muted:#667185;
+  --blue:#3b82f6;
+  --blueHover:#2f6fe3;
+  font-family: Inter, system-ui, -apple-system,"Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  padding: 0 16px; 
+  margin: 56px auto;
+  max-width: 1300px;
+}
+.gcc-subscribe__inner{
+  /* background: linear-gradient(130deg,var(--gradA),var(--gradB)); */
+  border-radius: 28px;
+  padding: clamp(40px,7vw,90px) clamp(18px,6vw,48px);
+  text-align:center;
+  background:#FAE99B;
+}
+.gcc-subscribe__title{
+  margin:0 0 10px 0;
+  /*color:var(--text);*/
+ color: #1A3764;
+  font-weight:bold;
+  letter-spacing:-0.02em;
+  line-height:1.2;
+  font-size: clamp(28px, 4vw, 44px);
+}
+.gcc-subscribe__desc{
+  margin:0 auto 28px auto;
+  color:var(--muted);
+  font-size: clamp(14px, 1.8vw, 18px);
+  max-width: 760px;
+}
+
+/* pill form */
+.gcc-subscribe__form{
+  display:flex;
+  align-items:stretch;
+  justify-content:center;
+  margin: 0 auto;
+  max-width: 950px;
+  background:#fff;                 /* inner white */
+  border:4px solid #fff;           /* thick white outline like mock */
+  border-radius:14px;
+  overflow:hidden;                  /* make one continuous pill */
+  box-shadow: 0 12px 28px rgba(2,6,23,0.12);
+}
+.gcc-subscribe__input{
+  flex:1 1 auto;
+  min-height: 60px;
+  padding: 0 18px;
+  font-size: 16px;
+  color:#111827;
+  background:#fff;
+  border:none !important;          /* override Magento */
+  outline:none;
+  box-shadow:none !important;      /* override Magento */
+  -webkit-appearance:none; 
+  appearance:none;
+}
+.gcc-subscribe__input::placeholder{ color:#9aa3b2; }
+
+/* button */
+.gcc-subscribe__btn{
+  flex:0 0 auto;
+  padding: 0 26px;
+  min-width: 70px;
+  background: #1A3764;
+  color:#fff;
+  font-weight:700;
+  font-size:16px;
+  border-radius:8px;
+  border:none !important;          /* override Magento */
+  /* border-left: 0; */
+  outline:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  cursor:pointer;
+  transition: background .2s ease, transform .02s ease;
+}
+.gcc-subscribe__btn:hover{ background: var(--blueHover); }
+.gcc-subscribe__btn:active{ transform: translateY(1px); }
+.gcc-subscribe__btn svg{ width:20px; height:20px; }
+
+@media (max-width: 520px){
+  .gcc-subscribe__btn{ min-width: 130px; padding: 0 18px; }
+  .gcc-subscribe__form{ border-width:3px; }
+}
+</style>

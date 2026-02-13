@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>+º+ä+¦+ü+¡+¬ +º+ä+¦+ª+è+¦+è+¬ +ä+¬+¼+º+¦+¬ +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å +º+ä+«+ä+è+¼+è</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- (all your existing styles left exactly the same) -->
+  <style>
+    /* --- your styles unchanged --- */
+    .custom-bg {
+      background: linear-gradient(to top, #e4f0ff, #f7f8fc);
+      padding: 2rem;
+      border-radius: 1rem;
+      width: 80%;
+      margin: 2rem auto;
+      text-align: center;
+    }
+    .input-container {display:flex;justify-content:center;align-items:center;max-width:600px;margin:0 auto;border-radius:9999px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.05)}
+    .input-field {flex:1;padding:1rem;font-size:1rem;border:none;outline:none}
+    .subscribe-button {padding:1rem 1.5rem;background-color:#3B82F6;color:#fff;font-size:1rem;font-weight:500;border:none;cursor:pointer;display:flex;align-items:center;transition:background-color .3s ease}
+    .subscribe-button:hover{background-color:#2563EB}
+    .subscribe-button svg{margin-left:.5rem;width:20px;height:20px}
+    .custom-bg{background:linear-gradient(135deg,#d9e5ff 0%,#a9c8ff 100%);border-radius:12px;padding:2rem;width:80%;margin:auto;text-align:center;box-sizing:border-box}
+    .custom-bg h3{color:#111827;font-weight:700;font-size:1.875rem;margin-bottom:1rem}
+    .custom-bg p{color:#4b5563;margin-bottom:1.5rem;font-size:1rem}
+    .input-container{display:flex;justify-content:center}
+    .input-field{flex-grow:1;padding:.75rem 1rem;font-size:1rem;border-radius:.5rem 0 0 .5rem;border:none;outline:none;box-shadow:0 2px 6px rgba(0,0,0,.1);max-width:500px}
+    .subscribe-button{background-color:#3b82f6;color:#fff;padding:.75rem 1.25rem;border-radius:0 .5rem .5rem 0;border:none;cursor:pointer;display:flex;align-items:center;gap:.5rem;box-shadow:0 2px 6px rgba(59,130,246,.6);transition:background-color .3s ease}
+    .subscribe-button:hover{background-color:#2563eb}
+    .subscribe-button svg{width:1.25rem;height:1.25rem;fill:currentColor}
+
+    .hero-banner{position:relative;background-image:url({{media url='wysiwyg/hero-img.png'}});background-size:cover;background-position:center;width:100%;min-height:460px;border-radius:15px;overflow:visible!important}
+    .hero-overlay{position:absolute;inset:0;background-color:rgba(59,130,246,.6);border-radius:15px;pointer-events:none}
+    .hero-content{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#fff;padding:20px;max-width:800px;width:100%;z-index:2}
+    .hero-content h1{font-size:4.5rem;font-weight:700;line-height:1.4;margin:0 0 20px}
+
+    .search-form{display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;padding:8px;position:relative;overflow:visible;z-index:3}
+    .search-form input{flex:1 1 auto;padding:12px;font-size:1rem;border:none;border-radius:4px 0 0 4px;outline:none;color:#111}
+    .search-form button{background:#1E56A0;color:#fff;padding:12px 20px;font-size:1rem;border:none;border-radius:0 4px 4px 0;cursor:pointer;transition:background-color .25s}
+    .search-form button:hover{background:#17478c}
+
+    .mst-searchautocomplete__autocomplete,.mst-searchautocomplete__autocomplete_active{position:absolute!important;top:calc(100% + 8px)!important;left:0!important;right:0!important;width:auto!important;height:auto!important;max-height:min(60vh,460px)!important;overflow:auto!important;background:#fff;border:1px solid #e5e7eb;border-radius:10px;box-shadow:0 14px 28px rgba(0,0,0,.18);margin-top:0!important;text-align:left;z-index:10020}
+    .mst-searchautocomplete__results{height:auto!important;overflow:visible!important}
+    .mst-searchautocomplete__items{list-style:none;margin:0;padding:6px 0}
+    .mst-searchautocomplete__item{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;line-height:1.35}
+    .mst-searchautocomplete__item:hover,.mst-searchautocomplete__item.is-active,.mst-searchautocomplete__item.is-selected{background:#f3f4f6}
+    .mst-searchautocomplete__title{font-size:14px;color:#111;font-weight:600}
+    .mst-searchautocomplete__subtitle,.mst-searchautocomplete__index-label{font-size:12px;color:#6b7280}
+    .mst-searchautocomplete__title mark,.mst-searchautocomplete__highlight{background:none;color:#111;font-weight:700}
+    @media (max-width:640px){.hero-content h1{font-size:2.2rem}}
+
+    .mst-searchautocomplete__autocomplete,.mst-searchautocomplete__autocomplete_active{border:1px solid #e5e7eb;border-radius:12px;box-shadow:0 16px 32px rgba(0,0,0,.14);padding:0}
+    .mst-searchautocomplete__index{margin:0;padding:8px 0;border-top:1px solid #eef2f7}
+    .mst-searchautocomplete__index:first-child{border-top:0;padding-top:6px}
+    .mst-searchautocomplete__index-label{display:block;padding:8px 16px 6px;font-size:12px;font-weight:700;letter-spacing:.02em;color:#6b7280;text-transform:none}
+    .mst-searchautocomplete__items{list-style:none;margin:0;padding:0}
+    .mst-searchautocomplete__item{display:grid;grid-template-columns:56px 1fr auto;gap:12px;align-items:center;padding:12px 16px;cursor:pointer}
+    .mst-searchautocomplete__item:hover,.mst-searchautocomplete__item.is-active,.mst-searchautocomplete__item.is-selected{background:#f6f7fb}
+    .mst-searchautocomplete__item--query{grid-template-columns:1fr auto}
+    .mst-searchautocomplete__image{width:56px;height:56px;object-fit:cover;object-position:center;border-radius:8px;background:#f8fafc;border:1px solid #e5e7eb}
+    .mst-searchautocomplete__title{font-size:14px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mst-searchautocomplete__title mark,.mst-searchautocomplete__highlight{background:none;color:#111;font-weight:700}
+    .mst-searchautocomplete__subtitle,.mst-searchautocomplete__description,.mst-searchautocomplete__desc{margin-top:2px;font-size:12px;color:#6b7280;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden}
+    .mst-searchautocomplete__price,.mst-searchautocomplete__meta{font-size:13px;font-weight:700;color:#111;padding-left:8px;white-space:nowrap}
+    .mst-searchautocomplete__view-all{text-align:center;padding:12px 14px;border-top:1px solid #eef2f7;font-size:12px;color:#2563eb}
+    .mst-searchautocomplete__view-all a{color:inherit;text-decoration:none}
+    .mst-searchautocomplete__view-all a:hover{text-decoration:underline}
+    @media (max-width:640px){.mst-searchautocomplete__item{grid-template-columns:44px 1fr auto;padding:10px 12px}.mst-searchautocomplete__image{width:44px;height:44px}}
+  </style>
+</head>
+
+<body>
+  <!-- HERO BANNER -->
+  <div class="max-w-7xl mx-auto text-center" style="padding-top: 95px">
+    <section class="hero-banner">
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <h1>+»+ä+è+ä+â +º+ä+à+ê+½+ê+é +ä+¬+¼+º+¦+¬<br/>+»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å +º+ä+«+ä+è+¼+è</h1>
+
+        <!-- Bind Mirasvit to THIS form and input -->
+        <div data-mage-init='{
+          "mstSearchAutocomplete": {
+            "formSelector": ".search-form",
+            "inputSelector": "#search"
+          }
+        }'>
+          <form class="search-form" action="{{store url='catalogsearch/result'}}" method="get">
+            <input
+              type="text"
+              id="search"
+              name="q"
+              placeholder="+º+¿+¡+½ +¦+å +º+ä+à+ê+¦+»+è+å +ê+º+ä+à+å+¬+¼+º+¬ +º+ä+¦+º+ä+à+è+¬ +ü+è +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å +º+ä+«+ä+è+¼+è" />
+            <button type="submit">+¿+¡+½</button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- SECTORS GRID -->
+  <section style="background-image: url({{media url='wysiwyg/home-main1.jpg'}});">
+    <div class="py-16 px-4 max-w-screen-xl mx-auto text-center">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">
+        +å+¦+¿++ +à+¦+¬+¦+É+è +º+ä+«+ä+è+¼ +¿+º+ä+à+ê+¦+»+è+å +º+ä+à+¡+ä+è+è+å<br/>+ê+º+ä+¦+º+ä+à+è+è+å
+      </h2>
+      <p class="text-lg text-gray-600 mb-10 max-w-3xl mx-auto" style="font-size: 1.5rem;">
+        +º+å+¦+à +Ñ+ä+ë +à+å+¦+¬ +à+¡+ä+è+¬ +è+ä+¬+é+è +ü+è+ç+º +º+ä+à+ê+¦+»+ê+å +ê+º+ä+à+¦+¬+¦+ê+å. +º+¦+¬+â+¦+ü +à+¼+à+ê+¦+¬ +ê+º+¦+¦+¬ +à+å +º+ä+à+å+¬+¼+º+¬ +¦+º+ä+è+¬ +º+ä+¼+ê+»+¬
+        +à+¦ +¬+ê+¦+è+¦ +¡+¦+ê+¦+â +ü+è +ú+¦+ê+º+é +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å +º+ä+«+ä+è+¼+è.
+      </p>
+      <button type="submit" class="bg-blue-600 text-white py-3 sm:py-4 px-6 rounded-2xl">
+        +º+å+¦+à +ê+º+¿+»+ú +º+ä+¬+ê+º+¦+ä
+      </button>
+      <img src="{{media url='wysiwyg/home-main.png'}}" width="100%" />
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="w-full bg-gradient-to-b from-[#EAF2FF] to-[#F6F8FE]">
+    <div class="mx-auto max-w-6xl px-4 py-16">
+      <h2 class="text-center text-4xl md:text-5xl font-semibold tracking-tight text-gray-900">
+        +¬+à+â+è+å +¦+ê+º+¿++ +º+ä+¬+¼+º+¦+¬ +ü+è +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å
+      </h2>
+
+      <div class="mt-12 grid gap-8 md:grid-cols-2">
+        <!-- Vendor Card -->
+        <div class="relative rounded-2xl bg-white border-2 border-[#5CA5FF] shadow-[0_10px_28px_rgba(30,64,175,0.08)] p-8">
+          <div class="flex items-center gap-3 mb-6">
+            <img src="{{media url='wysiwyg/home_vendor.png'}}" alt="Vendor Icon" class="w-11 h-11" />
+            <h3 class="text-2xl font-semibold text-gray-900">+º+ä+à+ê+¦+æ+É+»</h3>
+          </div>
+
+          <ul class="text-left text-[17px] text-gray-600 font-medium divide-y divide-gray-200">
+            <li class="py-3"><div class="flex items-center gap-3"><span>+ê+¦+æ+¦ +å+++º+é +ê+¦+ê+ä+â +Ñ+ä+ë +º+ä+à+¦+¬+¦+è+å +º+ä+à+¡+¬+à+ä+è+å</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+¬+é+ä+è+ä +¬+â+º+ä+è+ü +º+ä+¬+¦+ê+è+é</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+¦+¦+¦ +à+ê+º+¦+ü+º+¬ +º+ä+à+å+¬+¼+º+¬ +¿+º+ä+¬+ü+¦+è+ä</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+ä+¬+¦+ê+è+¼ +ä+à+å+¬+¼+º+¬+â</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+¬+¦+¦+è+¦ +º+ä+½+é+¬ +¦+¿+¦ +º+ä+à+¦+º+¼+¦+º+¬ +º+ä+à+ê+½+ê+é+¬</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+ä+¬+ê+º+¦+ä +º+ä+à+¿+º+¦+¦ +à+¦ +º+ä+à+¦+¬+¦+è+å</span></div></li>
+          </ul>
+
+          <div class="mt-7">
+            <button class="inline-flex items-center rounded-lg bg-[#2563EB] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1E49C4] transition">
+              +¦+è+º+¦+¬ +¦+ü+¡+¬ +º+ä+à+ê+¦+æ+É+»
+            </button>
+          </div>
+        </div>
+
+        <!-- Buyer Card -->
+        <div class="relative rounded-2xl bg-white border border-[#E1E8FF] shadow-[0_10px_28px_rgba(2,6,23,0.08)] p-8">
+          <span class="absolute top-4 right-5 rounded-lg border border-[#CFE0FF] bg-[#E8F0FF] text-[#2563EB] text-xs md:text-sm font-medium px-3 py-1">
+            +à+å+º+¦+¿ +ä+ü+¦+é +º+ä+à+¦+¬+¦+è+º+¬
+          </span>
+
+          <div class="flex items-center gap-3 mb-6">
+            <img src="{{media url='wysiwyg/home_buyer.png'}}" alt="Buyer Icon" class="w-11 h-11" />
+            <h3 class="text-2xl font-semibold text-gray-900">+º+ä+à+¦+¬+¦+è</h3>
+          </div>
+
+          <ul class="text-left text-[17px] text-gray-600 font-medium divide-y divide-gray-200">
+            <li class="py-3"><div class="flex items-center gap-3"><span>+Ñ+¦+¦+º+ä +++ä+¿+º+¬ +¦+¦+ê+¦ +º+ä+ú+¦+¦+º+¦ +ê+º+ä+¡+¦+ê+ä +¦+ä+ë +¦+»+ê+» +¦+¦+è+¦+¬</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+ä+¦+½+ê+¦ +¦+ä+ë +à+ê+¦+»+è+å +ü+è +à+«+¬+ä+ü +é+++º+¦+º+¬ +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+ä+º+++ä+º+¦ +¦+ä+ë +à+ê+º+¦+ü+º+¬ +º+ä+à+å+¬+¼+º+¬ +¿+»+é+¬</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+¦+¬+â+¦+º+ü +à+¼+à+ê+¦+¬ +ê+º+¦+¦+¬ +à+å +º+ä+à+å+¬+¼+º+¬ +º+ä+à+¡+ä+è+¬</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+ä+º+¦+¬+à+º+» +¦+ä+ë +º+ä+à+¦+º+¼+¦+º+¬ +ä+º+¬+«+º+¦ +é+¦+º+¦+º+¬ +ú+¦+â+ë</span></div></li>
+            <li class="py-3"><div class="flex items-center gap-3"><span>+º+ä+¡+¦+ê+ä +¦+ä+ë +¦+¦+ê+¦ +à+å +ú+ü+¦+ä +º+ä+à+ê+¦+»+è+å</span></div></li>
+          </ul>
+
+          <div class="mt-7">
+            <button class="inline-flex items-center rounded-lg bg-[#2563EB] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#1E49C4] transition">
+              +¦+è+º+¦+¬ +¦+ü+¡+¬ +º+ä+à+¦+¬+¦+è
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET IN TOUCH SECTION -->
+  <section style="
+    background: linear-gradient(90deg, #1e40af00 0%, #2563eb 100%), url('pub/media/wysiwyg/getthe-bg.png');
+    background-size: cover; background-position: center; color: #fff; padding: 64px 32px; border-radius: 12px; margin: 32px 0;
+  ">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;max-width:1200px;margin:0 auto;">
+      <div style="flex:1 1 300px;padding-right:32px;">
+        <h2 style="font-size:2rem;font-weight:700;margin-bottom:16px;line-height:1.2;">
+          +¬+ê+º+¦+ä +à+¦+å+º +º+ä+ó+å!
+        </h2>
+        <p style="font-size:1.5rem;margin-bottom:24px;color:rgba(255,255,255,0.85);line-height:1.5;">
+          +¬+ê+º+¦+ä +à+¦ +ü+¦+è+é+å+º +ä+ä+¡+¦+ê+ä +¦+ä+ë +ú+»+ê+º+¬ +ê+à+ê+º+¦+» +¡+¦+¦+è+¬. +º+¿+»+ú +¦+¡+ä+¬+â +å+¡+ê +¬+»+º+ê+ä +ú+â+½+¦ +â+ü+º+í+¬ +ê+ü+¦+º+ä+è+¬ +º+ä+è+ê+à.
+        </p>
+        <a href="{{store url='contact-us'}}" style="
+          display:inline-block;background:#fff;color:#2563eb;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:500;
+        ">
+          +º+¬+¦+ä +¿+å+º
+        </a>
+      </div>
+      <div style="flex:0 0 300px;margin-top:24px;">
+        <img src="{{media url='wysiwyg/home-contact.png'}}" alt="Contact Illustration" style="width:59%;height:auto;border-radius:8px;" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Key Platform Features -->
+  <section class="bg-[#CBE2FF] py-16 px-4">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="font-bold text-gray-900 mb-4" style="font-size: 2.5rem;">+ú+ç+à +à+¦+º+è+º +º+ä+à+å+¦+¬</h2>
+      <p class="text-gray-600 text-base sm:text-lg mb-12 max-w-2xl mx-auto" style="font-size:16px;line-height:2.5rem">
+        +¦+Å+à+à+¬ +ä+¬+¦+ç+è+ä +º+ä+¬+ê+º+¦+ä +ê+»+¦+à +å+¼+º+¡ +º+ä+¬+¼+º+¦+¬ +¿+è+å +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å +º+ä+«+ä+è+¼+è +ê+º+ä+¦+º+ä+à
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-sm p-6 text-left">
+          <img src="{{media url='wysiwyg/home-rfq.png'}}" alt="RFQ" class="w-10 h-10 mb-4" style="width:13%;height:53px;" />
+          <h3 class="text-lg font-semibold text-gray-900" style="font-size:15px;line-height:2.3;">+++ä+¿ +¦+¦+¦ +¦+¦+¦ (RFQ)</h3>
+          <p class="text-gray-600 mt-1">+è+à+â+å +ä+ä+à+ê+¦+»+è+å +ê+º+ä+à+¦+¬+¦+è+å +¿+¦+ç+ê+ä+¬ +++ä+¿ +º+ä+¦+¦+ê+¦ +ê+º+ä+¦+» +¦+ä+è+ç+º.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 text-left">
+          <img src="{{media url='wysiwyg/home-specs.png'}}" alt="Product Specs" class="w-10 h-10 mb-4" style="width:13%;height:53px;" />
+          <h3 class="text-lg font-semibold text-gray-900" style="font-size:15px;line-height:2.3;">+à+ê+º+¦+ü+º+¬ +º+ä+à+å+¬+¼+º+¬ +º+ä+¬+ü+¦+è+ä+è+¬</h3>
+          <p class="text-gray-600 mt-1">+è+à+â+å +ä+ä+à+¦+¬+¦+è+å +º+ä+º+++ä+º+¦ +¦+ä+ë +¬+ü+º+¦+è+ä +º+ä+à+å+¬+¼+º+¬+î +ê+è+à+â+å +ä+ä+à+ê+¦+»+è+å +Ñ+¿+¦+º+¦+ç+º +ä+ä+¼+à+ç+ê+¦ +º+ä+à+å+º+¦+¿.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 text-left">
+          <img src="{{media url='wysiwyg/home-reviews.png'}}" alt="Vendor Reviews" class="w-10 h-10 mb-4" style="width:13%;height:53px;" />
+          <h3 class="text-lg font-semibold text-gray-900" style="font-size:15px;line-height:2.3;">+à+¦+º+¼+¦+º+¬ +º+ä+à+ê+¦+æ+»+è+å</h3>
+          <p class="text-gray-600 mt-1">+å+++º+à +à+¦+º+¼+¦+º+¬ +¦+ü+º+ü +è+¦+º+¦+» +º+ä+à+¦+¬+¦+è+å +¦+ä+ë +º+¬+«+º+¦ +é+¦+º+¦+º+¬ +ó+à+å+¬ +ê+è+¦+¦+æ+¦ +à+ê+½+ê+é+è+¬ +º+ä+à+ê+¦+æ+»+è+å.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+        <div class="bg-white rounded-xl shadow-sm p-6 text-left">
+          <img src="{{media url='wysiwyg/home-search.png'}}" alt="Search" class="w-10 h-10 mb-4" style="width:9%;height:53px;" />
+          <h3 class="text-lg font-semibold text-gray-900" style="font-size:15px;line-height:2.3;">+º+ä+¿+¡+½ +ê+º+ä+¬+¦+ü+è+¬</h3>
+          <p class="text-gray-600 mt-1">+à+è+¦+¬ +¿+¡+½ +é+ê+è+¬ +¬+à+â+æ+å +º+ä+à+¦+¬+¦+è+å +ê+º+ä+à+ê+¦+»+è+å +à+å +º+ä+ê+¦+ê+ä +º+ä+¦+¦+è+¦ +ä+à+º +è+¡+¬+º+¼+ê+å+ç.</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6 text-left">
+          <img src="{{media url='wysiwyg/home-chat.png'}}" alt="Communication" class="w-10 h-10 mb-4" style="width:9%;height:53px;" />
+          <h3 class="text-lg font-semibold text-gray-900" style="font-size:15px;line-height:2.3;">+¬+ê+º+¦+ä +à+¿+º+¦+¦</h3>
+          <p class="text-gray-600 mt-1">+è+à+â+å +ä+ä+à+ê+¦+»+è+å +ê+º+ä+à+¦+¬+¦+è+å +º+ä+¬+ê+º+¦+ä +à+¿+º+¦+¦+¬ +¦+¿+¦ +º+ä+à+å+¦+¬ +ä+¦+à+º+å +à+¦+º+à+ä+º+¬ +ú+â+½+¦ +¦+ä+º+¦+¬.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- News / Updates -->
+  <section class="bg-white py-16 px-4 text-center">
+    <div class="max-w-7xl mx-auto text-center">
+      <h2 class="text-3xl font-semibold text-gray-900 mb-8">+à+¦+º+¦+¦ +º+ä+«+ä+è+¼ +ê+¬+¡+»+è+½+º+¬ +º+ä+¬+¼+º+¦+¬</h2>
+      <p class="text-lg text-gray-600 mb-12" style="font-size: 1.5rem;">
+        +º+¿+é+Ä +¦+ä+ë +º+++ä+º+¦ +¿+º+ä+à+¦+º+¦+¦ +º+ä+é+º+»+à+¬+î +ê+ü+¦+¦ +º+ä+¦+ê+é+î +ê+ó+«+¦ +º+ä+¬+++ê+¦+º+¬ +ü+è +à+å+++é+¬ +º+ä+«+ä+è+¼.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 justify-items-center">
+        <div class="bg-white border border-gray-300 rounded-lg w-full pt-6 pb-6 p-10">
+          <img src="{{media url='wysiwyg/home-exibition1.jpg'}}" alt="Exhibition Image 1" class="w-full h-64 object-cover rounded-t-lg mx-auto" />
+          <div class="p-4 mt-4">
+            <p class="text-gray-500 text-sm text-left">17 +ú+â+¬+ê+¿+¦ 2024</p>
+            <h3 class="text-xl font-bold text-gray-900 mt-2 text-left">
+              +º+ä+à+¦+º+¦+¦ +º+ä+¬+¼+º+¦+è+¬ +º+ä+é+º+»+à+¬ +ü+è +»+ê+ä +à+¼+ä+¦ +º+ä+¬+¦+º+ê+å +ä+¦+º+à 2024
+            </h3>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-300 rounded-lg w-full pt-6 pb-6 p-10">
+          <img src="{{media url='wysiwyg/home-exhib2.png'}}" alt="Exhibition Image 2" class="w-full h-64 object-cover rounded-t-lg mx-auto" />
+          <div class="p-4 mt-4">
+            <p class="text-gray-500 text-sm text-left">19 +ú+â+¬+ê+¿+¦ 2024</p>
+            <h3 class="text-xl font-bold text-gray-900 mt-2 text-left">
+              +ú+¿+¦+¦ +à+º +¼+º+í +ü+è +à+¦+¦+¦ +»+¿+è +º+ä+¬+¼+º+¦+è +º+ä+ú+«+è+¦
+            </h3>
+          </div>
+        </div>
+
+        <div class="bg-white border border-gray-300 rounded-lg w-full pt-6 pb-6 p-10">
+          <img src="{{media url='wysiwyg/home-exhib3.png'}}" alt="Exhibition Image 3" class="w-full h-64 object-cover rounded-t-lg mx-auto" />
+          <div class="p-4 mt-4">
+            <p class="text-gray-500 text-sm text-left">24 +ú+â+¬+ê+¿+¦ 2024</p>
+            <h3 class="text-xl font-bold text-gray-900 mt-2 text-left">
+              +¦+ñ+ë +¦+å+º+¦+è+¬ +¼+»+è+»+¬: +à+¦+¬+é+¿+ä +º+ä+¬+¼+º+¦+¬ +ü+è +º+ä+«+ä+è+¼
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <div class="border-2 border-blue-600 rounded-lg flex items-center justify-center p-4 w-auto hover:bg-blue-50 transition">
+          <a href="#" class="text-blue-600 text-sm font-semibold flex items-center gap-1">
+            +º+ä+à+¦+è+» +à+å +º+ä+ú+«+¿+º+¦ <span class="text-xl">GåÆ</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {{block class="Magento\\Framework\\View\\Element\\Template" template="Magento_Theme::html/newsletter.phtml"}}
+</body>
+
+<script>
+  require(['jquery'], function($) {
+    $(document).ready(function() {
+      function hideAutocomplete() {
+        $('.mst-search-autocomplete__typeahead-overlay').each(function() {
+          $(this).hide();
+        });
+      }
+      hideAutocomplete();
+      const observer = new MutationObserver(function() { hideAutocomplete(); });
+      observer.observe(document.body, { childList: true, subtree: true });
+    });
+  });
+</script>
+
+</html>

@@ -1,0 +1,143 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View */
+
+$vendor = $block->getVendor();
+if (!$vendor || !$vendor->getId()) {
+    return;
+}
+
+$vendorVerification = $block->getVendorVerification();
+$verificationId = $vendorVerification->getId();
+
+/** Verification section data */
+$verificationData = $block->getVerificationSectionData(
+    $verificationId,
+    \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS
+);
+
+$detail_id = $verificationData->getDetailId();
+$status    = $verificationData->getStatus();
+
+/** Address data */
+$address = $block->convertVerificationData($verificationData->getData('vendor_data'));
+
+$street   = $address['street']   ?? '';
+$city     = $address['city']     ?? '';
+$state    = $address['state']    ?? '';
+$postcode = $address['postcode'] ?? '';
+$map      = $address['map']      ?? '';
+?>
+
+<div class="verification-section">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h2><?= __('Business Address') ?></h2>
+
+        <!-- ✅ EDIT BUTTON -->
+        <?php if ($status == \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
+            <button type="button"
+                    class="btn btn-default btn-flat pull-right verification-edit"
+                    data-modal-id="verification-address-modal">
+                <i class="fa fa-pencil"></i> <?= __('Edit') ?>
+            </button>
+        <?php endif; ?>
+
+        <?php
+        $commentsCount = $block->getCommentsCounts(
+            $verificationId,
+            $detail_id,
+            \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS
+        );
+        ?>
+
+        <button type="button"
+                class="btn btn-link pull-right verification-showcomment"
+                data-verificationid="<?= $verificationId ?>"
+                data-verifidtlid="<?= $detail_id ?>"
+                data-verifigroupid="<?= \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS ?>">
+            <i class="fa fa-comment"></i>
+            <span><?= __('%1 Comments', $commentsCount) ?></span>
+        </button>
+    </div>
+
+    <!-- VIEW TABLE -->
+    <div class="verification-tbl">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td><?= __('Status') ?></td>
+                    <td><?= $block->getStatusLabel($status); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Street') ?></td>
+                    <td><?= $street ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('City') ?></td>
+                    <td><?= $city ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('State') ?></td>
+                    <td><?= $state ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Postcode') ?></td>
+                    <td><?= $postcode ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="verification-address-modal" style="display:none;">
+    <form class="form verification"
+          method="post"
+          action="<?= $block->getEditActionUrl(
+              $verificationId,
+              $detail_id,
+              \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS
+          ); ?>"
+          data-mage-init='{"validation":{}}'>
+
+        <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" />
+
+        <legend class="legend">
+            <span><?= __('Edit Business Address') ?></span>
+        </legend>
+
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label><?= __('Street') ?></label>
+                <input type="text" name="street" value="<?= $street ?>" class="input-text" required />
+            </div>
+
+            <div class="col-md-6">
+                <label><?= __('City') ?></label>
+                <input type="text" name="city" value="<?= $city ?>" class="input-text" required />
+            </div>
+
+            <div class="col-md-6">
+                <label><?= __('State') ?></label>
+                <input type="text" name="state" value="<?= $state ?>" class="input-text" required />
+            </div>
+
+            <div class="col-md-6">
+                <label><?= __('Postcode') ?></label>
+                <input type="text" name="postcode" value="<?= $postcode ?>" class="input-text" required />
+            </div>
+
+            <div class="col-md-12">
+                <label><?= __('Map Location') ?></label>
+                <input type="text" name="map" value="<?= $map ?>" class="input-text_extract" />
+            </div>
+        </div>
+
+        <div class="page-main-actions">
+            <button type="submit" class="btn btn-primary">
+                <?= __('Update') ?>
+            </button>
+        </div>
+    </form>
+</div>

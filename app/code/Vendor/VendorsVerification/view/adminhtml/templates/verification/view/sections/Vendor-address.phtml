@@ -1,0 +1,237 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Adminhtml\Verification */
+
+$vendorVerification = $block->getVendorVerification();
+if (!$vendorVerification) { return; }
+
+$verificationId = $vendorVerification->getId();
+$groupId = \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS;
+$verificationData = $block->getVerificationSectionData($verificationId, $groupId);
+
+if (!$verificationData) {
+    echo __("No address data submitted for verification.");
+    return;
+}
+
+$detailId = $verificationData->getDetailId();
+$arrData  = $block->convertVerificationData($verificationData->getData('vendor_data'));
+
+$street   = $arrData['street']   ?? '';
+$city     = $arrData['city']     ?? '';
+$state    = $arrData['state']    ?? '';
+$postcode = $arrData['postcode'] ?? '';
+
+$lat = $arrData['lat'] ?? '24.7136';
+$lng = $arrData['lng'] ?? '46.6753';
+
+$config  = $block->getConfig('porto_settings/contacts');
+$apiKey  = $config['api_key'] ?? '';
+?>
+
+<!-- ================= PAGE CONTENT ================= -->
+
+<div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+        <div class="admin__page-section-item-title">
+            <span class="title"><?= __('Business Address Information') ?></span>
+        </div>
+
+        <div class="admin__page-section-item-content">
+
+            <!-- ACTION BUTTONS -->
+            <div class="admin__actions-section" style="margin-bottom:15px;">
+                <button type="button"
+                        class="action-default verification-action"
+                        style="background:#66a80f;color:#fff"
+                        data-modal-id="verification-addressapproval-modal">
+                    <?= __('Approve') ?>
+                </button>
+
+                <button type="button"
+                        class="action-default verification-action"
+                        style="background:#ffb300;color:#fff"
+                        data-modal-id="verification-addressresubmit-modal">
+                    <?= __('Request Re-submit') ?>
+                </button>
+
+                <button type="button"
+                        class="action-default verification-action"
+                        style="background:#ff2500;color:#fff"
+                        data-modal-id="verification-addressreject-modal">
+                    <?= __('Reject') ?>
+                </button>
+
+                <button type="button"
+                        class="action-default verification-showcomment pull-right"
+                        data-verificationid="<?= $verificationId ?>"
+                        data-verifidtlid="<?= $detailId ?>"
+                        data-verifigroupid="<?= $groupId ?>">
+                    <?= __('Comments') ?>
+                </button>
+            </div>
+
+            <!-- DATA TABLE -->
+            <table class="admin__table-secondary">
+                <tbody>
+                <tr>
+                    <td><strong><?= __('Current Status') ?></strong></td>
+                    <td>
+                        <span class="grid-severity-notice">
+                            <?= $block->getStatusLabel($verificationData->getStatus()) ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?= __('Address Line 1') ?></td>
+                    <td><?= $block->escapeHtml($street) ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('City') ?></td>
+                    <td><?= $block->escapeHtml($city) ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('State/Region') ?></td>
+                    <td><?= $block->escapeHtml($state) ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Post Code') ?></td>
+                    <td><?= $block->escapeHtml($postcode) ?></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MAP -->
+<div class="admin__page-section-item">
+    <div class="admin__page-section-item-title">
+        <span class="title"><?= __('Location on Map') ?></span>
+    </div>
+    <div id="store_map" style="min-height:350px;width:100%;border:1px solid #ccc;"></div>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- APPROVE -->
+<!-- APPROVE MODAL (IMAGE LIKE) -->
+<div id="verification-addressapproval-modal" style="display:none;">
+
+    <h2><?= __('Business Address') ?></h2>
+
+    <table class="admin__table-secondary">
+        <tbody>
+        <tr>
+            <td><?= __('Address Line 1') ?></td>
+            <td><?= $block->escapeHtml($street) ?></td>
+        </tr>
+        <tr>
+            <td><?= __('City') ?></td>
+            <td><?= $block->escapeHtml($city) ?></td>
+        </tr>
+        <tr>
+            <td><?= __('State') ?></td>
+            <td><?= $block->escapeHtml($state) ?></td>
+        </tr>
+        <tr>
+            <td><?= __('Post Code') ?></td>
+            <td><?= $block->escapeHtml($postcode) ?></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form method="post"
+          action="<?= $block->getEditActionUrl(
+              $verificationId,
+              $detailId,
+              $groupId,
+              \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__VERIFIED
+          ); ?>">
+
+        <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" />
+
+        <div class="page-main-actions" style="margin-top:15px;">
+            <button type="submit" class="action-primary">
+                <?= __('Update') ?>
+            </button>
+        </div>
+    </form>
+</div>
+<!-- RESUBMIT -->
+<div id="verification-addressresubmit-modal" style="display:none;">
+    <form method="post"
+          action="<?= $block->getEditActionUrl(
+              $verificationId,
+              $detailId,
+              $groupId,
+              \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT
+          ); ?>">
+          <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+                         <div class="fields col-md-10">
+                             <div class="field comments required">
+                                 <label  for="comments"><span><?php echo __('Comments For Re-submit') ?></span></label>
+                                 <div class="control">                                     
+									 <textarea name="comments" id="comments" rows="10" cols="80" data-validate="{required:true}"></textarea>
+                                 </div>
+                             </div>                             
+                          <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+						   <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+                        </div>	   
+                     </div>
+    </form>
+</div>
+
+<!-- REJECT -->
+<div id="verification-addressreject-modal" style="display:none;">
+    <form method="post"
+          action="<?= $block->getEditActionUrl(
+              $verificationId,
+              $detailId,
+              $groupId,
+              \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__REJECTED
+          ); ?>">
+            <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+                         <div class="fields col-md-10">
+                             <div class="field comments required">
+                                 <label  for="comments"><span><?php echo __('Comments For Reject') ?></span></label>
+                                 <div class="control">                                     
+									 <textarea name="comments" id="comments" rows="10" cols="80" data-validate="{required:true}"></textarea>
+                                 </div>
+                             </div>                             
+                          <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+						   <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+                        </div>	   
+                     </div>
+    </form>
+</div>
+
+<!-- ================= JS ================= -->
+<script type="text/javascript">
+require(['jquery', 'Magento_Ui/js/modal/modal', 'domReady!'], function ($, modal) {
+
+    $('.verification-action').on('click', function () {
+        var modalId = '#' + $(this).data('modal-id');
+        modal({type: 'popup', responsive: true}, $(modalId));
+        $(modalId).modal('openModal');
+    });
+
+    function initMap() {
+        var pos = {lat: parseFloat('<?= $lat ?>'), lng: parseFloat('<?= $lng ?>')};
+        if (isNaN(pos.lat) || isNaN(pos.lng)) return;
+
+        var map = new google.maps.Map(document.getElementById('store_map'), {
+            center: pos,
+            zoom: 15
+        });
+
+        new google.maps.Marker({position: pos, map: map});
+    }
+
+    if (typeof google === 'undefined') {
+        $.getScript('https://maps.googleapis.com/maps/api/js?key=<?= $apiKey ?>')
+            .done(initMap);
+    } else {
+        initMap();
+    }
+});
+</script>

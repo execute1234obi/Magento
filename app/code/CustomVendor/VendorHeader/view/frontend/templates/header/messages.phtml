@@ -1,0 +1,23 @@
+<?php
+/** @var \CustomVendor\VendorHeader\Block\VendorMessages $block */
+
+$messageCount = $block->getUnreadMessageCount();
+$messagesUrl = $block->getMessagesUrl();
+
+
+if ($messageCount > 0 && $block->getVendorSession()->isLoggedIn()):
+?>
+
+<div class="vendor-message-icon header-nav-link">
+    <a href="<?= $block->escapeUrl($messagesUrl) ?>" title="<?= $block->escapeHtml(__('Unread Messages')) ?>" class="message-link">
+        
+        <i class="fa fa-envelope" aria-hidden="true"></i> 
+        
+        <span class="message-count counter qty">
+            <span class="counter-number"><?= $block->escapeHtml($messageCount) ?></span>
+            <span class="counter-label"><?= $block->escapeHtml(__('Messages')) ?></span>
+        </span>
+    </a>
+</div>
+
+<?php endif; ?>

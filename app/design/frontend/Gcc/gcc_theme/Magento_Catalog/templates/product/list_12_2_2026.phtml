@@ -1,0 +1,214 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\ListProduct $block */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+
+/* Toolbar (pagination/sort) */
+$toolbarBlock = $block->getLayout()->getBlock('product_list_toolbar');
+if ($toolbarBlock) { $toolbarBlock->setCollection($_productCollection); echo $toolbarBlock->toHtml(); }
+
+/* Vendor/brand helpers */
+$om = \Magento\Framework\App\ObjectManager::getInstance();
+$getBrand = function($product) {
+    $text = $product->getAttributeText('manufacturer');
+    return is_array($text) ? reset($text) : ($text ?: '');
+};
+$vendorFactory = $om->create(\Vnecoms\Vendors\Model\VendorFactory::class);
+$verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification::class);
+?>
+
+<?php if (!$_productCollection->getSize()): ?>
+    <div><?= $block->escapeHtml(__('No products found.')) ?></div>
+<?php else: ?>
+    <div class="u-grid">
+    <?php foreach ($_productCollection as $_product): ?>
+        
+       <?php
+        $imgUrl = $block->getImage($_product, 'product_page_image_large')->getImageUrl();
+        $brand  = $getBrand($_product) ?: '—';
+
+        $vendorId   = (int) $_product->getVendorId();
+        $vendorName = ''; 
+        $countryCode = ''; 
+        $isVerified = false;
+        
+       //echo  $vendorId;exit;
+        if ($vendorId) {
+    //         echo "Vendor ID: " . $vendorId . " | Status: ";
+    //          $isVerified  = (bool) $verificationBlock->isVerifiedVendor($vendorId);
+    // var_dump($isVerified); 
+    // echo "<br>";
+    //  exit; //
+            try {
+                $vendor = $vendorFactory->create()->load($vendorId);
+                if ($vendor && $vendor->getId()) {
+                    $vendorName = $vendor->getData('b_name') ?: '';
+                    $countryCode = $vendor->getCountryId() ?: '';
+                    $isVerified = (bool) $verificationBlock->isVendorVerified($vendorId);
+                   
+                    
+                }
+            } catch (\Exception $e) { }
+        }
+
+        $displayBrand = $brand ?: ($vendorName ?: __('Brand'));
+        $displayCountry = $countryCode ?: 'SA'; // default country code if missing
+        
+        ?>
+        <article class="u-card">
+            <a class="u-imgbox" href="<?= $_product->getProductUrl(); ?>">
+                <img src="<?= $imgUrl; ?>" alt="<?= $block->escapeHtml($_product->getName()); ?>" />
+            </a>
+
+            <h3 class="u-title"><?= $block->escapeHtml($_product->getName()); ?></h3>
+            <div class="u-price">
+                <?= $block->getProductPrice($_product); ?>
+                <span>/ 1 pcs</span>
+            </div>
+
+            <hr class="u-divider" />
+
+            <div class="u-brand">
+                <span><?= $block->escapeHtml($vendorName); ?></span>
+                <?php
+                /** --- FIXED MEDIA VARIABLES --- **/
+// Pehle storemediaUrl define karein
+$storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+// Phir varifyImage define karein jo isi URL ko use karega
+//$varify = $storemediaUrl . "wysiwyg/VerificationBadgeIcon.png";
+                $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
+            $varify =$mediaUrl."pub/media/wysiwyg/VerificationBadgeIcon.png";
+                if ($isVerified): ?>
+                    <span class="u-verified" title="<?= $block->escapeHtmlAttr(__('Verified vendor')); ?>">
+                        <img src="<?= $block->escapeUrl($varify); ?>" alt="Verified" width="7%">
+                    </span>
+                <?php endif; ?>
+            </div>
+
+            <!-- Country with flag -->
+          <div class="u-country" data-code="<?= strtolower($countryCode); ?>">
+  <span class="u-flag" aria-hidden="true"></span>
+  <span><?= $block->escapeHtml($displayCountry); ?></span>
+</div>
+
+            <button class="u-cta" type="button"><?= $block->escapeHtml(__('Add to Quote')); ?></button>
+        </article>
+    <?php endforeach; ?>
+    </div>
+
+    <?php if ($toolbarBlock) echo $toolbarBlock->toHtml(); ?>
+<?php endif; ?>
+
+<style>
+.u-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+.u-card { background:#fff; border:1px solid #e6edf7; border-radius:14px; padding:16px; position:relative; display:flex; flex-direction:column; box-shadow:0 1px 0 rgba(16,24,40,.02); transition: box-shadow .18s ease, transform .18s ease; }
+.u-card:hover { box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-2px); }
+.u-imgbox { position:relative; border-radius:12px; background:#f6f8ff; height:170px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:14px; }
+.u-imgbox img { width:88%; height:88%; object-fit:contain; display:block; }
+.u-title { font-size:18px; line-height:1.25; font-weight:700; color:#111827; margin:0 0 8px; min-height:45px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.u-price { font-size:16px; color:#111827; font-weight:600; margin-bottom:14px; }
+.u-divider { height:1px; background:#eef2f7; margin:2px 0 12px; border:0; }
+.u-brand { display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:6px; }
+.u-verified { /*display:inline-flex; */align-items:center; justify-content:center; /*width:18px;*/ height:18px; border-radius:999px; /*background:#eaf2ff;*/ color:#2d62f0; }
+.u-country { display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:14px; }
+/* .u-flag { width:26px; height:18px; border-radius:4px; background:#e6f6ea; display:inline-block; } */
+.u-flag {
+  width: 24px;
+  height: 16px;
+  border-radius: 4px;
+  background-color: #e6f6ea;
+  display: inline-block;
+}
+
+.u-cta { margin-top:16px; width:100%; height:48px; border-radius:12px; border:1px solid #2d62f0; background:#fff; color:#2d62f0; font-weight:600; font-size:16px; cursor:pointer; transition: background .15s ease, color .15s ease, box-shadow .15s ease; }
+.u-cta:hover { background:#f2f6ff; box-shadow:0 2px 8px rgba(45,98,240,.15); }
+.price-as-configured,
+.price-from,
+.price-label {
+    display: none !important;
+}
+</style>
+
+<script>
+// require(['jquery'], function($){
+//     const countryFlags = {
+//         /* Middle East */
+//         "SA": "https://flagcdn.com/w40/sa.png",
+//         "AE": "https://flagcdn.com/w40/ae.png",
+//         "QA": "https://flagcdn.com/w40/qa.png",
+
+//         /* South Asia */
+//         "IN": "https://flagcdn.com/w40/in.png",
+//         "PK": "https://flagcdn.com/w40/pk.png",
+//         "BD": "https://flagcdn.com/w40/bd.png",
+
+//         /* East Asia */
+//         "JP": "https://flagcdn.com/w40/jp.png",
+//         "KR": "https://flagcdn.com/w40/kr.png",
+//         "CN": "https://flagcdn.com/w40/cn.png",
+
+//         /* Southeast Asia */
+//         "SG": "https://flagcdn.com/w40/sg.png",
+//         "MY": "https://flagcdn.com/w40/my.png",
+//         "TH": "https://flagcdn.com/w40/th.png",
+
+//         /* Europe */
+//         "GB": "https://flagcdn.com/w40/gb.png",
+//         "DE": "https://flagcdn.com/w40/de.png",
+//         "FR": "https://flagcdn.com/w40/fr.png",
+
+//         /* Africa */
+//         "EG": "https://flagcdn.com/w40/eg.png",
+//         "NG": "https://flagcdn.com/w40/ng.png",
+//         "ZA": "https://flagcdn.com/w40/za.png",
+
+//         /* North America */
+//         "US": "https://flagcdn.com/w40/us.png",
+//         "CA": "https://flagcdn.com/w40/ca.png",
+//         "MX": "https://flagcdn.com/w40/mx.png",
+
+//         /* South America */
+//         "BR": "https://flagcdn.com/w40/br.png",
+//         "AR": "https://flagcdn.com/w40/ar.png",
+//         "CL": "https://flagcdn.com/w40/cl.png",
+
+//         /* Oceania */
+//         "AU": "https://flagcdn.com/w40/au.png",
+//         "NZ": "https://flagcdn.com/w40/nz.png",
+//         "FJ": "https://flagcdn.com/w40/fj.png"
+//     };
+
+//     $(document).ready(function(){
+//         $('.u-country').each(function(){
+//             var $container = $(this);
+//             var countryCode = $container.data('code');
+//             var flagUrl = countryFlags[countryCode] || 'https://via.placeholder.com/40x24?text=?';
+
+//             $container.find('.u-flag').css({
+//                 'background-image': 'url(' + flagUrl + ')',
+//                 'background-size': 'cover',
+//                 'background-position': 'center'
+//             });
+//         });
+//     });
+// });
+
+require(['jquery'], function($) {
+  $(document).ready(function() {
+    $('.u-country').each(function() {
+      var $container = $(this);
+      var countryCode = $container.data('code');
+      var flagUrl = 'https://flagcdn.com/w40/' + countryCode + '.png';
+      var altText = $container.find('span').last().text().trim();
+
+      $container.find('.u-flag').css({
+        'background-image': 'url(' + flagUrl + ')',
+        'background-size': 'cover',
+        'background-position': 'center'
+      }).attr('alt', altText);
+    });
+  });
+});
+
+</script>

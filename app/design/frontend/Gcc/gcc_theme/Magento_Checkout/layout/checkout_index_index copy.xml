@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <css src="css/custom-checkout.css"/>
+</head>
+
+    <!-- Preserve checkout base layout -->
+    <update handle="checkout_index_index"/>
+
+    <body>
+
+        <!-- Remove Luma Checkout Header -->
+         <referenceContainer name="checkout.header.wrapper" remove="true"/>
+        <referenceContainer name="page.top" remove="true"/>
+        
+        <!-- Remove your Vendor Sidebar completely -->
+        <referenceBlock name="vendor.sidebar" remove="true"/>
+        <referenceContainer name="left" remove="true"/>
+        <referenceContainer name="page.top" remove="true"/>
+        <referenceContainer name="sidebar.additional" remove="true"/>
+
+         <referenceContainer name="page.top" remove="true"/>
+
+        <!-- Remove checkout progress bar from header -->
+        <referenceBlock name="checkout.progress" remove="true" />
+
+
+        <!-- Correct place to inject header -->
+        <!-- <referenceContainer name="checkout.top">
+            <container name="custom.checkout.header"
+                       as="customCheckoutHeader"
+                       htmlTag="header"
+                       htmlClass="custom-page-header">
+                <block class="Gcc\Gcc_theme\Block\CustomHeader"
+                       name="custom.checkout.header.block"
+                       template="Magento_Theme::html/custom_header.phtml"
+                       cacheable="false"/>
+            </container>
+        </referenceContainer> -->
+
+    </body>
+</page>

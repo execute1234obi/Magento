@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+
+    <system>
+        <!-- New Tab for Vendor -->
+        <tab id="vendor_config" translate="label" sortOrder="200">
+            <label>Vendor</label>
+        </tab>
+
+        <!-- Vendor Section -->
+        <section id="vendor_settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInStore="1">
+            <label>Vendor Settings</label>
+            <tab>vendor_config</tab>
+            <resource>Vnecoms_VendorsConfig::general</resource>
+
+            <group id="store_information" translate="label tooltip" type="text" sortOrder="10" showInDefault="1" showInStore="1">
+                <label>Store Information</label>
+
+                <field id="logo" translate="label" type="image" sortOrder="10" showInDefault="1">
+                    <label>Banner</label>
+                    <comment>Allowed file types: PNG, GIF, JPG, JPEG</comment>
+                    <backend_model>Vendor\CustomConfig\Model\Config\Backend\SyncVendorData</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">ves_vendors/logo</upload_dir>
+                    <base_url type="media">ves_vendors/logo</base_url>
+                </field>
+
+                <field id="name" translate="label" type="text" sortOrder="20" showInDefault="1" showInStore="1">
+                    <label>Business Name</label>
+                    <backend_model>Vendor\CustomConfig\Model\Config\Backend\SyncVendorData</backend_model>
+                </field>
+
+                <field id="short_description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInStore="1">
+                    <label>About Store</label>
+                    <backend_model>Vendor\CustomConfig\Model\Config\Backend\SyncVendorData</backend_model>
+                </field>
+
+                <field id="phone" translate="label" type="text" sortOrder="40" showInDefault="1" showInStore="1">
+                    <label>Business Website</label>
+                    <backend_model>Vendor\CustomConfig\Model\Config\Backend\SyncVendorData</backend_model>
+                </field>
+
+                <field id="contact_information" translate="label" type="textarea" sortOrder="50" showInDefault="1" showInStore="1">
+                    <label>Contact Information</label>
+                    <comment>Enter details like Contact Name, Phone, Email</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

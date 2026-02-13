@@ -1,0 +1,17 @@
+    <div class="field fieldof_interest required">
+    <?php $option = $block->getAllFieldOfInterest();?>
+    <label for="fieldof_interest" class="label"><span><?php /* @escapeNotVerified */
+        echo __('Field of Interest') ?></span><span class="required text-[#d02d4e]">*</span></label>
+    <div class="control">
+        <select name="fieldof_interest" id="fieldof_interest" class="input-text fieldof_interest required-entry" data-validate="{required:false}">
+            <option value=""><?php /* @escapeNotVerified */
+        echo __('Please select') ?></option>
+            <?php if(count($option)):?>
+            <?php foreach($option as $option):?>
+                <option value="<?php echo $option['value']?>"><?php echo $option['label']?></option>
+            <?php endforeach;?>
+            <?php endif;?>
+        </select>
+    </div>
+</div>
+

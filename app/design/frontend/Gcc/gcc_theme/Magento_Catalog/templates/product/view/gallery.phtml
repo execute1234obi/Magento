@@ -1,0 +1,32 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\View\Gallery $block */
+$product = $block->getProduct();
+$galleryImages = $block->getGalleryImages();
+?>
+<div data-role="media-gallery"
+     data-mage-init='{
+        "mage/gallery/gallery": {
+            "data": <?= $block->getGalleryImagesJson() ?>,
+            "options": <?= $block->getGalleryOptionsJson() ?>,
+            "fullscreen": <?= $block->getGalleryOptions()->getVar('fullscreen') ?>,
+            "breakpoints": <?= $block->getBreakpoints() ?>,
+            "template": "Magento_Catalog/product/gallery"
+        }
+     }'>
+
+    <div class="main-frame" data-gallery-role="gallery-placeholder"></div>
+
+    <div class="thumbs-wrap">
+        <button class="thumb-arrow" id="prevBtn" aria-label="Previous image">‹</button>
+        <div class="gallery-thumbs" id="thumbTrack" role="tablist" aria-label="Product images">
+            <?php foreach ($galleryImages as $image) : ?>
+                <img src="<?= $block->escapeUrl($image->getUrl()) ?>"
+                     alt="<?= $block->escapeHtmlAttr($image->getLabel() ?: 'Product Image') ?>"
+                     data-gallery-role="gallery-thumb"
+                     class="thumb-image"
+                     role="tab">
+            <?php endforeach; ?>
+        </div>
+        <button class="thumb-arrow" id="nextBtn" aria-label="Next image">›</button>
+    </div>
+</div>

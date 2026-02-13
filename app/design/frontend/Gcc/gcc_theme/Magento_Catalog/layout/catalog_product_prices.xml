@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <!-- Force configurable products to use default price renderer -->
+        <referenceBlock name="product.price.render.default">
+            <arguments>
+                <argument name="configurable" xsi:type="string">Magento\Catalog\Pricing\Render\FinalPriceBox</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

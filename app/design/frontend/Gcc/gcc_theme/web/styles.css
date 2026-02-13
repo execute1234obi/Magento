@@ -1,0 +1,11 @@
+.page-main {
+    padding-top: 20px; /* Adjust based on your header height */
+}
+body.custom_result-bg{
+  background-color: #f9fafb;
+}
+
+    body.customer-account .page-main {
+        padding-top: 150px !important ;
+    }
+  

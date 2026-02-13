@@ -1,0 +1,108 @@
+<?php
+use Magento\Framework\UrlInterface;
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$categoryCollectionFactory = $objectManager->get(\Magento\Catalog\Model\ResourceModel\Category\CollectionFactory::class);
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+
+$parentCategoryId = 2;
+
+$categories = $categoryCollectionFactory->create()
+    ->addAttributeToSelect(['name', 'image', 'url_key'])
+    ->addIsActiveFilter()
+    ->addAttributeToFilter('parent_id', $parentCategoryId);
+
+$mediaBase = $storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
+//echo '<pre>mediaBase: ' . $mediaBase . '</pre>';
+?>
+
+
+<!-- Section Title -->
+  
+<div class="text-center mb-12 mt-5  pt-12 pb-12">
+    <h2 class="text-6xl font-semibold text-[#1A3764]"> <?= __('Explore Key Industrial Sectors') ?></h2>
+    <p class="text-gray-600 mt-5 text-3xl">
+        <?= __('Discover suppliers and products across various industries to meet your business needs efficiently') ?>.
+        
+    </p>
+</div>
+
+<!-- Category Grid Wrapper -->
+<div class="category-grid-wrapper w-full mb-12 px-6" style="padding:0 130px;">
+    <!-- <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"> -->
+        <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+
+        <?php foreach ($categories as $category): ?>
+<?php
+// $imagePath = $category->getImage();
+
+// if (!empty($imagePath)) {
+//     $imagePath = ltrim($imagePath, '/');
+//     $imagePath = str_replace('media/', '', $imagePath);
+// } else {
+//     $imagePath = '';
+// }echo $imagePath;
+$imagePath = $category->getImage();
+
+if (!empty($imagePath)) {
+    // Remove absolute path
+    $imagePath = str_replace(['pub/media/', 'media/'], '', $imagePath);
+
+    // Clean leading slashes
+    $imagePath = ltrim($imagePath, '/');
+}
+?>   <div class="category-card flex flex-col items-start justify-start p-6 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors duration-300">
+                <a href="<?= $category->getUrl() ?>" class="flex flex-col items-center">
+                    <?php if ($category->getImage()): ?>
+                        <img src="<?= $mediaBase . $imagePath ?>"
+                             alt="<?= $category->getName() ?>"
+                             class="w-20 h-20 mb-4 rounded-full object-cover" />
+                    <?php else: ?>
+                        <img src="<?= $block->getViewFileUrl('Magento_Catalog::images/default-category.png') ?>"
+                             alt="No Image"
+                             class="w-20 h-20 mb-4 rounded-full" />
+                    <?php endif; ?>
+                    <p class="text-3xl font-semibold text-center text-gray-800"><?= $category->getName() ?></p>
+                </a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+
+<!-- Navigation Arrows -->
+<div class="flex justify-start space-x-6 pb-12" style="margin:50px 130px;">
+    <!-- Left Arrow Icon -->
+    <button onclick="scrollCategories(-1)"
+            class="bg-[#1A3764] text-white px-4  hover:bg-blue-700 transition-colors duration-300" style="width:40px; height:8px;">
+        <i class="fas fa-chevron-left text-2xl"></i>
+    </button>
+    <!-- Right Arrow Icon -->
+    <button onclick="scrollCategories(1)"
+            class="bg-[#1A376480] text-white px-4 hover:bg-blue-700 transition-colors duration-300" style="width:15px; height:8px;">
+        <i class="fas fa-chevron-left text-2xl"></i>
+        <i class="fas fa-chevron-right text-2xl"></i>
+    </button>
+</div>
+
+<script>
+let currentIndex = 0;
+const visibleCount = 5; // Number of categories visible at once
+
+function scrollCategories(direction) {
+    const container = document.querySelector('.category-grid');
+    const card = container.querySelector('.category-card');
+    if (!card) return;
+
+    const cardWidth = card.offsetWidth; // Exact width of each card
+    const total = container.children.length;
+
+    currentIndex += direction;
+
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex > Math.ceil(total / visibleCount) - 1) {
+        currentIndex = Math.ceil(total / visibleCount) - 1;
+    }
+
+    container.style.transform = `translateX(-${currentIndex * cardWidth * visibleCount}px)`;
+}
+</script>

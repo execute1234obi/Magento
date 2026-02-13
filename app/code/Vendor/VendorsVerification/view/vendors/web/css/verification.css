@@ -1,0 +1,276 @@
+/* ============================================================
+   Vendor Verification NEW Form UI (match image 2/3)
+   Scoped to #verification-form so it won't affect other pages
+   ============================================================ */
+
+#verification-form{
+  /* keep page clean */
+  font-family: inherit;
+}
+
+/* remove bootstrap row negative spacing inside this form (prevents stretched look) */
+#verification-form .row{
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Page title: "Verification Information" */
+#verification-form .page-heading-book{
+  margin: 6px 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #0c2a63;
+}
+
+/* Optional wrapper (if you added verification-ui-wrap / card) */
+#verification-form .verification-ui-wrap{
+  width: 100%;
+}
+#verification-form .verification-ui-card{
+  max-width: 860px;            /* matches the “narrow card” feel in image 2/3 */
+  background: #fff;
+  border: 1px solid #e9eef6;
+  border-radius: 8px;
+  padding: 16px 18px 18px;
+}
+
+/* If you didn't add wrapper, apply same card style on .custom-tab */
+#verification-form .custom-tab{
+  max-width: 860px;
+  background: #fff;
+  border: 1px solid #e9eef6;
+  border-radius: 8px;
+  padding: 14px 16px 18px;
+}
+
+/* "Request Vendor Verification" small label line */
+#verification-form .requare-text{
+  margin: 2px 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0c2a63;
+}
+
+/* ============================================================
+   Step Tabs (Business Information / Documents)
+   Uses your #myTabs + .icon-no markup
+   ============================================================ */
+
+#verification-form .nav-tabs{
+  border-bottom: 1px solid #edf2fb;
+  margin: 8px 0 14px;
+  display: flex;
+  gap: 18px;
+}
+
+#verification-form .nav-tabs > li{
+  float: none;                 /* stop bootstrap float */
+  margin: 0;
+}
+
+#verification-form .nav-tabs > li > a{
+  border: 0 !important;
+  background: transparent !important;
+  padding: 10px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #8a9bb3;
+}
+
+#verification-form .nav-tabs > li > a:hover{
+  color: #0c2a63;
+}
+
+/* number circle */
+#verification-form .nav-tabs .icon-no{
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  background: #f1f5ff;
+  border: 1px solid #dbe7ff;
+  color: #1f57a6;
+}
+
+/* active tab */
+#verification-form .nav-tabs > li.active > a{
+  color: #0c2a63 !important;
+  border: 0 !important;
+  background: transparent !important;
+  position: relative;
+}
+
+#verification-form .nav-tabs > li.active > a:after{
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background: #1f57a6;
+}
+
+#verification-form .nav-tabs > li.active .icon-no{
+  background: #ff8a00;
+  border-color: #ff8a00;
+  color: #fff;
+}
+
+/* tab content spacing */
+#verification-form .tab-content{
+  padding-top: 4px;
+}
+
+/* ============================================================
+   Section headings (Business Information, Business Address, etc.)
+   Works with fieldset + legend
+   ============================================================ */
+
+#verification-form fieldset.fieldset{
+  border: 0;
+  padding: 0;
+  margin: 0 0 14px;
+}
+
+#verification-form .legend{
+  border: 0;
+  margin: 0 0 10px;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0c2a63;
+}
+
+#verification-form .legend span{
+  font-size: 14px;
+  font-weight: 700;
+  color: #0c2a63;
+}
+
+/* ============================================================
+   Form fields (match image 2/3: soft blue background inputs)
+   ============================================================ */
+
+#verification-form label{
+  font-size: 12px;
+  font-weight: 600;
+  color: #0c2a63;
+  margin-bottom: 6px;
+}
+
+#verification-form .control input,
+#verification-form .control select,
+#verification-form .control textarea{
+  width: 100%;
+  background: #f7fbff;
+  border: 1px solid #dbe7ff;
+  border-radius: 4px;
+  color: #0c2a63;
+  font-size: 13px;
+  outline: none;
+  box-shadow: none;
+}
+
+#verification-form .control input,
+#verification-form .control select{
+  height: 38px;
+  padding: 8px 10px;
+}
+
+#verification-form .control textarea{
+  min-height: 120px;
+  padding: 10px;
+  resize: vertical;
+}
+
+/* focus */
+#verification-form .control input:focus,
+#verification-form .control select:focus,
+#verification-form .control textarea:focus{
+  border-color: #1f57a6;
+  box-shadow: 0 0 0 3px rgba(31, 87, 166, 0.10);
+}
+
+/* spacing between fields (bootstrap sometimes collapses this) */
+#verification-form .field{
+  margin-bottom: 14px;
+}
+
+/* helper note text */
+#verification-form .field-note,
+#verification-form .noncatrfq-uploadnotice{
+  margin-top: 6px;
+  font-size: 12px;
+  color: #8a9bb3;
+}
+
+/* ============================================================
+   Footer Buttons (Next Step / Submit / Back)
+   Uses your existing .page-main-actions + btn classes
+   ============================================================ */
+
+#verification-form .page-main-actions{
+  margin: 16px 0 0 !important;
+  padding-top: 12px;
+  border-top: 1px solid #edf2fb;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+/* primary button */
+#verification-form .btn.btn-primary,
+#verification-form button.btn.btn-primary{
+  background: #1f57a6 !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff !important;
+  box-shadow: 0 10px 18px rgba(31, 87, 166, 0.18);
+  transition: 0.2s ease;
+}
+
+#verification-form .btn.btn-primary:hover{
+  background: #184a8f !important;
+  transform: translateY(-1px);
+}
+
+/* Back button style (outline) */
+#verification-form .verification-prevpage{
+  background: #ffffff !important;
+  color: #1f57a6 !important;
+  border: 1px solid #dbe7ff !important;
+  box-shadow: none !important;
+}
+
+/* make Back align to right like your current pull-right intent */
+#verification-form .verification-prevpage.pull-right{
+  margin-left: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px){
+  #verification-form .custom-tab,
+  #verification-form .verification-ui-card{
+    padding: 12px;
+  }
+
+  #verification-form .page-main-actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #verification-form .verification-prevpage.pull-right{
+    margin-left: 0;
+  }
+}

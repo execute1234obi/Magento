@@ -1,0 +1,265 @@
+<style>
+ .product-grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Creates 3 equal columns */
+  grid-gap: 20px; /* Adjust the gap between cards */
+  padding: 20px; /* Add padding around the grid */
+  max-width: 900px; /* Optional: Limit the maximum width of the grid */
+  margin: 0 auto; /* Center the grid horizontally */
+}
+
+/* Optional: Media query for smaller screens */
+@media (max-width: 768px) {
+  .product-grid-container {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid-container {
+    grid-template-columns: 1fr; /* 1 column on even smaller screens */
+  }
+}
+body {
+    background-color: #f4f4f4; /* A very light gray color */
+}
+.product-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 12px; /* Increased border-radius */
+  overflow: hidden;
+  width: 100%; /* Make the card fill its grid cell */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex; /* Use flexbox for overall layout */
+  flex-direction: column;
+  font-family: sans-serif; /* Added a default font-family */
+}
+
+.product-image {
+  width: 100%;
+  height: 180px; /* Adjusted height */
+  overflow: hidden;
+  position: relative; /* For positioning the heart icon */
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+   object-fit: cover; /*Maintain aspect ratio and fill container */
+}
+
+.product-image .heart-icon {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2196f3; /* Example heart color */
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.product-details {
+  padding: 12px; /* Reduced padding */
+}
+
+.product-name {
+  font-size: 18px; /* Further reduced font size */
+  margin-bottom: 4px; /* Reduced margin */
+  font-weight: 600; /* Lighter font weight */
+  line-height: 1.2; /* Adjust line height for better readability */
+  color: #222; /* Darker text color */
+}
+
+.product-price {
+  font-size: 0.8rem; /* Further reduced font size */
+  color: #555; /* Slightly darker color */
+}
+
+.vendor-info {
+  padding: 0 12px 8px; /* Adjusted padding */
+  display: flex;
+  flex-direction: column;
+}
+
+.vendor-name {
+  font-weight: 600; /* Slightly bolder */
+  display: flex;
+  align-items: center;
+  margin-bottom: 2px; /* Reduced margin */
+  font-size: 0.8rem; /* Reduced font size */
+  color: #111; /* Darker text color */
+}
+
+.verified-icon {
+  color: #2196f3; /* Example: Blue color for verified icon */
+  margin-left: 4px;
+  font-size: 0.7rem; /* Reduced icon size */
+}
+
+.vendor-location {
+  display: flex;
+  align-items: center;
+  font-size: 0.7rem; /* Reduced font size */
+  color: #777;
+  margin-bottom: 6px; /* Reduced margin */
+}
+
+.vendor-location img {
+  width: 14px; /* Reduced flag size */
+  margin-right: 4px;
+}
+
+.add-to-quote {
+  padding: 6px 12px; /* Reduced padding */
+  text-align: center;
+  border-top: 1px solid #e0e0e0; /* Added top border */
+}
+
+.add-to-quote button {
+    background-color: #fff;
+    color: #2196f3;
+    border: 1px solid #2196f3;
+    border-radius: 6px;
+    padding: 10px 55px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.add-to-quote button:hover {
+  background-color: #e3f2fd;
+}
+/* product prize style */
+.price-label {
+  font-family: Arial, sans-serif; /* or the font you prefer */
+  font-size: 16px; /* adjust as needed */
+  color: #333; /* main text color */
+}
+
+.price-label .price {
+  font-weight: bold; /* makes $900 stand out */
+}
+
+.price-label .quantity {
+  font-weight: normal; /* lighter for the unit */
+  color: #666; /* slightly lighter color */
+}
+</style>
+<?php
+/** @var \Magento\Catalog\Block\Product\ListProduct $block */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+
+// Get the existing toolbar block from the layout
+$toolbarBlock = $block->getLayout()->getBlock('product_list_toolbar');
+
+// Check if the block exists before trying to use it
+if ($toolbarBlock) {
+    // Set the product collection on the toolbar
+    $toolbarBlock->setCollection($_productCollection);
+}
+
+// Get the Object Manager for testing (not recommended for production)
+// In a real module, you would use dependency injection in your Block class.
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+// Get the Vnecoms Vendor Factory
+$vendorFactory = $objectManager->create(\Vnecoms\Vendors\Model\VendorFactory::class);
+// Get the Vendors Verification Helper
+// This is the line you need to add to fix the error
+$vendorsVerificationHelper = $objectManager->get(\Business\VendorsVerification\Helper\Data::class);
+?>
+
+<?php
+/** @var $block \Magento\Catalog\Block\Product\ListProduct */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+ <?php if ($toolbarBlock) { echo $toolbarBlock->toHtml(); } ?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__('We can\'t find products matching the selection.')) ?></p>
+    </div>
+<?php else: ?>
+    <div class="product-grid-container">
+        <?php foreach ($_productCollection as $_product): ?>
+        <?php
+            $vendorId = $_product->getVendorId();
+            $vendorName = '';
+            $vendorLocation = '';
+            
+            if ($vendorId) {
+                try {
+                    // Create a new vendor model instance and load data by ID
+                    $vendor = $vendorFactory->create()->load($vendorId);
+                    if ($vendor && $vendor->getId()) {
+                        // Use the correct methods to get the vendor's data
+                        $vendorName = $vendor->getVendorName() ?: $vendor->getCName();
+                        $vendorLocation = $vendor->getCountryId(); // Or another attribute like getCity()
+                        $isVerified = $vendorsVerificationHelper->isVerifiedVendor($vendorId);
+                    }
+                } catch (NoSuchEntityException $e) {
+            // This is a more specific exception for "not found"
+            $this->messageManager->addErrorMessage('Vendor data not found.');
+            return 'N/A';
+        } catch (\Exception $e) {
+            $this->messageManager->addErrorMessage('An error occurred while fetching vendor data.');
+            return 'N/A';
+        }
+            }
+            ?>
+
+
+            <div class="product-card">
+  <div class="product-image">
+      <a href="<?= $_product->getProductUrl() ?>">
+    <img src="<?= $block->getImage($_product, 'product_page_image_large')->getImageUrl(); ?>" 
+                            alt="<?= $block->escapeHtml($_product->getName()); ?>" style="max-width:100%;height:auto;display:block;object-fit:cover;">
+        </a>
+</div>
+  <div class="product-details">
+    <h3 class="product-name"><?= $block->escapeHtml($_product->getName()); ?></h3>
+    <div class="price-label">
+  <span class="price"><?= $block->getProductPrice($_product); ?></span> / <span class="quantity">1 pcs</span>
+</div>
+
+<hr/>
+     </div>
+  <div class="vendor-info">
+    <div class="vendor-name">
+       <?= $block->escapeHtml($vendorName ?: 'N/A'); ?>
+       <?php
+// In your .phtml file
+$mediaUrl = $block->getUrl('pub/media');
+$varifyimageUrl = $mediaUrl . 'wysiwyg/varifiedicon.png';
+$countryimageUrl = $mediaUrl . 'wysiwyg/SA_flag.png';
+?>
+
+
+      <span class="verified-icon">
+         <?php 
+          $isVerified = $vendorsVerificationHelper->isVerifiedVendor($vendorId);
+          $isVerified = $isVerified ?? false; 
+         if ($isVerified): ?>
+        <img src="<?= $block->escapeUrl($varifyimageUrl) ?>" alt="Verified Icon">
+        <?php endif; ?>
+      </span>
+    </div>
+    <div class="vendor-location">
+     <img src="<?= $block->escapeUrl($countryimageUrl) ?>" alt="country Icon">
+       <?= $block->escapeHtml($vendorLocation ?: 'N/A'); ?>
+    </div>
+  </div>
+  <div class="add-to-quote">
+    <button>Add to Quote</button>
+  </div>
+</div>
+        <?php endforeach; ?>
+       
+    </div>
+      <?php if ($toolbarBlock) { echo $toolbarBlock->toHtml(); } ?>
+<?php endif; ?>

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Vnecoms_Vendors:etc/menu.xsd">
+    <menu>
+        <remove id="Vnecoms_Vendors::general_config"/>
+        <remove id="Vnecoms_Vendors::seller_page"/>
+        <remove id="Vnecoms_Vendors::product_import_export"/>
+        <remove id="Vnecoms_Vendors::catalog_search"/>  
+    </menu>
+</config>

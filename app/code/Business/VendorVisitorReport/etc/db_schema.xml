@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!-- Raw Vendor Profile Visitor Table -->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="business_vendor_profile_visitor"
+           resource="default"
+           engine="innodb"
+           comment="Business Vendor Profile Visitor Raw Data">
+
+        <!-- Primary Key -->
+        <column xsi:type="int"
+                name="entity_id"
+                unsigned="true"
+                nullable="false"
+                identity="true"
+                comment="Entity ID"/>
+
+        <!-- Vendor whose profile was visited -->
+        <column xsi:type="int"
+                name="vendor_id"
+                unsigned="true"
+                nullable="false"
+                comment="Vendor ID"/>
+
+        <!-- Logged-in customer (nullable for guest) -->
+        <column xsi:type="int"
+                name="customer_id"
+                unsigned="true"
+                nullable="true"
+                comment="Customer ID"/>
+
+        <!-- Visitor IP -->
+        <column xsi:type="varchar"
+                name="visitor_ip"
+                length="45"
+                nullable="false"
+                comment="Visitor IP Address"/>
+
+        <!-- Country Code (IN, SA, KW etc.) -->
+        <column xsi:type="varchar"
+                name="country_code"
+                length="5"
+                nullable="true"
+                comment="Country Code"/>
+
+        <!-- Visit Timestamp -->
+        <column xsi:type="timestamp"
+                name="visited_at"
+                nullable="false"
+                default="CURRENT_TIMESTAMP"
+                comment="Visited At"/>
+
+        <!-- Primary Key -->
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+
+        <!-- Indexes -->
+        <index referenceId="BUSINESS_VENDOR_PROFILE_VISITOR_VENDOR_ID"
+               indexType="btree">
+            <column name="vendor_id"/>
+        </index>
+
+        <index referenceId="BUSINESS_VENDOR_PROFILE_VISITOR_COUNTRY"
+               indexType="btree">
+            <column name="country_code"/>
+        </index>
+
+        <index referenceId="BUSINESS_VENDOR_PROFILE_VISITOR_VISITED_AT"
+               indexType="btree">
+            <column name="visited_at"/>
+        </index>
+
+    </table>
+
+</schema>

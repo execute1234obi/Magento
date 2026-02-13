@@ -1,0 +1,91 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$categoryRepository = $objectManager->get(\Magento\Catalog\Model\CategoryRepository::class);
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+
+$rootCategoryId = $storeManager->getStore()->getRootCategoryId();
+$rootCategory = $categoryRepository->get($rootCategoryId);
+$categories = $rootCategory->getChildrenCategories();
+?>
+
+<style>
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    transition: box-shadow .2s;
+    cursor: pointer;
+    text-align: center;
+    background: #fff;
+    height: 100%;
+    box-sizing: border-box;
+    word-wrap: break-word;
+}
+
+.category-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.category-card img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 12px;
+    object-fit: contain;
+}
+
+.category-card span {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1f2937;
+    word-break: break-word;
+}
+
+/* Responsive Grid */
+@media screen and (max-width: 1024px) {
+    .category-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .category-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+
+<div class="category-grid">
+    <?php foreach ($categories as $category): ?>
+        <?php if ($category->getIsActive()): ?>
+            <?php
+                $categoryUrl = $category->getUrl();
+                $categoryName = $category->getName();
+                $imageUrl = $category->getImageUrl() ?: 'https://via.placeholder.com/48'; // Fallback image
+            ?>
+            <a href="<?= $categoryUrl ?>" class="category-card">
+                <img src="<?= $imageUrl ?>" alt="<?= $categoryName ?>" />
+                <span><?= $categoryName ?></span>
+            </a>
+        <?php endif; ?>
+    <?php endforeach; ?>
+</div>

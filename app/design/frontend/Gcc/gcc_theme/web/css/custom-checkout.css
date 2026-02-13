@@ -1,0 +1,149 @@
+/* ---------------------------------------------------- */
+/* 1. RESET AND BASE FIXES */
+/* ---------------------------------------------------- */
+
+/* Fixed Header Overlap Fix */
+body.checkout-index-index {
+    /* Set this to your final header height (e.g., 60px or 70px) */
+    padding-top: 70px !important; 
+}
+
+/* ---------------------------------------------------- */
+/* 2. HEADER WRAPPER AND FLEX LAYOUT */
+/* ---------------------------------------------------- */
+.custom-header-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 50;
+    background-color: #ffffff; /* White background */
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Shadow-sm */
+    font-family: sans-serif; /* Use your desired font */
+}
+
+.header-main-container {
+    display: flex; /* Main Flex container */
+    justify-content: space-between; /* Items on ends */
+    align-items: center;
+    max-width: 1280px; /* max-w-7xl */
+    margin: 0 auto; /* Center the container */
+    padding: 12px 24px; /* py-3 px-6 */
+}
+
+.header-section-left {
+    display: flex;
+    align-items: center;
+    gap: 40px; /* Spacing between logo and nav */
+}
+
+.header-section-right {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* Spacing between right-side elements */
+}
+
+/* ---------------------------------------------------- */
+/* 3. LOGO AND NAVIGATION STYLES */
+/* ---------------------------------------------------- */
+.logo-img {
+    max-height: 37px;
+    width: auto;
+}
+
+.header-main-nav {
+    display: flex;
+    align-items: center;
+    gap: 24px; /* Space between nav links/dropdowns */
+}
+
+.nav-link,
+.dropdown-menu-wrapper span {
+    color: #4B5563; /* Text color */
+    text-decoration: none;
+    font-size: 1rem;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.nav-link:hover,
+.dropdown-menu-wrapper:hover span {
+    color: #3B82F6;
+    background-color: #EFF6FF;
+}
+
+/* Dropdown Arrow Icon */
+.header-dropdown-arrow {
+    font-size: 0.75rem;
+    margin-left: 4px;
+}
+
+/* ---------------------------------------------------- */
+/* 4. DROPDOWN CONTENT STYLES */
+/* ---------------------------------------------------- */
+.dropdown-menu-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%; /* Position below the button */
+    left: 0;
+    margin-top: 12px;
+    width: 250px; /* Fixed width for dropdown */
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    border: 1px solid #E5E7EB;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* space-y-4 */
+}
+
+.dropdown-content.hidden {
+    display: none;
+}
+
+.dropdown-content a {
+    color: #374151;
+    text-decoration: none;
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+.dropdown-content a:hover {
+    background-color: #F3F4F6;
+}
+
+/* ---------------------------------------------------- */
+/* 5. RTL STYLES (If applicable) */
+/* ---------------------------------------------------- */
+.rtl-header {
+    direction: rtl;
+    text-align: right;
+}
+
+.rtl-header .header-main-container {
+    flex-direction: row-reverse;
+}
+
+.rtl-header .header-section-left {
+    flex-direction: row-reverse;
+    /* Adjust gaps for RTL if necessary */
+}
+
+.rtl-header .header-section-right {
+    flex-direction: row-reverse;
+}
+
+.rtl-header .dropdown-content {
+    left: auto;
+    right: 0; /* Align dropdown to the right */
+    text-align: right;
+}
+

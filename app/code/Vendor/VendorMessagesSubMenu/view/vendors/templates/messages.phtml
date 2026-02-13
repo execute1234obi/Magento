@@ -1,0 +1,354 @@
+<!-- <h1>vru</h1> -->
+<style>
+  /* ===== Vendor Messages: Gmail-like split UI ===== */
+  .vendor-msg {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+    margin-top: 10px;
+  }
+
+  /* LEFT: Thread list panel */
+  .vendor-msg__sidebar {
+    width: 360px;
+    min-width: 320px;
+    background: #ffffff;
+    border: 1px solid #e9eef6;
+    border-radius: 14px;
+    overflow: hidden;
+    height: calc(100vh - 210px);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .vendor-msg__sidebarHeader {
+    padding: 14px 16px;
+    border-bottom: 1px solid #eef2f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .vendor-msg__sidebarTitle {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 800;
+    color: #0B1F44;
+  }
+
+  .vendor-msg__searchWrap {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eef2f7;
+    background: #fff;
+  }
+
+  .vendor-msg__search {
+    width: 100%;
+    height: 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 0 12px;
+    font-size: 13px;
+    outline: none;
+    background: #fbfdff;
+  }
+  .vendor-msg__search:focus {
+    border-color: #1E56A0;
+    box-shadow: 0 0 0 3px rgba(30, 86, 160, 0.10);
+    background: #fff;
+  }
+
+  /* folders (optional) */
+  .vendor-msg__folders {
+    padding: 10px 8px;
+    border-bottom: 1px solid #eef2f7;
+  }
+  .vendor-msg__folders a { text-decoration: none; }
+
+  /* THREAD LIST container */
+  .vendor-msg__threadList {
+    padding: 8px;
+    overflow: auto;
+    flex: 1;
+    background: #fff;
+  }
+
+  /* === Convert Magento inbox TABLE to thread list cards === */
+  .vendor-msg__threadList table {
+    width: 100%;
+    border: 0 !important;
+    border-collapse: separate !important;
+    border-spacing: 0 10px !important;
+    background: transparent !important;
+  }
+
+  .vendor-msg__threadList thead,
+  .vendor-msg__threadList .admin__data-grid-header,
+  .vendor-msg__threadList .admin__data-grid-pager,
+  .vendor-msg__threadList .data-grid-filters,
+  .vendor-msg__threadList .col-actions,
+  .vendor-msg__threadList .action-select,
+  .vendor-msg__threadList .action-menu,
+  .vendor-msg__threadList .action-multicheck-wrap,
+  .vendor-msg__threadList .data-grid-th,
+  .vendor-msg__threadList .data-grid-checkbox-cell {
+    display: none !important;
+  }
+
+  .vendor-msg__threadList tbody tr {
+    background: #ffffff;
+    border: 1px solid #eef2f7;
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+  }
+
+  .vendor-msg__threadList tbody tr:hover {
+    background: #f4f8ff;
+    transform: translateY(-1px);
+  }
+
+  .vendor-msg__threadList tbody tr.is-active {
+    background: rgba(30, 86, 160, 0.10);
+    border-color: rgba(30, 86, 160, 0.20);
+    box-shadow: inset 3px 0 0 #1E56A0;
+  }
+
+  .vendor-msg__threadList td {
+    border: 0 !important;
+    padding: 0 !important;
+    vertical-align: top;
+  }
+
+  /* Thread row layout (subject + sender + date) */
+  .vendor-msg__threadCard {
+    padding: 14px 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 10px;
+    align-items: start;
+  }
+
+  .vendor-msg__threadSubject {
+    font-size: 15px;
+    font-weight: 900;
+    color: #173A73;
+    line-height: 1.2;
+  }
+
+  .vendor-msg__threadSender {
+    grid-column: 1 / 2;
+    font-size: 13px;
+    color: #64748b;
+    margin-top: 2px;
+  }
+
+  .vendor-msg__threadDate {
+    grid-column: 2 / 3;
+    font-size: 13px;
+    color: #94A3B8;
+    white-space: nowrap;
+    margin-left: 10px;
+  }
+
+  /* RIGHT: Conversation area */
+  .vendor-msg__content {
+    flex: 1;
+    background: #ffffff;
+    border: 1px solid #e9eef6;
+    border-radius: 14px;
+    overflow: hidden;
+    height: calc(100vh - 210px);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .vendor-msg__contentHeader {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eef2f7;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .vendor-msg__contentTitle {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 900;
+    color: #0B1F44;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .vendor-msg__contentMeta {
+    font-size: 12px;
+    color: #94A3B8;
+    white-space: nowrap;
+  }
+
+  .vendor-msg__contentBody {
+    padding: 16px;
+    overflow: auto;
+    flex: 1;
+    background: #fbfdff;
+  }
+
+  /* Placeholder when no message selected */
+  .vendor-msg__empty {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #64748b;
+    font-size: 14px;
+    padding: 40px;
+    text-align: center;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .vendor-msg { flex-direction: column; }
+    .vendor-msg__sidebar,
+    .vendor-msg__content {
+      width: 100%;
+      height: auto;
+      min-height: 420px;
+    }
+  }
+</style>
+<div class="vendor-msg">
+
+  <!-- LEFT: Thread list -->
+  <aside class="vendor-msg__sidebar">
+    <div class="vendor-msg__sidebarHeader">
+      <h3 class="vendor-msg__sidebarTitle"><?php echo $block->getTitle();?></h3>
+    </div>
+
+    <div class="vendor-msg__searchWrap">
+      <input class="vendor-msg__search" id="vendorMsgSearch" type="text"
+             placeholder="<?php echo __("Search messages..."); ?>" />
+    </div>
+
+    <div class="vendor-msg__folders">
+      <?php echo $block->getChildHtml('folders') ?>
+    </div>
+
+    <!-- ✅ Recommended: render inbox grid here via layout as="message_list" -->
+    <div class="vendor-msg__threadList" id="vendorThreadList">
+      <?php echo $block->getChildHtml('message_list') ?>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Conversation (your existing view/communication output) -->
+  <section class="vendor-msg__content" id="vendorMsgRight">
+    <div class="vendor-msg__contentHeader">
+      <h3 class="vendor-msg__contentTitle">
+        <?php echo $block->escapeHtml($block->getTitle()); ?>
+      </h3>
+      <div class="vendor-msg__contentMeta"></div>
+    </div>
+
+    <div class="vendor-msg__contentBody" id="vendorMsgContentBody">
+      <?php echo $block->getChildHtml('message_content') ?>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function () {
+  const threadList = document.getElementById('vendorThreadList');
+  const rightBody  = document.getElementById('vendorMsgContentBody');
+  const rightWrap  = document.getElementById('vendorMsgRight');
+  const searchBox  = document.getElementById('vendorMsgSearch');
+
+  // 1) If you did NOT render message_list, but message_content contains the inbox grid,
+  //    auto-move it from RIGHT to LEFT (Inbox page).
+  const hasLeftList = threadList && threadList.innerText.trim().length > 0;
+  const rightHasGrid = rightBody && rightBody.querySelector('table');
+
+  if (!hasLeftList && rightHasGrid) {
+    // Move the table/grid to the left
+    const table = rightBody.querySelector('table');
+    threadList.innerHTML = '';
+    threadList.appendChild(table);
+
+    // Show empty placeholder on the right (Inbox page should not show the grid anymore)
+    rightBody.innerHTML = '<div class="vendor-msg__empty">Select a message from the left to view full communication.</div>';
+  }
+
+  // 2) Convert grid rows into "thread cards" UI + click row => existing View link
+  const table = threadList ? threadList.querySelector('table') : null;
+  if (table) {
+    const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+    rows.forEach(tr => {
+      const tds = tr.querySelectorAll('td');
+      if (!tds || tds.length < 3) return;
+
+      // Try to find a "View" link inside the row (existing functionality)
+      const viewA = tr.querySelector('a[href]');
+      const href  = viewA ? viewA.getAttribute('href') : null;
+
+      // Your grid order (from screenshot): checkbox | Sender | Subject | Created at | Action(View)
+      // We'll attempt based on indexes:
+      const sender  = (tds[1] ? tds[1].innerText : '').trim();
+      const subject = (tds[2] ? tds[2].innerText : '').trim();
+      const dateTxt = (tds[3] ? tds[3].innerText : '').trim();
+
+      // Build card UI in the Subject column
+      const card = document.createElement('div');
+      card.className = 'vendor-msg__threadCard';
+      card.innerHTML = `
+        <div class="vendor-msg__threadSubject"></div>
+        <div class="vendor-msg__threadDate"></div>
+        <div class="vendor-msg__threadSender"></div>
+      `;
+      card.querySelector('.vendor-msg__threadSubject').textContent = subject || '(No subject)';
+      card.querySelector('.vendor-msg__threadSender').textContent  = sender || '';
+      card.querySelector('.vendor-msg__threadDate').textContent    = dateTxt || '';
+
+      if (tds[2]) {
+        tds[2].innerHTML = '';
+        tds[2].appendChild(card);
+      }
+
+      // Make row clickable to open the existing view page
+      if (href) {
+        tr.addEventListener('click', (e) => {
+          const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+          if (tag === 'a' || tag === 'button' || tag === 'input' || tag === 'select' || tag === 'textarea') return;
+          window.location.href = href;
+        });
+
+        // Highlight active thread if current URL matches
+        const current = window.location.href;
+        if (current && current.indexOf(href) !== -1) {
+          tr.classList.add('is-active');
+        }
+      }
+
+      // Store search text
+      tr.setAttribute('data-search', (sender + ' ' + subject + ' ' + dateTxt).toLowerCase());
+    });
+
+    // 3) Search filter
+    if (searchBox) {
+      searchBox.addEventListener('input', function () {
+        const q = (this.value || '').toLowerCase().trim();
+        const rows = Array.from(table.querySelectorAll('tbody tr'));
+        rows.forEach(tr => {
+          const hay = tr.getAttribute('data-search') || '';
+          tr.style.display = (!q || hay.includes(q)) ? '' : 'none';
+        });
+      });
+    }
+  }
+
+  // 4) On view page: auto-scroll conversation to bottom
+  if (rightBody) rightBody.scrollTop = rightBody.scrollHeight;
+})();
+</script>

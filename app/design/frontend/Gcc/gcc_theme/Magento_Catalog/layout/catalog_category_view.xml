@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+
+        <!-- REMOVE DEFAULT PRODUCT LIST -->
+        <referenceBlock name="category.products" remove="true" />
+        <referenceBlock name="category.products.list" remove="true" />
+
+        <!-- Default Magento category image remove -->
+        <referenceBlock name="category.image" remove="true" />
+
+        <!-- REMOVE TOOLBAR / SORTING -->
+        <referenceBlock name="product_list_toolbar" remove="true" />
+
+         <!-- Remove category description -->
+        <referenceBlock name="category.description" remove="true" />
+
+
+        <!-- REMOVE SEARCH BAR ABOVE PRODUCT LIST -->
+          <referenceBlock name="mst_category_search" remove="true" />
+        <referenceBlock name="mirasvit.search.category.search" remove="true" />
+        <referenceContainer name="mst_category_search" remove="true" />
+
+        <!-- REMOVE LAYERED NAVIGATION (FILTERS) -->
+        <referenceBlock name="catalog.leftnav" remove="true" />
+        <referenceBlock name="catalog.navigation" remove="true" />
+
+        <referenceContainer name="content">
+    <block class="Magento\Framework\View\Element\Template"
+           name="custom_category_page"
+           template="Magento_Catalog::category/categogy_page.phtml" />
+</referenceContainer>
+
+    </body>
+</page>

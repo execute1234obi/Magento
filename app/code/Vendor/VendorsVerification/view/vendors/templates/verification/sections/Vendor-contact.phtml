@@ -1,0 +1,48 @@
+<?php
+$vendor = $block->getVendor();
+
+if (!$vendor || !$vendor->getId()) {
+    return;
+}
+//echo $vendor->getId();
+$contactName = $vendor->getCName() ?: '';
+$contactCountryCode = $vendor->getCCode() ?: '';
+$contactPhone  = $vendor->getContactPhone() ?: '';
+$contactEmail = $vendor->getContactEmail() ?: '';
+?>
+
+<legend class="legend"><span><?php echo __('Business Contact') ?></span></legend>
+<div class="fields">
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="field required">
+            <label for="contact-name"><span><?php echo __('Contact Name') ?></span></label>                                  
+            <input name="contact-name" id="contact-name" readonly="true" value="<?php echo $contactName ?>" placeholder="<?php echo __('Contact Name') ?>" aria-label="<?php echo __('Contact Name') ?>" class="input-text" type="text" data-validate="{required:true}" />
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="field required">
+            <label for="contact-countrycode"><span><?php echo __('Country code') ?></span></label>                                  
+            <input name="contact-countrycode" id="contact-countrycode" readonly="true" title="<?php echo __('Country code') ?>" value="<?php echo $contactCountryCode; ?>" class="input-text" type="text" data-validate="{required:true}" />
+        </div>
+    </div>                
+</div>
+<div class="row g-3">
+    <div class="col-md-6">
+        <div class="field required">
+            <label for="contact-phone"><span><?php echo __('Phone') ?></span></label>
+            <div class="control">
+                <input name="contact-phone" id="contact-phone" readonly="true" title="<?php echo __('Phone') ?>" value="<?php echo $contactPhone; ?>" class="input-text" type="text" data-validate="{required:true}"/>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="field required">
+            <label for="contact-email"><span><?php echo __('Email') ?></span></label>
+            <div class="control">                                      
+                <input name="contact-email" id="contact-email" readonly="true" title="<?php echo __('Email') ?>" value="<?php echo $block->escapeHtml($contactEmail) ?>" class="input-text" type="text" data-validate="{required:true, 'validate-email':true}"/>
+            </div>
+        </div>
+    </div>                                                                                    
+</div>                                                                   
+</div>

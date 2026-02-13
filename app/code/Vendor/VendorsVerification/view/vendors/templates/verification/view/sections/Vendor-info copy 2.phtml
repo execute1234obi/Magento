@@ -1,0 +1,156 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification */
+
+$vendor = $block->getVendor();
+$vendorVerification = $block->getVendorVerification();
+
+$verificationId = ($vendorVerification && $vendorVerification->getId())
+    ? (int)$vendorVerification->getId()
+    : 0;
+//echo $verificationId;
+/** Default safe values */
+$verificationData = null;
+$arrData = [];
+$detail_id = 0;
+
+/** Fetch collection */
+if ($verificationId) {
+  
+   $verificationData = $block->getVerificationSectionData(
+    $verificationId,
+    \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+);
+//echo '<pre>';
+//print_r($verificationData->getData());
+//exit;
+//print_r( $verificationData);
+ $detail_id = (int)$verificationData->getDetailId();
+  $arrData = $block->convertVerificationData(
+            $verificationData->getData('vendor_data')
+        );
+    // if ($verificationData && $verificationData->getSize() > 0) {
+    //     //$verificationData = $collection->getFirstItem();
+    //     $detail_id = (int)$verificationData->getDetailId();
+    //   echo  $detail_id;
+    //     $arrData = $block->convertVerificationData(
+    //         $verificationData->getData('vendor_data')
+    //     );
+    //     print_r($arrData);
+    // }
+}
+
+/** Read values safely */
+$business_country     = $arrData['country_id']          ?? '';
+$business_name        = $arrData['business_name']       ?? '';
+$business_description = $arrData['business_description']?? '';
+$business_website     = $arrData['website']             ?? '';
+$business_phone       = $arrData['business_phone']      ?? '';
+$business_email       = $arrData['business_email']      ?? '';
+
+$status = $verificationData ? (int)$verificationData->getStatus() : 0;
+
+?>
+
+<h2>Business Information</h2>
+
+<div class="header">
+    <div>
+        <?php if ($status == \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
+            <!-- <button type="button"
+                    class="btn btn-default verification-edit"
+                    data-modal-id="verification-info-modal">
+                <?php //echo __('Edit'); ?>
+            </button> -->
+           <?php $vendorInfoUrl = $block->getUrl('account/index');?> 
+             <a href="<?= $block->escapeUrl($vendorInfoUrl) ?>"
+       class="btn btn-default">
+        <?= __('Edit'); ?>
+    </a>
+        <?php endif; ?>
+
+        <?php
+        $commentsCount = $block->getCommentsCounts(
+            $verificationId,
+            $detail_id,
+            \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+        );
+        ?>
+        <button type="button"
+                class="btn btn-link verification-showcomment"
+                data-verificationid="<?php echo $verificationId; ?>"
+                data-verifidtlid="<?php echo $detail_id; ?>"
+                data-verifigroupid="<?php echo \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION; ?>">
+            <i class="fa fa-comment"></i>
+            <?php echo __('%1 Comments', $commentsCount); ?>
+        </button>
+    </div>
+</div>
+
+<div class="verification-tbl">
+    <table class="table table-striped">
+        <tbody>
+        <tr>
+            <td><?php echo __('Status'); ?></td>
+            <td><?php echo $block->getStatusLabel($verificationData->getStatus());?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Country'); ?></td>
+            <td><?php echo $block->getCountryByCode($business_country); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Business Name'); ?></td>
+            <td><?php echo $block->escapeHtml($business_name); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Business Description'); ?></td>
+            <td><?php echo $block->escapeHtml($business_description); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Website'); ?></td>
+            <td><?php echo $block->escapeHtml($business_website); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Phone'); ?></td>
+            <td><?php echo $block->escapeHtml($business_phone); ?></td>
+        </tr>
+        <tr>
+            <td><?php echo __('Email'); ?></td>
+            <td><?php echo $block->escapeHtml($business_email); ?></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- MODAL ALWAYS RENDER -->
+<div id="verification-info-modal" style="display:none;">
+    <form method="post"
+          action="<?php echo $block->getEditActionUrl(
+              $verificationId,
+              $detail_id,
+              \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+          ); ?>">
+
+        <h3><?php echo __('Edit Business Information'); ?></h3>
+
+        <label><?php echo __('Business Name'); ?></label>
+        <input type="text" name="business-name"
+               value="<?php echo $block->escapeHtml($business_name); ?>" />
+
+        <label><?php echo __('Website'); ?></label>
+        <input type="text" name="business-website"
+               value="<?php echo $block->escapeHtml($business_website); ?>" />
+
+        <label><?php echo __('Phone'); ?></label>
+        <input type="text" name="business-phone"
+               value="<?php echo $block->escapeHtml($business_phone); ?>" />
+
+        <label><?php echo __('Email'); ?></label>
+        <input type="text" name="business-email"
+               value="<?php echo $block->escapeHtml($business_email); ?>" />
+
+        <br><br>
+        <button type="submit" class="btn btn-primary">
+            <?php echo __('Save'); ?>
+        </button>
+    </form>
+</div>

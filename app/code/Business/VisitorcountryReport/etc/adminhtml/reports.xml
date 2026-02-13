@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Reports:etc/reports.xsd">
+    <group name="visitor_test_group" label="Testing Group">
+        <report name="visitor_test_report" label="AA TEST REPORT" type="Magento\Reports\Model\ResourceModel\Report\Product\Viewed\Collection" />
+    </group>
+</config>

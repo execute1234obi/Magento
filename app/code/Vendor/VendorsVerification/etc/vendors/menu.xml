@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="Vnecoms_Vendors::vendorverification" icon="icon-verifications" title="Verification" module="Vendor_VendorsVerification" sortOrder="100" resource="Vnecoms_Vendors::vendorverification" dependsOnModule="Vnecoms_Vendors" />
+    	<add id="Vnecoms_Vendors::vendorverification_manage" icon="sub-menu-arrow" title="Request Verification" sortOrder="10" module="Vendor_VendorsVerification" action="vendorverification/verification/index" parent="Vnecoms_Vendors::vendorverification" dependsOnModule="Vendor_VendorsVerification" resource="Vnecoms_Vendors::vendorverification_manage"/>
+    </menu>
+</config>
+

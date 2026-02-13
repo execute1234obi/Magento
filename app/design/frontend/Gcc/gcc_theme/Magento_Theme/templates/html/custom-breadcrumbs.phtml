@@ -1,0 +1,8 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$breadcrumbsBlock = $block->getLayout()->createBlock(\Magento\Theme\Block\Html\Breadcrumbs::class);
+if ($breadcrumbsBlock) {
+    $breadcrumbsBlock->setTemplate('Magento_Theme::html/breadcrumbs.phtml');
+    echo $breadcrumbsBlock->toHtml();
+}
+?>

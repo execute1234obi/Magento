@@ -1,0 +1,30 @@
+/* Combined style for login page centering */
+.customer-account-login {
+    display: flex;
+    justify-content: center;
+    align-items: center; /* This will vertically center the login container */
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: #f7faff;
+    color: #103e7e;
+    padding: 40px 20px;
+}
+
+/* Style for the login container itself */
+.customer-account-login .login-container {
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgb(16 62 126 / 0.1);
+    max-width: 420px;
+    width: 100%;
+    padding: 30px 32px 32px 32px;
+}
+
+/* Style for registration page centering */
+body.customer-account-create {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}

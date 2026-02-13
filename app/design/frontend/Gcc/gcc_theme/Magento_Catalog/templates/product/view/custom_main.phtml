@@ -1,0 +1,128 @@
+<?php
+/**
+ * Custom Product Detail Page Template
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ */
+$product = $block->getProduct();
+$imageHelper = $block->getImage($product, 'product_base_image');
+?>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="max-w-7xl mx-auto px-6 py-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+    <!-- Left: Images + Vendor Box -->
+    <div>
+        <!-- Vendor Box -->
+        <div class="vendor-box bg-white p-4 rounded shadow flex items-center gap-4 mb-4">
+            <div class="vendor-logo">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" alt="Adidas" class="w-12 h-12">
+            </div>
+            <div class="vendor-info flex-1">
+                <h3 class="font-bold">Adidas ✔</h3>
+                <div class="vendor-meta text-sm text-gray-500">⭐ 4/5 • Saudi Arabia</div>
+            </div>
+            <button class="contact-btn bg-blue-600 text-white py-1 px-3 rounded text-sm">Contact Vendor</button>
+        </div>
+
+        <!-- Main Image -->
+        <img id="main-product-image" src="<?= $imageHelper->getImageUrl(); ?>" alt="<?= $block->escapeHtmlAttr($product->getName()); ?>" class="w-full rounded-lg shadow object-cover">
+
+        <!-- Thumbnails -->
+        <div class="mt-4 flex space-x-3 overflow-x-auto pb-2">
+            <?php $i = 0; ?>
+            <?php foreach ($product->getMediaGalleryImages() as $image): $i++; ?>
+                <img src="<?= $image->getUrl(); ?>" 
+                     class="w-20 h-20 object-cover border rounded-lg shadow-sm cursor-pointer thumbnail-image <?= ($i==1)?'active':''; ?>" 
+                     data-image-src="<?= $image->getUrl(); ?>" 
+                     alt="<?= $block->escapeHtmlAttr($image->getLabel()); ?>">
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Right: Product Info -->
+    <div>
+        <h1 class="text-2xl font-bold"><?= $block->escapeHtml($product->getName()); ?></h1>
+
+        <div class="mt-2 text-gray-600">
+            <?= $block->getProduct()->getShortDescription(); ?>
+        </div>
+
+        <!-- Configurable Options -->
+        <div class="mt-4">
+            <?= $block->getChildHtml('product.info.options.configurable'); ?>
+        </div>
+
+        <!-- Price -->
+        <div class="mt-2">
+            <?= $block->getChildHtml('product.info.price'); ?>
+        </div>
+
+        <!-- Add to Quote Form -->
+        <form action="#" method="post" id="product_addtocart_form" class="mt-4">
+            <input type="hidden" name="product" value="<?= $block->escapeHtmlAttr($product->getId()) ?>">
+            <?= $block->getBlockHtml('formkey') ?>
+
+            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded text-sm font-semibold hover:bg-blue-700">
+                <?= $block->escapeHtml(__('Add To Quote')) ?>
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Tabs Section -->
+<div class="max-w-7xl mx-auto px-6 mt-8">
+    <div class="border-b flex space-x-6 text-sm">
+        <button class="py-2 tab-button active" data-tab="description-tab">Product Description</button>
+        <button class="py-2 tab-button" data-tab="specification-tab">Specification</button>
+        <button class="py-2 tab-button" data-tab="shipping-tab">Packing & Shipping</button>
+        <button class="py-2 tab-button" data-tab="reviews-tab">Reviews</button>
+    </div>
+
+    <div class="mt-4 text-sm text-gray-700 leading-relaxed">
+        <div id="description-tab" class="tab-pane">
+            <h3 class="font-bold mb-2">Detailed Product Description</h3>
+            <p><?= $block->getProduct()->getDescription(); ?></p>
+        </div>
+        <div id="specification-tab" class="tab-pane hidden">
+            <p>Specifications content here...</p>
+        </div>
+        <div id="shipping-tab" class="tab-pane hidden">
+            <p>Packing & shipping info here...</p>
+        </div>
+        <div id="reviews-tab" class="tab-pane hidden">
+            <?= $block->getChildHtml('reviews.tab'); ?>
+        </div>
+    </div>
+</div>
+
+<!-- JS for Tabs and Thumbnails -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabPanes.forEach(pane => pane.classList.add('hidden'));
+
+            button.classList.add('active');
+            const target = document.getElementById(button.dataset.tab);
+            if(target) target.classList.remove('hidden');
+        });
+    });
+
+    // Image gallery
+    const mainImage = document.getElementById('main-product-image');
+    const thumbnails = document.querySelectorAll('.thumbnail-image');
+    thumbnails.forEach(thumbnail => {
+        thumbnail.addEventListener('click', () => {
+            mainImage.src = thumbnail.dataset.imageSrc;
+            thumbnails.forEach(t => t.classList.remove('active'));
+            thumbnail.classList.add('active');
+        });
+    });
+});
+</script>

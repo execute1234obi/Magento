@@ -1,0 +1,96 @@
+<?php
+/** @var \Vendor\SearchEnhancer\Block\SearchData $dataBlock */
+$dataBlock = $block->getChildBlock('custom.search.data');
+
+// Use data
+$countries = $dataBlock->getCountryOptions();
+//$sectors = $dataBlock->getVendorSectors();
+//$types = $dataBlock->getBusinessTypes();
+?>
+
+<!-- Search Bar -->
+<section class="bg-gray-100 py-4 px-6">
+  <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <input type="text" class="w-full md:w-2/3 p-2 border rounded" placeholder="Find your product or brand in the GCC">
+    <button class="bg-blue-700 text-white px-4 py-2 rounded">Search</button>
+  </div>
+</section>
+
+<!-- Breadcrumb -->
+<div class="container mx-auto px-4 py-3 text-sm text-gray-600">
+  Dashboard / Search Results for: <span class="text-black font-semibold">Fashion</span>
+</div>
+
+<!-- Main Section -->
+<main class="container mx-auto px-4 flex flex-col md:flex-row gap-6 py-4">
+
+  <!-- Filter Sidebar -->
+  <aside class="w-full md:w-1/4 space-y-4">
+    <div>
+      <label class="block font-semibold mb-1">Country</label>
+      <select class="w-full p-2 border rounded" name="country">
+        <option value="">All</option>
+        <?php foreach ($countries as $country): ?>
+          <option value="<?= $country['value'] ?>"><?= $country['label'] ?></option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Vendor Sector</label>
+      <select class="w-full p-2 border rounded">
+        <option>All</option>
+      </select>
+    </div>
+
+    <div>
+      <label class="block font-semibold mb-1">Business Type</label>
+      <select class="w-full p-2 border rounded">
+        <option>All</option>
+      </select>
+    </div>
+  </aside>
+
+  <!-- Results Section -->
+  <section class="w-full md:w-3/4 space-y-6">
+    <!-- Tabs -->
+    <div class="flex border-b mb-4">
+      <button class="px-4 py-2 font-semibold text-blue-700 border-b-2 border-blue-700">Vendor</button>
+      <button class="px-4 py-2 text-gray-600">Product</button>
+    </div>
+
+    <!-- Vendor Cards -->
+    <div class="space-y-4">
+      <!-- Example Card -->
+      <div class="border rounded p-4 shadow-sm flex flex-col md:flex-row justify-between">
+        <div>
+          <h3 class="font-bold text-lg">Lusajo</h3>
+          <p class="text-sm text-gray-600">Manufacturers & Wholesalers, offering top Fashionwear in Abu Dhabi.</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span class="text-green-600 text-sm">Online</span>
+          <button class="text-blue-600 text-sm">Visit Store</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center pt-4">
+      <span class="text-sm text-gray-600">Result per page: 5</span>
+      <div class="flex space-x-2">
+        <button class="px-2 border rounded">1</button>
+        <button class="px-2 border rounded text-gray-400">2</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Newsletter CTA -->
+<section class="bg-blue-50 py-10 text-center mt-10">
+  <h2 class="text-xl font-bold mb-2">Get the Latest GCC Trade Updates</h2>
+  <p class="text-gray-600 mb-4">Subscribe to get the latest trade news delivered to your inbox.</p>
+  <div class="flex justify-center">
+    <input type="email" placeholder="Enter your email" class="p-2 border rounded-l w-64">
+    <button class="bg-blue-700 text-white px-4 py-2 rounded-r">Subscribe</button>
+  </div>
+</section>

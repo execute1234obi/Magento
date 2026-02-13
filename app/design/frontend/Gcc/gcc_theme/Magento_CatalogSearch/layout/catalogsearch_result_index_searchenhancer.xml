@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+      layout="1column">
+
+    <body>
+          <!-- Remove default title -->
+        <referenceBlock name="page.main.title" remove="true" />
+
+        <!-- Remove default breadcrumbs -->
+        <referenceBlock name="breadcrumbs" remove="true" />
+
+        <!-- Override default block -->
+        <referenceBlock name="search.result">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Magento_CatalogSearch::result/result.phtml</argument>
+            </action>
+                <block class="Vendor\SearchEnhancer\Block\SearchData" name="custom.search.data" template="" />
+
+        </referenceBlock>
+        <referenceContainer name="content">
+    <block class="Vendor\SearchEnhancer\Block\ProductSearch"
+           name="product_search_results"
+           template="Vendor_SearchEnhancer::product-results.phtml"/>
+</referenceContainer>
+
+    </body>
+</page>

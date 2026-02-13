@@ -1,0 +1,248 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View */
+
+use Vendor\VendorsVerification\Model\Source\InfoGroup;
+
+$vendorVerification = $block->getVendorVerification();
+$verificationId = $vendorVerification ? (int)$vendorVerification->getId() : 0;
+
+/** ============================
+ * CERTIFICATE & DOCUMENT DATA
+ * ============================ */
+$certVerificationData = null;
+$certDetailId = 0;
+$arrCertDocsData = [];
+
+if ($verificationId) {
+    $certVerificationData = $block->getVerificationSectionData(
+        $verificationId,
+        InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+    );
+
+    if ($certVerificationData && $certVerificationData->getId()) {
+        $certDetailId = (int)$certVerificationData->getDetailId();
+        $arrCertDocsData = $block->convertVerificationData(
+            $certVerificationData->getData('vendor_data')
+        );
+    }
+}
+
+$folderName = 'vendor-verification-documents/';
+$mediaUrl   = $block->getMediaUrl();
+?>
+
+<!-- ================= CERTIFICATE & DOCUMENTS ================= -->
+<div class="verification-documents-section">
+
+    <!-- HEADER -->
+    <div class="verification-card-header">
+        <h3><?= __('Certificates and Documents') ?></h3>
+
+        <?php
+        $commentsCount = $block->getCommentsCounts(
+            $verificationId,
+            $certDetailId,
+            InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+        );
+        ?>
+
+        <div class="header-actions">
+            <button type="button"
+                class="btn btn-link verification-showcomment"
+                data-verificationid="<?= $verificationId ?>"
+                data-verifidtlid="<?= $certDetailId ?>"
+                data-verifigroupid="<?= InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS ?>">
+                <i class="fa fa-comment"></i>
+                <?= __('%1 Comments', $commentsCount) ?>
+            </button>
+
+            <?php if ($certVerificationData &&
+                $certVerificationData->getStatus() ==
+                \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
+                <button type="button"
+                    class="btn btn-sm btn-outline verification-edit"
+                    data-modal-id="verification-cert-modal">
+                    <i class="fa fa-pencil"></i> <?= __('Edit') ?>
+                </button>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="verification-tbl">
+        <table class="table table-striped">
+            <tbody>
+
+            <!-- STATUS -->
+            <tr>
+                <td><?= __('Status') ?></td>
+                <td>
+                    <span class="status-badge">
+                        <?= $certVerificationData && $certVerificationData->getId()
+                            ? $block->getStatusLabel($certVerificationData->getStatus())
+                            : __('Pending'); ?>
+                    </span>
+                </td>
+            </tr>
+
+            <!-- COMMERCIAL CERTIFICATE -->
+            <tr>
+                <td><?= __('Commercial Registration Certificate') ?></td>
+                <td>
+                    <?php if (!empty($arrCertDocsData['certificate'])): ?>
+                        <a target="_blank"
+                           class="doc-link"
+                           href="<?= $mediaUrl . $folderName . $arrCertDocsData['certificate']; ?>">
+                            <i class="fa fa-file-text-o"></i>
+                            <?= basename($arrCertDocsData['certificate']); ?>
+                        </a>
+                    <?php else: ?>
+                        <span class="doc-empty"><?= __('Not Uploaded') ?></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+
+            <!-- OTHER DOCUMENTS -->
+            <tr>
+                <td><?= __('Other Documents') ?></td>
+                <td>
+                    <?php if (!empty($arrCertDocsData['documents'])): ?>
+                        <?php
+                        $docs = is_array($arrCertDocsData['documents'])
+                            ? $arrCertDocsData['documents']
+                            : explode(',', $arrCertDocsData['documents']);
+                        ?>
+                        <ul class="doc-list">
+                            <?php foreach ($docs as $doc): ?>
+                                <?php if (trim($doc)): ?>
+                                    <li>
+                                        <a target="_blank"
+                                           class="doc-link"
+                                           href="<?= $mediaUrl . $folderName . trim($doc); ?>">
+                                            <i class="fa fa-file-text-o"></i>
+                                            <?= basename(trim($doc)); ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <span class="doc-empty"><?= __('Not Uploaded') ?></span>
+                    <?php endif; ?>
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="verification-cert-modal" style="display:none;">
+    <form class="form verification"
+        action="<?= $block->getEditActionUrl(
+            $verificationId,
+            $certDetailId,
+            InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+        ); ?>"
+        method="post"
+        enctype="multipart/form-data">
+
+        <?= $block->getBlockHtml('formkey') ?>
+
+        <fieldset class="fieldset">
+            <legend class="legend"><span><?= __('Documents') ?></span></legend>
+
+            <!-- CERTIFICATE -->
+            <div class="form-group">
+                <label><?= __('Commercial Registration Certificate') ?></label>
+                <div class="upload-wrapper" data-bind="scope: 'vendor_certificate'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+
+            <!-- ADDITIONAL DOCUMENTS -->
+            <div class="form-group">
+                <label><?= __('Additional Documents') ?></label>
+                <div class="upload-wrapper" data-bind="scope: 'vendor_documents'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="page-main-actions">
+            <button type="submit" class="btn btn-primary"><?= __('Update') ?></button>
+        </div>
+    </form>
+</div>
+<?php
+$certificateFiles = [];
+$documentFiles = [];
+
+if (!empty($arrCertDocsData['certificate'])) {
+    $certificateFiles[] = [
+        'name' => basename($arrCertDocsData['certificate']),
+        'url'  => $mediaUrl . $folderName . $arrCertDocsData['certificate'],
+        'size' => 0
+    ];
+}
+
+if (!empty($arrCertDocsData['documents'])) {
+    $docs = is_array($arrCertDocsData['documents'])
+        ? $arrCertDocsData['documents']
+        : explode(',', $arrCertDocsData['documents']);
+
+    foreach ($docs as $doc) {
+        if (trim($doc)) {
+            $documentFiles[] = [
+                'name' => basename(trim($doc)),
+                'url'  => $mediaUrl . $folderName . trim($doc),
+                'size' => 0
+            ];
+        }
+    }
+}
+?>
+
+<!-- ================= FILE UPLOADER INIT ================= -->
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+
+                "vendor_certificate": {
+                    "component": "Magento_Ui/js/form/element/file-uploader",
+                    "template": "ui/form/element/uploader/uploader",
+                    "dataScope": "certificate",
+                    "formElement": "fileUploader",
+                    "isMultipleFiles": false,
+                    "savedFiles": <?= json_encode($certificateFiles) ?>,
+                    "uploaderConfig": {
+                        "url": "<?= $block->getUrl(
+                            'vendorverification/vendors_uploader/ajax',
+                            ['fldname' => 'certificate']
+                        ) ?>"
+                    }
+                },
+
+                "vendor_documents": {
+                    "component": "Magento_Ui/js/form/element/file-uploader",
+                    "template": "ui/form/element/uploader/uploader",
+                    "dataScope": "documents",
+                    "formElement": "fileUploader",
+                    "isMultipleFiles": true,
+                    "savedFiles": <?= json_encode($documentFiles) ?>,
+                    "uploaderConfig": {
+                        "url": "<?= $block->getUrl(
+                            'vendorverification/vendors_uploader/ajax',
+                            ['fldname' => 'documents']
+                        ) ?>"
+                    }
+                }
+
+            }
+        }
+    }
+}
+</script>

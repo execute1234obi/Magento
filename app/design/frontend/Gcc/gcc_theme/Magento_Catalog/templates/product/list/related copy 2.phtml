@@ -1,0 +1,124 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
+$items = $block->getItems();
+
+// Sirf count check karo
+//echo "Related products count: " . count($items);
+
+// Har product ka sirf ID aur Name print karo
+// foreach ($items as $_item) {
+//     echo "<br>ID: " . $_item->getId() . " | Name: " . $_item->getName();
+// }
+?>
+<?php $items = $block->getItems(); ?>
+<?php if (count($items)): ?>
+<div class="block related">
+    <div class="block-title">
+        <strong><?php echo __('Similar Products'); ?></strong>
+    </div>
+    <div class="block-content">
+        <div class="products-grid">
+            <?php foreach ($items as $_item): ?>
+                <?php
+                $productImage = $block->getImage($_item, 'category_page_list')->getImageUrl();
+                $brand = $_item->getAttributeText('manufacturer'); // or brand attribute
+                $country = $_item->getData('country'); // if you have a custom 'country' attribute
+                $price = $block->getProductPrice($_item);
+                ?>
+                <div class="similar-product-item">
+    <div class="product-card">
+        <a href="<?php echo $_item->getProductUrl(); ?>" class="product-image">
+            <img src="<?php echo $productImage; ?>" 
+                 alt="<?php echo $block->escapeHtml($_item->getName()); ?>" />
+        </a>
+        <div class="product-info">
+            <h3 class="product-name"><?php echo $block->escapeHtml($_item->getName()); ?></h3>
+            <div class="product-price"><?php echo $price; ?></div>
+            
+            <?php if($brand): ?>
+                <div class="product-brand"><?php echo $block->escapeHtml($brand); ?></div>
+            <?php endif; ?>
+            
+            <?php if($country): ?>
+                <div class="product-country"><?php echo $block->escapeHtml($country); ?></div>
+            <?php endif; ?>
+        </div>
+        <div class="product-actions">
+            <button class="btn-add-quote"><?php echo __('Add to Quote'); ?></button>
+        </div>
+    </div>
+</div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
+<?php endif; ?>
+
+<style>
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 items per row */
+    gap: 15px; /* space between items */
+    justify-items: center; /* center items horizontally */
+    align-items: start; /* align items at the top */
+    margin-top: 15px;
+}
+
+/* ... your existing CSS for .products-grid and other classes ... */
+.similar-product-item { /* Renamed from product-item */
+    border: 1px solid #e0e0e0;
+    padding: 10px;
+    text-align: center;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    /* height: 100%; */
+}
+
+.similar-product-item img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+.product-details h3 {
+    font-size: 14px;
+    margin: 5px 0;
+    min-height: 36px; /* keep height consistent */
+}
+
+.product-details .product-price,
+.product-details .product-brand,
+.product-details .product-country {
+    font-size: 12px;
+    margin: 2px 0;
+}
+
+.btn-add-quote {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+@media (max-width: 1200px) {
+    .products-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 480px) {
+    .products-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+</style>

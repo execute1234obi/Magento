@@ -1,0 +1,231 @@
+<?php
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
+$filters = $block->getFilterData() ?: [];
+$selected = $block->getSelectedFilters() ?: [];
+
+$filters['countries'] = $filters['countries'] ?? [];
+$filters['verified'] = $filters['verified'] ?? [];
+$filters['business_types'] = $filters['business_types'] ?? [];
+
+$selected['country'] = $selected['country'] ?? '';
+$selected['verified'] = $selected['verified'] ?? '';
+$selected['business_type'] = $selected['business_type'] ?? '';
+
+// Remove empty values (fix blank dropdown option issue)
+$filters['countries'] = array_filter($filters['countries']);
+$filters['verified'] = array_filter($filters['verified']);
+$filters['business_types'] = array_filter($filters['business_types']);
+?>
+<style>
+   /* Layout */
+    .layout { display: flex; max-width: 1200px; margin: 20px auto; }
+    .sidebar {
+      width: 250px; background: #fff; padding: 20px;
+      border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      position: sticky; top: 20px; height: fit-content;
+    }
+  /* Filter */
+    .filter-title1 { font-weight: bold; margin-bottom: 15px; color: #2d62f0; display: block; }
+    .filter-group { margin-bottom: 15px; }
+    .filter-group select {
+      width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd; font-size: 10px;font-size: 14px;       /* ✅ Fix font-size */
+    line-height: 1.5;       /* ✅ Improve vertical spacing */
+    min-height: 40px;       /* ✅ Prevent cropping */
+    box-sizing: border-box;
+    white-space: nowrap;    /* ✅ Prevent text breaking */
+    }
+     .page-main {
+    padding-top: 0 !important;
+  }
+  .page-title-wrapper {
+   display:none;}
+
+/* .filter-title {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #2d62f0;
+    margin-bottom: 15px;
+    visibility: visible;
+    opacity: 1;
+} */
+  </style>
+   <!-- Your vendor filters -->
+<div class="layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="filter-title1"><?= __('Filter') ?></div>
+    <div class="filter-group">
+      <label for="country"><?= __('Country') ?></label>
+      <select id="country">
+         <option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['countries'] as $country): ?>
+        <option value="<?= $block->escapeHtmlAttr($country) ?>" <?= ($selected['country'] == $country) ? 'selected' : '' ?>>
+          <?= $block->escapeHtml($country) ?>
+        </option>
+      <?php endforeach; ?>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="verified-seller"><?= __('Verified Seller') ?></label>
+      <select id="verified-seller"><option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['verified'] as $key => $label): ?>
+        <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['verified'] == $key) ? 'selected' : '' ?>>
+          <?= $block->escapeHtml($label) ?>
+        </option>
+      <?php endforeach; ?></select>
+    </div>
+    <div class="filter-group">
+      <label for="business-type"><?= __('Business Type') ?></label>
+      
+      <select id="business-type"><option value=""><?= __('Please Select') ?>
+       <?php foreach ($filters['business_types'] as $key => $label): ?>
+        <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['business_type'] == $key) ? 'selected' : '' ?>>
+          <?= $block->escapeHtml($label) ?>
+        </option>
+      <?php endforeach; ?></select>
+    </div>
+  </div>
+<style>
+  #vendor-sidebar.force-show {
+    display: block;
+}
+
+  </style>
+<!-- JavaScript -->
+<script type="text/javascript">
+// require(['jquery', 'domReady!'], function($) {
+
+//     function reloadPage() {
+//         var query = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
+//         var country = $('#country').val();
+//         var verified = $('#verified-seller').val();
+//         var business = $('#business-type').val();
+
+//         var url = window.location.origin + window.location.pathname + '?q=' + encodeURIComponent(query) +
+//                   '&svendor_country_id=' + encodeURIComponent(country) +
+//                   '&svendor_is_verified=' + encodeURIComponent(verified) +
+//                   '&svendor_business_type=' + encodeURIComponent(business);
+
+//         window.location.href = url;
+//     }
+
+//     function updateVendorTab(count) {
+//         var vendorTab = $('li[role="tab"]:contains("Vendor") a');
+//         if (vendorTab.length) {
+//             vendorTab.text('Vendor (' + count + ')');
+//         }
+//     }
+
+//     function refreshVendorTab() {
+//         var count = <?= (int)$block->getSearchCollection()->getSize() ?>;
+//         updateVendorTab(count);
+//     }
+
+//     $('#country, #verified-seller, #business-type').on('change', function() {
+//         reloadPage();
+//     });
+
+//     refreshVendorTab();
+
+//     // Sidebar toggle logic
+//     function toggleSidebar(tabId) {
+//         console.log("Toggling sidebar for:", tabId);
+//         if (tabId === 'product') {
+//             $('#default-sidebar').show();
+//             $('#vendor-sidebar').hide();
+//         } else if (tabId === 'search.result.list.vendors') {
+//             $('#default-sidebar').hide();
+//             $('#vendor-sidebar').show();
+//         } else {
+//             $('#default-sidebar').hide();
+//             $('#vendor-sidebar').hide();
+//         }
+//     }
+
+//     // Handle click on tabs
+//     $('.mst-search-tabs .mst-tab').on('click', function() {
+//         var tabId = $(this).data('tab');
+//         toggleSidebar(tabId);
+//     });
+
+//     // Detect active tab on load
+//     var activeTabId = $('.mst-search-tabs .mst-tab.active').data('tab') || 'product';
+//     toggleSidebar(activeTabId);
+// });
+require(['jquery', 'domReady!'], function($){
+    function reloadPage(){
+        var query = '<?= $block->getRequest()->getParam('q', '') ?>';
+        var country = $('#country').val();
+        var verified = $('#verified-seller').val();
+        var business = $('#business-type').val();
+        var url = window.location.origin + window.location.pathname + '?q=' + encodeURIComponent(query) +
+                  '&svendor_country_id=' + country +
+                  '&svendor_is_verified=' + verified +
+                  '&svendor_business_type=' + business;
+        window.location.href = url;
+    }
+
+    $('#country, #verified-seller, #business-type').change(reloadPage);
+});
+require(['jquery', 'domReady!'], function($) {
+
+    /**
+     * Updates the Vendor tab text with the current count
+     * @param {Number} count - Number of vendors matching the current filter
+     */
+    function updateVendorTab(count) {
+        var vendorTab = $('li[role="tab"]:contains("Vendor") a');
+        vendorTab.text('Vendor (' + count + ')');
+    }
+
+    /**
+     * Fetches the vendor count dynamically and updates the tab
+     * Replace the logic inside this function with your actual data source/API
+     */
+    function refreshVendorTab() {
+        // Example: fetching count from your collection or API
+        var count = <?= $block->getSearchCollection()->getSize() ?>;
+        updateVendorTab(count);
+    }
+
+    // Run on filter change
+    $('#country, #verified-seller, #business-type').on('change', function() {
+        refreshVendorTab();
+    });
+
+    // Initial load
+    refreshVendorTab();
+
+});
+jQuery(document).ready(function($) {
+    function toggleSidebarByActiveTab() {
+         var activeTab = $('.mst-search__result-tabs li[aria-selected="true"] a');
+        var activeLabel = activeTab.length ? activeTab.text().trim() : '';
+
+
+       // console.log("Active Tab:", activeLabel); // debug
+        //alert("Active tab".activeLabel);
+        if (activeLabel.includes('Vendor')) {
+          //alert("Hi-if");
+            $('#default-sidebar').hide();
+             $('#vendor-sidebar').addClass('force-show');
+        } else {
+          //alert("else");
+            $('#default-sidebar').show();
+             $('#vendor-sidebar').removeClass('force-show').hide();
+        }
+    }
+
+    // On tab click → wait for class update then run
+    $('.mst-search-tabs .mst-tab').on('click', function() {
+        setTimeout(toggleSidebarByActiveTab, 50); // small delay
+    });
+
+    // On page load
+    toggleSidebarByActiveTab();
+});
+
+
+</script>

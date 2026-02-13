@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Vendor_VendorsVerification::js/lock-tabs.js"/>
+    </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="vendor.verification.tabs"
+                   template="Vendor_VendorsVerification::init-tabs.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

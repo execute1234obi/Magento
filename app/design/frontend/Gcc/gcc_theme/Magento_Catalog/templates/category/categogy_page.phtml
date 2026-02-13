@@ -1,0 +1,559 @@
+<style>
+/* ---- MAKE PAGE FULL WIDTH ONLY ON THIS TEMPLATE ---- */
+.page-layout-1column .columns,
+.page-layout-1column .columns .main,
+.page-layout-1column .column.main {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+/* If your page uses 2columns-right or default */
+.columns,
+.columns .main,
+.column.main {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+}
+/* Hero Section with Circuit Board Background */
+        .hero-banner {
+            position: relative;
+            background-image: url({{media url='wysiwyg/cat-hero.jpg'}});
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            min-height: 500px;
+            overflow: hidden;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0px !important;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            max-width: 900px;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0 0 15px;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+
+        /* Category Carousel */
+        .category-carousel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card {
+            background: #FAE99B;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .category-card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1A3764;
+            margin-bottom: 5px;
+            text-align:start;
+        }
+
+        .category-card p {
+            font-size: 1.2rem;
+            color: #1A3764;
+            text-align:start;
+        }
+
+        /* Carousel Navigation */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #2563EB;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: background 0.3s ease;
+        }
+
+        .carousel-nav:hover {
+            background: #1E49C4;
+        }
+
+        .carousel-nav.prev {
+            left: 40px;
+        }
+
+        .carousel-nav.next {
+            right: 40px;
+        }
+
+        /* Product Cards */
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            background: #f3f4f6;
+        }
+
+        .product-favorite {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .product-favorite:hover {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 16px;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #111827;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 12px;
+        }
+
+        .product-vendor {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+
+        .product-vendor-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        .product-vendor-verified {
+            width: 16px;
+            height: 16px;
+            color: #10b981;
+        }
+
+        .product-location {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+
+        .add-to-quote-btn {
+            width: 100%;
+            padding: 10px 16px;
+            background: white;
+            border: 2px solid #2563EB;
+            color: #2563EB;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-quote-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+
+        .section-subtitle {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        .section-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .section-nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #E5E7EB;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .section-nav-btn:hover {
+            background: #2563EB;
+            color: white;
+        }
+
+        /* Decorative Background Elements */
+        .bg-decoration {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .bg-decoration-1 {
+            width: 300px;
+            height: 300px;
+            background: #DBEAFE;
+            top: 10%;
+            left: -5%;
+        }
+
+        .bg-decoration-2 {
+            width: 250px;
+            height: 250px;
+            background: #FEF3C7;
+            bottom: 20%;
+            right: -3%;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .carousel-nav {
+                display: none;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        .page-main{
+              max-width: 100% !important;
+              padding:0px !important;
+        }
+
+    #trendingContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background: #f3f4f6;
+}
+
+
+/* --- New/Modified Styles for Product Carousel (Trending) --- */
+
+/* Remove the previous grid-based styles for the container */
+#trendingContainer {
+    /* Set to overflow-x: auto so the scrollbar appears, or hidden if you only want button control */
+    overflow-x: auto;
+    /* Optional: Hide scrollbar in webkit browsers */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    padding: 10px 0; /* Add some padding for visual space */
+}
+#trendingContainer::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+
+
+.product-carousel-track {
+    /* Use flexbox to line up all product cards horizontally */
+    display: flex;
+    /* Prevent wrapping to force horizontal layout */
+    flex-wrap: nowrap;
+    /* Space between items */
+    gap: 20px;
+    /* Ensure the track is wide enough to contain all items */
+    width: fit-content;
+    padding: 0 10px; /* Padding for the edges */
+}
+
+/* Style for individual product cards in the carousel */
+.product-card {
+    /* Set a fixed or minimum width for each card */
+    min-width: 280px; /* Adjust this size to fit 3-4 on screen */
+    width: 280px; /* Fixed width */
+    flex-shrink: 0; /* Important: prevents the cards from shrinking */
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+}
+
+/* You can remove or comment out this block from your existing CSS
+#trendingContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    overflow-x: hidden;
+    padding: 10px;
+}
+*/
+    </style>
+<body class="bg-white relative">
+    <!-- Decorative Background Elements -->
+  <?php
+echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Catalog::category/image.phtml")
+    ->toHtml();
+?>
+
+<div class="category-carousel relative bg-[#FFFFFFBF] p-8 rounded-2xl" style="padding-right:100px; padding-left:100px;">
+    <!-- FROM VENDORS NEAR BY -->
+     <section class="mb-16">
+           <?php
+echo $this->getLayout()
+    ->createBlock('Magento\Cms\Block\Block')
+    ->setBlockId('vendor_nearby_custom')
+    ->toHtml();
+?>
+
+        </section>
+   <?php
+/** Get Current Category **/
+$registry = \Magento\Framework\App\ObjectManager::getInstance()
+    ->get(\Magento\Framework\Registry::class);
+$category = $registry->registry('current_category');
+
+if (!$category) {
+    echo "<p style='color:red;'>Category not found.</p>";
+    return;
+}
+
+/** Get Product List Block (NO LAYER, NO ERROR) **/
+$productListBlock = $block->getLayout()->createBlock(\Magento\Catalog\Block\Product\ListProduct::class);
+
+/** Load category products */
+$productCollection = $category->getProductCollection()
+    ->addAttributeToSelect('*')
+    ->addAttributeToFilter('status', 1)
+    ->addAttributeToFilter('visibility', 4);
+?>
+
+<section class="mb-16">
+
+    <div class="text-center pt-8 pb-8" style="margin-top:30px;">
+        <h2 class="text-6xl font-semibold text-[#1A3764]">Trending Products</h2>
+        <p class="text-gray-600 mt-5 text-3xl">See the Trending Products in this Category</p>
+    </div>
+
+    <div class="section-header">
+        <p class="text-[#141A25] mt-5 font-bold text-2xl">Trending Products</p>
+        <div class="section-nav">
+            <button class="section-nav-btn" onclick="scrollProducts('trending','left')">‹</button>
+            <button class="section-nav-btn" onclick="scrollProducts('trending','right')">›</button>
+        </div>
+    </div>
+
+    <div class="overflow-x-hidden" id="trendingContainer">
+        
+        <?php if ($productCollection->getSize() == 0): ?>
+            <p style="padding:20px; font-size:18px; color:red;">
+                No products found in this category.
+            </p>
+
+        <?php else: ?>
+            <div class="product-carousel-track">
+                <?php foreach ($productCollection as $product): ?>
+
+                    <div class="product-card">
+
+                        <?php
+                        $imageUrl = $productListBlock
+                            ->getImage($product, 'category_page_grid')
+                            ->getImageUrl();
+                        ?>
+                        <a href="<?= $product->getProductUrl(); ?>">
+                        <img src="<?= $imageUrl ?>" class="product-image" alt="<?= $product->getName(); ?>">
+                        </a>
+                        <div class="product-info">
+
+                            <h3 class="product-title"><?= $product->getName(); ?></h3>
+
+                            <p class="product-price"><?= $product->getFinalPrice(); ?> SAR</p>
+
+                            <div class="product-vendor">
+                                <span class="product-vendor-name">Brand</span>
+                            </div>
+
+                            <p class="product-location">Saudi Arabia</p>
+
+                            <button class="add-to-quote-btn">Add to Quote</button>
+                        </div>
+                    </div>
+
+                <?php endforeach; ?>
+            </div> <?php endif; ?>
+
+    </div>
+
+</section>
+
+
+    </div>
+    <?php
+echo $this->getLayout()
+    ->createBlock(\Magento\Framework\View\Element\Template::class)
+    ->setTemplate("Magento_Theme::html/newsletter.phtml")
+    ->toHtml();
+?>
+
+
+    <script>
+        // Category Carousel Scroll Function
+        function scrollCategories(direction) {
+            const container = document.getElementById('categoriesContainer');
+            const scrollAmount = 350;
+            
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        // Product Carousel Scroll Function
+        function scrollProducts(section, direction) {
+            const container = document.getElementById(section === 'vendors' ? 'vendorsContainer' : 'trendingContainer');
+            const scrollAmount = 350;
+            
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        // Favorite Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const favoriteButtons = document.querySelectorAll('.product-favorite');
+            
+            favoriteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const svg = this.querySelector('svg');
+                    const isFilled = svg.getAttribute('fill') === 'currentColor';
+                    
+                    if (isFilled) {
+                        svg.setAttribute('fill', 'none');
+                        svg.setAttribute('stroke', 'currentColor');
+                    } else {
+                        svg.setAttribute('fill', 'currentColor');
+                        svg.removeAttribute('stroke');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+

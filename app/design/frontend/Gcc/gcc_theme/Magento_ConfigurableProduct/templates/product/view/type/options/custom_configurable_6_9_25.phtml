@@ -1,0 +1,130 @@
+<?php
+/** @var \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable $block */
+$product = $block->getProduct();
+$attributes = $block->getAllowAttributes();
+?>
+
+<form class="product-info-main"
+      data-role="product-form"
+      action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
+      method="post"
+      enctype="multipart/form-data">
+    
+    <?= $block->getBlockHtml('formkey') // ✅ Recommended for CSRF protection ?>
+    
+    <!-- ✅ Required JSON config for Magento configurable JS to work -->
+    <script type="text/x-magento-init">
+    {
+        "[data-role=product-form]": {
+            "Magento_ConfigurableProduct/js/configurable": <?= $block->getJsonConfig() ?>
+        }
+    }
+    </script>
+    <style>
+        .variation { margin: 15px 0; }
+.variation label { font-weight: bold; margin-bottom: 6px; display: block; }
+.variation .options { display: flex; flex-wrap: wrap; gap: 10px; }
+.variation .options button { padding: 8px 14px; border: 1px solid #ccc; border-radius: 6px; background: #fff; cursor: pointer; }
+.variation .options button.active { border: 2px solid #2563eb; color: #2563eb; font-weight: bold; }
+
+.add-quote-btn {
+ display: block; width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none;
+ border-radius: 8px; margin-top: 20px; cursor: pointer; font-size: 16px;
+}
+    </style>
+    <?php if (!empty($attributes)): ?>
+    <?php foreach ($attributes as $attribute): 
+        $attributeLabel = $block->escapeHtml($attribute->getProductAttribute()->getStoreLabel());
+        $attributeCode = $attribute->getProductAttribute()->getAttributeCode();
+        $attributeOptions = $attribute->getOptions();
+    ?>
+    <div class="variation">
+        <label><?= $attributeLabel ?></label>
+
+        <!-- Custom Button UI -->
+        <div class="attribute-options" data-attribute-code="<?= $attributeCode ?>">
+            <?php foreach ($attributeOptions as $option): 
+                $optionLabel = $block->escapeHtml($option['label'] ?? '');
+                $optionValue = $block->escapeHtmlAttr($option['value_index'] ?? '');
+            ?>
+            <button type="button"
+                    class="option-btn"
+                    data-attribute-code="<?= $attributeCode ?>"
+                    data-option-id="<?= $optionValue ?>">
+                <?= $optionLabel ?>
+            </button>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- 👇 REQUIRED hidden <select> for Magento's JS -->
+        <select name="super_attribute[<?= $attributeCode ?>]" 
+                class="super-attribute-select" 
+                data-selector="super_attribute[<?= $attributeCode ?>]" 
+                style="display:none;">
+            <option value=""><?= __('Choose an option...') ?></option>
+            <?php foreach ($attributeOptions as $option): ?>
+                <option value="<?= $block->escapeHtmlAttr($option['value_index']) ?>">
+                    <?= $block->escapeHtml($option['label']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No configurable attributes found.</p>
+<?php endif; ?>
+
+
+    <button type="submit"
+            class="mt-6 w-full bg-blue-600 text-white py-2 rounded text-sm font-semibold hover:bg-blue-700 add-to-quote-btn"
+            data-product-id="<?= (int) $product->getId() ?>">
+        Add To Quote
+    </button>
+</form>
+<script type="text/x-magento-init">
+{
+    "#product_addtocart_form": {
+        "configurable": {
+            "spConfig": <?= $block->getJsonConfig() ?>,
+            "gallerySwitchStrategy": "replace",
+            "optionPrices": <?= $block->getJsonConfig() ?>,
+            "chooseText": "Choose an Option..."
+        }
+    }
+}
+</script>
+<script>
+    
+require([
+    'jquery',
+    'Magento_ConfigurableProduct/js/configurable',
+    'domReady!'
+], function($) {
+    console.log('Magento JS components ready');
+
+    $('.option-btn').on('click', function () {
+        var $btn = $(this);
+        var attributeCode = $btn.data('attribute-code');
+        var optionId = $btn.data('option-id');
+        console.log('Clicked:', attributeCode, optionId);
+
+        var $select = $('.super-attribute-select[name="super_attribute[' + attributeCode + ']"]');
+        $select.val(optionId).trigger('change');
+    });
+});
+
+$('.option-btn').on('click', function () {
+  var $btn = $(this);
+  var attributeCode = $btn.data('attribute-code');
+  var optionId = $btn.data('option-id');
+  console.log('Button clicked for', attributeCode, 'option', optionId);
+
+  var $select = $('.super-attribute-select[name="super_attribute[' + attributeCode + ']"]');
+  console.log('Before select value:', $select.val());
+  
+  $select.val(optionId).trigger('change');
+  
+  console.log('Triggered change event');
+});
+
+</script>

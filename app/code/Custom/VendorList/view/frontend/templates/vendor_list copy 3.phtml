@@ -1,0 +1,157 @@
+<?php $vendors = $block->getVendorDetails(); // Get vendor details ?>
+
+    <?php //print_r($vendors); exit();?>
+   
+<style>
+    
+.vendor-card {
+    width: 280px; /* Reduced the card width */
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: box-shadow 0.2s;
+    padding: 20px 20px 20px 20px;
+    margin: 10px;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+}
+.vendor-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+.vendor-logo {
+    width: 80px; /* Reduced the logo size */
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 18px;
+    border-radius: 50%;
+}
+.vendor-title {
+    font-size: 1.6rem; /* Increased title font size */
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+.vendor-category {
+    font-size: 1.2rem; /* Increased category font size */
+    color: #666;
+    margin-bottom: 18px;
+}
+.vendor-description {
+    font-size: 1.1rem; /* Increased description font size */
+    color: #444;
+    margin-bottom: 18px;
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+}
+.vendor-country {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem; /* Increased country font size */
+    color: #1a7f37;
+    font-weight: 500;
+    gap: 6px;
+}
+.vendor-country img {
+    width: 20px;
+    height: 14px;
+    object-fit: cover;
+}
+
+/* Responsive Design */
+@media (min-width: 320px) and (max-width: 768px) {
+    .vendor-card {
+        width: 85%; /* Make cards even smaller on mobile */
+        margin: 10px auto; /* Center align cards */
+    }
+
+    .vendor-title {
+        font-size: 1.4rem; /* Larger title on mobile */
+    }
+
+    .vendor-description {
+        font-size: 1rem; /* Larger description on mobile */
+    }
+
+    .vendor-category {
+        font-size: 1.1rem; /* Larger category on mobile */
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) {
+    .vendor-card {
+        width: 45%; /* Two cards per row on medium screens */
+        margin: 10px;
+    }
+
+    .vendor-title {
+        font-size: 1.5rem; /* Larger title on medium screens */
+    }
+
+    .vendor-description {
+        font-size: 1.1rem; /* Larger description on medium screens */
+    }
+
+    .vendor-category {
+        font-size: 1.2rem; /* Larger category on medium screens */
+    }
+}
+
+@media (min-width: 1200px) {
+    .vendor-card {
+        width: 25%; /* Four cards per row on large screens */
+        margin: 10px;
+    }
+
+    .vendor-title {
+        font-size: 1.8rem; /* Larger title on large screens */
+    }
+
+    .vendor-description {
+        font-size: 1.2rem; /* Larger description on large screens */
+    }
+
+    .vendor-category {
+        font-size: 1.3rem; /* Larger category on large screens */
+    }
+}
+</style>
+
+<div class="vendors-container" style="display: flex; flex-wrap: wrap; justify-content: space-evenly;">
+    <?php foreach ($vendors as $vendor): ?>
+       <div class="vendor-card">
+          <?php
+            $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+            $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)."pub/media/"; // Get base media URL
+            $logoPath = !empty($vendor['vendor_logo']) ? trim($vendor['vendor_logo'], '/') : 'default/logo.png';
+            $fullLogoUrl = $mediaUrl . $logoPath; // Full logo URL
+          ?>
+          <?php
+            $vendorurl = $this->getBaseUrl() . 'shop/' . $vendor['custom_vendor_id'];
+          ?>
+          <a href="<?= $block->escapeUrl($vendorurl) ?>">  
+              <img src="<?= $fullLogoUrl ?>" alt="<?= $block->escapeHtml($vendor['company_name'] ?? '-') ?>" class="vendor-logo">
+          </a>
+          <h3 class="vendor-title"><?= $block->escapeHtml($vendor['company_name'] ?? '-') ?></h3>
+          <p class="vendor-category"><?= $block->escapeHtml($vendor['business_category'] ?? '-') ?></p>
+          <div class="vendor-description">
+              <?= $block->escapeHtml($vendor['business_description'] ?? 'No description available') ?>
+          </div>
+          <div class="vendor-country">
+          
+              <!-- <img src="/pub/media/flags/saudi-arabia.png" alt="Saudi Arabia"> -->
+                <img src="<?= $mediaUrl."wysiwyg/SA_flag.PNG" ?>" alt="Saudi Arabia">
+              Saudi Arabia
+          </div>
+       </div>  
+    <?php endforeach; ?>
+</div>

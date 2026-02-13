@@ -1,0 +1,28 @@
+<?php 
+$vendorVerification = $block->getVendorVerificationHistory();
+$count = $vendorVerification->getSize();
+?>
+<?php if ($count){?>
+<br />	<br />	
+<hr />
+<h2><?php echo __('Verification History') ?></h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Price</th>
+      <th scope="col">Start Date</th>
+      <th scope="col">Expeire Date</th>
+    </tr>
+  </thead>
+  <tbody>
+	 <?php foreach ($vendorVerification as $history)?> 
+    <tr>
+      <th scope="row"><?php echo $history['inc_id'];?></th>
+      <td><?php echo $block->getFormatedPrice($history['amount']);?></th>
+      <td><?php echo $block->getFormatedDate($history['from_date']);?></th>
+      <td><?php echo $block->getFormatedDate($history['to_date']);?></th>
+    </tr>
+  </tbody>
+</table>
+<?php }?>

@@ -1,0 +1,50 @@
+ <?php
+        $productCollectionFactory = $objectManager->get(\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory::class);
+        $collection = $productCollectionFactory->create()
+            ->addAttributeToSelect(['name', 'price', 'small_image'])
+            ->addAttributeToFilter('vendor_id', $vendorId)
+            ->addAttributeToFilter('status', 1)
+            ->addAttributeToFilter('visibility', ['neq' => \Magento\Catalog\Model\Product\Visibility::VISIBILITY_NOT_VISIBLE])
+            ->setPageSize(10);
+
+        $_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+       
+        ?>
+        
+      <h2>PRODUCTS</h2>
+        <div class="u-grid">
+        <?php if ($collection->getSize()): ?>
+           
+            <?php foreach ($collection as $_product): ?>
+                <article class="u-card">
+                  <?php  $imageUrl = $_imageHelper->init($_product, 'category_page_grid')->getUrl();?>
+                    <a href="<?= $_product->getProductUrl() ?>" class="u-imgbox">
+                        <img src="<?= $imageUrl ?>" 
+                            alt="<?= $block->escapeHtml($_product->getName()); ?>" style="max-width:100%;height:auto;display:block;object-fit:cover;">
+                            <span class="u-fav" title="<?= $block->escapeHtmlAttr(__('Save')); ?>">
+                            <!-- heart outline -->
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
+                            </svg>
+                            </span>        
+                    </a>
+       <h3 class="u-title"><?= $block->escapeHtml($_product->getName()); ?></h3>
+        <div class="u-price"><?= $block->getProductPrice($_product); ?> <span>/ 1 pcs</span>
+        </div>
+         <hr class="u-divider" />
+          <div class="u-brand">
+          <span><?= showData($name) ?: 'N/A'; ?></span>
+        </div>
+
+
+           <div class="u-country">
+          <span class="u-flag" aria-hidden="true"></span>
+          <span> <?= $country ?: 'N/A'; ?></span>
+        </div>
+        <button class="u-cta" type="button"><?= $block->escapeHtml(__('Add to Quote')); ?></button>
+      </article>
+    <?php endforeach; ?>
+    </div>
+     <?php else: ?>
+            <p>No products found for this vendor.</p>
+        <?php endif; ?>

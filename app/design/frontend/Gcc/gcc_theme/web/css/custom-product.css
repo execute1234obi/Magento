@@ -1,0 +1,41 @@
+  /* Vendor Box */
+    .vendor-box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    .vendor-logo img {
+      width: 40px;
+      height: 40px;
+    }
+    .vendor-info {
+      flex: 1;
+    }
+    .vendor-info h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .vendor-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .contact-btn {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .vendor-meta {
+      font-size: 13px;
+      color: #555;
+    }

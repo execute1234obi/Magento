@@ -1,0 +1,279 @@
+<?php
+// $vendor = $block->getVendor();
+// if (!$vendor || !$vendor->getId()) {
+//     return;
+// }
+$vendor = $block->getVendor();
+
+if (!$vendor || !$vendor->getId()) {
+    echo '<div class="message error">Vendor session expired. Please login again.</div>';
+    return;
+}
+
+//$vendorCustomer = $vendor->getCustomer();
+$vendorCustomer = $vendor->getCustomer();
+
+$uploaedCertificate = json_encode([]);
+$uploaedLogoOthers = json_encode([]);
+
+$registrationCertificate = $vendor->getData('certificate') ?: '';
+if ($registrationCertificate) {
+    $attachements = $block->populateAttachements([$registrationCertificate]);
+    $uploaedCertificate = json_encode($attachements);
+}
+
+$registrationLogo = $vendor->getLogo() ?: '';
+if ($registrationLogo) {
+    $otherFiles = $block->populateAttachements([$registrationLogo]);
+    $uploaedLogoOthers = json_encode($otherFiles);
+}
+?>
+
+<form class="form verification"
+      action="<?php echo $block->getPostActionUrl(); ?>"
+      name="verification-form"
+      id="verification-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      enctype="multipart/form-data">
+    <div class="row" >
+        <div class="col-sm-12">	
+            <h3 class="page-heading-book"><?php echo __('Verification Information') ?></h3>
+            <div class="custom-tab">
+                <p class="requare-text"><?php echo __('Request Vendor Verification') ?></p>		
+                <div class="vertical-tab nav-tabs-custom" role="tabpanel">
+                    <!-- Nav tabs -->
+                    <ul id="myTabs"  class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#section1" aria-controls="home" role="tab" data-toggle="tab">
+                                <span class="icon-no">1</span>
+                                <?php echo __('Business Information') ?>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#section2" aria-controls="profile" role="tab" data-toggle="tab">
+                                <span class="icon-no">2</span>
+                                <?php echo __('Documents') ?>
+                            </a>
+                        </li>                    
+                    </ul>
+                    <!-- Tab panes -->
+                    <div class="tab-content tabs">					
+                        <div role="tabpanel" class="tab-pane fade in active" id="section1">
+                        <!-- <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+                            <button type="button"  class="btn btn-primary btn-flat pull-right verification-nextpage"><?php echo __('Next') ?> <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+                            </button>		
+                        </div>	 -->
+                        <!--Start Page 1-->					
+                        <fieldset class="fieldset">
+                            <!-- Business information  -->
+                            <?php echo $block->getChildHtml('verification.businessinfo'); ?>                                              
+                    </fieldset>                  
+                    <div>&nbsp;</div>
+                    <fieldset class="fieldset">
+                        <!--  Business Addrsss -->
+                        <?php echo $block->getChildHtml('verification.addressinfo'); ?>					   
+                    </fieldset>
+                    <div>&nbsp;</div>
+                    <fieldset class="fieldset">
+                    <!--  Business Contact  -->
+                    <?php echo $block->getChildHtml('verification.contactinfo'); ?>                                     
+                    </fieldset>    
+                    <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+                            <button type="button"  class="btn btn-primary verification-nextpage"><?php echo __('Next Step') ?>
+                            </button>		
+                        </div>	
+                        <!--End Page 1-->						
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade in" id="section2">						
+                            <!--Start Page 2-->						
+                            <fieldset class="fieldset">
+                            
+                            <!--  Business Documents  -->
+                            <?php //echo $block->getChildHtml('form.verification.documents'); ?>                                     
+                            <legend class="legend"><span><?php echo __('Documents') ?></span></legend>                      
+                                <div class="row">								  
+                                    <div class="fields col-md-12">
+                                        <div class="field name required">
+                                            <label  for="commercialregistcert'"><span><?php echo __('Commercial Registration Certificate') ?></span></label>
+                                            <div class="control">
+                                                    <div class="upload-wrapper" data-bind="scope: 'vendorregistcert'">
+                                                        <!-- ko template: getTemplate() --><!-- /ko -->
+                                                    </div>                
+                                                </div>
+                                                <div class="field-note noncatrfq-uploadnotice">
+                                                <span>[Allowd File Types:"png", "jpg", "jpeg", "gif", "pdf", "doc", "docx","PDF"]</span>
+                                                </div>
+                                        </div>                     
+                                    </div>                                  
+                                </div>
+                                <div class="row"><div>&nbsp;</div></div>
+                                <div class="row">
+                                    <div class="fields col-md-12">
+                                        <div class="field name required">
+                                            <label  for="verification-additional-docs"><span><?php echo __('Additional Documents ') ?></span></label>
+                                            <div class="control">
+                                                    <div class="upload-wrapper" data-bind="scope: 'vendoradditionaldocs'">
+                                                        <!-- ko template: getTemplate() --><!-- /ko -->
+                                                    </div>                
+                                                </div>
+                                                <div class="field-note noncatrfq-uploadnotice" >
+                                                <span>[Allowd File Types:"png", "jpg", "jpeg", "gif", "pdf", "doc", "docx","PDF"]</span>
+                                                </div>
+                                        </div>                     
+                                    </div>   
+                                </div>                                 
+                            <!--End Business Documents-->
+                            </fieldset>    
+                            <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+                            <!--<button type="submit" class="btn btn-primary"><?php echo __('Submit') ?></button>-->
+                            <button type="button" id="mysubmit-button" class="btn btn-primary verification-nextpage"><?php echo __('Submit') ?></button>		
+                            <button type="button"  class="btn btn-primary pull-right verification-prevpage"><?php echo __('Back') ?></button>
+                            </div>	
+                            <!--End Page 2-->	
+                        </div>
+                    </div>	
+                </div>
+            </div>
+         </div>
+    </div>            
+</form><input type="hidden" id="is-certselected" name="is-certselected" value="" />
+<!-- <div class="page-main-actions" style="margin-right:0;margin-left:0;">	 
+	<input type="hidden" id="is-certselected" name="is-certselected" value="" /> 		                
+ <span class="pull-right" id="verifi-pageno">1/2</span>							
+		                   
+</div>	 -->
+
+<script>
+require(['jquery','Magento_Ui/js/modal/alert','mage/translate','mage/mage'], 
+   function ($, uiAlert, $t,$mage) {	
+	
+	var dataForm = jQuery('#verification-form');
+	var ignore = null;	
+    dataForm.mage('validation', {});
+    $('#mysubmit-button').click( function() { //can be replaced with any event
+		var validationFailed = false;		
+		if($("#is-certselected").val() == ''){// check Commercial Registration Certificate upload
+			validationFailed = true;
+			var data = {
+                content: $t('Please upload Commercial Registration Certificate.')
+            };
+            data.modalClass = '_image-box';	 
+			uiAlert(data);			
+		}
+		if(validationFailed){
+			return;
+		}
+       validationFailed = dataForm.validation('isValid'); //validates form and returns boolean
+       if(validationFailed){		
+		   dataForm.submit();	   	
+	   } 
+    });	
+	   		 
+    $(document).ready(function(){
+	
+	 $(document).on('shown.bs.tab', 'a[data-toggle="tab"]', function (e) {		
+		var targetUrl = '' +  e.target;		
+		var arrTarget = targetUrl.split("#");
+        switch (arrTarget[1]){
+         case "section1":{
+              $("#verifi-pageno").html("1/2");
+              break;
+         }
+         case "section2":{
+              $("#verifi-pageno").html("2/2");
+              break;
+           }
+        }
+     })
+	     
+    $(".verification-nextpage").click(function(){		 
+	    var next = jQuery('.nav-tabs > .active').next('li');
+         if(next.length){
+           next.find('a').trigger('click');           
+         }else{
+           $('#myTabs a:first').tab('show');
+         }		 
+	  })
+	  
+	$(".verification-prevpage").click(function(){		 
+		 var prev = jQuery('.nav-tabs > .active').prev('li')
+         if(prev.length){
+            prev.find('a').trigger('click');            
+         }else{
+            jQuery('#myTabs a:last').tab('show');
+         }
+	   }) 
+		
+     //Business Country drop-down change
+     $("#business-country").change(function(){
+		 var countryCode =  $(this).val();
+		 $("#business-countrycode").val(countryCode);
+		 $("#contact-countrycode").val(countryCode);
+	  });
+  
+  });
+
+});
+
+</script>
+
+
+<script type="text/x-magento-init">
+{
+".upload-wrapper": {
+   "Magento_Ui/js/core/app": {
+       "components": {
+           "vendorregistcert": {
+			   "dataScope": "vendorregistcert",
+                "source": "vendorregistcert",                
+                "component": "Vendor_VendorsVerification/js/custom-file-uploader",
+                "template": "ui/form/element/uploader/uploader",                
+                "previewTmpl":"Vendor_VendorsVerification/uploader/preview",
+                "allowedExtensions": ["png", "jpg", "jpeg", "gif","pdf","doc","docx","pdf"],                
+                "isMultipleFiles":false,                 
+                "required":true,
+                "inputName":"vendorregistcert",
+                "maxFileAllow":1,
+                "myUploadId":"vendorcert",
+               "uploaderConfig": {
+                    "url": "<?php echo $block->getUrl('vendorverification/uploader/ajax/',['fldname'=>'vendorregistcert']); ?>"
+               },
+               "savedFiles":<?php echo $uploaedCertificate;?>               
+               
+            }
+        }
+   }
+ }
+}
+</script>
+<script type="text/x-magento-init">
+{
+".upload-wrapper": {
+   "Magento_Ui/js/core/app": {
+       "components": {
+           "vendoradditionaldocs": {
+               "dataScope": "vendoradditionaldocs",
+               "source"   : "vendoradditionaldocs",
+               "component": "Vendor_VendorsVerification/js/custom-file-uploader",
+               "template": "ui/form/element/uploader/uploader",                
+                "previewTmpl":"Vendor_VendorsVerification/uploader/preview-others",
+                "allowedExtensions": ["png", "jpg", "jpeg", "gif","pdf","doc","docx","pdf"],                
+                "isMultipleFiles":true, 
+                "inputName":"vendoradditionaldocs",
+                "maxFileAllow":2,
+                "myUploadId":"vendodocs",
+               "uploaderConfig": {
+                    "url": "<?php echo $block->getUrl('vendorverification/uploader/ajax/',['fldname'=>'vendoradditionaldocs']); ?>"
+               },
+               "savedFiles":<?php echo $uploaedLogoOthers;?>                              
+               
+            }
+        }
+   }
+ }
+}
+</script>
+
+
+

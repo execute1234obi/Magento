@@ -1,0 +1,151 @@
+/* --- FORCE RTL DIRECTION --- */
+
+html[lang="ar"], body[lang="ar"] {
+    direction: rtl !important;
+    unicode-bidi: embed;
+}
+
+/* --- SIDEBAR & MAIN COLUMN RTL FIX --- */
+html[lang="ar"] .page-layout-2columns-left .sidebar-main {
+    float: right !important;
+}
+
+html[lang="ar"] .page-layout-2columns-left .column.main {
+    float: left !important;
+}
+
+/* --- FLEX REVERSE WHEN NEEDED --- */
+html[lang="ar"] .columns {
+    flex-direction: row-reverse !important;
+}
+
+/* --- CONTAINER ALIGNMENT --- */
+html[lang="ar"] .page-wrapper,
+html[lang="ar"] .page-main,
+html[lang="ar"] .columns {
+    text-align: right;
+}
+
+/* --- RESET BLOCKS --- */
+html[lang="ar"] .column.main > *,
+html[lang="ar"] .sidebar-main > * {
+    direction: rtl !important;
+}
+
+/* --- INPUT + LABEL RTL --- */
+html[lang="ar"] input,
+html[lang="ar"] select,
+html[lang="ar"] textarea,
+html[lang="ar"] label {
+    text-align: right;
+    direction: rtl;
+}
+/* Sidebar width fix */
+html[lang="ar"] .sidebar-main {
+    width: 260px !important;
+    max-width: 260px !important;
+    box-sizing: border-box;
+}
+
+/* Prevent filter dropdown stretching */
+html[lang="ar"] .sidebar-main select {
+    width: 100% !important;
+}
+
+/* Prevent filter from shifting down */
+html[lang="ar"] .columns {
+    align-items: flex-start !important;
+}
+
+/* Ensure sidebar stays on top */
+html[lang="ar"] .sidebar-main {
+    margin-top: 0 !important;
+}
+
+/* Fix sidebar pushing content */
+html[lang="ar"] .column.main {
+    width: calc(100% - 260px) !important;
+}
+
+/* --- SIDEBAR & MAIN COLUMN RTL FIX (EXCEPT CMS PAGES) --- */
+html[lang="ar"] body:not(.cms-page-view) .page-layout-2columns-left .sidebar-main {
+    float: right !important;
+}
+
+html[lang="ar"] body:not(.cms-page-view) .page-layout-2columns-left .column.main {
+    float: left !important;
+}
+
+/* --- FLEX REVERSE (EXCEPT CMS PAGES) --- */
+html[lang="ar"] body:not(.cms-page-view) .columns {
+    flex-direction: row-reverse !important;
+    align-items: flex-start !important;
+}
+
+/* --- CONTAINER ALIGNMENT (EXCEPT CMS PAGES) --- */
+html[lang="ar"] body:not(.cms-page-view) .page-wrapper,
+html[lang="ar"] body:not(.cms-page-view) .page-main,
+html[lang="ar"] body:not(.cms-page-view) .columns {
+    text-align: right;
+}
+
+/* --- RESET BLOCKS (EXCEPT CMS PAGES) --- */
+html[lang="ar"] body:not(.cms-page-view) .column.main > *,
+html[lang="ar"] body:not(.cms-page-view) .sidebar-main > * {
+    direction: rtl !important;
+}
+
+/* --- INPUT + LABEL RTL (SAFE TO APPLY EVERYWHERE) --- */
+html[lang="ar"] input,
+html[lang="ar"] select,
+html[lang="ar"] textarea,
+html[lang="ar"] label {
+    text-align: right;
+    direction: rtl;
+}
+
+/* Sidebar width fix (EXCEPT CMS PAGES) */
+html[lang="ar"] body:not(.cms-page-view) .sidebar-main {
+    width: 240px !important;
+    max-width: 260px !important;
+    margin-top: 0 !important;
+    box-sizing: border-box;
+}
+
+/* Prevent filter dropdown stretching */
+html[lang="ar"] body:not(.cms-page-view) .sidebar-main select {
+    width: 100% !important;
+}
+
+/* Fix sidebar pushing content (EXCEPT CMS PAGES) */
+html[lang="ar"] body.catalog-product-view.page-layout-1column .column.main {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+/* vendor detail page*/
+html[lang="ar"] body.vendor-home-page.page-layout-1column-full-width.vendor-page.page-products.page-with-filter.vendorspage-index-index.page-layout-1column .column.main {
+    width: 100% !important;
+}
+
+
+/* html[lang="ar"] body:not(.cms-page-view) .column.main {
+    width: calc(100% ) !important;
+} */
+
+@media (min-width: 768px) {
+    html[lang="ar"] .page-layout-2columns-left .columns {
+        flex-direction: row-reverse !important;
+        align-items: flex-start !important;
+    }
+}
+
+@media print {
+    .page-products .columns {
+        padding-top: 0;
+        position: relative;
+        z-index: 1;
+    }
+}
+
+
+

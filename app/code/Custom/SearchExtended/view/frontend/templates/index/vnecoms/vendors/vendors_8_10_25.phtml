@@ -1,0 +1,111 @@
+<?php
+//vendor listing
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
+// Get the vendor collection using the method from our block
+$vendors = $block->getSearchCollection();
+?>
+<style>
+   /* Tabs */
+   body { background: #f9f9fb; color: #333; font-size: 14px; }
+    .tabs { display: flex; border-bottom: 2px solid #eee; margin-bottom: 20px; }
+    .tab {
+      padding: 10px 20px; cursor: pointer; font-weight: 500;
+      border-bottom: 2px solid transparent; transition: all 0.2s ease;
+    }
+    .tab.active { color: #2d62f0; border-bottom: 2px solid #2d62f0; }
+      /* Vendor Cards */
+      #vendors {
+       margin: 0; /* Changed from auto to 0 to align left */
+       padding-top: 15px; /* Added padding to the top */
+
+    }
+    .vendor-card {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #fff; border-radius: 10px; padding: 20px;
+      margin-bottom: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .vendor-left { display: flex; align-items: flex-start; gap: 15px; }
+    .vendor-logo { width: 50px; height: 50px; border-radius: 50%; overflow: hidden; }
+    .vendor-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .vendor-info h3 {
+      font-size: 18px; margin-bottom: 3px; display: flex; align-items: center; gap: 6px;
+    }
+    .vendor-info h3 img { width: 16px; height: 16px; }
+    .vendor-meta { font-size: 13px; color: gray; margin-bottom: 8px; }
+    .vendor-desc { font-size: 13px; line-height: 1.5; color: #555; max-width: 550px; }
+
+    .vendor-right { display: flex; align-items: center; gap: 20px; }
+    .vendor-country { font-size: 13px; display: flex; align-items: center; gap: 6px; }
+    .vendor-country img { width: 18px; height: 12px; }
+    .vendor-right a {
+      color: #2d62f0; text-decoration: none; font-size: 13px;
+      font-weight: 500; background: #f4f6ff; padding: 6px 12px;
+      border-radius: 6px; display: inline-flex; align-items: center; gap: 4px;
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex; justify-content: center; align-items: center;
+      margin-top: 20px; gap: 10px;
+    }
+    .pagination button {
+      padding: 6px 12px; border: 1px solid #ddd; border-radius: 6px;
+      background: #fff; cursor: pointer; font-size: 13px;
+    }
+    .pagination .active { background: #2d62f0; color: #fff; border-color: #2d62f0; }
+  </style>
+<?php if ($vendors && $vendors->getSize() > 0): ?>
+  <div id="vendors" class="tab-content active">
+    <?php foreach ($vendors as $vendor): ?>
+       <?php
+                // Get country and category from the vendor
+                $country = $vendor->getData('country_id'); // Assuming 'country' is the field name
+                $category = $vendor->getData('business_category');// Assuming 'category' is the field name
+                $website = $vendor->getData('website');
+                ?>
+      <div class="vendor-card">
+        <div class="vendor-left">
+           <?php
+           $vendorurl= $this->getBaseUrl() . 'shop/v' . $vendor->getId() 
+            ?>
+            <a href="<?= $block->escapeUrl($vendorurl) ?>">
+
+          <div class="vendor-logo">
+             <?php
+                    $logo = $vendor->getData('upload_logo');
+                    if ($logo):
+                        $mediaUrl = $block->getUrl('pub/media/') . $logo;
+                    ?>
+                      <img src="<?= $block->escapeUrl($mediaUrl); ?>" alt="<?= $block->escapeHtml($block->getVendorName($vendor)); ?>">
+                    <?php endif; ?>
+            </div>
+          </a>
+          <div class="vendor-info">
+            <h3><?= $block->escapeHtml($block->getVendorName($vendor)); ?></h3>
+            <div class="vendor-meta"><?= $block->escapeHtml($category); ?></div>
+            <div class="vendor-desc">
+              <?= $block->escapeHtml($block->getBusinessDescriptions($vendor)); ?>
+            </div>
+          </div>
+        </div>
+        <div class="vendor-right">
+          <div class="vendor-country"><img src="https://flagcdn.com/w20/cn.png"> <?= $block->escapeHtml($country); ?></div>
+          <a href="<?= $block->escapeHtml($website); ?>">Visit Website ↗</a>
+        </div>
+      </div>
+      <?php endforeach; ?>
+      <div class="pagination">
+          <?= $block->getPager(); ?>
+        <button>Previous</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>Next</button>
+      </div>
+    </div>
+  <?php else: ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__("We can't find vendors matching the selection.")) ?></p>
+    </div>
+<?php endif; ?>
+  

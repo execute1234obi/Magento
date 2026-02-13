@@ -1,0 +1,29 @@
+<h1>Test: Most Viewed Template is Loading</h1>
+<?php $products = $block->getMostViewedProducts(); ?>
+<div class="dashboard-item">
+    <div class="block-title"><strong>Most Viewed Products</strong></div>
+    <div class="block-content">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Views</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php $i = 1; foreach ($products as $product): ?>
+                <tr>
+                    <td><?= $i++; ?></td>
+                    <td><img src="<?= $block->getProductImage($product) ?>" width="50" height="50"></td>
+                    <td><?= $block->escapeHtml($product->getName()) ?></td>
+                    <td><?= $product->getPrice() ?></td>
+                    <td><strong><?= (int)$product->getViews() ?></strong></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>

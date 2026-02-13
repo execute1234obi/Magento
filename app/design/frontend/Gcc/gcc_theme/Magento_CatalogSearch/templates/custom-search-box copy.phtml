@@ -1,0 +1,188 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* ---- Base ---- */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #f6f7fb;
+  color: #111827;
+}
+
+.container {
+  width: 95%;
+  max-width: 1320px;
+  margin: 24px auto;
+}
+
+/* ---- Search Bar ---- */
+.search-wrap {
+  margin-bottom: 18px;
+}
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 56px;
+  border-radius: 14px;
+  background: #f9fbfd;  /* soft light background like the screenshot */
+  /* border: 1px solid #e6eaf0;  */
+  box-shadow: 0 1px 0 rgba(17, 24, 39, 0.02) inset;
+}
+input[type="text"], input[type="password"], input[type="url"], input[type="tel"], input[type="search"], input[type="number"], input[type*="date"], input[type="email"]
+ {
+    background: #ffffff;
+    background-clip: padding-box;
+    border: 1px solid #c2c2c2;
+    border-radius: 7px !important;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    height: 32px;
+    line-height: 1.42857143;
+    padding: 0 9px;
+    vertical-align: baseline;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  width: 20px;
+  height: 20px;
+  stroke: #7f8a9b;
+  stroke-width: 2;
+  fill: none;
+}
+
+.search-input {
+  width: 100% !important;
+  height: 100% !important;
+  padding: 0 64px 0 46px !important;  /* room for icon + shortcut hint */
+  border: 0;
+  background: transparent;
+  font-size: 16px;
+  color: #0f172a;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #9aa3b2;
+}
+
+.shortcut {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #98a1af;
+  font-weight: 600;
+  letter-spacing: .02em;
+  font-size: 14px;
+  user-select: none;
+}
+
+.search-bar:focus-within {
+  border-color: #cfe0ff;  /* ring when focused */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  background: #fbfdff;
+}
+
+.search-bar:hover {
+  border-color: #b0c7e1;  /* subtle border hover effect */
+}
+
+
+  .shortcut{
+    position:absolute;right:18px;top:50%;transform:translateY(-50%);
+    color:#98a1af;font-weight:600;letter-spacing:.02em;
+    font-size:14px;user-select:none
+  }
+  .search-bar:focus-within{
+    border-color:#cfe0ff;                /* ring when focused */
+    box-shadow:0 0 0 3px rgba(59,130,246,.15);
+    background:#fbfdff;
+  }
+
+  </style>
+<div class="container">
+    <!-- Search -->
+    <div class="search-wrap">
+     <form class="flex justify-center"
+      action="<?= $block->getUrl('catalogsearch/result/index') ?>"
+      method="get"
+      id="custom_search_form">
+      <div class="search-bar" role="search">
+        <!-- search icon -->
+        <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <!-- input -->
+        <input id="search" class="search-input" type="text"  name="q"  value="<?= $block->escapeHtml($this->getRequest()->getParam('q')) ?>"
+  placeholder="Search for vendors or products..." aria-label="Search for vendors or products..."  autocomplete="off"/>
+        <!-- shortcut hint -->
+        <span id="shortcutHint" class="shortcut">⌘K</span>
+      </div>
+      </form>
+    </div>
+</div>
+<script>
+  // Show ⌘K on macOS and Ctrl K elsewhere
+  (function(){
+    const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+    document.getElementById('shortcutHint').textContent = isMac ? '⌘K' : 'Ctrl K';
+
+    // Focus the search when pressing the shortcut
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      if ((isMac && e.metaKey && key === 'k') || (!isMac && e.ctrlKey && key === 'k')) {
+        e.preventDefault();
+        document.getElementById('search').focus();
+      }
+    });
+
+    // Optional: update breadcrumb query when submitting with Enter
+    const input = document.getElementById('search');
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('qText').textContent = input.value || 'All';
+      }
+    });
+  })();
+
+  require(['jquery'], function($) {
+  $(document).ready(function() {
+
+    // Function to hide all autocomplete overlays
+    function hideAutocomplete() {
+      $('.mst-search-autocomplete__typeahead-overlay').each(function() {
+        $(this).hide(); // Hide existing overlay
+      });
+    }
+
+    // Hide immediately if already rendered
+    hideAutocomplete();
+
+    // Observe DOM changes so even dynamically created overlays are hidden
+    const observer = new MutationObserver(function() {
+      hideAutocomplete();
+    });
+
+    // Start observing entire body for any new elements added dynamically
+    observer.observe(document.body, { childList: true, subtree: true });
+
+  });
+});
+</script>
+
+
+

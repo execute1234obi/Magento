@@ -1,0 +1,143 @@
+@import '_newsletter.less';
+.page-main {
+    padding-top: 50px; // adjust this based on your header height
+}
+.catalogsearch-result-index .actions-primary {
+    display: none !important;
+}
+.custom-search-bg {
+    background-color: #F5F7FA;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+//Theme setup
+/* Global font */
+//
+// Extra safety overrides
+//
+
+// Keep login popup hidden until triggered by JS
+body.hide-login .block-authentication {
+    display: none;
+}
+
+header.page-header h1,
+header.page-header h2,
+header.page-header h3,
+header.page-header h4,
+header.page-header h5,
+header.page-header h6,
+footer.page-footer h1,
+footer.page-footer h2,
+footer.page-footer h3,
+footer.page-footer h4,
+footer.page-footer h5,
+footer.page-footer h6 {
+    font-weight: normal !important;
+}
+
+// Optional: make headings bold everywhere
+.page-wrapper h1,
+.page-wrapper h2,
+.page-wrapper h3,
+.page-wrapper h4,
+.page-wrapper h5,
+.page-wrapper h6 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+}
+
+//end theme setup
+//product-detial-page
+//gallery css
+/* Thumbnail container */
+.fotorama__nav--thumbs {
+    display: flex !important;
+    gap: 12px !important;
+    overflow-x: auto !important;
+    padding: 6px !important;
+    scroll-snap-type: x mandatory !important;
+}
+
+/* Scrollbar style */
+.fotorama__nav--thumbs::-webkit-scrollbar {
+    height: 8px !important;
+}
+
+.fotorama__nav--thumbs::-webkit-scrollbar-thumb {
+    background: #e5e7eb !important;
+    border-radius: 8px !important;
+}
+
+/* Thumbnail images */
+.fotorama__nav__frame img {
+    width: 72px !important;
+    height: 72px !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    border: 1px solid #e5e7eb !important;
+    background: #f3f4f6 !important;
+    cursor: pointer !important;
+    flex: 0 0 auto !important;
+    scroll-snap-align: start !important;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease !important;
+}
+
+/* Active thumbnail */
+.fotorama__nav__frame img.fotorama__active {
+    border: 2px solid #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .15) !important;
+    transform: translateY(-2px) !important;
+}
+
+//end gallery css
+// ==============================================
+// Custom PDP Button UI for Configurable Options
+// ==============================================
+
+.swatch-attribute {
+  margin: 15px 0;
+}
+
+.swatch-attribute .swatch-attribute-label {
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+  font-size: 15px;
+}
+
+.swatch-attribute .swatch-attribute-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.swatch-attribute .swatch-option {
+  min-width: 40px;
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease-in-out;
+  font-size: 14px;
+}
+
+.swatch-attribute .swatch-option:hover {
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+.swatch-attribute .swatch-option.selected {
+  border: 2px solid #2563eb;
+  color: #2563eb;
+  font-weight: bold;
+}
+
+.swatch-attribute .swatch-option.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+

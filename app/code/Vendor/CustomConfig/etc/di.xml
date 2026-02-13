@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Make sure we are injecting the correct dependencies for VendorLogo -->
+<type name="Magento\Framework\File\Uploader">
+        <arguments>
+            <argument name="allowedPaths" xsi:type="array">
+                <item name="vendor_logo_path" xsi:type="string">ves_vendors/logo</item>
+                </argument>
+        </arguments>
+    </type>
+    <!-- Plugin for Vnecoms Module (unchanged) -->
+    <type name="Vnecoms\VendorsConfig\Helper\Data">
+        <plugin name="vendor_customconfig_sanitize_vnecoms_config_data"
+                type="Vendor\CustomConfig\Plugin\VendorConfigSavePlugin"
+                sortOrder="10"
+                disabled="false"/>
+    </type>
+</config>

@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <referenceContainer name="content">
+
+            <!-- 🔴 RED TEST TEXT -->
+            <block class="Magento\Framework\View\Element\Text" name="test.red">
+                <arguments>
+                    <argument name="text" xsi:type="string">
+                        <![CDATA[
+                        <div style="padding:20px;
+                                    background:#ffe6e6;
+                                    color:red;
+                                    font-size:20px;
+                                    font-weight:bold;">
+                            RED TEST: Vendor Visitor Report Layout Loaded ✅
+                        </div>
+                        ]]>
+                    </argument>
+                </arguments>
+            </block>
+
+            <!-- 🟢 GREEN TEST TEXT -->
+            <block class="Magento\Framework\View\Element\Text" name="test.green">
+                <arguments>
+                    <argument name="text" xsi:type="string">
+                        <![CDATA[
+                        <div style="padding:20px;
+                                    background:#e6ffe6;
+                                    color:green;
+                                    font-size:18px;
+                                    margin-top:10px;">
+                            GREEN TEST: Layout + Controller OK 🎉
+                        </div>
+                        ]]>
+                    </argument>
+                </arguments>
+            </block>
+
+        </referenceContainer>
+    </body>
+</page>

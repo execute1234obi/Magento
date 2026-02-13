@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Remove Add to Cart button from category (product listing) page -->
+        <referenceBlock name="category.product.addtocart" remove="true" />
+   <!-- Remove category description -->
+        <referenceBlock name="category.description" remove="true" />
+
+        <!-- Remove layered navigation (filters) -->
+        <referenceBlock name="catalog.leftnav" remove="true" />
+
+        <!-- Remove ALL toolbar components (searchbar, sort by, pagination, modes) -->
+        <referenceBlock name="product_list_toolbar" remove="true" />
+        <referenceBlock name="product_list_toolbar_pager" remove="true" />
+        <referenceBlock name="product_list_modes" remove="true" />
+        <referenceBlock name="category.product.list.toolbar" remove="true" />
+        <referenceBlock name="toolbar" remove="true" />
+
+       <!-- Remove left column/sidebar -->
+      <referenceBlock name="catalog.leftnav" remove="true"/>
+
+        <!-- Theme custom toolbar wrapper -->
+        <referenceContainer name="product_list_toolbar_container" remove="true" />
+
+
+           <!-- Insert your CMS static block before product listing -->
+<referenceContainer name="category.view.container">
+    <block class="Magento\Cms\Block\Block"
+           name="vendor_nearby_static"
+           after="category.image">
+        <arguments>
+            <argument name="block_id" xsi:type="string">vendor_nearby_custom</argument>
+        </arguments>
+    </block>
+</referenceContainer>
+
+
+
+<referenceBlock name="category.image" after="category.image">
+    <block class="Magento\Framework\View\Element\Template"
+           name="trending_products"
+           template="Magento_Catalog::category/trending_products.phtml"/>
+</referenceBlock>
+        <!-- <referenceContainer name="content">
+            <block class="Magento\Cms\Block\Block" 
+                   name="vendor_nearby_static">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">vendor_nearby_custom</argument>
+                </arguments>
+            </block>
+        </referenceContainer> -->
+        
+    </body>
+</page>

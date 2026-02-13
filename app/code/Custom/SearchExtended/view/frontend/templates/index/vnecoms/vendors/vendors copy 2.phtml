@@ -1,0 +1,58 @@
+<style>
+    body {
+        background-color: #f4f4f4; /* A very light gray color */
+    }
+</style>
+<?php
+//@codingStandardsIgnoreFile
+/** @var \Mirasvit\Search\Block\Index\Base $block */
+$vendors = $block->getSearchCollection();
+// Explicitly load the collection to ensure getSize() is accurate
+
+?>
+
+<?php if ($vendors && $vendors->getSize() > 0): ?>
+    <div class="product-list space-y-6">
+        <?php foreach ($vendors as $vendor): ?>
+            <div class="product-item flex flex-col md:flex-row gap-6 p-4 border rounded shadow-sm bg-white">
+                <div class="w-full md:w-1/4">
+                    <?php
+                    $logo = $vendor->getData('upload_logo');
+                    if ($logo):
+                        $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'pub/media/' . $logo;
+                        ?>
+                        <img
+                            src="<?= $block->escapeUrl($mediaUrl); ?>"
+                            alt="<?= $block->escapeHtml($vendor->getData('c_name')); ?>"
+                            class="w-full h-auto object-contain rounded"
+                        />
+                    <?php endif; ?>
+                </div>
+
+                <div class="w-full md:w-3/4 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">
+                            <a href="<?= $block->getUrl('shop/' . $vendor->getData('vendor_id')); ?>" class="hover:underline">
+                                <?= $vendor->getData('c_name'); ?>
+                            </a>
+                        </h2>
+                        <div class="text-green-700 text-lg font-bold mb-4">
+                            <?= $vendor->getData('business_descriptions'); ?>
+                        </div>
+                    </div>
+
+                    <div>
+                        <a href="<?= $block->getUrl('shop/' . $vendor->getData('vendor_id')) ?>"
+                           class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 hover:text-white focus:text-white active:text-white visited:text-white transition">
+                            View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php else: ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__("We can't find vendors matching the selection.")) ?></p>
+    </div>
+<?php endif; ?>

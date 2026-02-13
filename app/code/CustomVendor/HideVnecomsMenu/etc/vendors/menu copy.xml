@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <remove id="Vnecoms_VendorsCms::index" />
+
+        <remove id="Vnecoms_VendorsSales::sales" />
+        <remove id="Vnecoms_VendorsFeaturedProduct::product" />
+        <remove id="Vnecoms_Vendors::catalog_category" />
+        <remove id="Vnecoms_VendorsReport::report_sales" />
+        <remove id="Vnecoms_VendorsReport::report_products" />
+        <remove id="Vnecoms_Vendors::sales" />
+        <add id="CustomVendor_HideVnecomsMenu::profile_visitors"
+             title="Profile Visitors"
+             module="CustomVendor_HideVnecomsMenu"
+             action="customvendor/report/index"  parent="Vnecoms_VendorsReport::report"
+             sortOrder="100"  resource="CustomVendor_HideVnecomsMenu::profile_visitors_resource" />
+         <add id="CustomVendor_HideVnecomsMenu::reviews_top_level"
+             title="Reviews"
+             module="CustomVendor_HideVnecomsMenu"
+             action="customvendor/review/index"
+             sortOrder="91" resource="CustomVendor_HideVnecomsMenu::reviews_top_level" />
+             <!-- <update id="Vnecoms_Vendors::dashboard"
+            icon="fa fa-home"/> 
+           <update id="Vnecoms_Vendors::dashboard"
+        icon="custom-dashboard-icon"/> -->  
+    
+
+
+</menu>
+</config>

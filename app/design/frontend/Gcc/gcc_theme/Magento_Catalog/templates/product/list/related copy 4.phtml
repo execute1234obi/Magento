@@ -1,0 +1,254 @@
+<?php
+/** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
+$items = $block->getItems();
+?>
+
+<?php if (count($items)): ?>
+<div class="block related">
+  <div class="block-title">
+    <strong><?= __('Similar Products'); ?></strong>
+  </div>
+
+  <div class="block-content">
+    <div class="products-grid rp-grid">
+
+      <?php foreach ($items as $_item): ?>
+        <?php
+          $imgUrl    = $block->getImage($_item, 'category_page_list')->getImageUrl();
+          $brand     = $_item->getAttributeText('manufacturer'); // adjust if your brand attr differs
+          $country   = $_item->getData('country');               // optional custom attr
+          $priceHtml = $block->getProductPrice($_item);          // Magento price HTML
+        ?>
+        <div class="rp-cell">
+          <article class="rp-card">
+            <!-- image -->
+            <a class="rp-thumb"
+               href="<?= $_item->getProductUrl(); ?>"
+               aria-label="<?= $block->escapeHtml($_item->getName()); ?>">
+              <img src="<?= $imgUrl; ?>"
+                   alt="<?= $block->escapeHtml($_item->getName()); ?>">
+              <button class="rp-like" type="button" aria-label="<?= $block->escapeHtml(__('Save')); ?>">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+                </svg>
+              </button>
+            </a>
+
+            <!-- content -->
+            <div class="rp-body">
+              <h3 class="rp-name">
+                <a href="<?= $_item->getProductUrl(); ?>">
+                  <?= $block->escapeHtml($_item->getName()); ?>
+                </a>
+              </h3>
+
+              <div class="rp-price-line">
+                <span class="rp-price"><?= $priceHtml; ?></span>
+                <span class="rp-per">/ 1 pcs</span>
+              </div>
+
+              <hr class="rp-divider">
+
+              <?php if ($brand): ?>
+                <div class="rp-meta">
+                  <span class="rp-brand"><?= $block->escapeHtml($brand); ?></span>
+                  <span class="rp-verified" aria-label="verified">
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                      <path fill="#2A6FE3" d="M12 2l2.4 2 3-.7 1 2.9 2.9 1-1 2.9 2 2.4-2 2.4 1 2.9-2.9 1-1 2.9-3-.7L12 22l-2.4-2-3 .7-1-2.9-2.9-1 1-2.9L2 12l2-2.4-1-2.9 2.9-1 1-2.9 3 .7L12 2zm-1.2 12.7l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/>
+                    </svg>
+                  </span>
+                </div>
+              <?php endif; ?>
+
+              <?php if ($country): ?>
+                <div class="rp-meta">
+                  <span class="rp-flag" aria-hidden="true">🌍</span>
+                  <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
+                </div>
+              <?php endif; ?>
+            </div>
+
+            <!-- footer -->
+            <div class="rp-foot">
+              <button class="rp-btn" type="button"><?= __('Add to Quote'); ?></button>
+            </div>
+          </article>
+        </div>
+      <?php endforeach; ?>
+
+    </div>
+  </div>
+</div>
+<?php endif; ?>
+
+
+<style>
+:root {
+  --rp-blue: #2A6FE3;
+  --rp-blue-200: #CFE0FF;
+  --rp-blue-150: #E6EEFF;
+  --rp-text: #0f172a;
+  --rp-muted: #6b7280;
+  --rp-slab: #F3F6FB;
+  --rp-line: #EDF2F7;
+  --rp-card-radius: 14px;
+}
+
+/* ===== GRID ===== */
+.rp-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+@media (max-width:1280px) {
+  .rp-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width:1024px) {
+  .rp-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width:768px) {
+  .rp-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width:480px) {
+  .rp-grid { grid-template-columns: 1fr; }
+}
+
+.rp-cell { display: flex; }
+
+/* ===== CARD ===== */
+.rp-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  width: 100%;
+  border: 1.5px solid var(--rp-blue-150);
+  border-radius: var(--rp-card-radius);
+  overflow: hidden;
+  transition: box-shadow .2s ease, border-color .2s ease, transform .12s ease;
+}
+.rp-card:hover {
+  border-color: var(--rp-blue-200);
+  box-shadow: 0 8px 22px rgba(16,24,40,.08);
+}
+
+/* image panel */
+.rp-thumb {
+  position: relative;
+  display: block;
+  margin: 12px 12px 0;
+  border-radius: 10px;
+  background: var(--rp-slab);
+  padding: 12px;
+  aspect-ratio: 4/3;
+}
+.rp-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.rp-like {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1px solid #E6EBF3;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  color: #5f6b7a;
+  box-shadow: 0 2px 6px rgba(16,24,40,.06);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.rp-like:hover {
+  background: #f7f9fc;
+  color: #2f3b48;
+  border-color: #DAE3EF;
+}
+
+/* body */
+.rp-body { padding: 12px 14px 0; }
+.rp-name {
+  margin: 0 0 8px;
+  font: 800 16px/1.25 system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+.rp-name a {
+  color: var(--rp-text);
+  text-decoration: none;
+}
+.rp-name a:hover { text-decoration: underline; }
+
+.rp-price-line {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 10px;
+}
+.rp-price {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--rp-text);
+}
+.rp-per {
+  font-size: 13px;
+  color: var(--rp-muted);
+}
+
+.rp-divider {
+  border: 0;
+  border-top: 1px solid var(--rp-line);
+  margin: 0 0 8px 0;
+}
+
+.rp-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 6px 0;
+}
+.rp-brand {
+  font-weight: 800;
+  color: var(--rp-text);
+  font-size: 14px;
+}
+.rp-country {
+  color: #334155;
+  font-size: 14px;
+}
+.rp-flag { font-size: 14px; }
+
+/* footer button */
+.rp-foot {
+  padding: 12px 14px 14px;
+  margin-top: auto;
+}
+.rp-btn {
+  width: 100%;
+  height: 40px;
+  background: #fff;
+  color: var(--rp-blue);
+  border: 1.5px solid var(--rp-blue-200);
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+}
+.rp-btn:hover {
+  background: #EEF5FF;
+  border-color: #BDD3FF;
+}
+
+/* adjust price container */
+.price-container .price {
+  font-size: 2rem !important;
+  font-weight: 700 !important;
+}
+</style>

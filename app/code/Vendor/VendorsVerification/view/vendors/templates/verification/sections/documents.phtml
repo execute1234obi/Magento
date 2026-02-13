@@ -1,0 +1,44 @@
+<?php echo get_class($block); ?>
+<legend class="legend"><span><?php echo __('Documents') ?></span></legend><br />      
+<h1 style="color:red; background:yellow; z-index:9999; position:relative;">
+   TESTING: AGAR YE DIKHE TO FILE SAHI HAI
+</h1>                 
+<div class="fields col-md-10">
+    <div class="field name required">
+        <label for="certificate"><span><?php echo __('Commercial Registration Certificate') ?></span></label>
+        <div class="control">
+            <div class="upload-wrapper" data-bind="scope: 'certificate-uploader'">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>                
+        </div>
+        <label class="label">
+            [Allowed File Types: "png", "jpg", "jpeg", "gif", "pdf", "doc", "docx", "PDF"]
+        </label>
+    </div>                     
+</div>   
+
+<script type="text/x-magento-init">
+{
+    ".upload-wrapper": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "certificate-uploader": {
+                    "dataScope": "certificate",
+                    "source": "certificate",
+                    "component": "Vendor_VendorsVerification/js/custom-file-uploader",
+                    "template": "ui/form/element/uploader/uploader",
+                    "previewTmpl": "Vendor_VendorsVerification/uploader/preview",
+                    "allowedExtensions": ["png", "jpg", "jpeg", "gif", "pdf", "doc", "docx"],
+                    "isMultipleFiles": false,
+                    "maxFileAllow": 1,
+                    "myUploadId": "vendorcert",
+                    "uploaderConfig": {
+                        "url": "<?= $block->getUrl('vendorverification/verification/uploader/ajax'); ?>"
+                    },
+                    "savedFiles": <?= /* @noEscape */ $block->getCertificateFilesJson(); ?>
+                }
+            }
+        }
+    }
+}
+</script>

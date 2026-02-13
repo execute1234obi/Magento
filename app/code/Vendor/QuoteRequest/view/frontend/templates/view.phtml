@@ -1,0 +1,515 @@
+<div class="gcc-quote-page">
+  <div class="gcc-container">
+    <div class="quote-page">
+
+      <!-- Breadcrumb -->
+      <div class="quote-breadcrumb">
+        <a href="<?= $block->getUrl('') ?>"><?= __('Home') ?></a>
+        <span class="sep">/</span>
+        <span><?= __('Quotation Submission Page') ?></span>
+      </div>
+
+      <!-- Page Title -->
+      <h1 class="quote-title"><?= __('Choose your location') ?></h1>
+
+      <!-- Location Card -->
+      <div class="quote-card quote-card--location">
+        <div class="quote-grid-2">
+          <div class="quote-field">
+            <select class="quote-select">
+              <option>Saudi Arabia</option>
+              <option>UAE</option>
+              <option>Qatar</option>
+            </select>
+          </div>
+
+          <div class="quote-field">
+            <select class="quote-select">
+              <option>Jeddah</option>
+              <option>Riyadh</option>
+              <option>Dammam</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quotation List Card -->
+      <div class="quote-card">
+        <div class="quote-card-head">
+          <div class="quote-card-title">
+            <h2><?= __('Quotation List') ?></h2>
+            <span><?= __('(Select the products you wish to inquire about)') ?></span>
+          </div>
+        </div>
+
+        <!-- Select all row -->
+        <label class="quote-select-all">
+          <input type="checkbox" class="quote-checkbox" />
+          <span><?= __('Select All Product') ?></span>
+        </label>
+        <!-- ========================= -->
+        <!-- VENDOR BLOCK: Adidas -->
+        <!-- ========================= -->
+        <?php $quotes = $block->getQuotes(); ?>
+
+<?php if ($quotes->getSize()): ?>
+    <?php foreach ($quotes as $quote): ?>
+
+        <div class="vendor-block">
+            <div class="vendor-head">
+                <strong><?= $quote->getVendorName(); ?></strong>
+            </div>
+
+            <div>
+                <strong><?= __('Quote ID:') ?></strong>
+                <?= $quote->getId(); ?>
+            </div>
+
+            <div>
+                <strong><?= __('Status:') ?></strong>
+                <?= $quote->getStatus(); ?>
+            </div>
+
+        </div>
+
+    <?php endforeach; ?>
+<?php else: ?>
+    <p><?= __('No quotations found.') ?></p>
+<?php endif; ?>
+
+        <!-- Draft Inquiry -->
+        <div class="draft-inquiry">
+          <div class="draft-head">
+            <h3><?= __('Draft inquiry') ?></h3>
+            <span><?= __('(for the selected product vendors)') ?></span>
+          </div>
+
+          <textarea class="quote-textarea" rows="4">Hello! I have a question regarding your shoe collection. Could you provide more details about the available styles?</textarea>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="quote-bottom-bar">
+          <div class="bottom-left">
+            <strong><?= __('Quotation Request:') ?></strong>
+          </div>
+
+          <div class="bottom-right">
+            <span class="product-count">2 <?= __('Products') ?></span>
+            <button class="quote-primary-btn" type="button">
+              <?= __('Confirm Quotation Requests') ?>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+
+
+/* Page wrapper */
+.gcc-quote-page{
+  background: #f6f8fb;
+    padding-top: 103px;
+}
+
+/* ✅ aligned container (same left/right feel as navbar) */
+.gcc-container{
+  width: min(1200px, calc(100% - 48px)); /* 24px + 24px */
+  margin: 0 auto;
+}
+
+/* Base page block (remove old max-width/margins) */
+.quote-page{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #111827;
+}
+
+/* Breadcrumb */
+.quote-breadcrumb{
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 14px;
+}
+.quote-breadcrumb a{ color:#6b7280; text-decoration:none; }
+.quote-breadcrumb a:hover{ text-decoration:underline; }
+.quote-breadcrumb .sep{ margin:0 8px; color:#9ca3af; }
+
+/* Title */
+.quote-title{
+  font-size: 22px;
+  font-weight: 650;
+  margin: 0 0 14px;
+}
+
+/* Cards */
+.quote-card{
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  margin-top: 14px;
+}
+.quote-card--location{ padding: 16px; }
+
+/* Quotation list head */
+.quote-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 14px;
+}
+.quote-card-title{
+  display:flex;
+  align-items:baseline;
+  gap: 10px;
+}
+.quote-card-title h2{
+  margin:0;
+  font-size: 18px;
+  font-weight: 650;
+}
+.quote-card-title span{
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Select inputs */
+.quote-grid-2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.quote-select{
+  width: 100%;
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 0 14px;
+  background: #fff;
+  font-size: 14px;
+  color: #111827;
+}
+.quote-select:focus{
+  outline:none;
+  border-color:#93c5fd;
+  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+}
+
+/* Select all */
+.quote-select-all{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 12px 12px;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  background: #f9fafb;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+.quote-checkbox{
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+  cursor:pointer;
+}
+
+/* Vendor */
+.vendor-block{
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.vendor-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eef2f7;
+  margin-bottom: 14px;
+}
+.vendor-left{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+.vendor-logo{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background:#f9fafb;
+  display:grid;
+  place-items:center;
+  font-size: 14px;
+}
+.vendor-name{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  font-size: 15px;
+}
+.vendor-verified{
+  display:inline-flex;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  align-items:center;
+  justify-content:center;
+  font-size: 12px;
+  background:#e0f2fe;
+  color:#0369a1;
+}
+.vendor-trash{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color:#ef4444;
+}
+.vendor-trash:hover{ background:#fff1f2; }
+
+/* Products row */
+.product-row{
+  display:grid;
+  grid-template-columns: 32px 180px 1fr 160px;
+  gap: 16px;
+  align-items:center;
+  padding: 12px 6px;
+}
+.product-row--compact{
+  grid-template-columns: 32px 160px 1fr 160px;
+}
+.product-check{
+  display:flex;
+  justify-content:center;
+}
+.product-thumb{
+  width: 180px;
+  height: 130px;
+  border-radius: 12px;
+  background:#f3f4f6;
+  border: 1px solid #eef2f7;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+.product-thumb--small{
+  width: 160px;
+  height: 120px;
+}
+.product-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:10px;
+}
+.product-info{ min-width:0; }
+.product-title{
+  font-size: 16px;
+  font-weight: 650;
+  margin: 0 0 8px;
+}
+.product-desc .desc-label{
+  font-size: 12px;
+  color:#6b7280;
+  margin-bottom: 6px;
+}
+.product-desc p{
+  margin:0;
+  font-size: 13px;
+  line-height: 1.45;
+  color:#374151;
+}
+.more-link{
+  color:#2563eb;
+  font-weight:600;
+  text-decoration:none;
+  margin-left: 6px;
+}
+.more-link:hover{ text-decoration:underline; }
+
+.product-meta{
+  display:flex;
+  gap: 40px;
+  margin-top: 10px;
+}
+.meta-item{ display:grid; gap:2px; }
+.meta-label{ font-size:12px; color:#6b7280; }
+.meta-value{ font-size:13px; font-weight:600; }
+
+/* Qty */
+.product-qty{
+  display:flex;
+  justify-content:flex-end;
+}
+.qty-stepper{
+  display:grid;
+  grid-template-columns: 42px 58px 42px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow:hidden;
+  height: 40px;
+  background:#fff;
+}
+.qty-btn{
+  border:none;
+  background:#fff;
+  cursor:pointer;
+  font-size: 18px;
+}
+.qty-btn:hover{ background:#f9fafb; }
+.qty-input{
+  border:none;
+  text-align:center;
+  font-size: 14px;
+  font-weight: 650;
+  outline:none;
+}
+
+/* Divider */
+.vendor-divider{
+  border-top: 1px solid #eef2f7;
+  margin: 10px 0;
+}
+
+/* Draft inquiry */
+.draft-inquiry{
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #eef2f7;
+}
+.draft-head{
+  display:flex;
+  align-items:baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.draft-head h3{
+  margin:0;
+  font-size: 16px;
+  font-weight: 650;
+}
+.draft-head span{
+  font-size: 13px;
+  color:#6b7280;
+}
+.quote-textarea{
+  width:100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  min-height: 110px;
+  resize: vertical;
+}
+.quote-textarea:focus{
+  outline:none;
+  border-color:#93c5fd;
+  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+}
+
+/* Bottom bar */
+.quote-bottom-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-top: 16px;
+  margin-top: 18px;
+  border-top: 1px solid #eef2f7;
+}
+.bottom-left strong{
+  font-size: 18px;
+  font-weight: 750;
+}
+.bottom-right{
+  display:flex;
+  align-items:center;
+  gap: 16px;
+}
+.product-count{
+  font-size: 14px;
+  font-weight: 650;
+}
+.quote-primary-btn{
+  height: 44px;
+  padding: 0 18px;
+  border:none;
+  border-radius: 10px;
+  background:#0f2f5f;
+  color:#fff;
+  font-weight:650;
+  cursor:pointer;
+}
+.quote-primary-btn:hover{ filter: brightness(1.06); }
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+/* tablet */
+@media (max-width: 992px){
+  .gcc-container{
+    width: min(100%, calc(100% - 32px)); /* 16px sides */
+  }
+  .quote-grid-2{ grid-template-columns: 1fr; }
+
+  .product-row,
+  .product-row--compact{
+    grid-template-columns: 24px 140px 1fr;
+    grid-template-rows: auto auto;
+    align-items:start;
+  }
+  .product-qty{
+    grid-column: 2 / -1;
+    justify-content:flex-start;
+    margin-top: 8px;
+  }
+}
+
+/* mobile */
+@media (max-width: 576px){
+  .gcc-container{
+    width: min(100%, calc(100% - 24px)); /* 12px sides */
+  }
+  .quote-card{ padding: 14px; }
+
+  .product-row,
+  .product-row--compact{
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+  }
+
+  .product-thumb,
+  .product-thumb--small{
+    width: 100%;
+    height: 160px;
+  }
+
+  .product-meta{
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .quote-bottom-bar{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .bottom-right{
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .quote-primary-btn{ width:100%; }
+}
+
+</style>

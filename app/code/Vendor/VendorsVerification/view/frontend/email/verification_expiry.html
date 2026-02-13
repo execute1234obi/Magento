@@ -1,0 +1,21 @@
+<!--@subject Your Seller Verification has expired @-->
+
+{{template config_path="design/email/header_template"}}
+
+<p>{{trans "Hi %1," $vendor.getName()}}</p>
+
+<p>
+{{trans
+    "Your Seller Verification #%1 has expired on %2."
+    $vendorVerification.inc_id
+    $vendorVerification.to_date
+}}
+</p>
+
+<p>
+{{trans "You can re-verify your seller account at:"}}
+<br>
+<a href="{{var verificationReviewUrl}}">{{var verificationReviewUrl}}</a>
+</p>
+
+{{template config_path="design/email/footer_template"}}

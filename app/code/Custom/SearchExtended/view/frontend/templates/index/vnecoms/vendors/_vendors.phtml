@@ -1,0 +1,20 @@
+<?php /** @var array $items */ ?>
+<?php if (!empty($items)): ?>
+    <ul class="mst-search__autocomplete-vendors">
+        <?php foreach ($items as $item): ?>
+            <li class="mst-search__item">
+                <a href="<?= $item['url'] ?>">
+                    <?php if (!empty($item['logo'])): ?>
+                        <img src="<?= $item['logo'] ?>" alt="<?= $item['name'] ?>" class="vendor-logo"/>
+                    <?php endif; ?>
+                    <span class="vendor-title"><?= $item['name'] ?></span>
+                    <?php if (!empty($item['description'])): ?>
+                        <div class="vendor-detail"><?= $item['description'] ?></div>
+                    <?php endif; ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <div class="mst-search__no-results">No vendors found</div>
+<?php endif; ?>

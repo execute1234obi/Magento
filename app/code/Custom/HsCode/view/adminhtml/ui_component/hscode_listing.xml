@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">hscode_listing.hscode_listing_data_source</item>
+            <item name="deps" xsi:type="string">hscode_listing.hscode_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">hscode_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Add HS Code</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/add</item>
+            </item>
+        </item>
+    </argument>
+
+    <dataSource name="hscode_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Custom\HsCode\Ui\DataProvider\HsCodeDataProvider</argument>
+            <argument name="name" xsi:type="string">hscode_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">hscode_id</argument>
+            <argument name="requestFieldName" xsi:type="string">hscode_id</argument>
+            <argument name="collection" xsi:type="object">Custom\HsCode\Model\ResourceModel\HsCode\Collection</argument>
+        </argument>
+    </dataSource>
+
+    <columns name="hscode_columns">
+        <column name="hscode_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+
+        <column name="title">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Title</label>
+            </settings>
+        </column>
+
+        <column name="country">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Country</label>
+            </settings>
+        </column>
+
+        <column name="status">
+            <settings>
+                <filter>select</filter>
+                <options class="Custom\HsCode\Model\Config\Source\StatusOptions"/>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+
+        <column name="pdf">
+            <settings>
+                <filter>false</filter>
+                <label translate="true">PDF</label>
+            </settings>
+        </column>
+
+        <column name="created_at">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Created At</label>
+            </settings>
+        </column>
+
+        <column name="updated_at">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Updated At</label>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions">
+    <argument name="data" xsi:type="array">
+        <item name="config" xsi:type="array">
+            <item name="indexField" xsi:type="string">hscode_id</item>
+            <item name="viewUrlPath" xsi:type="string">*/edit</item>
+            <item name="urlEntityParamName" xsi:type="string">id</item>
+        </item>
+    </argument>
+    <settings>
+        <indexField>hscode_id</indexField>
+        <label translate="true">Actions</label>
+    </settings>
+</actionsColumn>
+
+    </columns>
+</listing> -->
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">hscode_listing.hscode_listing_data_source</item>
+            <item name="deps" xsi:type="string">hscode_listing.hscode_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">hscode_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">Add HS Code</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/add</item>
+            </item>
+        </item>
+    </argument>
+
+    <dataSource name="hscode_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Custom\HsCode\Ui\DataProvider\HsCodeDataProvider</argument>
+            <argument name="name" xsi:type="string">hscode_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">hscode_id</argument>
+            <argument name="requestFieldName" xsi:type="string">hscode_id</argument>
+            <argument name="collection" xsi:type="object">Custom\HsCode\Model\ResourceModel\HsCode\Collection</argument>
+        </argument>
+    </dataSource>
+
+    <columns name="hscode_columns">
+        <column name="hscode_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+
+        <column name="title">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Title</label>
+            </settings>
+        </column>
+
+        <column name="country">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Country</label>
+            </settings>
+        </column>
+
+        <column name="status">
+            <settings>
+                <filter>select</filter>
+                <options class="Custom\HsCode\Model\Config\Source\StatusOptions"/>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+
+        <column name="pdf">
+            <settings>
+                <filter>false</filter>
+                <label translate="true">PDF</label>
+            </settings>
+            <bodyTmpl>Custom_HsCode::ui/grid/cells/pdf.phtml</bodyTmpl>
+        </column>
+
+        <column name="created_at">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Created At</label>
+            </settings>
+        </column>
+
+        <column name="updated_at">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Updated At</label>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">hscode_id</item>
+                    <item name="viewUrlPath" xsi:type="string">*/edit</item>
+                    <item name="urlEntityParamName" xsi:type="string">id</item>
+                </item>
+            </argument>
+            <settings>
+                <indexField>hscode_id</indexField>
+                <label translate="true">Actions</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>
+

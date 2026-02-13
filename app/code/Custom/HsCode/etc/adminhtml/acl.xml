@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Custom. All rights reserved.
+ */
+-->
+<acl xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
+    <resources>
+        <resource id="Magento_Backend::admin">
+            <!-- Define the root node for backend access -->
+            <resource id="Custom_HsCode::manage" title="HS Codes Management" sortOrder="10">
+                <resource id="Custom_HsCode::list" title="Manage HS Codes" sortOrder="10"/>
+            </resource>
+        </resource>
+    </resources>
+</acl>

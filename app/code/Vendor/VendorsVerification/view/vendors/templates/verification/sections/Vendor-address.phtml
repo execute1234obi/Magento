@@ -1,0 +1,107 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\Form */
+
+$vendor = $block->getVendor(); 
+if (!$vendor) { return; }
+
+$address = $block->getVendorAddress();
+
+// Array keys check karein - safe fetching
+$vendorStreet   = isset($address['street']) ? $address['street'] : '';
+$vendorCity     = isset($address['city']) ? $address['city'] : '';
+$vendorRegion   = isset($address['state']) ? $address['state'] : '';
+$vendorPostCode = isset($address['postcode']) ? $address['postcode'] : '';
+$vendorCountry  = isset($address['country']) ? $address['country'] : '';
+$businessName   = $vendor->getData('b_name');
+
+// GOOGLE MAPS CONFIGURATION - Yahan Galti Thi
+// Hum values ko manually define kar rahe hain taaki crash na ho
+$_apikey     = ''; // Aap apni Google API key yahan manually daal sakte hain
+$_zoom       = 15;
+$_center_lat = '24.7136'; 
+$_center_lng = '46.6753';
+
+// Address string for map marker
+$_address = $block->escapeHtml($businessName . ' ' . $vendorStreet);
+
+// Map Coordinates fetching
+$gmap_lat = ($vendor->getGmapLat()) ? $vendor->getGmapLat() : $_center_lat;
+$gmap_lng = ($vendor->getGmapLng()) ? $vendor->getGmapLng() : $_center_lng;
+?>
+
+<style>
+    #map {
+        width: 100%;
+        height: 480px;
+        border: 1px solid #d8dee9;
+        margin-top: 15px;
+    }
+</style>
+
+<legend class="legend"><span><?= $block->escapeHtml(__('Business Address')) ?></span></legend>
+
+<div class="fields">
+    <div class="row">
+        <div class="col-md-12 field required">
+            <label for="business-address-line-1"><span><?= $block->escapeHtml(__('Address')) ?></span></label>
+            <div class="control">
+                <input name="business-address-line-1" id="business-address-line-1" readonly="true" type="text"
+                       value="<?= $block->escapeHtmlAttr($vendorStreet) ?>" class="input-text" data-validate="{required:true}">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 field">
+            <label ><span><?= $block->escapeHtml(__('City')) ?></span></label>
+            <input type="text" value="<?= $block->escapeHtmlAttr($vendorCity) ?>" readonly="true" class="input-text">
+        </div>
+        <div class="col-md-4 field">
+            <label ><span><?= $block->escapeHtml(__('State')) ?></span></label>
+            <input type="text" value="<?= $block->escapeHtmlAttr($vendorRegion) ?>" readonly="true" class="input-text">
+        </div>
+        <div class="col-md-4 field">
+            <label ><span><?= $block->escapeHtml(__('Post Code')) ?></span></label>
+            <input type="text" value="<?= $block->escapeHtmlAttr($vendorPostCode) ?>" readonly="true" class="input-text">
+        </div>
+    </div>
+
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-sm-6">
+            <label><strong><?= $block->escapeHtml(__('Google Map Location')) ?></strong></label>
+        </div>
+        <div class="col-sm-6">
+            <button type="button" id="showmap-button" onclick="displayMap()" class="action primary pull-right">
+                <span><?= $block->escapeHtml(__('Show Map')) ?></span>
+            </button>
+        </div>
+        <div id="map" style="display:none;"></div>
+    </div>
+</div>
+
+<input type="hidden" name="lat" id="lat" value="<?= $gmap_lat ?>" />
+<input type="hidden" name="lng" id="lng" value="<?= $gmap_lng ?>" />
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<?= $_apikey ?>"></script>
+<script type="text/javascript">
+    function displayMap() {
+        document.getElementById('map').style.display = "block";
+        document.getElementById('showmap-button').style.display = "none";
+        initialize();
+    }
+
+    function initialize() {
+        var pos = new google.maps.LatLng(<?= $gmap_lat ?>, <?= $gmap_lng ?>);
+        var mapOptions = {
+            center: pos,
+            zoom: <?= $_zoom ?>,
+            draggable: true
+        };
+        var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+        var marker = new google.maps.Marker({
+            position: pos,
+            map: map,
+            title: '<?= $_address ?>'
+        });
+    }
+</script>

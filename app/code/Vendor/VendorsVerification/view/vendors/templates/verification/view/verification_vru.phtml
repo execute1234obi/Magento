@@ -1,0 +1,45 @@
+<?php
+$vendor = $block->getVendor();
+
+if (!$vendor || !$vendor->getId()) {
+    echo '<h2>No vendor session found</h2>';
+    return;
+}
+?>
+
+<!-- <h2>Vendor Verification</h2> -->
+
+<!-- <p>Vendor ID: <?php //echo $vendor->getId(); ?></p> -->
+
+<?php if ($block->isActiveVerificationExit()): ?>
+    <h3>Verification already exists</h3>
+<?php else: ?>
+    <h2><?php echo __('Verification Information') ?></h2>
+	<div class="row" >
+		 <div class="col-md-12">	
+			 <div class="before-verificaion-center">
+	          <img src="<?php echo $block->getMediaUrl().'before-verification.png';?>" alt="<?php echo __('No Active Verification Process is available') ?>" />
+	          <h2><?php echo __('No Active Verification Process is available') ?></h2>
+	          <p>Help Increase transparency between</p>
+	          <p>business and people on <strong>GCC TRADING</strong></p>
+	          <p>by verifying your business</p>
+	          <p>&nbsp;</p>	          
+	          <button type="button" id="req-verification" class="btn btn-primary verification-before" data-verificationurl="<?php echo  $block->getURL('vendorverification/verification/new/');?>">
+				  <?php echo __('Request Verification') ?>
+	          </button>
+	          </div>  
+	     </div>
+	 </div>
+	 <script>
+	 require(
+        ['jquery'],
+        function($) {	
+	   $("#req-verification").on('click',function(){
+		   var url =  $(this).data('verificationurl');		   
+		   window.location= url;
+		})	
+	})	
+		
+	
+</script>
+<?php endif; ?>

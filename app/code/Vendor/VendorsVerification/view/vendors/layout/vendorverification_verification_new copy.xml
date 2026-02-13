@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendor-1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>		
+        <css src="Vendor_VendorsVerification::css/styles.css"/>
+    </head>
+    <body>		
+        <referenceContainer name="content">			
+		  <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="vendor.verificationForm" template="verification/form.phtml">
+			  <container name="form.verification.businessinfo" label="Verification Form Business Info"/>
+			  <container name="form.verification.addressinfo" label="Verification Form Address Info"/>
+			  <container name="form.verification.contactinfo" label="Verification Form Contact Info"/>
+			  <container name="form.verification.documents" label="Verification Form Documents Upload"/>
+		  </block>		
+        </referenceContainer>
+        <referenceContainer name="form.verification.businessinfo">
+			 <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.businessinfo" template="verification/sections/Vendor-info.phtml" />
+        </referenceContainer>
+        <referenceContainer name="form.verification.addressinfo">
+			 <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.addressinfo" template="verification/sections/Vendor-address.phtml" />
+        </referenceContainer>        
+        <referenceContainer name="form.verification.contactinfo">
+			 <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.contactinfo" template="verification/sections/Vendor-contact.phtml" />
+        </referenceContainer>        
+        <referenceContainer name="form.verification.documents">
+			 <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.documents" template="verification/sections/documents.phtml" />
+        </referenceContainer>        
+    </body>
+</page>
+

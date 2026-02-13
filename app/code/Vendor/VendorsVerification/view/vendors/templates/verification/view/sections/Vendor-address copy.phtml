@@ -1,0 +1,158 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View */
+
+$vendor = $block->getVendor();
+if (!$vendor || !$vendor->getId()) {
+    return;
+}
+
+$vendorVerification = $block->getVendorVerification();
+$verificationId = $vendorVerification->getId();
+//echo $verificationId;
+/** Verification data (status + comments only) */
+$verificationData = $block->getVerificationSectionData(
+    $verificationId,
+    \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS
+);
+
+$detail_id = $verificationData->getDetailId();
+//echo $detail_id;
+/** ✅ Vendor Address (SOURCE OF TRUTH) */
+$address = $block->convertVerificationData(
+            $verificationData->getData('vendor_data')
+        );
+//$address = $block->getVendorAddress();
+
+$vendorStreet   = $address['street']   ?? '';
+$vendorCity     = $address['city']     ?? '';
+$vendorRegion   = $address['state']    ?? '';
+$vendorPostCode = $address['postcode'] ?? '';
+$vendorCountry  = $address['country']  ?? '';
+
+$businessName = $vendor->getData('b_name');
+
+/** Google Map */
+$gmap_lat = $vendor->getGmapLat() ?: '24.7136';
+$gmap_lng = $vendor->getGmapLng() ?: '46.6753';
+
+$_address = $block->escapeHtml($businessName . ' ' . $vendorStreet);
+?>
+
+<div class="verification-section">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h2><?= __('Business Address') ?></h2>
+
+        <?php
+        $commentsCount = $block->getCommentsCounts(
+            $verificationId,
+            $detail_id,
+            \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS
+        );
+        ?>
+
+        <button type="button"
+                title="<?= __('Show Admin Comments') ?>"
+                class="btn btn-link pull-right verification-showcomment"
+                data-verificationid="<?= $verificationId ?>"
+                data-verifidtlid="<?= $detail_id ?>"
+                data-verifigroupid="<?= \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS ?>">
+            <i class="fa fa-comment"></i>
+            <span><?= __('%1 Comments', $commentsCount) ?></span>
+        </button>
+    </div>
+
+    <!-- TABLE -->
+    <div class="verification-tbl">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td><?= __('Status') ?></td>
+                    <td><?= $block->getStatusLabel($verificationData->getStatus()); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Address') ?></td>
+                    <td><?= $vendorStreet ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('City') ?></td>
+                    <td><?= $vendorCity ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('State') ?></td>
+                    <td><?= $vendorRegion ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Post Code') ?></td>
+                    <td><?= $vendorPostCode ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Country') ?></td>
+                    <td><?= $vendorCountry ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- GOOGLE MAP -->
+<style>
+#map {
+    width: 100%;
+    height: 480px;
+    border: 1px solid #d8dee9;
+    display: none;
+    margin-top: 15px;
+}
+</style>
+
+<div class="verification-section">
+    <div class="header">
+        <h2><?= __('Google Map Location') ?></h2>
+        <button type="button"
+                id="showmap-button"
+                onclick="displayMap()"
+                class="btn btn-success btn-flat pull-right">
+            <?= __('Show Map') ?> <i class="fa fa-map-marker"></i>
+        </button>
+    </div>
+
+    <div class="verification-tbl">
+        <div id="map"></div>
+    </div>
+</div>
+
+<input type="hidden" id="lat" value="<?= $gmap_lat ?>">
+<input type="hidden" id="lng" value="<?= $gmap_lng ?>">
+
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script>
+function displayMap() {
+    document.getElementById('map').style.display = 'block';
+    document.getElementById('showmap-button').style.display = 'none';
+
+    var pos = {
+        lat: <?= $gmap_lat ?>,
+        lng: <?= $gmap_lng ?>
+    };
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: pos,
+        zoom: 15,
+        draggable: false
+    });
+
+    new google.maps.Marker({
+        position: pos,
+        map: map,
+        title: "<?= $_address ?>"
+    });
+}
+</script>
+
+<!-- NOTE -->
+<p class="note">
+    <?= __('Business address is fetched from Vendor Profile and cannot be edited here.') ?>
+</p>

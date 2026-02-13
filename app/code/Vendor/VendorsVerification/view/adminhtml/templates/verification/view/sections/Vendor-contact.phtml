@@ -1,0 +1,202 @@
+<?php 
+$vendorVerification = $block->getVendorVerification();
+$verificationId = $vendorVerification->getId();
+$verificationData = $block->getVerificationSectionData($verificationId, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT);
+//echo $verificationId;
+if (!$verificationData) {
+    return;
+}
+//echo "<pre>";
+//print_r($verificationData->getData()); 
+//echo "</pre>";
+$detail_id = $verificationData->getDetailId();
+$arrData = $block->convertVerificationData($verificationData->getData('vendor_data'));
+
+/** * Frontend DB fields ke hisaab se mapping (With Fallback)
+ * c_name, c_code, contact_phone, contact_email
+ */
+//echo '<pre>';
+//print_r($arrData);
+//die;
+// $contact_name  = isset($arrData['contact_name']) ? $arrData['contact_name'] : (isset($arrData['contact-name']) ? $arrData['contact-name'] : '');
+// $country_code  = isset($arrData['country_code']) ? $arrData['country_code'] : '';
+// $contact_phone = isset($arrData['phone']) ? $arrData['phone'] : (isset($arrData['phone']) ? $arrData['phone'] : '');
+// $contact_email = isset($arrData['email']) ? $arrData['email'] : (isset($arrData['email']) ? $arrData['email'] : '');
+$contact_name  = $arrData['contact_name']  ?? '';
+$country_code  = $arrData['country_code']  ?? '';
+$contact_phone = $arrData['contact_phone'] ?? '';
+$contact_email = $arrData['contact_email'] ?? '';
+
+// Display Name: Agar country code hai toh Phone ke saath dikhane ke liye
+$full_phone = $country_code ? '+' . $country_code . ' ' . $contact_phone : $contact_phone;
+?>
+<div class="admin__page-section-content">
+	<div>
+	<?php //if($verificationData->getStatus() == \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS_PENDING):?>
+			    
+				          <button id="print" title="<?php echo __('Approve') ?>" type="button" class="btn verification-action" style="background:#66a80f;color:#ffffff;"  data-ui-id="vendor-verification-print-button" data-modal-id="verification-contactapproval-modal" data-modal-action="approve">
+								 <span><?php echo __('Approve') ?></span>
+						   </button>			              
+						   <button id="print" title="<?php echo __('Resubmit') ?>" type="button" class="btn verification-action" style="background:#ffb300;color:#ffffff;" data-ui-id="vendor-verification-print-button" data-modal-id="verification-contactresubmit-modal" data-modal-action="resubmit">
+								 <span><?php echo __('Request Re-submit') ?></span>
+						   </button>			              
+						   <button id="print" title="<?php echo __('Reject') ?>" type="button" class="btn verification-action" style="background:#ff2500;color:#ffffff;"  data-ui-id="vendor-verification-print-button" data-modal-id="verification-contactreject-modal" data-modal-action="reject">
+								 <span><?php echo __('Reject') ?></span>
+						   </button>			               
+			    
+    <?php //endif;?>    									    
+     <div class="page-actions-buttons">					
+                    <button id="back" title="Comments" type="button" class="action-default verification-showcomment" 
+                    data-verificationid="<?php echo  $verificationId;?>" 
+                    data-verifidtlid="<?php echo  $detail_id;?>" 
+                    data-verifigroupid="<?php echo  \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT;?>"  >                   
+                        <span><?php echo __("Comments");?></span>
+                    </button>                     
+     </div>
+     </div>          
+	<div class="admin__page-section-item">
+		<div class="admin__page-section-item-title">
+			<span class="title">
+			   <span><?php echo __('Business Contact') ?></span>			
+		    </span>
+		</div>
+		<div class="admin__page-section-item-content">										
+			<?php if(is_array($arrData)):?>
+			<table class="admin__table-secondary">
+				 <tbody>
+					<tr>      
+					  <td><?php echo __('Status') ?></td>
+					  <td>
+							<?php echo $block->getStatusLabel($verificationData->getStatus());?>									              			   
+					  </td>      
+					</tr>
+				    <tr>
+						<td><?php echo __('Contact  Name') ?></td>
+						<td><?php echo $contact_name;?></td>
+					</tr>   
+					<!--<tr>      
+					  <td><?php //echo __('Contact First Name') ?></td>
+					  <td><?php //echo $arrData['contact-firstname'];?></td>      
+					</tr>
+					<tr>      
+					  <td><?php //echo __('Contact Last Name') ?></td>
+					  <td><?php //echo $arrData['contact-lastname'];?></td>      
+					</tr>-->
+					<tr>      
+					  <td><?php echo __('Phone') ?></td>
+					  <td><?php echo $contact_phone;?></td>      
+					</tr>
+					<tr>      
+					  <td><?php echo __('Email') ?></td>
+					  <td><?php echo $contact_email;?></td>      
+					</tr>    
+				  </tbody>
+			</table>
+			<?php endif;?>
+		</div>			
+    </div>		
+</div>    
+
+<?php
+$vendor =  $this->getVendor();
+/*$firstName =  $arrData['contact-firstname'];
+$lasttName =  $arrData['contact-lastname'];
+$vendorPhone = $arrData['contact-phone'];
+$vendorEmail = $arrData['contact-email'];*/
+?>
+<!-- START Busines Contact Approval  Form-->
+<div id="verification-contactapproval-modal" style="display:none;">
+	<table class="admin__table-secondary">
+     <h2><?php echo __('Business Contact') ?></h2>
+		 <tbody>
+			       <tr>
+						<td><?php echo __('Contact  Name') ?></td>
+						<td><?php echo $contact_name;?></td>
+					</tr>   
+					<!--<tr>      
+					  <td><?php //echo __('Contact First Name') ?></td>
+					  <td><?php //echo $arrData['contact-firstname'];?></td>      
+					</tr>
+					<tr>      
+					  <td><?php //echo __('Contact Last Name') ?></td>
+					  <td><?php //echo $arrData['contact-lastname'];?></td>      
+					</tr>-->
+					<tr>      
+					  <td><?php echo __('Phone') ?></td>
+					  <td><?php echo $contact_phone;?></td>      
+					</tr>
+					<tr>      
+					  <td><?php echo __('Email') ?></td>
+					  <td><?php echo $contact_email;?></td>      
+					</tr>
+		</tbody>	
+	</table>		
+	<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__VERIFIED); ?>"
+      name="verification-contactapproval-form"
+      id="verification-contactapproval-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+      <div class="fields col-md-10">                             
+             <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+		        <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+             </div>	   
+       </div>
+     
+</form>
+</div>
+<!-- END Busines Contact Approval  Form-->
+
+<!-- START Busines Contact Re-submit  Form-->
+<div id="verification-contactresubmit-modal" style="display:none;">	
+     <h2><?php echo __('Business Contact') ?></h2>
+	<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT); ?>"
+      name="verification-contactresubmit-form"
+      id="verification-contactresubmit-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+      <div class="fields col-md-10">
+           <div class="field comments required">
+               <label  for="comments"><span><?php echo __('Comments For Re-submit') ?></span></label>
+                <div class="control">                                     
+		       		 <textarea name="comments" id="comments" rows="10" cols="80" data-validate="{required:true}"></textarea>
+                 </div>
+             </div>                             
+              <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+			     <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+               </div>	   
+       </div>     
+</form>
+</div>
+<!-- END Busines Contact Re-submit  Form-->
+
+<!-- START Busines Contact Reject  Form-->
+<div id="verification-contactreject-modal" style="display:none;">	
+     <h2><?php echo __('Business Contact') ?></h2>
+	<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__REJECTED); ?>"
+      name="verification-contactreject-form"
+      id="verification-contactreject-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+      <div class="fields col-md-10">
+           <div class="field comments required">
+               <label  for="comments"><span><?php echo __('Comments For Reject') ?></span></label>
+                <div class="control">                                     
+		       		 <textarea name="comments" id="comments" rows="10" cols="80" data-validate="{required:true}"></textarea>
+                 </div>
+             </div>                             
+              <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+			     <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+               </div>	   
+       </div>     
+</form>
+</div>
+<!-- END Busines Contact Reject  Form-->

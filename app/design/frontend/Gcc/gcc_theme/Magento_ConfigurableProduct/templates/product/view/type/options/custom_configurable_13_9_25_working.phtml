@@ -1,0 +1,365 @@
+<?php
+/** @var \Magento\ConfigurableProduct\Block\Product\View\Type\Configurable $block */
+$product = $block->getProduct();
+$attributes = $block->getAllowAttributes();
+
+$configurableJsonConfig = $block->getJsonConfig();
+$priceConfigData = $block->getJsonPriceConfig();
+
+// Only render the script if it's a configurable product and data is available
+if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE && $configurableJsonConfig && $priceConfigData) :
+?>
+
+<script type="text/x-magento-init">
+{
+    "#product-options-wrapper": {
+        "Magento_ConfigurableProduct/js/configurable": {
+            "spConfig": <?= /* @noEscape */ $configurableJsonConfig ?>,
+            "gallerySwitchStrategy": "replace",
+            "chooseText": "Choose an Option..."
+        }
+    },
+    "[data-role=priceBox][data-product-id='<?= $product->getId() ?>']": {
+        "priceBox": {
+            "priceConfig": <?= /* @noEscape */ $priceConfigData ?>
+        }
+    }
+}
+</script>
+<?php endif; ?>
+<!-- <pre> -->
+<?php //print_r(json_decode($configurableJsonConfig, true)); ?>
+<!-- </pre> -->
+<style>
+    .option-btn{
+    padding: 10px 25px;
+    border-radius: 6px;
+    }
+    .option-btn:hover{
+    padding: 10px 25px;
+    border-radius: 6px;
+    border: 2px solid #2563eb;
+    background-color: #eaf2ff;
+    color: #2563eb;
+    transition: all 0.3s ease;
+    }
+    .sub-heading{
+        font-size: 18px;
+        font-weight: 600;
+    }
+    .product-description {
+    margin-bottom: 20px;
+}
+
+.description-text {
+    max-height: 4.5em; /* Limit to 3-4 lines */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.show-more-btn {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.show-more-btn:hover {
+    background-color: #1e50b6;
+}
+
+</style>
+
+<form class="product-info-main"
+      id="product-options-wrapper"
+      data-role="product-form"
+      action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
+      method="post"
+      enctype="multipart/form-data">
+
+    <?= $block->getBlockHtml('formkey') ?>
+
+    <?php if (!empty($attributes)): ?>
+        <?php foreach ($attributes as $attribute):
+            $attributeLabel = $block->escapeHtml($attribute->getProductAttribute()->getStoreLabel());
+            $attributeCode = $attribute->getProductAttribute()->getAttributeCode();
+            $attributeOptions = $attribute->getOptions();
+        ?>
+
+
+
+
+        <div class="variation">
+            <div class="sub-heading">
+            Product Variation
+            </div>
+            <br />
+            <label><?= $attributeLabel ?></label>
+            <div class="attribute-options" data-attribute-code="<?= $attributeCode ?>">
+                <?php foreach ($attributeOptions as $option): ?>
+                <button type="button"
+                        class="option-btn"
+                        data-attribute-code="<?= $attributeCode ?>"
+                        data-option-id="<?= $block->escapeHtmlAttr($option['value_index'] ?? '') ?>">
+                    <?= $block->escapeHtml($option['label'] ?? '') ?>
+                </button>
+                <?php endforeach; ?>
+            </div>
+            <select name="super_attribute[<?= $attributeCode ?>]"
+                    class="super-attribute-select"
+                    data-selector="super_attribute[<?= $attributeCode ?>]"
+                    style="display:none;">
+                <option value=""><?= __('Choose an option...') ?></option>
+                <?php foreach ($attributeOptions as $option): ?>
+                    <option value="<?= $block->escapeHtmlAttr($option['value_index']) ?>">
+                        <?= $block->escapeHtml($option['label']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No configurable attributes found.</p>
+    <?php endif; ?>
+
+    <button type="submit"
+            class="mt-6 w-full bg-blue-600 text-white py-2 rounded text-sm font-semibold hover:bg-blue-700 add-quote-btn"
+            data-product-id="<?= (int) $product->getId() ?>">
+        Add To Quote
+    </button>
+</form>
+<script>
+//      require(['jquery', 'domReady!'], function ($) {
+//     $('#product-options-wrapper').on('click', '.option-btn', function () {
+//         console.log('Option button clicked');
+//     });
+// });
+
+
+   
+// require(['jquery', 'domReady!'], function ($) {
+//     'use strict';
+   
+//  $('#product-options-wrapper').on('configurable.initialized', function () {
+//     console.log('Configurable product options initialized');
+// });
+//     // Wait for the configurable product widget to initialize
+//     $('#product-options-wrapper').on('configurable.initialized', function () {
+//         console.log('Configurable product options initialized');
+
+//         // Bind click event to option buttons
+//         $(this).on('click', '.option-btn', function () {
+//             console.log('Option button clicked');
+//             var $btn = $(this),
+//                 attributeCode = $btn.data('attribute-code'),
+//                 optionId = $btn.data('option-id'),
+//                 $select = $('#product-options-wrapper .super-attribute-select[name="super_attribute[' + attributeCode + ']"]');
+
+//             if ($select.length) {
+//                 $btn.siblings('.option-btn[data-attribute-code="' + attributeCode + '"]').removeClass('active');
+//                 $btn.addClass('active');
+//                 $select.val(optionId).trigger('change');
+//             } else {
+//                 console.warn('Select element not found for attributeCode:', attributeCode);
+//             }
+//         });
+//     });
+// });
+
+
+// for price box
+// require(['jquery', 'Magento_ConfigurableProduct/js/configurable'], function ($, Configurable) {
+//     var spConfig = <?= /* @noEscape */ $configurableJsonConfig ?>;
+//     var selectedAttributes = {};
+
+//     // Function to find matching simple product ID
+//     function findMatchingProduct() {
+//         var matchingProductId = null;
+//         $.each(spConfig.index, function (productId, attributes) {
+//             var match = true;
+//             $.each(selectedAttributes, function (attrId, valId) {
+//                 if (attributes[attrId] != valId) {
+//                     match = false;
+//                     return false;
+//                 }
+//             });
+//             if (match) {
+//                 matchingProductId = productId;
+//                 return false; // break loop
+//             }
+//         });
+//         return matchingProductId;
+//     }
+
+//     // Function to update price manually
+//     function updatePrice(productId) {
+//         if (!productId) return;
+
+//         var prices = spConfig.optionPrices[productId];
+
+//         if (prices && prices.finalPrice && prices.finalPrice.amount) {
+//             var finalPrice = prices.finalPrice.amount;
+
+//             // Update price in the DOM
+//             var priceBox = $('[data-role=priceBox][data-product-id="<?= $product->getId() ?>"]');
+//             priceBox.find('.price').first().text('₹' + finalPrice.toFixed(2));
+//         }
+//     }
+
+//     // Handle option button clicks
+//     $(document).on('click', '.option-btn', function () {
+//         var $btn = $(this);
+//         var attributeCode = $btn.data('attribute-code');
+//         var optionId = $btn.data('option-id');
+
+//         // Find attribute ID from attribute code
+//         var attrId = null;
+//         $.each(spConfig.attributes, function (index, attr) {
+//             if (attr.code === attributeCode) {
+//                 attrId = attr.id;
+//             }
+//         });
+
+//         if (attrId) {
+//             selectedAttributes[attrId] = optionId;
+
+//             var productId = findMatchingProduct();
+//             updatePrice(productId);
+//         }
+//     });
+// });
+
+
+</script>
+<script>
+require(['jquery'], function($) {
+    var spConfig = <?= /* @noEscape */ $configurableJsonConfig ?>;
+    var selectedAttributes = {};
+
+    function findMatchingProduct() {
+        var matched = null;
+        $.each(spConfig.index, function(productId, attrs) {
+            var ok = true;
+            $.each(selectedAttributes, function(attrId, valId) {
+                if (attrs[attrId] != valId) {
+                    ok = false;
+                    return false;
+                }
+            });
+            if (ok) {
+                matched = productId;
+                return false;
+            }
+        });
+        return matched;
+    }
+
+    function updatePrice(productId) {
+        if (!productId) return;
+        var prices = spConfig.optionPrices[productId];
+        if (prices && prices.finalPrice && prices.finalPrice.amount) {
+            var finalPrice = prices.finalPrice.amount;
+            $('[data-role=priceBox][data-product-id="<?= $product->getId() ?>"] .price')
+                .text('₹' + finalPrice.toFixed(2));
+        }
+    }
+
+    function rebuildThumbnails(productId) {
+        if (!productId || !spConfig.images || !spConfig.images[productId]) return;
+
+        var images = spConfig.images[productId];
+        var $thumbTrack = $('#thumbTrack');
+        $thumbTrack.empty(); // remove old thumbs
+
+        // rebuild
+        images.forEach(function(imgObj, idx) {
+            var $img = $('<img />', {
+                src: imgObj.img,
+                alt: imgObj.label || '',
+                'data-index': idx,
+                class: 'thumb-image' + (idx === 0 ? ' active' : ''),
+                'aria-selected': idx === 0 ? 'true' : 'false',
+                role: 'tab'
+            });
+            $thumbTrack.append($img);
+        });
+
+        // re-bind thumb clicks
+        bindThumbnailClicks(productId);
+        // re-bind arrow buttons
+        bindArrowButtons(productId);
+    }
+
+    function updateMainImage(productId) {
+        if (!productId || !spConfig.images || !spConfig.images[productId]) return;
+
+        var firstImg = spConfig.images[productId][0];
+        if (firstImg && firstImg.full) {
+            $('#mainImage').attr('src', firstImg.full);
+        }
+    }
+
+    function bindThumbnailClicks(productId) {
+        $('#thumbTrack').off('click', '.thumb-image').on('click', '.thumb-image', function() {
+            var idx = $(this).data('index');
+            var imgObj = spConfig.images[productId][idx];
+            if (imgObj && imgObj.full) {
+                $('#mainImage').attr('src', imgObj.full);
+                $('.thumb-image').removeClass('active').attr('aria-selected', 'false');
+                $(this).addClass('active').attr('aria-selected', 'true');
+            }
+        });
+    }
+
+    function bindArrowButtons(productId) {
+        var $thumbs = $('#thumbTrack .thumb-image');
+        if ($thumbs.length === 0) return;
+        var currentIndex = 0;
+
+        $('#prevBtn').off('click').on('click', function() {
+            currentIndex = (currentIndex - 1 + $thumbs.length) % $thumbs.length;
+            $thumbs.eq(currentIndex).trigger('click');
+        });
+        $('#nextBtn').off('click').on('click', function() {
+            currentIndex = (currentIndex + 1) % $thumbs.length;
+            $thumbs.eq(currentIndex).trigger('click');
+        });
+    }
+
+    // initial binding for default product
+    $(document).ready(function(){
+        // optional setup if initial product has thumbs etc
+        bindThumbnailClicks(<?= $product->getId() ?>);
+        bindArrowButtons(<?= $product->getId() ?>);
+    });
+
+    // when user clicks .option-btn
+    $(document).on('click', '.option-btn', function () {
+        var $btn = $(this);
+        var attributeCode = $btn.data('attribute-code');
+        var optionId = $btn.data('option-id');
+
+        // find attributeId from spConfig
+        var attrId = null;
+        $.each(spConfig.attributes, function(i, attr){
+            if (attr.code === attributeCode) {
+                attrId = attr.id;
+            }
+        });
+
+        if (attrId) {
+            selectedAttributes[attrId] = optionId;
+            var productId = findMatchingProduct();
+
+            if (productId) {
+                updatePrice(productId);
+                updateMainImage(productId);
+                rebuildThumbnails(productId);
+            }
+        }
+    });
+});
+</script>

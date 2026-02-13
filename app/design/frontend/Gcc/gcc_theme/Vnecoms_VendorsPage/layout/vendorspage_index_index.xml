@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Vnecoms_VendorsPage::css/custom-vendor-page.css"/>
+        <script src="https://cdn.tailwindcss.com" src_type="url"/>
+        <script src="Vnecoms_VendorsPage::js/vendor-tabs.js"/>
+    </head>
+    <body>
+        <attribute name="class" value="page-layout-1column-full-width"/>
+    
+        <referenceContainer name="sidebar.main" remove="true"/>
+        <referenceContainer name="sidebar.additional" remove="true"/>
+
+        <referenceBlock name="vendor.home.shipping" remove="true"/>
+        <referenceBlock name="vendor.home.refund" remove="true"/>
+        <referenceBlock name="vendor.home.about" remove="true"/>
+        <referenceBlock name="vendor.home.businessreviewform" remove="true"/>
+        <referenceBlock name="vendor.home.contact" remove="true"/>
+        <referenceBlock name="vendor.home.certificates" remove="true"/>
+        <referenceBlock name="vendor.home.catalog" remove="true"/>
+        <referenceBlock name="vendor.home.locationmap" remove="true"/>
+        <referenceBlock name="vendor.home.banner" remove="true"/>
+        <referenceBlock name="vendor.products" remove="true"/>
+        <referenceContainer name="vendor.home.review.container" remove="true" />
+        <referenceContainer name="vendor.featured.product.container" remove="true" />
+
+        <referenceContainer name="content">
+            <container name="custom.vendor.page.container" htmlTag="div" htmlClass="custom-vendor-page-container" before="-">
+                <block class="Magento\Framework\View\Element\Template"
+                       name="custom.vendor.profile"
+                       template="Vnecoms_VendorsPage::profile.phtml">
+                    
+                    <block class="Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification"
+                           name="vendor.verification.block" />
+                </block>
+            </container>
+        </referenceContainer>
+
+        <referenceContainer name="main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.newsletter"
+                   template="Magento_Theme::html/newsletter.phtml"
+                   after="content" />
+        </referenceContainer>
+    </body>
+</page>

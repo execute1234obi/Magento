@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+
+    <menu>
+
+        <!-- Inbox -->
+        <add id="Vendor_VendorMessagesSubMenu::inbox"
+             title="Inbox"
+             module="Vendor_VendorMessagesSubMenu"
+             parent="Vnecoms_VendorsMessage::messages"
+             action="message/index"
+             sortOrder="10"
+             resource="Vendor_VendorMessagesSubMenu::inbox"/>
+
+        <!-- Sent -->
+        <add id="Vendor_VendorMessagesSubMenu::sent"
+             title="Sent"
+             module="Vendor_VendorMessagesSubMenu"
+             parent="Vnecoms_VendorsMessage::messages"
+             action="message/sent"
+             sortOrder="20"
+             resource="Vendor_VendorMessagesSubMenu::sent"/>
+
+        <!-- Trash -->
+        <add id="Vendor_VendorMessagesSubMenu::trash"
+             title="Trash"
+             module="Vendor_VendorMessagesSubMenu"
+             parent="Vnecoms_VendorsMessage::messages"
+             action="message/trash"
+             sortOrder="30"
+             resource="Vendor_VendorMessagesSubMenu::trash"/>
+
+    </menu>
+</config>

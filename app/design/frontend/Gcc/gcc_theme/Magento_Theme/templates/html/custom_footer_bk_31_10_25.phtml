@@ -1,0 +1,94 @@
+<?php /** @var \Magento\Framework\View\Element\Template $block */ ?>
+<footer style="
+    background: #fff;
+    /* padding: 48px 32px; */
+    padding: 16px 32px 48px 32px;
+    color: #374151;
+    font-family: Arial, sans-serif;
+    /* border-top: 1px solid #e5e7eb; */
+">
+  <div style="max-width:1200px; margin:0 auto;">
+
+     <!-- Logo -->
+  <div style="margin-bottom: 32px; display: flex; align-items: center;">
+      <img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/gcc-logo.png" alt="GCC Trading Logo" style="height: 40px; margin-right: 12px;">
+      <!-- <span style="font-weight: bold; font-size: 1.25rem; color: #1f2937;">GCC Trading</span> -->
+       <!-- Divider line that starts after logo -->
+  <div style="flex-grow: 1; height: 1px; background-color: #e5e7eb; margin-left: 24px;"></div>
+
+</div>
+ 
+    <!-- 4‑column layout -->
+    <div style="display:flex; flex-wrap:wrap; gap:32px; justify-content:space-between;">
+
+      <!-- Pages -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#374151;">Pages</h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li><a href="<?= $block->getUrl('vendor-page') ?>" style="color:#374151; text-decoration:none;">Vendors</a></li>
+          <li><a href="<?= $block->getUrl('customer-page') ?>" style="color:#374151; text-decoration:none;">Customers</a></li>
+          <li><a href="<?= $block->getUrl('about-us') ?>" style="color:#374151; text-decoration:none;">About Us</a></li>
+          <li><a href="<?= $block->getUrl('contact-us') ?>" style="color:#374151; text-decoration:none;">Contact Us</a></li>
+        </ul>
+      </div>
+
+      <!-- Services -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#111827;">Services</h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li><a href="#" style="color:#374151; text-decoration:none;">Request for quotes</a></li>
+          <li><a href="#" style="color:#374151; text-decoration:none;">HS Code</a></li>
+        </ul>
+      </div>
+
+      <!-- Support & Contact -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#111827;">Support & Contact</h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li><a href="<?= $block->getUrl('contact-us') ?>" style="color:#374151; text-decoration:none;">Contact Us</a></li>
+          <li><a href="#" style="color:#374151; text-decoration:none;">Help Center</a></li>
+          <li><a href="#" style="color:#374151; text-decoration:none;">Feedback</a></li>
+        </ul>
+      </div>
+
+      <!-- Connect -->
+      <div style="flex:1 1 200px; min-width:150px;">
+        <h4 style="margin-bottom:16px; font-size:17px; font-weight:600; color:#111827;">Connect</h4>
+        <ul style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; font-size:0.875rem;">
+          <li style="display:flex; align-items:center; gap:8px;">
+            <img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/insta.svg" alt="Instagram" style="width:16px;height:16px;">
+            <a href="#" style="color:#374151; text-decoration:none;">Instagram</a>
+          </li>
+          <li style="display:flex; align-items:center; gap:8px;">
+            <img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/facebook.svg" alt="Facebook" style="width:16px;height:16px;">
+            <a href="#" style="color:#374151; text-decoration:none;">Facebook</a>
+          </li>
+          <li style="display:flex; align-items:center; gap:8px;">
+            <img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/twitter.svg" alt="Twitter" style="width:16px;height:16px;">
+            <a href="#" style="color:#374151; text-decoration:none;">Twitter / X</a>
+          </li>
+          <li style="display:flex; align-items:center; gap:8px;">
+            <img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/linkdin.svg" alt="LinkedIn" style="width:16px;height:16px;">
+            <a href="#" style="color:#374151; text-decoration:none;">LinkedIn</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <hr style="border:none; border-top:1px solid #e5e7eb; margin:32px 0;" />
+
+    <!-- Bottom bar -->
+    <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; font-size:0.875rem; color:#6b7280;">
+      <div style="margin-bottom:8px;">
+        &copy; <?= date('Y') ?> GCC Trading · All rights reserved.
+      </div>
+      <div style="display:flex; gap:24px;">
+        <a href="#" style="color:#6b7280; text-decoration:none;">Terms of use</a>
+        <a href="#" style="color:#6b7280; text-decoration:none;">Privacy policy</a>
+        <a href="#" style="color:#6b7280; text-decoration:none;">Security</a>
+      </div>
+    </div>
+
+  </div>
+</footer>

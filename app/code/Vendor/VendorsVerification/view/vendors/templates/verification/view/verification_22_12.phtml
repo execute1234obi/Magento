@@ -1,0 +1,183 @@
+<?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+/** ---------------- SAFE VERIFICATION LOAD ---------------- */
+$vendorVerification = null;
+$verificationIncId  = '';
+$hasActiveVerification = false;
+
+try {
+    // Check karein ki kya sach mein verification exit karti hai
+    if ($block->isActiveVerificationExit()) {
+        $verification = $block->getVendorVerification();
+
+        // VALIDATION: Check karein ki $verification null nahi hai aur object hai
+        if ($verification && is_object($verification) && $verification->getId()) {
+            $vendorVerification     = $verification;
+            $verificationIncId      = $verification->getIncId();
+            $hasActiveVerification  = true;
+        } else {
+            // Agar record DB mein nahi hai, toh false set karein
+            $hasActiveVerification = false;
+        }
+    }
+} catch (\Exception $e) {
+    $hasActiveVerification = false;
+}
+?>
+
+<h2>vrusali</h2>
+
+<?php if($block->isActiveVerificationExit()){ ?>
+<h2><?php echo __('Verification Information # %1', $verificationIncId) ?></h2>
+
+<div class="row">
+	<?php echo $block->getChildHtml('form.verification.statusinfo'); ?>                                              
+</div>
+
+<div class="row">
+        <div class="col-sm-6">			
+			<div class="verification-section">															
+			  <?php echo $block->getChildHtml('form.verification.businessinfo'); ?>                                              
+			</div>  
+        </div>        
+        <div class="col-sm-6" >			
+			<div class="verification-section">					
+			<?php echo $block->getChildHtml('form.verification.contactinfo'); ?>                                     
+			</div>
+        </div>
+</div>
+</div>
+<?php echo $block->getChildHtml('form.verification.addressinfo'); ?>
+
+<div id="commentslist_popup"></div>
+<script type="text/javascript">
+    require(['jquery',
+              'Magento_Ui/js/modal/modal'
+              ],function($,modal) {
+			 				
+            var options = {
+                type: 'popup',
+                responsive: false,
+                innerScroll: false,
+                modalClass: 'verification-modal',
+                title: $.mage.__('Verification'),
+                buttons: [{
+                    text: $.mage.__('Cancel'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };            
+            
+            $(".verification-edit").on('click',function(){				
+				var popupDivId =  $(this).data('modal-id');				
+                var popup = modal(options, $('#'+popupDivId));
+                $('#'+popupDivId).modal('openModal');                
+            });			
+			 
+            
+           $(".verification-showcomment").on('click',function(){		 
+			   
+			   var verificationId = $(this).data('verificationid');	
+			   var dataid = $(this).data('verifidtlid');
+			   var dataGroupType = $(this).data('verifigroupid');
+			   //alert("ID ="+verificationId+", detailId =" + dataid + ", groupId ="+dataGroupType);
+			   //return ;
+			   var param = {
+				   id : verificationId,
+				   dataid : dataid,
+				   grouptype: dataGroupType,
+				   form_key: window.FORM_KEY
+			   };
+			   
+			   var options = {
+				       title: $.mage.__('Admin Comments'),
+                       type: 'popup',
+                       responsive: false,
+                       modalClass: 'verification-modal',
+                       innerScroll: true,
+                       buttons: [{
+                           text: $.mage.__('Cancel'),
+                           class: 'primary action  btn btn-default',
+                           click: function () {
+                               this.closeModal();
+                           }
+                       }]
+                   };
+        		
+        		
+			    $.ajax({
+					showLoader: true,
+					url: <?php echo '"'. $block->getCommentsViewUrl().'"' ;?>,
+					data: param,
+					type: "GET",
+					dataType: 'json',
+					success: function(response) { 
+						if(response.success){							
+							var count = 0;
+							//var htmlout;/app/code/Vnecoms/Vendors/view/vendors/templates/account/profile.phtml
+							var htmlout = '';
+                             var commentsTbl = '<table class="table" >';                             
+                             $.each(response.data, function(k, v) {
+								 count++;
+								 commentsTbl +='<tr>'								 
+								 commentsTbl +='<td>' + v + '</td>';								 
+								 commentsTbl +='</tr>';
+						     });
+                             commentsTbl +='</table>';                             
+                             if(count>0){
+                                htmlout   =  '<h4>' + response.message + '</h4>';
+                                htmlout += commentsTbl;
+						     } else {
+								  htmlout   =  '<h4>' + response.message + '</h4>';
+							 }                             
+                             $("#commentslist_popup").html('');
+                             $("#commentslist_popup").html(htmlout).modal(options).modal('openModal');
+						}else {
+							alert(response.message);
+						}
+                    },
+                    error: function (xhr, status, errorThrown) {
+                        console.log(errorThrown);
+                     }
+			     })
+			   
+		   })
+            
+     });
+</script>
+<?php } else {?>
+	<h2><?php echo __('Verification Information') ?></h2>
+	<div class="row" >
+		 <div class="col-md-12">	
+			 <div class="before-verificaion-center">
+	          <img src="<?php echo $block->getMediaUrl().'porto/before-verification.png';?>" alt="<?php echo __('No Active Verification Process is available') ?>" />
+	          <h2><?php echo __('No Active Verification Process is available') ?></h2>
+	          <p>Help Increase transparency between</p>
+	          <p>business and people on <strong>GCC TRADING</strong></p>
+	          <p>by verifying your business</p>
+	          <p>&nbsp;</p>	          
+	          <button type="button" id="req-verification" class="btn btn-primary verification-before" data-verificationurl="<?php echo  $block->getURL('vendorverification/verification/new/');?>">
+				  <?php echo __('Request Verification') ?>
+	          </button>
+	          </div>  
+	     </div>
+	 </div>
+<script>
+	 require(
+        ['jquery'],
+        function($) {	
+	   $("#req-verification").on('click',function(){
+		   var url =  $(this).data('verificationurl');		   
+		   window.location= url;
+		})	
+	})	
+		
+	
+</script>	 
+<?php } ?>
+
+
+

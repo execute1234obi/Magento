@@ -1,0 +1,10 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="vendor-2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<body>
+<!--
+Reference the existing block named "adminhtml.system.config.tabs" and set a new template.
+The name is found in the original layout file:
+<block class="Vnecoms\VendorsConfig\Block\System\Config\Tabs" name="adminhtml.system.config.tabs" before="-"/>
+-->
+<referenceBlock name="adminhtml.system.config.tabs" template="Vendor_CustomConfig::system/config/tabs.phtml"/>
+</body>
+</page>

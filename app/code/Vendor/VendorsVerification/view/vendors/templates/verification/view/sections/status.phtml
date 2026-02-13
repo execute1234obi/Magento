@@ -1,0 +1,73 @@
+<?php 
+//$vendorVerification = $block->getVendorVerification();
+//$verificationId =  $vendorVerification->getId();
+?>
+<?php
+// Block se naya data fetch karein safe tarike se
+$vendorVerification = $block->getVendorVerification();
+// echo "<pre>";
+// if ($vendorVerification) {
+//     // Agar data aa raha hai toh ye uski saari details print karega
+//     print_r($vendorVerification->getData()); 
+// } else {
+//     echo "Variable Is NULL";
+// }
+//echo "</pre>";
+//exit; //
+// Check karein ki null toh nahi hai
+if ($vendorVerification && $vendorVerification->getId()) : 
+    $status = $vendorVerification->getStatus();
+endif;
+?>
+<div class="col-md-12">
+	<div class="verification-info">
+		 <div class="header">
+			 <h2><?php echo __('Verification Details') ?></h2>
+		 </div>
+  <div class="verification-tbl">		 
+  <table class="table">
+  <tbody>
+	<tr>      
+      <td><?php echo __('Verification Status') ?></td>
+      <td>
+		  : <?php echo $block->getvendorVerificationStatusLabel($vendorVerification->getIsVerified());?>
+		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Payment Status') ?></td>
+      <td>
+		  : <?php echo $block->getPaymentStatusLabel($vendorVerification->getIsPaid());?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Fees') ?></td>
+      <td>
+		  : <?php echo $block->getFormatedPrice($vendorVerification->getAmount());?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Duration') ?></td>
+      <td>
+		  : <?php echo $vendorVerification->getMonthsBooked().__(' Months');?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Start Date') ?></td>
+      <td>
+		  : <?php echo ($vendorVerification->getFromDate()) ? $block->getFormatedDate($vendorVerification->getFromDate()):"N/A";?>		  
+      </td>      
+    </tr>
+    <tr>
+    <td><?php echo __('Verification Expire Date') ?></td>
+      <td>		  
+		  : <?php echo ($vendorVerification->getToDate()) ? $block->getFormatedDate($vendorVerification->getToDate()):"N/A";?>		  
+      </td>      
+    </tr>
+   </tbody> 
+  </table>
+  </div>
+ </div>
+</div>
+
+

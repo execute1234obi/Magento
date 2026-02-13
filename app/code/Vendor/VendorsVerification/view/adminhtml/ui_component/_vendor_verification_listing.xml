@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magento.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+
+    <!-- ================= DATA SOURCE ================= -->
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">
+                vendor_verification_listing.vendor_verification_admin_data_source
+            </item>
+            <item name="deps" xsi:type="string">
+                vendor_verification_listing.vendor_verification_admin_data_source
+            </item>
+        </item>
+        <item name="spinner" xsi:type="string">vendorverification_columns</item>
+    </argument>
+
+    <dataSource name="vendor_verification_admin_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">
+                Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
+            </argument>
+            <argument name="name" xsi:type="string">
+                vendor_verification_admin_data_source
+            </argument>
+            <argument name="primaryFieldName" xsi:type="string">verification_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                </item>
+            </argument>
+        </argument>
+
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <!-- ================= TOOLBAR ================= -->
+    <listingToolbar name="listing_top">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="sticky" xsi:type="boolean">true</item>
+            </item>
+        </argument>
+
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <!-- ================= COLUMNS ================= -->
+    <columns name="vendorverification_columns">
+
+        <!-- Storage & Row Click -->
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+
+                <item name="storageConfig" xsi:type="array">
+                    <item name="provider" xsi:type="string">
+                        vendor_verification_listing.vendor_verification_listing.listing_top.bookmarks
+                    </item>
+                    <item name="namespace" xsi:type="string">current</item>
+                </item>
+
+                <item name="childDefaults" xsi:type="array">
+                    <item name="fieldAction" xsi:type="array">
+                        <item name="provider" xsi:type="string">
+                            vendor_verification_listing.vendor_verification_listing.vendorverification_columns.actions
+                        </item>
+                        <item name="target" xsi:type="string">applyAction</item>
+                        <item name="params" xsi:type="array">
+                            <item name="0" xsi:type="string">edit</item>
+                            <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
+                        </item>
+                    </item>
+                </item>
+
+            </item>
+        </argument>
+
+        <!-- Verification ID -->
+        <column name="verification_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Verification ID</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="sorting" xsi:type="string">desc</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Increment ID -->
+        <column name="inc_id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">ID</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="sorting" xsi:type="string">desc</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Order ID -->
+        <column name="salesorder_incid">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Order ID</item>
+                    <item name="filter" xsi:type="string">text</item>
+                    <item name="indexField" xsi:type="string">order_id</item>
+                    <item name="viewUrlPath" xsi:type="string">sales/order/view</item>
+                    <item name="urlEntityParamName" xsi:type="string">order_id</item>
+                    <item name="sortOrder" xsi:type="number">25</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Seller (Vendor Dropdown) -->
+        <column name="vendor_id">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">
+                    Vendor\VendorsVerification\Model\Source\Vendors
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Seller</item>
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">
+                        Magento_Ui/js/grid/columns/select
+                    </item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Country -->
+        <column name="country">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">
+                    Vendor\VendorsVerification\Model\Source\Countries
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Country</item>
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">
+                        Magento_Ui/js/grid/columns/select
+                    </item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Fees -->
+        <!-- <column name="amount" class="Vendor\VendorsVerification\Ui\Component\Listing\Columns\Price">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Fees</item>
+                    <item name="filter" xsi:type="string">textRange</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                </item>
+            </argument>
+        </column> -->
+
+        <!-- Dates -->
+        <column name="created_at">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Create Date</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="from_date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Start Date</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="sortOrder" xsi:type="number">70</item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="to_date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Expire Date</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
+                </item>
+            </argument>
+        </column>
+
+        <!-- Payment Status -->
+        <!-- <column name="is_paid">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">
+                    Vendor\VendorsVerification\Model\Source\PaymentStatus
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Payment</item>
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">
+                        Magento_Ui/js/grid/columns/select
+                    </item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">90</item>
+                </item>
+            </argument>
+        </column> -->
+
+        <!-- Verification Status -->
+        <!-- <column name="is_verified">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">
+                    Vendor\VendorsVerification\Model\Source\VerificationStatus
+                </item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string" translate="true">Status</item>
+                    <item name="filter" xsi:type="string">select</item>
+                    <item name="component" xsi:type="string">
+                        Vendor_VendorsVerification/js/grid/columns/verificationstatus
+                    </item>
+                    <item name="dataType" xsi:type="string">select</item>
+                    <item name="sortOrder" xsi:type="number">100</item>
+                </item>
+            </argument>
+        </column> -->
+
+        <!-- Actions -->
+        <actionsColumn name="actions"
+            class="Vendor\VendorsVerification\Ui\Component\Listing\Columns\Admin\VerificationActions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">verification_id</item>
+                    <item name="sortOrder" xsi:type="number">110</item>
+                </item>
+            </argument>
+        </actionsColumn>
+
+    </columns>
+
+</listing>

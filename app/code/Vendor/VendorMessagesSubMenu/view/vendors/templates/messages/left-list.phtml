@@ -1,0 +1,43 @@
+<?php
+echo '<h3 style="color:green">LEFT MESSAGE LIST LOADED</h3>';
+?>
+<?php
+/** @var $block \Vnecoms\VendorsMessage\Block\Vendors\Messages\ListMessage */
+$messages = $block->getMessageCollection();
+echo '<pre>';
+var_dump($messages);
+exit;
+?>
+
+<ul class="left-message-subjects">
+    <?php if ($messages && $messages->getSize()): ?>
+        <?php foreach ($messages as $message): ?>
+            <li>
+                <a href="<?= $block->escapeUrl(
+                    $block->getMessageUrl($message->getId())
+                ) ?>">
+                    <?= $block->escapeHtml($message->getSubject()) ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <li class="empty"><?= __('No messages found') ?></li>
+    <?php endif; ?>
+</ul>
+<style>
+    .left-message-subjects {
+    margin-top: 10px;
+    padding-left: 0;
+}
+.left-message-subjects li {
+    list-style: none;
+    padding: 6px 0;
+    border-bottom: 1px solid #eee;
+}
+.left-message-subjects a {
+    color: #0c2a63;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+</style>

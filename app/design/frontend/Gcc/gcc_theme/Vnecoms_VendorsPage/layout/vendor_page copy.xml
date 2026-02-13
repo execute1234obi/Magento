@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="sidebar.main" remove="true"/>
+        
+        <referenceContainer name="content" remove="true"/>
+
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceBlock name="wishlist_sidebar" remove="true"/>
+        <referenceBlock name="sales.order.reorder.sidebar" remove="true"/>
+        <referenceBlock name="vendor.full.profile" remove="true"/>
+        <referenceBlock name="vendor.products.list" remove="true"/>
+        <referenceBlock name="vendor.review.list" remove="true"/>
+        <referenceBlock name="vendor.about" remove="true"/>
+
+        <referenceContainer name="page.wrapper">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="vendor.full.profile"
+                   template="Vnecoms_VendorsPage::profile.phtml" />
+        </referenceContainer>
+    </body>
+</page>

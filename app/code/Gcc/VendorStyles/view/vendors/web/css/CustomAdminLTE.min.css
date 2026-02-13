@@ -1,0 +1,40 @@
+.skin-blue .main-header .logo {
+   /* background-color: #4B78B3;*/
+    background-color: #1E56A0;
+    color: #fff;
+    border-bottom: 0 solid transparent;
+}
+skin-blue .main-header .navbar {
+    background-color: #1E56A0;
+}
+.logo-mini .logo-img {
+    display: none !important;
+}
+.logo-mini {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-image: url('../media/wysiwyg/Logo_vendor_dash.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.collapsed-box .box-header.with-border {
+    border-bottom: none;
+    display: none;
+}
+
+.skin-blue .sidebar-menu>li.header {
+    color: #4b646f;
+    background: #1a2226;
+    display: none !important;
+}
+.message-folders {
+    display: none !important;
+}
+
+.col-md-9 {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+}

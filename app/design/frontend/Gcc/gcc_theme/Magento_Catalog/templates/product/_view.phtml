@@ -1,0 +1,279 @@
+<?php
+/**
+ * Product view template
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer
+ */
+$product = $block->getProduct();
+$imageHelper = $block->getImage($product, 'product_base_image');
+?>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    /* Custom CSS to remove default Magento padding and create a full-width container */
+    body {
+        font-family: 'Inter', sans-serif;
+        margin: 0;
+        padding: 0;
+         background-color: #f4f4f4; /* A very light gray color */
+    }
+
+    /* Style for the active tab */
+    .tab-button.active {
+        border-bottom: 2px solid #0056b3;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    /* Inactive tab styling */
+    .tab-button {
+        border-bottom: 2px solid transparent;
+        font-weight: 400;
+        color: #6b7280;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .tab-button:hover:not(.active) {
+        color: #007bff;
+    }
+    
+    /* Hide content for inactive tabs */
+    .tab-pane.hidden {
+        display: none;
+    }
+    
+    /* Product variation buttons */
+    .variation-button {
+        border-width: 1px;
+        border-color: #d1d5db;
+        border-radius: 0.25rem;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .variation-button.active {
+        background-color: #e0f2fe;
+        border-color: #93c5fd;
+    }
+
+    /* Thumbnail active state */
+    .thumbnail-image.active {
+        border: 2px solid #0056b3;
+        transform: scale(1.05);
+    }
+
+         /* Vendor Box */
+    .vendor-box {
+      background: #fff;
+      padding: 15px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 15px;
+    }
+    .vendor-logo img {
+      width: 40px;
+      height: 40px;
+    }
+    .vendor-info {
+      flex: 1;
+    }
+    .vendor-info h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .vendor-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .contact-btn {
+      background: #0071e3;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .vendor-meta {
+      font-size: 13px;
+      color: #555;
+    }
+
+</style>
+<?php echo $block->getLayout()->getBlock('breadcrumbs')->toHtml(); ?>
+<div class="w-full">
+
+    <div class="px-8 py-4 grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-screen-xl mx-auto">
+        <div >
+            <div class="vendor-box">
+      <div class="vendor-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Adidas_Logo.svg" alt="Adidas">
+      </div>
+      <div class="vendor-info">
+        <h3>Adidas ✔</h3>
+        <div class="vendor-meta">⭐ 4/5 • Saudi Arabia</div>
+      </div>
+      <div class="vendor-actions">
+        <button class="contact-btn">Contact Vendor</button>
+      </div>
+    </div>
+            <img id="main-product-image" 
+                 src="<?= $imageHelper->getImageUrl(); ?>" 
+                 alt="<?= $block->escapeHtmlAttr($product->getName()); ?>" 
+                 class="w-full rounded-lg shadow-lg object-cover">
+            
+            <div class="mt-4 flex space-x-3 overflow-x-auto pb-2">
+                <?php $i = 0; ?>
+                <?php foreach ($product->getMediaGalleryImages() as $image): ?>
+                    <?php $i++; ?>
+                    <img src="<?= $image->getUrl(); ?>" 
+                         class="w-20 h-20 object-cover border rounded-lg shadow-sm cursor-pointer thumbnail-image <?= ($i == 1) ? 'active' : ''; ?>" 
+                         data-image-src="<?= $image->getUrl(); ?>" 
+                         alt="<?= $block->escapeHtmlAttr($image->getLabel()); ?>">
+                <?php endforeach; ?>
+            </div>
+        </div>
+
+        <div class="flex flex-col">
+                     <?php
+// Get the product and its type instance
+$product = $block->getProduct();
+$productTypeInstance = $product->getTypeInstance();
+
+// Check if the product is a configurable product
+if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
+    $swatchBlock = $block->getLayout()->createBlock(\Magento\Swatches\Block\Product\Renderer\Configurable::class);
+    
+    // Set the product
+    $swatchBlock->setProduct($product);
+    
+    // Set the ViewModel so the template won't error out
+    $swatchBlock->setData('configurable_view_model', $block->getViewModel(\Magento\Swatches\ViewModel\ConfigurableProduct::class));
+    
+    $swatchBlock->setTemplate('Magento_Swatches::product/view/renderer.phtml');
+    
+    echo $swatchBlock->toHtml();
+}
+
+?>
+        </div>
+    </div>
+
+    <div class="w-full px-8 py-8 mt-6 max-w-screen-xl mx-auto border-t border-gray-200">
+        <div class="border-b flex space-x-8 text-lg">
+            <button class="py-3 tab-button active" data-tab="description-tab">Product Description</button>
+            <button class="py-3 tab-button" data-tab="specification-tab">Specification</button>
+            <button class="py-3 tab-button" data-tab="shipping-tab">Shipping</button>
+            <button class="py-3 tab-button" data-tab="reviews-tab">Reviews</button>
+        </div>
+
+        <div class="mt-6 text-sm text-gray-700 leading-relaxed">
+            <div id="description-tab" class="tab-pane">
+                <h3 class="font-bold mb-2 text-lg">Detailed Product Description</h3>
+                <p>
+                    <?= $block->getProduct()->getDescription(); ?>
+                </p>
+            </div>
+            
+            <div id="specification-tab" class="tab-pane hidden">
+                <h3 class="font-bold mb-2 text-lg">Product Specifications</h3>
+                <table class="table-auto w-full text-sm text-gray-700">
+                    <tbody>
+                        <?php 
+                        // This section would typically be a loop over specific product attributes
+                        $attributes = $product->getAttributes();
+                        if (isset($attributes['manufacturer']) && $product->getManufacturer()): ?>
+                        <tr>
+                            <td class="py-2 px-4 border-b">Manufacturer</td>
+                            <td class="py-2 px-4 border-b"><?= $block->escapeHtml($product->getAttributeText('manufacturer')); ?></td>
+                        </tr>
+                        <?php endif; ?>
+                        <?php if (isset($attributes['sku']) && $product->getSku()): ?>
+                        <tr>
+                            <td class="py-2 px-4 border-b">SKU</td>
+                            <td class="py-2 px-4 border-b"><?= $block->escapeHtml($product->getSku()); ?></td>
+                        </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="shipping-tab" class="tab-pane hidden">
+                <h3 class="font-bold mb-2 text-lg">Packing & Shipping</h3>
+                <p>
+                    This product is carefully packaged to ensure it arrives in perfect condition.
+                </p>
+                <ul class="list-disc pl-6 mt-3 space-y-1 text-sm">
+                    <li>Packed in a branded box</li>
+                    <li>Standard shipping takes 5-7 business days</li>
+                </ul>
+            </div>
+
+            <div id="reviews-tab" class="tab-pane hidden">
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabPanes = document.querySelectorAll('.tab-pane');
+
+        // Initially show the first tab and hide the rest
+        tabPanes.forEach((pane, index) => {
+            if (index === 0) {
+                pane.classList.remove('hidden');
+            } else {
+                pane.classList.add('hidden');
+            }
+        });
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Deactivate all buttons and panes
+                tabButtons.forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                tabPanes.forEach(pane => {
+                    pane.classList.add('hidden');
+                });
+
+                // Activate the clicked button and its corresponding pane
+                button.classList.add('active');
+                const targetTabId = button.dataset.tab;
+                const targetPane = document.getElementById(targetTabId);
+                if (targetPane) {
+                    targetPane.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Image Gallery Functionality
+        const mainImage = document.getElementById('main-product-image');
+        const thumbnails = document.querySelectorAll('.thumbnail-image');
+
+        thumbnails.forEach(thumbnail => {
+            thumbnail.addEventListener('click', () => {
+                // Change the main image source
+                const newSrc = thumbnail.getAttribute('data-image-src');
+                mainImage.src = newSrc;
+
+                // Update the active thumbnail state
+                thumbnails.forEach(thumb => {
+                    thumb.classList.remove('active');
+                });
+                thumbnail.classList.add('active');
+            });
+        });
+    });
+</script>

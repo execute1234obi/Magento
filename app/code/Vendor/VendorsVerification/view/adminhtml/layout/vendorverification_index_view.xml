@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <referenceBlock name="menu">
+            <action method="setActive">
+                <argument name="itemId" xsi:type="string">
+                    Vendor_VendorsVerification::vendor_verification
+                </argument>
+            </action>
+        </referenceBlock>
+
+        <referenceContainer name="content">
+            <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+                   name="vendor.verificationForm"
+                   template="Vendor_VendorsVerification::verification/view/verification.phtml">
+
+                <container name="form.verification.statusinfo" as="status_info"/>
+                <container name="form.verification.businessinfo" as="business_info"/>
+                <container name="form.verification.addressinfo" as="address_info"/>
+                <container name="form.verification.contactinfo" as="contact_info"/>
+                <container name="form.verification.documents" as="documents_info"/>
+                <container name="form.verification.vendoractivity" as="activity_info"/>
+
+            </block>
+        </referenceContainer>
+
+        <!-- STATUS -->
+        <referenceContainer name="form.verification.statusinfo">
+            <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+                   name="verification.status"
+                   template="Vendor_VendorsVerification::verification/view/sections/status.phtml"/>
+        </referenceContainer>
+
+        <!-- BUSINESS -->
+        <referenceContainer name="form.verification.businessinfo">
+            <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+                   name="verification.businessinfo"
+                   template="Vendor_VendorsVerification::verification/view/sections/Vendor-info.phtml"/>
+        </referenceContainer>
+
+        <!-- ADDRESS -->
+        <referenceContainer name="form.verification.addressinfo">
+            <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+                   name="verification.addressinfo"
+                   template="Vendor_VendorsVerification::verification/view/sections/Vendor-address.phtml"/>
+        </referenceContainer>
+
+        <!-- CONTACT -->
+        <referenceContainer name="form.verification.contactinfo">
+            <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+                   name="verification.contactinfo"
+                   template="Vendor_VendorsVerification::verification/view/sections/Vendor-contact.phtml"/>
+        </referenceContainer>
+
+        <!-- DOCUMENTS -->
+        <referenceContainer name="form.verification.documents">
+            <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+                   name="verification.documents"
+                   template="Vendor_VendorsVerification::verification/view/sections/documents.phtml"/>
+        </referenceContainer>
+
+        <!-- ✅ VENDOR ACTIVITY (FIXED) -->
+       <referenceContainer name="form.verification.vendoractivity">
+    <block class="Vendor\VendorsVerification\Block\Adminhtml\Verification"
+           name="verification.vendoractivity"
+           template="Vendor_VendorsVerification::verification/view/sections/vendor-activity.phtml"/>
+</referenceContainer>
+
+
+
+    </body>
+</page>

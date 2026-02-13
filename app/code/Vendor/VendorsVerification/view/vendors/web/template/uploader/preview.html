@@ -1,0 +1,44 @@
+<div class="file-uploader-summary">
+    <div class="file-uploader-preview">
+
+        <a class="preview-link"
+           data-bind="css: 'preview-' + $file.previewType,
+                      attr: { href: $parent.getFilePreview($file), title: $file.name }"
+           target="_blank">
+
+            <img tabindex="0"
+                 data-bind="
+                    event: { load: $parent.onPreviewLoad.bind($parent) },
+                    attr: { src: $parent.getFilePreview($file), alt: $file.name }
+                 ">
+        </a>
+
+        <span data-bind="text: $file.name"></span>
+
+        <input type="text" name="vendorregistcert[]" data-bind="value: $file.name" />   
+
+        <div class="actions">
+            <button type="button"
+                    class="action-remove"
+                    data-role="delete-button"
+                    data-bind="
+                        attr: { title: $t('Delete image') },
+                        click: $parent.removeFile.bind($parent, $file)
+                    ">
+                <span data-bind="translate: 'Delete image'"></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="file-uploader-filename" data-bind="text: $file.name"></div>
+
+    <div class="file-uploader-meta">
+        <span data-bind="if: $file.previewType === 'image'">
+            <span data-bind="text: $file.previewWidth"></span>
+            x
+            <span data-bind="text: $file.previewHeight"></span>,
+        </span>
+
+        <span data-bind="text: $parent.formatSize($file.size)"></span>
+    </div>
+</div>

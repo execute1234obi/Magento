@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <table name="vendor_quote" resource="default" engine="innodb">
+        <column xsi:type="int" name="quote_id" identity="true" nullable="false"/>
+        <column xsi:type="int" name="customer_id" nullable="true"/>
+        <column xsi:type="int" name="vendor_id" nullable="true"/>
+        <column xsi:type="varchar" name="status" length="50" default="pending"/>
+        <column xsi:type="timestamp" name="created_at" default="CURRENT_TIMESTAMP"/>
+
+        <constraint xsi:type="primary">
+            <column name="quote_id"/>
+        </constraint>
+    </table>
+
+    <table name="vendor_quote_item" resource="default" engine="innodb">
+        <column xsi:type="int" name="item_id" identity="true" nullable="false"/>
+        <column xsi:type="int" name="quote_id" nullable="false"/>
+        <column xsi:type="int" name="product_id" nullable="false"/>
+        <column xsi:type="int" name="qty" nullable="false"/>
+        <column xsi:type="decimal" name="proposed_price" scale="2" precision="12" nullable="true"/>
+
+        <constraint xsi:type="primary">
+            <column name="item_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign"
+                    referenceId="FK_VENDOR_QUOTE_ITEM_QUOTE_ID"
+                    table="vendor_quote_item"
+                    column="quote_id"
+                    referenceTable="vendor_quote"
+                    referenceColumn="quote_id"
+                    onDelete="CASCADE"/>
+    </table>
+
+</schema>

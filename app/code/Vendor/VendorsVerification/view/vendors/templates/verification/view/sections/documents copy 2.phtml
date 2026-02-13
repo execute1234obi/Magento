@@ -1,0 +1,305 @@
+<?php
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View */
+
+$vendorVerification = $block->getVendorVerification();
+$verificationId = $vendorVerification ? (int)$vendorVerification->getId() : 0;
+
+/** ============================
+ * CERTIFICATE & DOCUMENT DATA
+ * ============================ */
+$certVerificationData = null;
+$certDetailId = 0;
+$arrCertDocsData = [];
+
+if ($verificationId) {
+    $certVerificationData = $block->getVerificationSectionData(
+        $verificationId,
+        \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+    );
+
+    if ($certVerificationData && $certVerificationData->getId()) {
+        $certDetailId = (int)$certVerificationData->getDetailId();
+        $arrCertDocsData = $block->convertVerificationData(
+            $certVerificationData->getData('vendor_data')
+        );
+    }
+}
+
+$folderName = 'vendor-verification-documents/';
+?>
+
+<!-- ================= CERTIFICATE & DOCUMENTS ================= -->
+<div class="verification-card verification-documents-section">
+
+    <!-- HEADER -->
+    <div class="verification-card-header">
+        <h3><?= __('Certificates and Documents') ?></h3>
+
+        <?php
+        $commentsCount = $block->getCommentsCounts(
+            $verificationId,
+            $certDetailId,
+            \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+        );
+        ?>
+
+        <div class="header-actions">
+            <button type="button"
+                    class="btn btn-link verification-showcomment"
+                    data-verificationid="<?= $verificationId ?>"
+                    data-verifidtlid="<?= $certDetailId ?>"
+                    data-verifigroupid="<?= \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS ?>">
+                <i class="fa fa-comment"></i>
+                <?= __('%1 Comments', $commentsCount) ?>
+            </button>
+
+            <?php if (
+                $certVerificationData &&
+                $certVerificationData->getStatus() ==
+                \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT
+            ): ?>
+                <button type="button"
+                        class="btn btn-sm btn-outline verification-edit"
+                        data-modal-id="verification-cert-modal">
+                    <i class="fa fa-pencil"></i> <?= __('Edit') ?>
+                </button>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="verification-card-body">
+
+        <!-- STATUS -->
+        <div class="verification-row">
+            <div class="label"><?= __('Status') ?></div>
+            <div class="value">
+                <span class="status-badge">
+                    <?= $certVerificationData && $certVerificationData->getId()
+                        ? $block->getStatusLabel($certVerificationData->getStatus())
+                        : __('Pending'); ?>
+                </span>
+            </div>
+        </div>
+
+        <!-- COMMERCIAL CERTIFICATE -->
+        <div class="verification-row">
+            <div class="label"><?= __('Commercial Registration Certificate') ?></div>
+            <div class="value">
+                <?php if (!empty($arrCertDocsData['vendorregistcert'])): ?>
+                    <a target="_blank"
+                       class="doc-link"
+                       href="<?= $block->getMediaUrl() . $folderName . '/' . $arrCertDocsData['vendorregistcert']; ?>">
+                        <i class="fa fa-file-text-o"></i>
+                        <?= basename($arrCertDocsData['vendorregistcert']); ?>
+                    </a>
+                <?php else: ?>
+                    <span class="doc-empty"><?= __('Not Uploaded') ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- OTHER DOCUMENTS -->
+        <div class="verification-row">
+            <div class="label"><?= __('Other Documents') ?></div>
+            <div class="value">
+                <?php if (!empty($arrCertDocsData['vendoradditionaldocs']) && is_array($arrCertDocsData['vendoradditionaldocs'])): ?>
+                    <ul class="doc-list">
+                        <?php foreach ($arrCertDocsData['vendoradditionaldocs'] as $doc): ?>
+                            <li>
+                                <a target="_blank"
+                                   class="doc-link"
+                                   href="<?= $block->getMediaUrl() . $folderName . '/' . $doc; ?>">
+                                    <i class="fa fa-file-text-o"></i>
+                                    <?= basename($doc); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <span class="doc-empty"><?= __('Not Uploaded') ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- ================= END CERTIFICATE & DOCUMENTS ================= -->
+
+
+<!-- ================= EDIT MODAL ================= -->
+<div id="verification-cert-modal" style="display:none;">
+    <form class="form verification"
+          action="<?= $block->getEditActionUrl(
+              $verificationId,
+              $certDetailId,
+              \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+          ); ?>"
+          method="post"
+          enctype="multipart/form-data">
+
+        <fieldset class="fieldset">
+            <legend class="legend"><span><?= __('Documents') ?></span></legend>
+
+            <div class="form-group">
+                <label><?= __('Commercial Registration Certificate') ?></label>
+                <div class="upload-wrapper" data-bind="scope: 'vendorregistcert'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label><?= __('Additional Documents') ?></label>
+                <div class="upload-wrapper" data-bind="scope: 'vendoradditionaldocs'">
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="page-main-actions">
+            <button type="submit" class="btn btn-primary"><?= __('Update') ?></button>
+        </div>
+    </form>
+</div>
+
+<!-- ================= UI ONLY STYLES ================= -->
+<style>
+/* ===============================
+   SAME CARD LOOK (OLD SECTION)
+================================ */
+.verification-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    margin-bottom: 24px;
+    padding: 0;
+}
+
+/* ===============================
+   HEADER (same as .verification-section .header)
+================================ */
+.verification-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.verification-card-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Header actions (comments + edit) */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Comments button – same style */
+.verification-showcomment {
+    font-size: 13px;
+    color: #2563eb;
+    padding: 0;
+    text-decoration: none;
+}
+
+.verification-showcomment i {
+    margin-right: 4px;
+}
+
+.verification-showcomment:hover {
+    text-decoration: underline;
+}
+
+/* Edit button */
+.verification-edit {
+    font-size: 12px;
+    padding: 4px 10px;
+}
+
+/* ===============================
+   BODY (same as table rows)
+================================ */
+.verification-card-body {
+    padding: 12px 18px 18px;
+}
+
+/* Row = table row feel */
+.verification-row {
+    display: flex;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 13px;
+}
+
+.verification-row:last-child {
+    border-bottom: none;
+}
+
+/* Label column (like table first td) */
+.verification-row .label {
+    width: 220px;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Value column */
+.verification-row .value {
+    flex: 1;
+    color: #374151;
+    word-break: break-word;
+}
+
+/* ===============================
+   STATUS (same alignment as table)
+================================ */
+.status-badge {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+/* ===============================
+   DOCUMENT LINKS
+================================ */
+.doc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.doc-link:hover {
+    text-decoration: underline;
+}
+
+.doc-link i {
+    font-size: 14px;
+}
+
+/* Empty text */
+.doc-empty {
+    font-size: 13px;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* List spacing */
+.doc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.doc-list li {
+    margin-bottom: 6px;
+}
+
+</style>

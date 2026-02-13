@@ -1,0 +1,57 @@
+<?php
+/** @var $block \Magento\Catalog\Block\Product\ListProduct */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+
+<?php if (!$_productCollection->count()): ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__('We can\'t find products matching the selection.')) ?></p>
+    </div>
+<?php else: ?>
+    <div class="product-list space-y-6">
+        <?php foreach ($_productCollection as $_product): ?>
+            <div class="product-item flex flex-col md:flex-row gap-6 p-4 border rounded shadow-sm bg-white">
+                <!-- Product Image -->
+                <div class="w-full md:w-1/4">
+                    <a href="<?= $_product->getProductUrl() ?>">
+                       
+                        <img 
+                            src="<?= $block->getImage($_product, 'product_thumbnail_image')->getImageUrl(); ?>" 
+                            alt="<?= $block->escapeHtml($_product->getName()); ?>" 
+                            class="w-full h-auto object-contain rounded"
+                        />
+                    </a>
+                   
+                </div>
+
+                <!-- Product Info -->
+                <div class="w-full md:w-3/4 flex flex-col justify-between">
+                    <div>
+                        <!-- Product Name -->
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">
+                            <a href="<?= $_product->getProductUrl(); ?>" class="hover:underline">
+                                <?= $block->escapeHtml($_product->getName()); ?>
+                            </a>
+                        </h2>
+
+                        <!-- Product Price -->
+                        <div class="text-green-700 text-lg font-bold mb-4">
+                            <?= $block->getProductPrice($_product); ?>
+                        </div>
+                    </div>
+
+                    <!-- Button -->
+                 <div>
+  
+    <a href="<?= $_product->getProductUrl() ?>"
+       class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 hover:text-white focus:text-white active:text-white visited:text-white transition">
+        View Details
+    </a>
+</div>
+
+              </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>

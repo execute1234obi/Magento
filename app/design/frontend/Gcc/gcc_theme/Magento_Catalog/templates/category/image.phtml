@@ -1,0 +1,303 @@
+<?php
+// Safe get category
+$category = null;
+
+if (method_exists($block, 'getCurrentCategory')) {
+    $category = $block->getCurrentCategory();
+}
+
+if (!$category) {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $registry = $objectManager->get(\Magento\Framework\Registry::class);
+    $category = $registry->registry('current_category');
+}
+
+// If still no category → STOP & avoid errors
+if (!$category) {
+    return; // Safe exit (does not break page)
+}
+
+// Generate image URL safely
+$categoryImage = '';
+$categoryImageName = $category->getImage();
+
+if ($categoryImageName) {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+    $mediaBaseUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+    // Clean image path
+    $categoryImageName = ltrim(str_replace(['pub/media/', 'media/'], '', $categoryImageName), '/');
+    //$categoryImage = $mediaBaseUrl . "catalog/category/" . $categoryImageName;
+    $categoryImage = $mediaBaseUrl . $categoryImageName;
+    //echo $categoryImage;
+}
+?>
+
+
+<?php if ($categoryImage): ?>
+<div class="hero-banner" style="background-image: url('<?= $categoryImage ?>');">
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+        <h1><?= $block->escapeHtml($category->getName()) ?></h1>
+        <p><?= $category->getDescription() ?: 'Discover New and Important Products' ?></p>
+    </div>
+</div>
+<?php endif; ?>
+
+              <?php
+//$category = $block->getCurrentCategory();
+//$subcategories = $category->getChildrenCategories();
+$subcategories = $category->getChildrenCategories()
+    ->addAttributeToSelect(['image', 'thumbnail']);
+?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+$mediaBaseUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+//$mediaBaseUrl = $this->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+<?php if (count($subcategories) > 0): ?>
+    <div class="mx-auto px-4 py-8" style="position: relative;z-index: 1; background-image: url(http://gccapp.duckdns.org/pub/media/wysiwyg/home_join_meeting_section.png); background-size: contain; padding: 0px 200px; padding-top:50px; padding-bottom:50px;">
+        <!-- HERO SECTION -->
+        <!-- SHOP BY MORE SPECIFIC CATEGORIES -->
+<section class="mb-12">
+            <div class="text-center pt-14 pb-12">
+                <h2 class="text-6xl font-semibold text-[#1A3764]" style="padding-top:39px;">Shop by More Specific Categories</h2>
+                <p class="text-gray-600 mt-2 text-3xl">Discover New and Important Categories</p>
+<div class="mx-auto px-4 py-8"
+     style="position: relative; z-index: 1; 
+            background-size: cover; 
+            background-position: center;
+            padding: 10px 0;">
+
+
+<div class="category-carousel relative bg-[#FFFFFFBF] p-8 rounded-2xl" style="padding-right:100px; padding-left:100px;">
+
+    <button class="carousel-nav prev" onclick="scrollCategories('left')">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+    </button>
+    <div id="categoriesContainer" class="flex gap-6 overflow-x-auto whitespace-nowrap">
+       <?php foreach ($subcategories as $sub): ?>
+            <?php if ($sub->getIsActive()): ?>
+                <?php 
+               //print_r($sub->getData());
+                    $subUrl = $sub->getUrl(); 
+                  $imagePath = $sub->getImage();
+
+if (!empty($imagePath)) {
+    $imagePath = ltrim($imagePath, '/');
+
+    // Remove pub/ or media/ prefix if present
+    $imagePath = str_replace(['pub/media/', 'media/'], '', $imagePath);
+}
+$subImg = $mediaBaseUrl .  $imagePath;
+                    $productCount = $sub->getProductCount();
+                ?>
+<div class="category-card text-center min-w-[200px] p-4 bg-white rounded-xl shadow-md cursor-pointer">
+                    <a href="<?= $subUrl ?>">
+                        <img src="<?= $subImg ?>" alt="<?= $sub->getName() ?>" class="mx-auto w-24 h-24 object-contain" width="120px" height="120px"/>
+                        <h3 class="mt-3 font-semibold text-lg"><?= $sub->getName() ?></h3>
+                        <p class="text-gray-600"><?= $productCount ?> Product Types</p>
+                    </a>
+                </div>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </div>
+    <button class="carousel-nav next" onclick="scrollCategories('right')">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+    </button>
+
+</div>
+</div>
+<?php endif; ?>  
+</div>
+
+<style>
+
+    #categoriesContainer {
+    scrollbar-width: none;  /* Firefox */
+}
+
+#categoriesContainer::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+}
+    .hero-banner {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    min-height: 500px;
+    overflow: hidden;
+}
+ .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+        }
+
+        .hero-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #fff;
+            padding: 20px;
+            max-width: 900px;
+            width: 100%;
+            z-index: 2;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0 0 15px;
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            font-weight: 400;
+            opacity: 0.95;
+        }
+      /* Category Carousel */
+.category-carousel {
+    position: relative;
+    overflow: hidden;
+    background: #FFFFFFBF;
+    padding: 2rem;
+    border-radius: 1rem;
+}
+
+.category-card {
+    background: #FAE99B;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+      min-width: 250px; 
+    flex: 0 0 auto;
+}
+
+.category-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.category-card img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.category-card h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1A3764;
+    margin-bottom: 5px;
+    text-align: start;
+}
+
+.category-card p {
+    font-size: 1.2rem;
+    color: #1A3764;
+    text-align: start;
+}
+
+/* Carousel Navigation Arrows */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #2563EB;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: background 0.3s ease;
+}
+
+.carousel-nav:hover {
+    background: #1E49C4;
+}
+
+.carousel-nav.prev {
+    left: 40px;
+}
+
+.carousel-nav.next {
+    right: 40px;
+}
+
+.subcategory-thumb {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+@media (max-width: 768px) {
+    .carousel-nav {
+        display: none;
+    }
+}
+</style>
+     <script>
+        // Category Carousel Scroll Function
+        function scrollCategories(direction) {
+            const container = document.getElementById('categoriesContainer');
+            const scrollAmount = 350;
+            
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        // Product Carousel Scroll Function
+        function scrollProducts(section, direction) {
+            const container = document.getElementById(section === 'vendors' ? 'vendorsContainer' : 'trendingContainer');
+            const scrollAmount = 350;
+            
+            if (direction === 'left') {
+                container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+            } else {
+                container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+            }
+        }
+
+        // Favorite Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const favoriteButtons = document.querySelectorAll('.product-favorite');
+            
+            favoriteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const svg = this.querySelector('svg');
+                    const isFilled = svg.getAttribute('fill') === 'currentColor';
+                    
+                    if (isFilled) {
+                        svg.setAttribute('fill', 'none');
+                        svg.setAttribute('stroke', 'currentColor');
+                    } else {
+                        svg.setAttribute('fill', 'currentColor');
+                        svg.removeAttribute('stroke');
+                    }
+                });
+            });
+        });
+    </script>

@@ -1,0 +1,113 @@
+<?php 
+/** @var $block \Vendor\VendorsVerification\Block\Adminhtml\Verification */
+
+$vendorVerification = $block->getVendorVerification();
+if (!$vendorVerification) { return; }
+
+$verificationId = $vendorVerification->getId();
+$groupId = \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_ACTIVITY;
+$verificationData = $block->getVerificationSectionData($verificationId, $groupId);
+
+if (!$verificationData) {
+    echo __("No activity data submitted.");
+    return;
+}
+
+$detail_id = $verificationData->getDetailId();
+
+/** * ERROR 1 FIX: Data fetch nahi ho raha tha table ke liye.
+ * Hum vendor_data ko convert kar rahe hain taaki fields dikha sakein.
+ */
+$arrData = $block->convertVerificationData($verificationData->getData('vendor_data'));
+
+// Frontend fields ke mutabiq keys (Agar aapki keys alag hain toh yahan change karein)
+$vendorActivity = isset($arrData['vendor_activity']) ? $arrData['vendor_activity'] : (isset($arrData['activity']) ? $arrData['activity'] : __('N/A'));
+?>
+
+<div class="admin__page-section-content">
+    <div class="admin__page-section-item">
+        <div class="admin__page-section-item-title">
+            <span class="title">
+                <span><?php echo __('Vendor Activity') ?></span>         
+            </span>
+        </div>
+        <div class="admin__page-section-item-content">  
+            <div style="margin-bottom: 15px;">
+                <button title="<?php echo __('Approve') ?>" type="button" class="btn verification-action" style="background:#66a80f;color:#ffffff;" data-modal-id="verification-activityapprove-modal" data-modal-action="approve">
+                    <span><?php echo __('Approve') ?></span>
+                </button>
+                <button title="<?php echo __('Reject') ?>" type="button" class="btn verification-action" style="background:#ff2500;color:#ffffff;" data-modal-id="verification-activityreject-modal" data-modal-action="reject">
+                    <span><?php echo __('Reject') ?></span>
+                </button>
+                <button type="button" class="action-default verification-showcomment pull-right" 
+                    data-verificationid="<?php echo $verificationId;?>" 
+                    data-verifidtlid="<?php echo $detail_id;?>" 
+                    data-verifigroupid="<?php echo $groupId;?>">
+                    <span><?php echo __("Comments");?></span>
+                </button>
+            </div>
+
+            <table class="admin__table-secondary">
+                <tbody>
+                    <tr>      
+                        <td><strong><?php echo __('Status') ?></strong></td>
+                        <td><?php echo $block->getStatusLabel($verificationData->getStatus());?></td>      
+                    </tr>
+                    <!-- <tr>      
+                        <td><strong><?php echo __('Activity Description') ?></strong></td>
+                        <td><?php echo $block->escapeHtml($vendorActivity); ?></td>      
+                    </tr> -->
+                </tbody>    
+            </table>
+        </div>          
+    </div>      
+</div>
+<!-- START Activity Approval  Form-->
+<div id="verification-activityapprove-modal" style="display:none;">	
+     <h2><?php echo __('Vendor Activity') ?></h2>
+	
+	<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_ACTIVITY,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__VERIFIED); ?>"
+      name="verification-activity-form"
+      id="verification-activity-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+      <div class="fields col-md-10">                             
+             <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+		        <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+             </div>	   
+       </div>
+     
+</form>
+</div>
+<!-- END Activity Approval  Form-->
+
+
+
+<!-- START Activity Reject  Form-->
+<div id="verification-activityreject-modal" style="display:none;">	
+     <h2><?php echo __('Vendor Activity') ?></h2>
+	<form class="form verification"
+      action="<?php echo $block->getEditActionUrl($verificationId,$detail_id, \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_ACTIVITY,\Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__REJECTED); ?>"
+      name="verification-activityreject-form"
+      id="verification-activityreject-form"
+      method="post"
+      data-hasrequired="<?php echo __('* Required Fields') ?>"      
+      data-mage-init='{"validation":{}}'>
+      <input type="hidden" name="form_key" value="<?php echo $block->getFormKey();?>" />
+      <div class="fields col-md-10">
+           <div class="field comments required">
+               <label  for="comments"><span><?php echo __('Comments For Reject') ?></span></label>
+                <div class="control">                                     
+		       		 <textarea name="comments" id="comments" rows="10" cols="80" data-validate="{required:true}"></textarea>
+                 </div>
+             </div>                             
+              <div class="page-main-actions" style="margin-right:0;margin-left:0;">	  		                
+			     <button type="submit" class="btn btn-primary"><?php echo __('Update') ?></button>
+               </div>	   
+       </div>     
+</form>
+</div>
+<!-- END Busines Contact Reject  Form-->

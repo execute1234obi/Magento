@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+     <!-- Cart page load -->
+    <!-- <event name="sales_quote_collect_totals_before">
+        <observer
+            name="remove_verification_fee_from_cart"
+            instance="Vendor\VendorsVerification\Observer\RemoveVerificationFromCart"/>
+    </event> -->
+    <event name="checkout_onepage_controller_success_action">
+        <observer name="remove_verification_fee_from_cart"
+                  instance="Vendor\VendorsVerification\Observer\RemoveVerificationFromCart"/>
+    </event>
+
+</config>

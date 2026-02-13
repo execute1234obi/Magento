@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="Vendor" translate="label" sortOrder="100">
+            <label>Seller Verification</label>
+        </tab>
+        <section id="Vendor_vendorverification" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Verification Fees</label>
+            <tab>Vendor</tab>
+            <resource>Vendor_VendorsVerification::vendor_verification_config</resource>
+            <group id="config" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Verification Fees Configuration</label>                
+                <field id="sender_email_identity" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Email Sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                </field>
+                <field id="months_duration" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Verification Duration [Months]</label>
+                    <source_model>Vendor\VendorsVerification\Model\Source\VerificationMonths</source_model>
+                </field>
+                <field id="fees" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Verification Fees</label>
+                    <frontend_model>Vendor\VendorsVerification\Block\Adminhtml\Form\Field\Verification</frontend_model>
+                    <backend_model>Vendor\VendorsVerification\Config\Backend\VerificationFees</backend_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

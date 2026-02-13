@@ -1,0 +1,90 @@
+<?php
+/**
+ * Test file for Vnecoms Vendor Contact functionality.
+ * Designed to be placed on a PDP (Product Detail Page) or custom block.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * * NOTE: Using ObjectManager is highly discouraged in production code. 
+ * This is used ONLY for quick testing, as requested.
+ */
+
+// ---------------------------------------------------------------------
+// 1. DYNAMIC VENDOR ID FETCHING (Testing Purpose Only)
+// ---------------------------------------------------------------------
+$vendor_id = null;
+try {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $objectManager->get(\Magento\Framework\Registry::class)->registry('current_product');
+    
+    if ($product && $product->getVendorId()) {
+        $vendor_id = $product->getVendorId();
+    } elseif (!empty($vendor) && method_exists($vendor, 'getData')) {
+        // Fallback to your existing $vendor object if needed
+        $vendor_id = $vendor->getData('vendor_id');
+    }
+} catch (\Exception $e) {
+    // Fail silently in test environment
+}
+
+if (empty($vendor_id)) {
+    // If dynamic ID fails, use a hardcoded test ID (replace 123 with a known Vendor ID)
+    $vendor_id = 'v1'; 
+    echo '<strong>⚠️ Vendor ID Test:</strong> Using hardcoded ID ('.$vendor_id.').';
+}
+ $vendor_id = 'v1'; 
+// ---------------------------------------------------------------------
+?>
+
+<div class="vendor-contact-test-block" style="border: 2px solid #ccc; padding: 15px; margin: 20px 0; background: #f9f9f9;">
+    <h3>VnEcoms Message Functionality Test</h3>
+    <p>Current Vendor ID: <strong><?= $block->escapeHtml($vendor_id) ?></strong></p>
+
+    <button 
+        type="button" 
+        class="action primary test-contact-supplier-btn" 
+        id="test-vnecoms-msg-btn-<?= $block->escapeHtmlAttr($vendor_id) ?>"
+        data-vendor-id="<?= $block->escapeHtmlAttr($vendor_id) ?>" 
+    >
+        CLICK TO TEST (VnEcoms Direct Call)
+    </button>
+</div>
+
+<script>
+    require(['jquery'], function ($) {
+        'use strict';
+        
+        var vendorId = "<?= $block->escapeJs($vendor_id) ?>";
+        var button = $('#test-vnecoms-msg-btn-' + vendorId);
+
+        if (button.length) {
+            button.on('click', function () {
+                // Check 1: If VnEcoms has its global object defined (Legacy check)
+                if (typeof Vnecoms !== 'undefined' && Vnecoms.openContactForm) {
+                    Vnecoms.openContactForm(vendorId);
+                    console.log('VnEcoms Test: SUCCESS (Legacy Global Call)');
+                } 
+                
+                // Fallback (The most common issue fix)
+                else {
+                    // Injecting the required class and triggering the event
+                    // This forces the VnEcoms jQuery/RequireJS binding to activate.
+                    
+                    var $tempBtn = $('<a class="vnecoms-msg-btn" href="javascript:void(0);"></a>');
+                    $tempBtn.data('vendor-id', vendorId);
+                    
+                    // Attach, Trigger, and Remove
+                    $('body').append($tempBtn);
+                    $tempBtn.trigger('click');
+                    
+                    setTimeout(function() {
+                        $tempBtn.remove();
+                    }, 50); 
+                    
+                    console.log('VnEcoms Test: Fallback SUCCESS (Injected Event Triggered)');
+                }
+            });
+        } else {
+            console.warn('VnEcoms Test: Button element not found on page.');
+        }
+    });
+</script>

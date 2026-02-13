@@ -1,0 +1,75 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+$currentStore = $storeManager->getStore();
+$currentStoreName = $currentStore->getName();
+$isArabic = ($currentStore->getCode() === 'arabic'); 
+$mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+
+// Note: Ensure your core logic for stores and customer data is handled here
+
+// Arrow Icon HTML (No external SVG needed, just a simple character or CSS icon)
+$arrowIcon = '<span class="header-dropdown-arrow">&#9660;</span>'; // Down arrow character
+
+?>
+
+<header
+    id="customHeader"
+    class="custom-header-wrapper <?= $isArabic ? 'rtl-header' : '' ?>"
+    <?= $isArabic ? 'dir="rtl" lang="ar"' : '' ?>
+>
+    <div class="header-main-container">
+        <div class="header-section-left">
+            <div class="header-logo-area">
+                <a href="<?= $block->escapeUrl($block->getUrl('')); ?>">
+                    <img src="<?= $block->escapeUrl($block->getViewFileUrl('wysiwyg/gcc-logo.png')) ?>" alt="GCC Trading" class="logo-img">
+                </a>
+            </div>
+
+            <nav class="header-main-nav">
+                <div class="dropdown-menu-wrapper" id="vendorBtn">
+                    <span><?= __('Vendors') ?></span> <?= $arrowIcon ?>
+                    <div class="dropdown-content vendor-menu-content hidden" id="vendorMenu">
+                        <a href="#"><?= __('Add and manage your product listings.') ?></a>
+                        <a href="#"><?= __('Vendor Dashboard') ?></a>
+                    </div>
+                </div>
+
+                <div class="dropdown-menu-wrapper" id="customerBtn">
+                    <span><?= __('Customer') ?></span> <?= $arrowIcon ?>
+                    <div class="dropdown-content customer-menu-content hidden" id="customerMenu">
+                        <a href="#"><?= __('Request for Quotes (RFQ)') ?></a>
+                        <a href="#"><?= __('HS Code') ?></a>
+                        <a href="#"><?= __('Join as a Customer') ?></a>
+                    </div>
+                </div>
+
+                <a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>" class="nav-link"><?= __('About Us') ?></a>
+                <a href="<?= $block->escapeUrl($block->getUrl('contact-us')) ?>" class="nav-link"><?= __('Contact Us') ?></a>
+            </nav>
+        </div>
+
+        <div class="header-section-right">
+            <a href="#" class="nav-link vendor-dashboard-link"><?= __('Vendor Dashboard') ?></a>
+
+            <span class="header-icon icon-1"></span>
+            <span class="header-icon icon-2"></span>
+
+            <div class="dropdown-menu-wrapper language-switcher" id="langToggle">
+                <span class="lang-text"><?= $block->escapeHtml($currentStoreName) ?></span> <?= $arrowIcon ?>
+                <div class="dropdown-content language-menu-content hidden" id="languageMenu">
+                    </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<script type="text/x-magento-init">
+    {
+        "[data-role=mobile-menu-toggle]": { "Gcc_gcc_theme/js/header-init": {} },
+        "#langToggle": { "Gcc_gcc_theme/js/header-init": {} },
+        "#vendorBtn": { "Gcc_gcc_theme/js/header-init": {"dropdownId": "vendorMenu"} },
+        "#customerBtn": { "Gcc_gcc_theme/js/header-init": {"dropdownId": "customerMenu"} }
+    }
+</script>

@@ -1,0 +1,262 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<header id="pageHeader" style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #fff;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    max-width: 1440px;
+margin: 0 auto;
+">
+    <!-- <div style="flex-shrink: 0;"> -->
+       <div style="flex: 0 0 auto; display: flex; align-items: center; margin-left: 40px;flex-shrink: 0;">
+        <a href="<?= $block->escapeUrl($block->getUrl('')) ?>">
+            <img src="<?= $block->escapeUrl($block->getViewFileUrl('wysiwyg/gcc-logo.png')) ?>" alt="GCC Trading" style="height:40px; display: block;">
+        </a>
+    </div>
+  <div style="margin-right: 40px; display: flex; align-items: center; gap: 24px;">
+    <div id="navMenu">
+       
+      <nav style="display: flex; align-items: center; gap: 24px; font-family: Arial, sans-serif;">
+  <div class="dropdown" style="position: relative;">
+    <a href="#" onclick="toggleDropdown(event,'vendorMenu')" style="color: #4b5563; text-decoration: none; white-space: nowrap; padding: 8px 14px; font-size: 14px; border-radius: 6px; display: inline-block;">
+      Vendor <span style="font-size: .8rem;">▼</span>
+    </a>
+    <ul id="vendorMenu" style="
+      position: absolute; 
+  top: 100%; 
+  left: 0; 
+  background: #fff; 
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1); 
+  list-style: none; 
+ margin: 6px 0 0 0; /* ↓ Reduced margin to tighten top space */
+  padding: 10px; 
+  width: 200px;  /* Adjusted width to align with blue line */
+  display: none; 
+  border-radius: 20px; 
+  z-index: 1000; 
+  font-size: 13px;
+  transition: all 0.2s ease-in-out;
+    ">
+      <!-- Vendor Dashboard -->
+      <li style="margin-bottom: 3px;">
+        <a href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')) ?>" 
+            style="display: flex; align-items: center; text-decoration: none; color: #333; padding: 8px 10px;"
+             onmouseover="this.style.backgroundColor='#e6f0ff'; this.style.borderRadius='10px';"
+              onmouseout="this.style.backgroundColor='transparent'; this.style.borderRadius='10px';"
+>
+          <!-- <img src="{{media url='wysiwyg/home-rfq.png'}}" alt="Dashboard" style="width: 20px; height: 20px; margin-right: 10px;"> -->
+          <span style="font-size:1.25rem; margin-right:8px;">💬</span> 
+          <div>
+            <strong style="display: block;">Vendor Dashboard</strong>
+            <span style="font-size: 10px; color: #6b7280;">Manage orders, view analytics, optimize sales</span>
+          </div>
+        </a>
+      </li>
+        <!-- HS Code Option -->
+      <li style="margin-bottom: 3px;">
+        <a href="#" style="display: flex; align-items: center; text-decoration: none; color: #333;padding: 8px 10px; "
+             onmouseover="this.style.backgroundColor='#e6f0ff'; this.style.borderRadius='10px';"
+              onmouseout="this.style.backgroundColor='transparent'; this.style.borderRadius='10px';">
+          <!-- <img src="{{media url='wysiwyg/home-search.png'}}" alt="HS Code" style="width: 20px; height: 20px; margin-right: 10px;"> -->
+            <span style="font-size:1.25rem; margin-right:8px;">📁</span>
+          <div>
+            <strong style="display: block;">HS Code</strong>
+            <span style="font-size: 10px; color: #6b7280;">Identify correct HS codes for trade</span>
+          </div>
+        </a>
+      </li>
+
+           <!-- Join as Vendor -->
+      <li style="margin-bottom: 0;">
+        <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login/')) ?>" 
+            style="display: flex; align-items: center; text-decoration: none; color: #333;padding: 8px 8px; "
+             onmouseover="this.style.backgroundColor='#e6f0ff'; this.style.borderRadius='10px';"
+              onmouseout="this.style.backgroundColor='transparent'; this.style.borderRadius='10px';" >
+          <!-- <img src="{{media url='wysiwyg/home_vendor.png'}}" alt="Join" style="width: 20px; height: 20px; margin-right: 10px;"> -->
+            <span style="font-size:1.25rem; margin-right:8px;">🤝</span>
+          <div>
+            <strong style="display: block;">Join as a Vendor</strong>
+            <span style="font-size: 10px; color: #6b7280;">Become part of our marketplace</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+            <div class="dropdown" style="position: relative;">
+                <a href="#" style="color:#4b5563;text-decoration:none;white-space:nowrap;" onclick="toggleDropdown(event,'customerMenu')">
+                    Customer <span style="font-size:.8rem;">▼</span>
+                </a>
+                <ul id="customerMenu" class="dropdown-menu" style="position: absolute; top:100%; left:0; background:#fff; box-shadow:0 4px 8px rgba(0,0,0,.1); list-style:none; margin:8px 0 0; padding:12px; min-width:240px; display:none;">
+                    <li style="margin-bottom:12px; display:flex; align-items:center;">
+                        <span style="font-size:1.25rem; margin-right:8px;">💬</span>
+                        <div>
+                            <strong>RFQ (Quotes)</strong>
+                            <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">Submit project details to suppliers</p>
+                        </div>
+                    </li>
+                    <li style="margin-bottom:12px; display:flex; align-items:center;">
+                        <span style="font-size:1.25rem; margin-right:8px;">📁</span>
+                        <div>
+                            <strong>HS Code</strong>
+                            <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">Find the right HS codes for trade</p>
+                        </div>
+                    </li>
+                    <li style="display:flex; align-items:center;">
+                        <span style="font-size:1.25rem; margin-right:8px;">🤝</span>
+                        <div>
+                           <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login/')) ?>" style="text-decoration:none;color:inherit;">
+                            <strong>Join as Customer</strong>
+                            <p style="margin:4px 0 0;font-size:.875rem;color:#6b7280;">Access buyer‑only features</p>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>" style="color:#4b5563;text-decoration:none;white-space:nowrap;">About Us</a>
+            <a href="<?= $block->escapeUrl($block->getUrl('contact-us')) ?>" style="color:#4b5563;text-decoration:none;white-space:nowrap;">Contact Us</a>
+        </nav>
+   <?php if ($block->isLoggedIn()): ?>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <span class="welcome-msg">
+            <?= __('Welcome, %1', $block->escapeHtml($block->getCustomerName())) ?>
+        </span>
+        <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="logout-link">
+            <?= __('Logout') ?>
+        </a>
+    </div>
+<?php else: ?>
+    <div style="display:flex; align-items:center; gap:16px;">
+        <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="header-button" style="background:#2563eb; color:#fff; padding:8px 20px; border-radius:6px; font-size:.9rem; font-weight:500; text-decoration:none; white-space:nowrap;">Sign Up</a>
+        <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="header-button" style="border:1px solid #2563eb; color:#2563eb; padding:8px 20px; border-radius:6px; font-size:.9rem; font-weight:500; text-decoration:none; white-space:nowrap;">Sign In</a>
+    </div>
+<?php endif; ?>
+
+    <div style="display: flex; align-items: center; gap: 24px;">
+        <div id="langSwitcher" class="dropdown" style="position:relative;">
+            <a href="#" style="display:flex;align-items:center;color:#4b5563;text-decoration:none;font-size:.875rem;" onclick="toggleDropdown(event,'langMenu')">
+                <img src="https://img.icons8.com/color/48/globe--v1.png" alt="Language" style="width:20px;height:20px;margin-right:6px;">
+                EN<span style="font-size:.8rem;margin-left:4px;">▼</span>
+            </a>
+            <ul id="langMenu" class="dropdown-menu" style="position:absolute; top:100%; right:0; background:#fff; box-shadow:0 4px 8px rgba(0,0,0,.1); list-style:none; margin:8px 0 0; padding:8px 0; min-width:140px; display:none;">
+                <li style="padding:8px 16px;display:flex;align-items:center; cursor: pointer;">
+                    <img src="https://img.icons8.com/color/48/great-britain-circular.png" alt="EN" style="width:16px;height:16px;margin-right:8px;"> English
+                </li>
+                <li style="padding:8px 16px;display:flex;align-items:center; cursor: pointer;">
+                    <img src="https://img.icons8.com/color/48/saudi-arabia-circular.png" alt="AR" style="width:16px;height:16px;margin-right:8px;"> العربية
+                </li>
+            </ul>
+        </div>
+        <div id="hamburgerMenu" style="cursor: pointer; display: none;">
+            <img src="https://img.icons8.com/ios-filled/50/000000/menu--v1.png" alt="Menu" style="width: 24px; height: 24px; display: block;">
+        </div>
+    </div>
+      </div>
+</header>
+
+<script>
+    function toggleDropdown(e, id) {
+        e.preventDefault();
+        e.stopPropagation();
+        // Close all other dropdowns first
+        document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
+            if (menu.id !== id) {
+                menu.style.display = 'none';
+            }
+        });
+        // Toggle the clicked one
+        var m = document.getElementById(id);
+        m.style.display = m.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Toggle mobile navigation
+    document.getElementById('hamburgerMenu').addEventListener('click', function() {
+        var nav = document.getElementById('navMenu');
+        nav.classList.toggle('is-open');
+    });
+
+    // Global click listener to close all dropdowns
+    document.addEventListener('click', function() {
+        document.querySelectorAll('.dropdown-menu').forEach(function(m) {
+            m.style.display = 'none';
+        });
+    });
+</script>
+
+<style>
+    /* Default Desktop Styles */
+    #navMenu {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        flex-grow: 1; /* Allows nav to take space */
+        justify-content: flex-end; /* Pushes nav items to the right */
+        margin-right: 24px; /* Space before language switcher */
+    }
+
+    /* Tablet & Mobile Styles */
+    @media (max-width: 1024px) {
+        #navMenu {
+            display: none; /* Hide nav menu by default */
+            position: absolute;
+            top: 73px; /* Header height (56px) + padding (16px) + border (1px) */
+            left: 0;
+            width: 100%;
+            background-color: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            flex-direction: column;
+            align-items: flex-start; /* Align items left */
+            padding: 24px;
+            gap: 24px;
+            box-sizing: border-box; /* Important for padding */
+        }
+        #navMenu.is-open {
+            display: flex; /* Show menu when toggled */
+        }
+        #navMenu > nav,
+        #navMenu > div {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            width: 100%;
+        }
+        /* Make mobile dropdowns appear inline */
+        #navMenu .dropdown-menu {
+            position: static !important;
+            box-shadow: none !important;
+            border-top: 1px solid #f3f4f6;
+            margin-top: 15px !important;
+            padding-top: 15px !important;
+            width: 100%;
+        }
+        #hamburgerMenu {
+            display: block !important; /* Show hamburger icon */
+        }
+        #langSwitcher {
+            display: flex !important; /* Ensure language switcher is always visible */
+        }
+    }
+
+    /* Small Phone Styles */
+    @media (max-width: 480px) {
+        #pageHeader {
+            padding: 12px 16px !important;
+        }
+        #navMenu {
+            top: 65px !important; /* Adjust for new header height */
+        }
+        .header-button {
+            padding: 8px 16px !important;
+            font-size: .875rem !important;
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>

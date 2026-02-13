@@ -1,0 +1,27 @@
+/* DASHBOARD */
+.custom-dashboard-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+
+    background-color: #ffffff;
+    -webkit-mask: url("/media/dashboard.svg") no-repeat center;
+    mask: url("/media/dashboard.svg") no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+.custom-dashboard-icon:before { content: none !important; }
+
+/* CATALOG */
+.custom-catalog-icon {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+
+    background-color: #ffffff;
+    -webkit-mask: url("/media/catalog.svg") no-repeat center;
+    mask: url("/media/catalog.svg") no-repeat center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+.custom-catalog-icon:before { content: none !important; }
