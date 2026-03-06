@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="adminhtml_catalog_product_edit_prepare_form">
+    	<observer name="vnecoms_vendorsmembership_product_edit_tab_attributes" instance="Vnecoms\VendorsMembership\Observer\SetRenderer" />
+    </event>
+    <event name="ves_vendors_group_tab_main_prepare_after">
+        <observer name="vemdormembership_vendorsgroup_tab_main_prepare_after" instance="Vnecoms\VendorsMembership\Observer\Adminhtml\VendorsGroupTabAfter" />
+    </event>
+</config>

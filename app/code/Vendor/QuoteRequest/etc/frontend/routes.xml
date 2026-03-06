@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
-
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/routes.xsd">
     <router id="standard">
         <route id="quoterequest" frontName="quoterequest">
             <module name="Vendor_QuoteRequest"/>
         </route>
-    </router>
 
+        <route id="vendor_quoterequest" frontName="vendors">
+            <module name="Vendor_QuoteRequest"/>
+        </route>
+    </router>
 </config>

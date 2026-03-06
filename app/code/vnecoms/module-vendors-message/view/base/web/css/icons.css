@@ -1,0 +1,128 @@
+@font-face {
+    font-family: 'vnecoms-message';
+    src:  url('../fonts/vnecoms-message.eot?52zgvp');
+    src:  url('../fonts/vnecoms-message.eot?52zgvp#iefix') format('embedded-opentype'),
+    url('../fonts/vnecoms-message.ttf?52zgvp') format('truetype'),
+    url('../fonts/vnecoms-message.woff?52zgvp') format('woff'),
+    url('../fonts/vnecoms-message.svg?52zgvp#vnecoms-message') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="message-icon-"], [class*="message-icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'vnecoms-message' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.message-icon-envelope:before {
+    content: "\f003";
+}
+.message-icon-user:before {
+    content: "\f007";
+}
+.message-icon-discard:before {
+    content: "\f00d";
+}
+.message-icon-inbox:before {
+    content: "\f01c";
+}
+.message-icon-back:before {
+    content: "\f053";
+}
+.message-icon-forward:before {
+    content: "\f064";
+}
+.message-icon-reply:before {
+    content: "\f112";
+}
+.message-icon-trash:before {
+    content: "\f014";
+}
+.message-icon-floppy-o:before {
+    content: "\f0c7";
+}
+.message-icon-cloud-download:before {
+    content: "\f0ed";
+}
+.message-icon-cloud-upload:before {
+    content: "\f0ee";
+}
+.message-icon-angle_up:before {
+    content: "\f106";
+}
+.message-icon-angle_down:before {
+    content: "\f107";
+}
+.message-icon-paper-plane-o:before {
+    content: "\f1d9";
+}
+.message-icon-file-empty:before {
+    content: "\e925";
+}
+.message-icon-file-video:before {
+    content: "\e92c";
+}
+.message-icon-file-zip:before {
+    content: "\e92d";
+}
+.message-icon-file-pdf:before {
+    content: "\eae4";
+}
+.message-icon-file-word:before {
+    content: "\eae5";
+}
+.message-icon-file-excel:before {
+    content: "\eae6";
+}
+.message-icon-libreoffice:before {
+    content: "\eae7";
+}
+.message-icon-pencil2:before {
+    content: "\e906";
+}
+.message-icon-image:before {
+    content: "\e90d";
+}
+.message-icon-file-empty2:before {
+    content: "\e924";
+}
+.message-icon-file-video2:before {
+    content: "\e92a";
+}
+.message-icon-file-zip2:before {
+    content: "\e92b";
+}
+.message-icon-folder-download:before {
+    content: "\e933";
+}
+.message-icon-folder-upload:before {
+    content: "\e934";
+}
+.message-icon-attachment:before {
+    content: "\e9cd";
+}
+.message-icon-file-pdf2:before {
+    content: "\eadf";
+}
+.message-icon-file-openoffice:before {
+    content: "\eae0";
+}
+.message-icon-file-word2:before {
+    content: "\eae1";
+}
+.message-icon-file-excel2:before {
+    content: "\eae2";
+}
+.message-icon-libreoffice2:before {
+    content: "\eae3";
+}

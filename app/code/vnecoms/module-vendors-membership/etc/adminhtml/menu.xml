@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="Vnecoms_VendorsMembership::membership" title="Membership" sortOrder="60" module="Vnecoms_VendorsMembership" parent="Vnecoms_Vendors::marketplace" dependsOnModule="Vnecoms_VendorsMembership" resource="Vnecoms_VendorsMembership::membership"/>
+        <add id="Vnecoms_VendorsMembership::membership_products" title="Membership Packages" sortOrder="20" module="Vnecoms_VendorsMembership" parent="Vnecoms_VendorsMembership::membership" action="vendors/membership_product" dependsOnModule="Vnecoms_VendorsMembership" resource="Vnecoms_VendorsMembership::membership_products"/>
+        <add id="Vnecoms_VendorsMembership::membership_payment_history" title="Payment History" sortOrder="30" module="Vnecoms_VendorsMembership" parent="Vnecoms_VendorsMembership::membership" action="vendors/membership_payment/history" dependsOnModule="Vnecoms_VendorsMembership" resource="Vnecoms_VendorsMembership::membership_payment_history"/>
+    </menu>
+</config>

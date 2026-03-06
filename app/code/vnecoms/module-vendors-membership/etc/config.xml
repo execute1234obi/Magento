@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+    	<vendors>
+    		<membership>
+    			<default_expiry_day>30</default_expiry_day>
+    			<expiry_action>close</expiry_action>
+    			
+    			<expiry_notification>vendors_membership_expiry_notification</expiry_notification>
+    			<expiry_day_before>7</expiry_day_before>
+    			<sender_email_identity>general</sender_email_identity>
+    			
+    			<color_package1>#54CCB5</color_package1>
+    			<color_package2>#297FB8</color_package2>
+    			<color_package3>#E3536C</color_package3>
+    			<color_package4>#5D6A9A</color_package4>
+    			<color_package5>#3EC6E0</color_package5>
+    			<color_package6>#EAC80D</color_package6>
+    		</membership>
+    	</vendors>
+    </default>
+</config>

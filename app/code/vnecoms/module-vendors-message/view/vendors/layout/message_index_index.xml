@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+        <css src="Vnecoms_VendorsMessage::css/message.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Vnecoms\VendorsMessage\Block\Vendors\Messages" name="seller.messages" template="messages.phtml">
+            	<arguments>
+	    			<argument name="block_title" xsi:type="string">Inbox</argument>
+    			</arguments>
+            	<block class="Vnecoms\VendorsMessage\Block\Vendors\Messages\Folders" name="seller.messages.folders" as="folders" template="messages/folders.phtml">
+            		<arguments>
+		    			<argument name="active_box" xsi:type="string">inbox</argument>
+	    			</arguments>
+            	</block>
+            	<uiComponent name="vendor_messages_grid" as="message_content"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

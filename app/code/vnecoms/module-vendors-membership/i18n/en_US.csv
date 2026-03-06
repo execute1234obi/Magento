@@ -1,0 +1,54 @@
+"Add Duration","Add Duration"
+"Add Membership Product","Add Membership Product"
+"Membership Payment History","Membership Payment History"
+"%1 Day","%1 Day"
+"%1 Days","%1 Days"
+"%1 Week","%1 Week"
+"%1 Weeks","%1 Weeks"
+"%1 Month","%1 Month"
+"%1 Months","%1 Months"
+"%1 Year","%1 Year"
+"%1 Years","%1 Years"
+"Created at","Created at"
+Package,Package
+Amount,Amount
+Duration,Duration
+N/A,N/A
+Membership,Membership
+"Seller Membership Products","Seller Membership Products"
+"Duration, Duration Unit and Price must be set '%1'","Duration, Duration Unit and Price must be set '%1'"
+"Membership duration must be set '%1'","Membership duration must be set '%1'"
+"You need to choose options for your item.","You need to choose options for your item."
+"%1 day","%1 day"
+"%1 days","%1 days"
+"%1 week","%1 week"
+"%1 weeks","%1 weeks"
+"%1 month","%1 month"
+"%1 months","%1 months"
+"%1 year","%1 year"
+"%1 years","%1 years"
+Day,Day
+Week,Week
+Month,Month
+Year,Year
+"-- Please Select --","-- Please Select --"
+Rank,Rank
+"Sellers from higher rank group will not be able to downgrade to lower rank group","Sellers from higher rank group will not be able to downgrade to lower rank group"
+"Only seller account can buy membership packages.","Only seller account can buy membership packages."
+"You cannot buy different membership packages.","You cannot buy different membership packages."
+"You are in %1 membership you cannot downgrade to a lower package (%2).","You are in %1 membership you cannot downgrade to a lower package (%2)."
+"Duration Unit","Duration Unit"
+Price,Price
+"Sort Order","Sort Order"
+Action,Action
+"Delete Tier","Delete Tier"
+Delete,Delete
+"Add to Cart","Add to Cart"
+"Pricing overview","Pricing overview"
+Featured,Featured
+"Membership Information","Membership Information"
+Renew,Renew
+Package:,Package:
+"Expiry Date:","Expiry Date:"
+"Package Info:","Package Info:"
+"View Payment History","View Payment History"

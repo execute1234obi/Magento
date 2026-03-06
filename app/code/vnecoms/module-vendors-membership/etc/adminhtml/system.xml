@@ -1,0 +1,106 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="vendors">
+            <group id="membership" translate="label tooltip" type="text" sortOrder="101" showInDefault="1" showInWebsite="1" showInStore="1">
+				<label>Membership</label>
+				<field id="default_expiry_day" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Default Group Expiry Day</label>
+                    <frontend_class>validate-number</frontend_class>
+                    <comment><![CDATA[When vendor create new account, he will be assigned to a default group. The <strong>Expiry Action</strong> will be applied for the vendor account if after this day he doesn't renew.<br /><br />
+					You can change the default group under section <strong>Create New Account Options</strong> -> <strong>Default Seller Group</strong> of this page.]]></comment>
+                </field>
+                <field id="expiry_action" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Expiry Action</label>
+                    <tooltip>When the vendor account is expired, this action will be applied.</tooltip>
+                    <source_model>Vnecoms\VendorsMembership\Model\Source\ExpiryAction</source_model>
+                </field>
+                <field id="enpiry_vendor_group" translate="label" type="select" sortOrder="22" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Expiry Seller Group</label>
+                    <source_model>Vnecoms\VendorsMembership\Model\Source\ExpiryGroup</source_model>
+                    <comment><![CDATA[Expiry group must be different with <strong>Default Seller Group</strong>]]></comment>
+                    <depends>
+                        <field id="expiry_action">move</field>
+                    </depends>
+                    <frontend_class>required-entry</frontend_class>
+                </field>
+				<field id="expiry_notification" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Expiry Notification Email Template</label>
+                    <tooltip>This notification email will be sent to vendor when his account will be expired soon.</tooltip>
+                    <source_model>Vnecoms\Vendors\Model\Config\Source\Email\Template</source_model>
+                </field>
+                <field id="expiry_day_before" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Expiry Email Is Sent Before (days)</label>
+                    <tooltip>The number of days before seller account is expired which notification email will be sent</tooltip>
+                    <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="sender_email_identity" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Email Sender</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                </field>
+
+				<field id="payment_restrict_method" translate="label" type="multiselect" sortOrder="70" showInDefault="1" showInWebsite="1" canRestore="1">
+					<label>Restrict COD method</label>
+					<source_model>Vnecoms\VendorsMembership\Model\Source\CodMethod</source_model>
+				</field>
+                
+	        	<!-- Withdrawal Methods -->
+				<group id="membership_page" translate="label" showInDefault="1" showInWebsite="1" sortOrder="100">
+		            <label>Membership Page</label>
+		            <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
+		            
+		            <field id="page_title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Page Title</label>
+		            	<config_path>vendors/membership/page_title</config_path>
+		        	</field>
+		        	<field id="meta_keyword" translate="label" type="textarea" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Meta Keywords</label>
+		            	<tooltip>Separate keywords by comma</tooltip>
+		            	<config_path>vendors/membership/meta_keyword</config_path>
+		        	</field>
+		        	<field id="meta_description" translate="label" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Meta Description</label>
+		            	<config_path>vendors/membership/meta_description</config_path>
+		        	</field>
+	            </group>
+	            
+	            <group id="membership_color" translate="label" showInDefault="1" showInWebsite="1" sortOrder="110">
+		            <label>Color</label>
+		            <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Expanded</frontend_model>
+		            
+		            <field id="color_package1" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Package #1</label>
+		            	<frontend_model>Vnecoms\VendorsMembership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+		            	<config_path>vendors/membership/color_package1</config_path>
+		        	</field>
+		        	<field id="color_package2" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Package #2</label>
+		            	<frontend_model>Vnecoms\VendorsMembership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+		            	<config_path>vendors/membership/color_package2</config_path>
+		        	</field>
+		        	<field id="color_package3" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Package #3</label>
+		            	<frontend_model>Vnecoms\VendorsMembership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+		            	<config_path>vendors/membership/color_package3</config_path>
+		        	</field>
+		        	<field id="color_package4" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Package #4</label>
+		            	<frontend_model>Vnecoms\VendorsMembership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+		            	<config_path>vendors/membership/color_package4</config_path>
+		        	</field>
+		        	<field id="color_package5" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Package #5</label>
+		            	<frontend_model>Vnecoms\VendorsMembership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+		            	<config_path>vendors/membership/color_package5</config_path>
+		        	</field>
+		        	<field id="color_package6" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+		            	<label>Package #6</label>
+		            	<frontend_model>Vnecoms\VendorsMembership\Block\Adminhtml\System\Config\Form\Field\Color</frontend_model>
+		            	<config_path>vendors/membership/color_package6</config_path>
+		        	</field>
+	            </group>
+			</group>
+		</section>
+    </system>
+</config>

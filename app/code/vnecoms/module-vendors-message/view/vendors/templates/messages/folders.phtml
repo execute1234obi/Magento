@@ -1,0 +1,16 @@
+<div class="box box-solid">
+    <div class="box-header with-border">
+      <h3 class="box-title"><?php echo __('Folders')?></h3>
+      <div class="box-tools">
+        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+      </div>
+    </div>
+    <div class="box-body no-padding">
+      <ul class="nav nav-pills nav-stacked">
+        <li<?php if($block->isActiveBox('inbox')):?> class="active"<?php endif;?>><a href="<?php echo $block->isActiveBox('inbox')?'javascript:void(0)':$block->getInboxURL();?>"><i class="fa fa-inbox"></i> <?php echo __('Inbox')?> <span class="label label-primary pull-right"><?php echo $block->getUnreadMessageCount()?></span></a></li>
+        <li<?php if($block->isActiveBox('outbox')):?> class="active"<?php endif;?>><a href="<?php echo $block->isActiveBox('outbox')?'javascript:void(0)':$block->getOutboxURL();?>"><i class="fa fa-envelope-o"></i> <?php echo __('Sent')?></a></li>
+        <?php /*?><li<?php if($block->isActiveBox('draft')):?> class="active"<?php endif;?>><a href="<?php echo $block->getDraftURL();?>"><i class="fa fa-file-text-o"></i> <?php echo __('Drafts')?></a></li>*/?>
+        <li<?php if($block->isActiveBox('trash')):?> class="active"<?php endif;?>><a href="<?php echo $block->isActiveBox('trash')?'javascript:void(0)':$block->getTrashURL();?>"><i class="fa fa-trash-o"></i> <?php echo __('Trash')?></a></li>
+      </ul>
+    </div>
+</div>

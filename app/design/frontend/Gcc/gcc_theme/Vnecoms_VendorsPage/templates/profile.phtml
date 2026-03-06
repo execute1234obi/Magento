@@ -646,8 +646,15 @@ $wishlistHelper = $this->helper(\Magento\Wishlist\Helper\Data::class);
            <div class="u-country">
           <span class="u-flag" aria-hidden="true"><img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($countryCode ?: 'N/A')) ?>.svg" alt="Saudi Arabia Flag"></span>
           <span> <?= $country ?: 'N/A'; ?></span>
-        </div>
-        <button class="u-cta" type="button"><?= $block->escapeHtml(__('Add to Quote')); ?></button>
+        </div><?php
+        //for quote button 
+          $helper = $this->helper(\Vendor\QuoteRequest\Helper\Data::class);
+          $quoteUrl = $helper->getAddToQuoteUrl($_product->getId()); ?>
+        
+         <button type="button" id="add-to-quote-btn" class="u-cta"
+        onclick="location.href='<?= $quoteUrl ?>'">
+    <?= __("Add To Quote") ?>
+</button>
       </article>
     <?php endforeach; ?>
     </div>

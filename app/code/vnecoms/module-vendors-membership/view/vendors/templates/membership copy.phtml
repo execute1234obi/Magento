@@ -1,0 +1,27 @@
+<?php
+use Magento\Framework\App\Action\Action;
+
+/** @var $block \Vnecoms\VendorsMembership\Block\Vendors\Dashboard\Membership*/
+?>
+<div class="box box-primary block-membership-info">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?php echo __("Membership Information")?></h3>
+        <a href="<?php echo $this->getRenewUrl()?>" class="btn btn-default btn-sm pull-right btn-primary"><?php echo __("Renew")?></a>
+    </div>
+    <div class="box-body">
+        <?php $_package = $block->getCurrentPackageProduct()?>
+        <p><?php echo __("Package:")?> <strong><?php echo $block->getCurrentGroupName();?></strong></p>
+        <p><?php echo __("Expiry Date:")?> <strong<?php if($block->notifyExpiryDate()):?> class="expiry-notify text-red"<?php endif;?>><?php echo $block->getExpiryDate()?></strong></p>
+        <div><?php echo __("Package Info:")?> <br />       <?php echo $_package->getDescription() ? htmlspecialchars_decode($_package->getDescription()) : "" ?></div>
+    </div>
+    <div class="box-footer text-center">
+        <a href="<?php echo $block->getPaymentHistoryUrl();?>" class="uppercase"><?php echo __("View Payment History")?></a>
+    </div>
+    <script type="text/javascript">
+    require(["jquery"], function($){
+    	(function blink() { 
+  	  	  $('.expiry-notify').fadeOut(800).fadeIn(800, blink); 
+  	  	})();
+    });
+    </script>
+</div>

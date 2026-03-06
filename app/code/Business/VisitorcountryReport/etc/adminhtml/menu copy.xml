@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>        
+		<!--<add id="Business_VisitorcountryReport::report_visitorcountry_report" title="Visitor Country Report" translate="title" module="Business_VisitorcountryReport" sortOrder="200" parent="Magento_Reports::report" resource="Business_MostviewedVendors::report_custom_report"/>-->
+       <add
+    id="Business_VisitorcountryReport::report_custom_report"
+    title="GCC Custom Report"
+    module="Business_VisitorcountryReport"
+    parent="Magento_Reports::report"
+    sortOrder="190"
+    resource="Business_VisitorcountryReport::visitorcountry"/>
+       
+      <add
+    id="Business_VisitorcountryReport::report_visitorcountry_visited"
+    title="Visitor Country"
+    module="Business_VisitorcountryReport"
+    parent="Business_VisitorcountryReport::report_custom_report"
+    action="visitorcountryreport/report_country/visited"
+    resource="Business_VisitorcountryReport::visitorcountry"/>
+
+    </menu>
+</config>

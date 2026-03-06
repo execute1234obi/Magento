@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page layout="checkout" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- <css src="css/custom-checkout.css"/> -->
+          <css src="Magento_Theme::css/styles-m.css"/>
+        <css src="Magento_Theme::css/styles-l.css"/>
+       
+    </head>
+    <body>
+        <referenceBlock name="header.container" remove="true" />
+        <referenceBlock name="logo" remove="true" />
+
+        <!-- <referenceContainer name="page.wrapper">
+            <block class="Magento\Framework\View\Element\Template" name="custom.checkout.header" before="main.content" template="Magento_Theme::html/checkout_header.phtml"/>
+        </referenceContainer> -->
+    </body>
+</page>

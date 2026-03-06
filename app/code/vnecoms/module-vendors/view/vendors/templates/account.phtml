@@ -1,0 +1,302 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+// @codingStandardsIgnoreFile
+?>
+<div class="vendor-account-page">
+    <div class="vendor-account-layout">
+        <aside class="vendor-account-left">
+            <div class="vendor-left-card">
+                <?php echo $this->getChildHtml('myaccount_left')?>
+            </div>
+        </aside>
+
+        <section class="vendor-account-right">
+            <div class="vendor-content-card">
+                <?php echo $this->getChildHtml('myaccount_content')?>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+/* ===============================
+   Vendor Account - Custom 30/70 Layout
+   =============================== */
+
+.vendor-account-page {
+  background: #f7f9fc;
+  padding: 16px 0 24px;
+}
+
+/* 30/70 custom layout (no bootstrap grid dependency) */
+.vendor-account-layout {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  box-sizing: border-box;
+}
+
+.vendor-account-left {
+  flex: 0 0 30%;
+  max-width: 30%;
+  min-width: 280px; /* optional safety */
+}
+
+.vendor-account-right {
+  flex: 0 0 70%;
+  max-width: 70%;
+  min-width: 0;
+}
+
+/* cards */
+.vendor-account-page .vendor-left-card,
+.vendor-account-page .vendor-content-card {
+  background: #ffffff;
+  border: 1px solid #e6ecf5;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.04);
+}
+
+/* spacing inside cards */
+.vendor-account-page .vendor-left-card {
+  padding: 14px;
+}
+
+.vendor-account-page .vendor-content-card {
+  padding: 16px;
+}
+
+/* ---------- left profile card ---------- */
+.vendor-account-page .vendor-left-card .profile,
+.vendor-account-page .vendor-left-card .vendor-profile,
+.vendor-account-page .vendor-left-card .block-content {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.vendor-account-page .vendor-left-card .profile-logo img,
+.vendor-account-page .vendor-left-card .vendor-logo img {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.vendor-account-page .vendor-left-card .vendor-name,
+.vendor-account-page .vendor-left-card h3,
+.vendor-account-page .vendor-left-card h4 {
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 600;
+  color: #0f2d67;
+  margin: 8px 0 6px;
+}
+
+.vendor-account-page .vendor-left-card .meta,
+.vendor-account-page .vendor-left-card .joined-info,
+.vendor-account-page .vendor-left-card .location-info,
+.vendor-account-page .vendor-left-card .phone-info {
+  font-size: 14px;
+  color: #4f5d75;
+  margin-bottom: 6px;
+}
+
+/* ---------- tabs ---------- */
+.vendor-account-page .nav-tabs {
+  border-bottom: 1px solid #e6ecf5;
+  margin-bottom: 16px;
+}
+
+.vendor-account-page .nav-tabs > li {
+  margin-bottom: 0;
+}
+
+.vendor-account-page .nav-tabs > li > a {
+  border: none !important;
+  background: transparent !important;
+  color: #5f6f89;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-bottom: 2px solid transparent !important;
+  margin-right: 12px;
+}
+
+.vendor-account-page .nav-tabs > li.active > a,
+.vendor-account-page .nav-tabs > li.active > a:hover,
+.vendor-account-page .nav-tabs > li.active > a:focus {
+  color: #0f2d67 !important;
+  border-bottom-color: #1f4ea8 !important;
+}
+
+/* ---------- form blocks ---------- */
+.vendor-account-page .panel,
+.vendor-account-page .block,
+.vendor-account-page .fieldset {
+  border: 1px solid #e6ecf5;
+  border-radius: 8px;
+  box-shadow: none;
+  background: #fff;
+}
+
+.vendor-account-page .panel-heading,
+.vendor-account-page .legend,
+.vendor-account-page .section-title {
+  background: #fff;
+  border-bottom: 1px solid #eef2f8;
+  font-size: 22px;
+  line-height: 30px;
+  font-weight: 600;
+  color: #0f2d67;
+  padding: 14px 16px;
+  margin: 0;
+}
+
+/* labels */
+.vendor-account-page label,
+.vendor-account-page .label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #243b63;
+  margin-bottom: 6px;
+}
+
+/* inputs / selects / textarea */
+.vendor-account-page .form-control,
+.vendor-account-page input[type="text"],
+.vendor-account-page input[type="email"],
+.vendor-account-page input[type="tel"],
+.vendor-account-page input[type="number"],
+.vendor-account-page input[type="url"],
+.vendor-account-page select,
+.vendor-account-page textarea {
+  height: 42px;
+  border: 1px solid #d9e2f1;
+  border-radius: 6px;
+  background: #fff;
+  color: #2c3e5d;
+  box-shadow: none;
+  padding: 10px 12px;
+  font-size: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.vendor-account-page textarea {
+  min-height: 130px;
+  height: auto;
+  resize: vertical;
+}
+
+.vendor-account-page .form-control:focus,
+.vendor-account-page input:focus,
+.vendor-account-page select:focus,
+.vendor-account-page textarea:focus {
+  border-color: #2f67d8;
+  box-shadow: 0 0 0 3px rgba(47, 103, 216, 0.12);
+  outline: none;
+}
+
+/* form spacing */
+.vendor-account-page .form-group {
+  margin-bottom: 14px;
+}
+
+/* If vencom has internal .row in form, keep spacing neat */
+.vendor-account-page .row {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.vendor-account-page .row > [class*="col-"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+/* editor */
+.vendor-account-page .note-editor,
+.vendor-account-page .tox-tinymce {
+  border: 1px solid #d9e2f1 !important;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* buttons */
+.vendor-account-page .btn,
+.vendor-account-page button,
+.vendor-account-page .action.save,
+.vendor-account-page .save.button {
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+}
+
+.vendor-account-page .action.save,
+.vendor-account-page .btn-primary,
+.vendor-account-page button[type="submit"] {
+  background: #1f4ea8;
+  border-color: #1f4ea8;
+  color: #fff;
+}
+
+.vendor-account-page .action.save:hover,
+.vendor-account-page .btn-primary:hover,
+.vendor-account-page button[type="submit"]:hover {
+  background: #173f8a;
+  border-color: #173f8a;
+}
+
+.vendor-account-page .btn-default,
+.vendor-account-page .btn-secondary {
+  background: #f2f5fb;
+  border-color: #d9e2f1;
+  color: #324c77;
+}
+
+.vendor-account-page hr {
+  border-color: #edf2fa;
+  margin: 12px 0;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1200px) {
+  .vendor-account-layout {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 991px) {
+  .vendor-account-page {
+    padding: 12px 0 18px;
+  }
+
+  .vendor-account-layout {
+    display: block;
+  }
+
+  .vendor-account-left,
+  .vendor-account-right {
+    flex: none;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .vendor-account-left {
+    min-width: 0;
+    margin-bottom: 12px;
+  }
+
+  .vendor-account-page .panel-heading,
+  .vendor-account-page .legend,
+  .vendor-account-page .section-title {
+    font-size: 18px;
+    line-height: 24px;
+  }
+}
+</style>

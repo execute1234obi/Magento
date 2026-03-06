@@ -9,6 +9,10 @@
 $product = $block->getProduct();
 $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 
+//for quote button 
+$helper = $this->helper(\Vendor\QuoteRequest\Helper\Data::class);
+$quoteUrl = $helper->getAddToQuoteUrl($product->getId());
+
 // Fetching configurable product data if available
 $configurableData = '';
 if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
@@ -1067,7 +1071,18 @@ $country = $country_id->getName();
                     } ?>
                 </div>
                 <?php if ($product->getTypeId() !== \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE): ?>
-                    <button type="submit" id="add-to-quote-btn" class="add-quote-btn"><?= __("Add To Quote") ?></button>
+                     <?php
+    // $quoteUrl = $block->getUrl(
+    //     'quoterequest/index/create',
+    //     ['product_id' => $product->getId()]
+    // );
+    ?>
+
+   <button type="button" id="add-to-quote-btn" class="add-quote-btn"
+        onclick="location.href='<?= $quoteUrl ?>'">
+    <?= __("Add To Quote") ?>
+</button>
+                    <!-- <button type="submit" id="add-to-quote-btn" class="add-quote-btn"><?= __("Add To Quote") ?></button> -->
                 <?php endif; ?>
             </form>
         </div>
@@ -1342,6 +1357,7 @@ require(['jquery'], function($) {
 <?php endif; ?>
 
 <script type="text/javascript">
+    
 require([
     'jquery',
     'mage/url',

@@ -1,112 +1,177 @@
+<?php
+/** @var \Vendor\QuoteRequest\Block\View $block */
+$items = $block->getQuoteItems();
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+
 <div class="gcc-quote-page">
-  <div class="gcc-container">
-    <div class="quote-page">
+    <div class="gcc-container">
+        <form id="form-validate" action="<?= $block->getUrl('quoterequest/index/submit') ?>" method="post">
+            <div class="quote-page">
 
-      <!-- Breadcrumb -->
-      <div class="quote-breadcrumb">
-        <a href="<?= $block->getUrl('') ?>"><?= __('Home') ?></a>
-        <span class="sep">/</span>
-        <span><?= __('Quotation Submission Page') ?></span>
-      </div>
+                <div class="quote-breadcrumb">
+                    <a href="<?= $block->getUrl('') ?>"><?= __('Home') ?></a>
+                    <span class="sep">/</span>
+                    <span><?= __('Quotation Submission Page') ?></span>
+                </div>
 
-      <!-- Page Title -->
-      <h1 class="quote-title"><?= __('Choose your location') ?></h1>
+                <h1 class="quote-title"><?= __('Choose your location') ?></h1>
 
-      <!-- Location Card -->
-      <div class="quote-card quote-card--location">
-        <div class="quote-grid-2">
-          <div class="quote-field">
-            <select class="quote-select">
-              <option>Saudi Arabia</option>
-              <option>UAE</option>
-              <option>Qatar</option>
-            </select>
-          </div>
+                <div class="quote-card quote-card--location">
+                    <div class="quote-grid-2">
+                        <div class="quote-field">
+                            <select id="country" name="country_id" title="Country" class="quote-select">
+                                <option value=""><?= __('Select Country') ?></option>
+                                <?php foreach ($block->getCountryCollection() as $country): ?>
+                                    <option value="<?= $country->getCountryId() ?>">
+                                        <?= $country->getName() ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="quote-field">
+                            <select id="region_id" name="region_id" title="State" class="quote-select" style="display:none;">
+                                <option value=""><?= __('Select State/Region') ?></option>
+                            </select>
+                            <input type="text" id="region" name="region" title="State" class="quote-select" style="display:none;" />
+                        </div>
+                    </div>
+                </div>
 
-          <div class="quote-field">
-            <select class="quote-select">
-              <option>Jeddah</option>
-              <option>Riyadh</option>
-              <option>Dammam</option>
-            </select>
-          </div>
-        </div>
-      </div>
+                <div class="quote-card">
+                    <div class="quote-card-head">
+                        <div class="quote-card-title">
+                            <h2><?= __('Quotation List') ?></h2>
+                            <span><?= __('(%1 products selected)', count($items)) ?></span>
+                        </div>
+                    </div>
 
-      <!-- Quotation List Card -->
-      <div class="quote-card">
-        <div class="quote-card-head">
-          <div class="quote-card-title">
-            <h2><?= __('Quotation List') ?></h2>
-            <span><?= __('(Select the products you wish to inquire about)') ?></span>
-          </div>
-        </div>
+                    <?php if (!empty($items)): ?>
+                        <label class="quote-select-all">
+                            <input type="checkbox" class="quote-checkbox" id="select-all-products" checked />
+                            <span><?= __('Select All Product') ?></span>
+                        </label>
 
-        <!-- Select all row -->
-        <label class="quote-select-all">
-          <input type="checkbox" class="quote-checkbox" />
-          <span><?= __('Select All Product') ?></span>
-        </label>
-        <!-- ========================= -->
-        <!-- VENDOR BLOCK: Adidas -->
-        <!-- ========================= -->
-        <?php $quotes = $block->getQuotes(); ?>
+                        <?php foreach ($items as $item): ?>
+                            <?php 
+                                $_product = $item['product']; 
+                                $productImage = $imageHelper->init($_product, 'product_thumbnail_image')->getUrl();
+                                //$vendorName =  $block->getVendorName($_product) ?: 'Adidas';
+                                $vendorId = $_product->getData('vendor_id');
+                                $vendorName = $block->getVendorCompanyName($vendorId) ?: 'No Name Available';
+                                //$vendorId = $_product->getData('vendor_id');
+                                $vendorLogo = $block->getVendorLogo($vendorId);
+                            ?>
+                            <div class="vendor-block">
+                                <div class="vendor-head">
+                                    <div class="vendor-left">
+                                        <div class="vendor-logo">  <?php if($vendorLogo): ?>
+        <img src="<?= $vendorLogo ?>" alt="Vendor Logo">
+    <?php endif; ?></div>
+                                       <div class="vendor-name">
+    <strong><?= $vendorName ?></strong>
 
-<?php if ($quotes->getSize()): ?>
-    <?php foreach ($quotes as $quote): ?>
+    <?php
+    $verificationBlock = $block->getChildBlock('vendor.verification.block');
+  $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . "pub/media/";
+$mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
+            
+    //$verifyIcon = rtrim($mediaUrl,'/') . '/'  . 'ves_vendors/attribute/upload_logo/v/e/verification_badge_icon_1.png';
 
-        <div class="vendor-block">
-            <div class="vendor-head">
-                <strong><?= $quote->getVendorName(); ?></strong>
+    if ($verificationBlock && $verificationBlock->isVendorVerified($vendorId)): ?>
+       <span class="vendor-verified" title="Verified">✔</span>
+    <?php endif; ?>
+</div>
+                                    </div>
+                                    <button class="vendor-trash" type="button" data-id="<?= $_product->getId() ?>">🗑</button>
+                                </div>
+                                <div class="product-row">
+                                    <div class="product-check">
+                                        <input type="checkbox" name="selected_products[]" value="<?= $_product->getId() ?>" class="quote-checkbox product-item-checkbox" checked />
+                                    </div>
+                                    <div class="product-thumb"><img src="<?= $productImage ?>" /></div>
+                                    <div class="product-info">
+                                        <h3 class="product-title"><?= $_product->getName() ?></h3>
+                                        <div class="desc-label">SKU: <?= $_product->getSku() ?></div>
+                                    </div>
+                                    <div class="product-qty">
+                                        <div class="qty-stepper">
+                                            <button type="button" class="qty-btn minus">−</button>
+                                            <input type="text" name="qty[<?= $_product->getId() ?>]" value="<?= $item['qty'] ?>" class="qty-input" readonly />
+                                            <button type="button" class="qty-btn plus">+</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <div class="draft-inquiry">
+                        <h3><?= __('Draft inquiry') ?></h3>
+                        <textarea name="customer_note" class="quote-textarea" rows="4" placeholder="Write message..."></textarea>
+                    </div>
+
+                    <div class="quote-bottom-bar">
+                        <div class="bottom-left"><strong>Summary</strong></div>
+                        <div class="bottom-right">
+                            <span class="product-count"><?= count($items) ?> <?= __('Products') ?></span>
+                            <button class="quote-primary-btn" type="button" id="submit-quote">
+                                <?= __('Confirm Quotation Requests') ?>
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div>
-                <strong><?= __('Quote ID:') ?></strong>
-                <?= $quote->getId(); ?>
-            </div>
-
-            <div>
-                <strong><?= __('Status:') ?></strong>
-                <?= $quote->getStatus(); ?>
-            </div>
-
-        </div>
-
-    <?php endforeach; ?>
-<?php else: ?>
-    <p><?= __('No quotations found.') ?></p>
-<?php endif; ?>
-
-        <!-- Draft Inquiry -->
-        <div class="draft-inquiry">
-          <div class="draft-head">
-            <h3><?= __('Draft inquiry') ?></h3>
-            <span><?= __('(for the selected product vendors)') ?></span>
-          </div>
-
-          <textarea class="quote-textarea" rows="4">Hello! I have a question regarding your shoe collection. Could you provide more details about the available styles?</textarea>
-        </div>
-
-        <!-- Bottom Bar -->
-        <div class="quote-bottom-bar">
-          <div class="bottom-left">
-            <strong><?= __('Quotation Request:') ?></strong>
-          </div>
-
-          <div class="bottom-right">
-            <span class="product-count">2 <?= __('Products') ?></span>
-            <button class="quote-primary-btn" type="button">
-              <?= __('Confirm Quotation Requests') ?>
-            </button>
-          </div>
-        </div>
-
-      </div>
+        </form>
     </div>
-  </div>
 </div>
 
+<script type="text/x-magento-init">
+    {
+        "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": true,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#form-validate",
+                "regionJson": <?= /* @noEscape */ $block->getRegionJson() ?>,
+                "defaultRegion": "0",
+                "countriesWithOptionalZip": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
+            }
+        }
+    }
+</script>
 
+<script>
+require(['jquery'], function($){
+    $(document).ready(function(){
+        // Submit Logic
+        $(document).on('click', '#submit-quote', function(e){
+            e.preventDefault();
+            var country = $('#country').val();
+            var note = $('.quote-textarea').val();
+
+            if(!country || !note) {
+                alert("Please select country and write a message.");
+                return false;
+            }
+            $('#form-validate').submit();
+        });
+
+        // Qty Logic
+        $(document).on('click', '.qty-btn.plus', function(){
+            var input = $(this).siblings('.qty-input');
+            input.val(parseInt(input.val()) + 1);
+        });
+        $(document).on('click', '.qty-btn.minus', function(){
+            var input = $(this).siblings('.qty-input');
+            var val = parseInt(input.val());
+            if(val > 1) input.val(val - 1);
+        });
+    });
+});
+</script>
 <style>
 
 
@@ -511,5 +576,5 @@
   }
   .quote-primary-btn{ width:100%; }
 }
-
+<?= $this->getChildHtml('extra_css') // Just for structure ?>
 </style>

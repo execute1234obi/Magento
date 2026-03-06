@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ves_vendor_message" resource="default" engine="innodb" comment="Vendor Message Table">
+        <column xsi:type="int" name="message_id" unsigned="true" nullable="false" identity="true"
+                comment="ID"/>
+        <column xsi:type="varchar" name="identifier" nullable="false" length="32" comment="Identifier"/>
+        <column xsi:type="int" name="owner_id" unsigned="true" nullable="false" identity="false"
+                comment="Owner Id"/>
+        <column xsi:type="smallint" name="status" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Status"/>
+        <column xsi:type="smallint" name="is_inbox" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Is an inbox message"/>
+        <column xsi:type="smallint" name="is_outbox" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Is an outbox message"/>
+        <column xsi:type="smallint" name="is_deleted" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Is deleted Message (0 => No, 1 => Yes)"/>
+
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="message_id"/>
+        </constraint>
+    </table>
+
+    <table name="ves_vendor_message_detail" resource="default" engine="innodb" comment="Vendor Message Detail Table">
+        <column xsi:type="int" name="detail_id" unsigned="true" nullable="false" identity="true"
+                comment="Id"/>
+
+        <column xsi:type="int" name="message_id" unsigned="true" nullable="false" identity="false"
+                comment="Message Id"/>
+
+        <column xsi:type="int" name="sender_id" unsigned="true" nullable="false" identity="false"
+                comment="Sender Id"/>
+        <column xsi:type="varchar" name="sender_email" nullable="false" length="255" comment="Sender Email"/>
+        <column xsi:type="varchar" name="sender_name" nullable="false" length="255" comment="Sender Name"/>
+
+        <column xsi:type="int" name="receiver_id" unsigned="true" nullable="false" identity="false"
+                comment="Receiver Id"/>
+        <column xsi:type="varchar" name="receiver_email" nullable="false" length="255" comment="Receiver Email"/>
+        <column xsi:type="varchar" name="receiver_name" nullable="false" length="255" comment="Receiver Name"/>
+
+        <column xsi:type="varchar" name="subject" nullable="false" length="255" comment="Subject"/>
+        <column xsi:type="text" name="content" nullable="false" comment="Content"/>
+        <column xsi:type="smallint" name="is_read" unsigned="true" nullable="false" identity="false"
+                default="1" comment="Is read Message (0 => No, 1 => Yes)"/>
+
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="detail_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="VNECOMS_FOREIGN_MESSAGE_ID"
+                    table="ves_vendor_message_detail" column="message_id" referenceTable="ves_vendor_message"
+                    referenceColumn="message_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="ves_vendor_message_block" resource="default" engine="innodb" comment="Vendors Message Block User">
+        <column xsi:type="int" name="block_id" unsigned="true" nullable="false" identity="true"
+                comment="Id"/>
+
+        <column xsi:type="int" name="owner_id" unsigned="true" nullable="false" identity="false"
+                comment="Owner Id"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="block_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="VNECOMS_FOREIGN_CUSTOMER_ID"
+                    table="ves_vendor_message_block" column="owner_id" referenceTable="customer_entity"
+                    referenceColumn="entity_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="ves_vendor_message_warning" resource="default" engine="innodb" comment="Vendors Message Warning">
+        <column xsi:type="int" name="warning_id" unsigned="true" nullable="false" identity="true"
+                comment="Id"/>
+
+        <column xsi:type="int" name="detail_message_id" unsigned="true" nullable="false" identity="false"
+                comment="Message Detail Id"/>
+
+        <column xsi:type="int" name="message_id" unsigned="true" nullable="false" identity="false"
+                comment="Message Id"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="warning_id"/>
+        </constraint>
+
+        <constraint xsi:type="foreign" referenceId="VNECOMS_FOREIGN_MESSAGE_ID"
+                    table="ves_vendor_message_warning" column="message_id" referenceTable="ves_vendor_message"
+                    referenceColumn="message_id" onDelete="CASCADE"/>
+    </table>
+
+    <table name="ves_vendor_message_pattern" resource="default" engine="innodb" comment="Vendors Message Spam Pattern">
+        <column xsi:type="int" name="pattern_id" unsigned="true" nullable="false" identity="true"
+                comment="Id"/>
+
+        <column xsi:type="text" name="pattern" nullable="false" comment="Pattern"/>
+        <column xsi:type="text" name="message" nullable="false" comment="Message"/>
+        <column xsi:type="smallint" name="action" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Action"/>
+        <column xsi:type="smallint" name="status" unsigned="true" nullable="false" identity="false"
+                default="0" comment="Status"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="pattern_id"/>
+        </constraint>
+
+    </table>
+
+    <table name="ves_vendor_message_attachment" resource="default" engine="innodb" comment="Vendors Message Attachment">
+        <column xsi:type="int" name="attachment_id" unsigned="true" nullable="false" identity="true"
+                comment="Id"/>
+        <column xsi:type="int" name="detail_id" unsigned="true" nullable="false" identity="false"
+                comment="Message Detail Id"/>
+        <column xsi:type="text" name="file_name" nullable="false" comment="File Name"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attachment_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="VNECOMS_FOREIGN_MESSAGE_DETAIL_ID"
+                    table="ves_vendor_message_attachment" column="detail_id" referenceTable="ves_vendor_message_detail"
+                    referenceColumn="detail_id" onDelete="CASCADE"/>
+    </table>
+
+</schema>

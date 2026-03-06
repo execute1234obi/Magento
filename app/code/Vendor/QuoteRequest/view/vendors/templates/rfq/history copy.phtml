@@ -1,0 +1,55 @@
+<!-- <h2 style="background: yellow; color: black; padding: 20px; border: 5px solid red;">
+    SUCCESS: RFQ Template is Loading!
+</h2> -->
+<?php $quotes = $block->getQuoteHistory(); ?>
+
+<div class="vendor-quote-history">
+    <div class="block-title">
+        <h2><?php echo __('My Quote Requests'); ?></h2>
+    </div>
+    
+    <table class="data table" id="vendor-quote-table">
+        <thead>
+            <tr>
+                <th scope="col" class="col id"><?php echo __('Quote #') ?></th>
+                <th scope="col" class="col date"><?php echo __('Date') ?></th>
+                <th scope="col" class="col status"><?php echo __('Status') ?></th>
+                <th scope="col" class="col note"><?php echo __('Customer Note') ?></th>
+                <th scope="col" class="col action"><?php echo __('Action') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if (count($quotes) > 0): ?>
+                <?php foreach ($quotes as $quote): ?>
+                    <tr>
+                        <td data-th="Quote #" class="col id"><?php echo $quote['quote_id']; ?></td>
+                        <td data-th="Date" class="col date"><?php echo $quote['created_at']; ?></td>
+                        <td data-th="Status" class="col status">
+                            <span class="status-<?php echo strtolower($quote['status']); ?>">
+                                <?php echo ucfirst($quote['status']); ?>
+                            </span>
+                        </td>
+                        <td data-th="Note" class="col note"><?php echo $quote['customer_note']; ?></td>
+                        <td data-th="Action" class="col action">
+                            <a href="#" class="action view"><span>View Details</span></a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr>
+                    <td colspan="5" class="col-no-data" style="text-align: center; padding: 20px;">
+                        <?php echo __('You have no quote requests.'); ?>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
+<style>
+    #vendor-quote-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    #vendor-quote-table th, #vendor-quote-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    #vendor-quote-table th { background: #f4f4f4; }
+    .status-pending { color: orange; font-weight: bold; }
+    .col-no-data { color: #777; font-style: italic; }
+</style>

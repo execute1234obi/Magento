@@ -1,0 +1,48 @@
+<?php $_message = $block->getMessage();?>
+<?php $_detail = $block->getDetailMessage();?>
+<?php $msgDetailCollection = $_message->getMessageDetailCollection();?>
+<?php $detailCollectionSize = $msgDetailCollection->getSize();?>
+<?php $i = 1;?>
+
+<div class="box-header with-border">
+    <h3 class="box-title message-title"><?php echo $_message->getFirstMessageDetail()->getSubject();?></h3>
+</div>
+<?php foreach($msgDetailCollection as $_msgDetail):?>
+<div class="box-body no-padding<?php echo " message-".$i;?><?php if($_msgDetail->getId() == $_detail->getId()):?> warning<?php endif?>">
+    <div class="mailbox-read-info<?php if($_msgDetail->getIsRead() && $detailCollectionSize > 1 && $_msgDetail->getId() != $_detail->getId()):?> read<?php endif;?>">
+        <div class="pull-left message-icon<?php if($_message->getOwnerId() == $_msgDetail->getSenderId()):?> owner-message<?php endif;?>">
+            <i class="fa fa-user"></i>
+        </div>
+        <div class="pull-left">
+            <h3><?php echo $_msgDetail->getSenderName()?></h3> <span>&lt;<?php echo $_msgDetail->getSenderEmail()?>&gt;</span>
+            <div class="text-muted"><?php echo __("to %1",$_msgDetail->getReceiverName().sprintf(" &lt;%s&gt;",$_msgDetail->getReceiverEmail()))?></div>
+        </div>
+        
+        <div class="pull-right">
+            <span class="mailbox-read-time pull-right"><?php echo $block->formatDate($_msgDetail->getCreatedAt(),\IntlDateFormatter::MEDIUM,\IntlDateFormatter::MEDIUM)?></span>
+        </div>
+    </div>
+    <div class="mailbox-read-message<?php if($_msgDetail->getIsRead() && $detailCollectionSize > 1 && $_msgDetail->getId() != $_detail->getId()):?> hide<?php endif;?>">
+        <?php if($_msgDetail->getId() == $_detail->getId()): ?>
+        <?php echo $block->processContentMessageWarning($_msgDetail->getContent());?>
+        <?php else: ?>
+            <?php echo $_msgDetail->getContent();?>
+        <?php endif ?>
+    </div>
+</div>
+<?php $i++;?>
+<?php endforeach;?>
+<?php if($detailCollectionSize > 1):?>
+<script type="text/javascript">
+require(["jquery"], function($){
+    $(function() {
+        $('.mailbox-read-info').click(function(){
+            if(!$(this).parent().hasClass('warning')){
+            	$(this).toggleClass("read");
+                $(this).siblings('.mailbox-read-message').toggleClass("hide");
+            }
+        })
+    });
+});
+</script>
+<?php endif;?>

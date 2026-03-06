@@ -424,7 +424,172 @@ header .sign-in-btn {
     color: #3B82F6 !important; /* Optional hover color */
 }
 
+/* ============================= */
+/* ===== HEADER RESPONSIVE ===== */
+/* ============================= */
 
+/* Large screens (already mostly handled by Tailwind) */
+@media (max-width: 1280px) {
+    .max-w-7xl {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+
+    /* Reduce nav spacing */
+    #customHeader nav {
+        gap: 18px !important;
+    }
+
+    /* Reduce logo size slightly */
+    #customHeader img {
+        max-height: 32px;
+    }
+
+    /* Language toggle spacing */
+    #langToggle span {
+        font-size: 13px;
+    }
+}
+
+/* Small Tablets / Large Mobiles */
+@media (max-width: 768px) {
+
+    /* Header padding smaller */
+    #customHeader .header-main {
+        padding: 10px 15px !important;
+    }
+
+    /* Logo smaller */
+    #customHeader img {
+        max-height: 28px;
+    }
+
+    /* Hide desktop right section */
+    #customHeader .final-font {
+        display: none !important;
+    }
+
+    /* Mobile menu full width */
+    #mobileMenu {
+        width: 100%;
+    }
+
+    /* Mobile dropdown spacing */
+    #mobileMenu .flex {
+        gap: 10px;
+    }
+
+    /* Language dropdown full width */
+    #languageMenu {
+        right: 10px !important;
+    }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+
+    /* Reduce logo more */
+    #customHeader img {
+        max-height: 24px;
+    }
+
+    /* Reduce padding */
+    #customHeader .header-main {
+        padding: 8px 12px !important;
+    }
+
+    /* Mobile menu text */
+    #mobileMenu a {
+        font-size: 14px;
+    }
+
+    /* Buttons full width */
+    #mobileMenu .flex a {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Sign in / up buttons adjust */
+    .sign-in-btn,
+    #mobileMenu .custom-style {
+        padding: 8px 14px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+
+    #langToggle span {
+        display: none; /* Hide language text, keep icon */
+    }
+
+    #customHeader img {
+        max-height: 22px;
+    }
+
+    .sign-in-btn {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
+}
+/* ============================= */
+/* ===== TABLET FIX ONLY ====== */
+/* ============================= */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+    /* Reduce container padding */
+    #customHeader .header-main {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* Allow header content to wrap if needed */
+    #customHeader .header-main {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Reduce logo size */
+    #customHeader img {
+        max-height: 30px;
+    }
+
+    /* Reduce nav spacing */
+    #customHeader nav {
+        gap: 16px !important;
+        font-size: 14px !important;
+    }
+
+    /* Reduce dropdown width */
+    #vendorMenu,
+    #customerMenu,
+    #userMenuProfile {
+        width: 280px !important;
+    }
+
+    /* Reduce right section spacing */
+    #customHeader .space-x-6 {
+        gap: 12px !important;
+    }
+
+    /* Adjust sign buttons */
+    .sign-in-btn,
+    #customHeader .custom-style {
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+    }
+
+    /* Language toggle smaller */
+    #langToggle span {
+        font-size: 13px !important;
+    }
+}
 </style>
 
 <script>

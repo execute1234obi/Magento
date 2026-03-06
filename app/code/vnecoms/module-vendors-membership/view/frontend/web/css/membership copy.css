@@ -1,0 +1,240 @@
+/*its also known as clearfix*/
+.pricing-table:before,
+.pricing-table:after {
+    content: "";
+    display: table;
+} 
+.pricing-table:after {
+    clear: both;
+}
+.pricing-table {
+    zoom: 1; 
+}
+
+.pricing-table {
+    width: 80%;
+    margin: 50px auto;
+    text-align: center;
+    padding: 10px;
+    padding-right: 0;
+}
+.pricing-heading{
+    color: #9C9E9F;
+    margin-bottom: 4rem;
+	text-align: center;
+}
+
+.membership-block{
+    width: 30%;    
+    margin: 0 1.6667% 40px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+	float: left;
+	position: relative;
+/*    border: 1px solid red;*/
+}
+
+/*Shared properties*/
+.membership-title, .pt-footer{
+    color: #FEFEFE;
+    text-transform: capitalize;
+    line-height: 2.5;
+    position: relative;
+	margin: 0;
+}
+.membership-content{
+    position: relative;
+    color: #FEFEFE;
+    padding: 20px 0 10px 0;
+	opacity: 0.80;
+	filter: alpha(opacity =80);
+}
+
+.membership-content:after, .membership-content:before, .pt-footer:before, .pt-footer:after {
+	top: 100%;
+	left: 50%;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+}
+
+.pt-footer:after,.pt-footer:before{
+    top:0;
+}
+
+.membership-content:after,.pt-footer:after {
+	border-color: rgba(136, 183, 213, 0);	
+	border-width: 5px;
+	margin-left: -5px;
+}
+
+/*/arrow creation*/
+.membership-price{
+    position: relative;
+    display: inline-block;
+    margin-bottom: 0.625rem;
+}
+
+.membership-price .price-box .price{color: #FFF;}
+
+.membership-price span{    
+    font-size: 4rem;
+    font-weight: bold;        
+}
+
+.membership-price .price-container .price{
+	font-size: 4rem;
+}
+
+.membership-price sup{
+    font-size: 1.5rem;    
+    position: absolute;    
+    top: 12px;
+    left: -12px;
+}
+
+
+.membership-hint{
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.membership-features{
+    background: #FFFFFF;
+    text-align: left;
+    color: #9C9C9C;
+    padding:10px 35px 30px;
+	border-left: 1px solid #efefef;
+	border-right: 1px solid #efefef;
+	border-bottom: 1px solid #efefef;
+}
+.membership-features ul{
+	margin: 0;
+	list-style-type: none;
+	padding: 0;
+	
+}
+.membership-features li{
+  padding:5px 0;
+  width: 100%;
+  margin: 0;
+  list-style: outside none disc;
+}
+.membership-features li span{
+   padding-right: 0.4rem; 
+}
+
+.pt-footer{
+    text-transform: capitalize;
+}
+.pt-footer p{margin: 0;}
+
+/*Featured Box*/
+.membership-featured{
+	background: url(../images/featured.png) no-repeat;
+	display: block;
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	width: 100px;
+	height: 100px;
+	z-index: 1;
+}
+.membership-featured span{
+	display: none;
+}
+
+/*Add to cart*/
+.membership-tocart{
+	text-align: center;
+	margin-top: 50px;
+}
+.membership-tocart select{
+	margin-bottom: 15px;
+	width: 100%;
+}
+
+
+.membership-block .membership-tocart .action.primary:hover{
+	opacity: 0.85;
+	filter: alpha(opacity =85);
+}
+
+
+/*First Block*/
+.membership-block-1 .membership-title,
+.membership-block-1 .membership-content,
+.membership-block-1 .membership-tocart .action.primary{        
+    background: #54CCB5;
+}
+.membership-block-1 .membership-tocart .action.primary{
+	border-color: #54CCB5;
+}
+
+.membership-tocart .action.primary span {
+    color: white;
+}
+
+/*Second Block*/
+.membership-block-2 .membership-title,
+.membership-block-2 .membership-content,
+.membership-block-2 .membership-tocart .action.primary{
+    background: #3EC6E0;
+}
+.membership-block-2 .membership-tocart .action.primary{
+	border-color: #3EC6E0;
+}
+
+/*Third Block*/
+.membership-block-3 .membership-title,
+.membership-block-3 .membership-content,
+.membership-block-3 .membership-tocart .action.primary{
+    background: #E3536C;
+}
+.membership-block-3 .membership-tocart .action.primary{
+	border-color: #E3536C;
+}
+
+/*Fourth Block*/
+.membership-block-4 .membership-title,
+.membership-block-4 .membership-content,
+.membership-block-4 .membership-tocart .action.primary{
+    background: #5D6A9A;
+}
+.membership-block-4 .membership-tocart .action.primary{
+	border-color: #5D6A9A;
+}
+
+
+/*fifth Block*/
+.membership-block-5 .membership-title,
+.membership-block-5 .membership-content,
+.membership-block-5 .membership-tocart .action.primary{
+    background: #297FB8;
+}
+.membership-block-5 .membership-tocart .action.primary{
+	border-color: #297FB8;
+}
+
+
+/*six Block*/
+.membership-block-6 .membership-title,
+.membership-block-6 .membership-content,
+.membership-block-6 .membership-tocart .action.primary{
+    background: #EAC80D;
+}
+.membership-block-6 .membership-tocart .action.primary{
+	border-color: #EAC80D;
+}
+
+@media screen and (max-width: 767px) {
+  .membership-block{width: 46%;}
+}
+
+@media screen and (max-width: 550px) {
+  .membership-block{width: 100%;}
+}

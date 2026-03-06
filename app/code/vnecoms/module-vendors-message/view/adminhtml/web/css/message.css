@@ -1,0 +1,42 @@
+.message-list .data-grid-th:nth-child(n+1){display: none;}
+.message-list .data-grid .data-grid-multicheck-cell{background: none; border: 0 none;border-color: transparent !important;}
+.message-list .data-grid tbody{border-top: 0.1rem solid #d6d6d6; display: block;}
+.message-list .data-grid thead{display: block;}
+.message-list .data-grid td{border: 0 none;}
+.box-message-list{clear: both}
+.view-message .message-title{font-size: 25px;margin: 15px 0;}
+.mailbox-read-info{border-bottom: 0 none; border-top: 1px solid #dfdfdf; cursor: pointer;}
+.mailbox-read-info.one-message, .last .mailbox-read-info{cursor: auto;}
+.mailbox-read-info.read{background: #F5F5F5;}
+.mailbox-read-info:after, .message-buttons:after {clear: both;content: "";display: table;}
+.mailbox-read-info h3 {font-size: 14px;font-weight: bold;display: inline;}
+.message-icon {margin-right: 10px;float: left !important;}
+.message-icon .fa {font-size: 17px;color: #89d3b2;border: 1px solid #ccc;padding: 10px;}
+.message-icon.owner-message .fa{color: #a4c2f4;}
+.message-buttons{background: #FFF; padding: 10px; margin-bottom: 10px}
+.message-buttons-footer{text-align: center;}
+.message-buttons-footer .reply-btn{width: 150px;}
+.message-notification-box{position: fixed; top: 10px;left: 50%; margin-left: -30px; z-index: 9999; margin-left: -40px; display: block; padding: 6px 10px;font-weight: bold; background-color: #f9edbe; border: 1px solid #f0c36d; border-radius: 2px; -moz-border-radius: 2px;-webkit-border-radius: 2px;box-shadown: 0 2px 4px rgba(0, 0, 0, 0.2);}
+.mailbox-read-info {
+  border-bottom: 1px solid #f4f4f4;
+  padding: 10px;
+}
+.pull-left{float:left}
+.pull-right{float:right}
+.mailbox-read-message {
+  padding: 10px;
+}
+.hide {
+  display: none !important;
+}
+
+
+@media screen and (max-width: 767px) {
+  .message-list .data-grid .data-row .text-muted{display: none;}
+  
+}
+@media screen and (max-width: 361px) {
+  .message-list .data-grid-th:nth-child(n+4),
+  .message-list .data-row td:nth-child(n+4){display: none;}
+}
+.vnecoms-message-warning{color: red;font-weight: bold;padding: 0px;margin: 0px; }

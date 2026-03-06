@@ -3,25 +3,30 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
 
     <table name="vendor_quote" resource="default" engine="innodb">
-        <column xsi:type="int" name="quote_id" identity="true" nullable="false"/>
-        <column xsi:type="int" name="customer_id" nullable="true"/>
-        <column xsi:type="int" name="vendor_id" nullable="true"/>
-        <column xsi:type="varchar" name="status" length="50" default="pending"/>
-        <column xsi:type="timestamp" name="created_at" default="CURRENT_TIMESTAMP"/>
+        <column xsi:type="int" name="quote_id" identity="true" nullable="false" comment="Quote ID"/>
+        <column xsi:type="int" name="customer_id" nullable="true" comment="Customer ID"/>
+        <column xsi:type="int" name="vendor_id" nullable="true" comment="Vendor ID"/>
+        <column xsi:type="varchar" name="status" length="50" default="pending" comment="Status"/>
+        
+        <column xsi:type="varchar" name="country_id" length="10" nullable="true" comment="Country ID"/>
+        <column xsi:type="varchar" name="region_id" length="255" nullable="true" comment="State or Region ID"/>
+        <column xsi:type="text" name="customer_note" nullable="true" comment="Draft Inquiry Message"/>
+        
+        <column xsi:type="timestamp" name="created_at" default="CURRENT_TIMESTAMP" comment="Creation Time"/>
 
-        <constraint xsi:type="primary">
+        <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="quote_id"/>
         </constraint>
     </table>
 
     <table name="vendor_quote_item" resource="default" engine="innodb">
-        <column xsi:type="int" name="item_id" identity="true" nullable="false"/>
-        <column xsi:type="int" name="quote_id" nullable="false"/>
-        <column xsi:type="int" name="product_id" nullable="false"/>
-        <column xsi:type="int" name="qty" nullable="false"/>
-        <column xsi:type="decimal" name="proposed_price" scale="2" precision="12" nullable="true"/>
+        <column xsi:type="int" name="item_id" identity="true" nullable="false" comment="Item ID"/>
+        <column xsi:type="int" name="quote_id" nullable="false" comment="Quote ID Reference"/>
+        <column xsi:type="int" name="product_id" nullable="false" comment="Product ID"/>
+        <column xsi:type="int" name="qty" nullable="false" comment="Quantity"/>
+        <column xsi:type="decimal" name="proposed_price" scale="2" precision="12" nullable="true" comment="Proposed Price"/>
 
-        <constraint xsi:type="primary">
+        <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="item_id"/>
         </constraint>
 

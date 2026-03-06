@@ -1,0 +1,199 @@
+<div class="gcc-success-page">
+  <div class="gcc-success-card">
+    <div class="gcc-success-icon" aria-hidden="true">
+      <!-- Success Check SVG -->
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18.5 24.5l3.6 3.6L30.5 19.7" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M24 42c9.941 0 18-8.059 18-18S33.941 6 24 6 6 14.059 6 24s8.059 18 18 18Z"
+              stroke="currentColor" stroke-width="3.5" opacity="0.25"/>
+      </svg>
+    </div>
+
+    <h1 class="gcc-success-title"><?= __('Thank you for your inquiry!') ?></h1>
+    <p class="gcc-success-subtitle">
+      <?= __('Your quotation request has been received. Our team will contact you soon.') ?>
+    </p>
+
+    <div class="gcc-success-actions">
+      <a class="gcc-btn gcc-btn-primary" href="<?= $block->getUrl('') ?>">
+        <span><?= __('Continue Shopping') ?></span>
+        <span class="gcc-btn-arrow" aria-hidden="true">→</span>
+      </a>
+
+      <!-- Optional secondary button (remove if you don’t want) -->
+      <!--
+      <a class="gcc-btn gcc-btn-ghost" href="<?= $block->getUrl('customer/account') ?>">
+        <?= __('View Account') ?>
+      </a>
+      -->
+    </div>
+
+    <div class="gcc-success-note">
+      <span class="dot"></span>
+      <span><?= __('Tip: Keep an eye on your inbox—we’ll reply shortly.') ?></span>
+    </div>
+  </div>
+</div>
+
+<style>
+:root{
+  --gcc-blue:#1A3764;
+  --gcc-accent:#3B82F6;
+  --gcc-text:#0F172A;
+  --gcc-muted:#64748B;
+  --gcc-border:#E2E8F0;
+  --gcc-bg:#FFFFFF;
+
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
+  --shadow-soft: 0 6px 20px rgba(15, 23, 42, 0.08);
+  --radius-xl: 20px;
+}
+
+/* Page wrapper */
+.gcc-success-page{
+  min-height: calc(100vh - 120px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:48px 16px;
+  background:
+    radial-gradient(900px 500px at 20% 10%, rgba(59,130,246,.12), transparent 55%),
+    radial-gradient(800px 480px at 90% 30%, rgba(26,55,100,.10), transparent 60%),
+    #F8FAFC;
+}
+
+/* Card */
+.gcc-success-card{
+  width: min(720px, 100%);
+  background: var(--gcc-bg);
+  border: 1px solid rgba(226,232,240,.9);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow);
+  padding: 34px 28px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+
+/* Decorative top bar */
+.gcc-success-card::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto 0;
+  height:6px;
+  background: linear-gradient(90deg, var(--gcc-blue), var(--gcc-accent));
+}
+
+/* Icon */
+.gcc-success-icon{
+  width:84px;
+  height:84px;
+  margin: 8px auto 18px;
+  border-radius: 999px;
+  display:grid;
+  place-items:center;
+  color: var(--gcc-accent);
+  background: rgba(59,130,246,.10);
+  border: 1px solid rgba(59,130,246,.25);
+  box-shadow: var(--shadow-soft);
+}
+
+/* Title + subtitle */
+.gcc-success-title{
+  margin: 0 0 10px;
+  font-size: clamp(22px, 2.2vw, 32px);
+  line-height: 1.2;
+  color: var(--gcc-blue);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.gcc-success-subtitle{
+  margin: 0 auto 22px;
+  max-width: 54ch;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--gcc-muted);
+}
+
+/* Actions */
+.gcc-success-actions{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top: 8px;
+}
+
+/* Buttons */
+.gcc-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 14.5px;
+  text-decoration:none !important;
+  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  border: 1px solid transparent;
+  user-select:none;
+  white-space:nowrap;
+}
+
+.gcc-btn-primary{
+  background: var(--gcc-blue);
+  color:#fff !important;
+  box-shadow: 0 10px 22px rgba(26,55,100,.22);
+}
+
+.gcc-btn-primary:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(26,55,100,.26);
+  background: #163055;
+}
+
+.gcc-btn-arrow{
+  display:inline-block;
+  transition: transform .15s ease;
+}
+.gcc-btn-primary:hover .gcc-btn-arrow{
+  transform: translateX(2px);
+}
+
+.gcc-btn-ghost{
+  background: #fff;
+  border-color: rgba(59,130,246,.35);
+  color: var(--gcc-blue) !important;
+}
+.gcc-btn-ghost:hover{
+  transform: translateY(-1px);
+  background: rgba(59,130,246,.06);
+}
+
+/* Tip row */
+.gcc-success-note{
+  margin-top: 18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  color: var(--gcc-muted);
+  font-size: 13.5px;
+}
+
+.gcc-success-note .dot{
+  width:9px; height:9px;
+  border-radius:50%;
+  background: rgba(59,130,246,.9);
+  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+}
+
+/* Responsive */
+@media (max-width:480px){
+  .gcc-success-card{ padding: 28px 16px; }
+  .gcc-success-icon{ width:76px; height:76px; }
+  .gcc-btn{ width:100%; justify-content:center; }
+}
+</style>

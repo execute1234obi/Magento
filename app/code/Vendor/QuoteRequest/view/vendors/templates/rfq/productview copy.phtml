@@ -1,0 +1,40 @@
+<?php
+$quote = $block->getQuote();
+$items = $block->getItems();
+?>
+
+<h2>RFQ #<?= $quote->getId(); ?></h2>
+
+<div>
+    <p><strong>Customer:</strong> <?= $quote->getCustomerName(); ?></p>
+    <p><strong>Status:</strong> <?= ucfirst($quote->getStatus()); ?></p>
+</div>
+
+<table class="data table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Price</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php foreach ($items as $item): ?>
+        <?php
+            echo '<pre>';
+            print_r($items->getData());
+            echo '</pre>';
+            ?>
+        <tr>
+            <td><?= $block->getProductName($item->getData('product_id')); ?></td>
+            <td><?= (int)$item->getData('qty'); ?></td>
+            <td>
+                ₹<?= $item->getData('proposed_price') !== null && $item->getData('proposed_price') !== ''
+                    ? $item->getData('proposed_price')
+                    : '-' ?>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

@@ -1,0 +1,94 @@
+Back,Back
+"Delete Pattern","Delete Pattern"
+"Are you sure you want to do this?","Are you sure you want to do this?"
+Reset,Reset
+"Save and Continue Edit","Save and Continue Edit"
+"Save Pattern","Save Pattern"
+"%1 Message %2","%1 Message %2"
+"%1 Message","%1 Message"
+Now,Now
+"%1 minutes","%1 minutes"
+Today,Today
+Yesterday,Yesterday
+"%1 days","%1 days"
+Inbox,Inbox
+"All Messages","All Messages"
+Message,Message
+"A total of %1 record(s) have been deleted.","A total of %1 record(s) have been deleted."
+"The message is not available !","The message is not available !"
+Messages,Messages
+"View Message","View Message"
+View,View
+"Block User","Block User"
+"A total of %1 record(s) have been unblocked.","A total of %1 record(s) have been unblocked."
+"You deleted the pattern.","You deleted the pattern."
+"We can't find a pattern to delete.","We can't find a pattern to delete."
+"This pattern no longer exists.","This pattern no longer exists."
+"Warning patterns","Warning patterns"
+"Edit Pattern","Edit Pattern"
+"New Pattern","New Pattern"
+"Warning Patterns","Warning Patterns"
+"Message - Warning Patterns","Message - Warning Patterns"
+"A total of %1 record(s) have been disabled.","A total of %1 record(s) have been disabled."
+"A total of %1 record(s) have been enabled.","A total of %1 record(s) have been enabled."
+"You saved this pattern.","You saved this pattern."
+"Warning Pattern","Warning Pattern"
+"You blocked the sender.","You blocked the sender."
+"We can't find a warning message to block.","We can't find a warning message to block."
+"The warning message is not available !","The warning message is not available !"
+"The message detail is not available !","The message detail is not available !"
+"You deleted the warning.","You deleted the warning."
+"We can't find a warning to delete.","We can't find a warning to delete."
+"Warning Message","Warning Message"
+"Message - Warning","Message - Warning"
+"A total of %1 record(s) have been blocked.","A total of %1 record(s) have been blocked."
+"The message is not available.","The message is not available."
+"The message has been deleted!","The message has been deleted!"
+"The message #%1 is not available.","The message #%1 is not available."
+"%1 message(s) has been deleted.","%1 message(s) has been deleted."
+"My Messages","My Messages"
+"Re: %1","Re: %1"
+"The request is not valid.","The request is not valid."
+"A total of %1 record(s) have been updated.","A total of %1 record(s) have been updated."
+"Sent Messages","Sent Messages"
+Sent,Sent
+Trash,Trash
+"Trash Messages","Trash Messages"
+"A total of %1 record(s) have been undeleted.","A total of %1 record(s) have been undeleted."
+"The message has been deleted.","The message has been deleted."
+"It looks like your account has been blocked,  please contact your site administrator for details.","It looks like your account has been blocked,  please contact your site administrator for details."
+"Sorry, you are not be able to send the message to a blocked account.","Sorry, you are not be able to send the message to a blocked account."
+Edit,Edit
+me,me
+"to %1","to %1"
+Delete,Delete
+"Block this Sender","Block this Sender"
+" days"," days"
+Receiver,Receiver
+Subject,Subject
+"Creation Date","Creation Date"
+Actions,Actions
+"Checkbox control","Checkbox control"
+Action,Action
+"There is no message.","There is no message."
+Error,Error
+"You haven't selected any items!","You haven't selected any items!"
+Sender,Sender
+"Sending ...","Sending ..."
+Reply,Reply
+Draft,Draft
+Send,Send
+Discard,Discard
+Warning,Warning
+"New Message","New Message"
+Recipient,Recipient
+"Login Required","Login Required"
+"You need to login to use this feature.","You need to login to use this feature."
+"You can not send message to your self.","You can not send message to your self."
+Error...,Error...
+"Please enter your message body.","Please enter your message body."
+"Contact shop owner","Contact shop owner"
+Folders,Folders
+Drafts,Drafts
+"See All Messages","See All Messages"
+"You have %1 messages","You have %1 messages"

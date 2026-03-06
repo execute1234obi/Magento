@@ -7,16 +7,16 @@ use Magento\Framework\App\Action\Context;
 class Single extends Action
 {
     protected $quoteFactory;
-    protected $quoteItemFactory;
+    protected $itemFactory; // Naam change kiya
 
     public function __construct(
         Context $context,
         \Vendor\QuoteRequest\Model\QuoteFactory $quoteFactory,
-        \Vendor\QuoteRequest\Model\QuoteItemFactory $quoteItemFactory
+        \Vendor\QuoteRequest\Model\ItemFactory $itemFactory // QuoteItemFactory ko ItemFactory kiya
     ) {
         parent::__construct($context);
         $this->quoteFactory = $quoteFactory;
-        $this->quoteItemFactory = $quoteItemFactory;
+        $this->itemFactory = $itemFactory; // Sync kiya
     }
 
     public function execute()
@@ -31,7 +31,7 @@ class Single extends Action
             ]);
             $quote->save();
 
-            $item = $this->quoteItemFactory->create();
+            $item = $this->itemFactory->create(); // ItemFactory use kiya
             $item->setData([
                 'quote_id' => $quote->getId(),
                 'product_id' => $data['product_id'],

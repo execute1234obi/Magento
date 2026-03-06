@@ -1,0 +1,214 @@
+<!-- RECENTLY ADDED PRODUCTS -->
+<style>
+/* ===== Recently Added Products card (match dev UI) ===== */
+.recently-added-products.box {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+  overflow: hidden;
+}
+
+
+/* Header */
+.recently-added-products .box-header.with-border {
+  padding: 16px 18px;
+  border-bottom: 1px solid #eef2f7;
+  background: #fff;
+}
+
+
+.recently-added-products .box-title{
+  color: #0b2a6f;        /* navy */
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+
+/* Body */
+.recently-added-products .box-body {
+  padding: 14px 18px 16px;
+}
+
+
+/* List */
+.recently-added-products ul.products-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+.recently-added-products ul.products-list > li.item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eef2f7;
+}
+
+
+.recently-added-products ul.products-list > li.item:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+.recently-added-products .product-img{
+  width: 46px;
+  height: 46px;
+  border-radius: 10px;
+  background: #f5f8ff;
+  border: 1px solid #e9eefc;
+}
+/* Empty state (We couldn't find any records.) */
+.recently-added-products ul.products-list > li.item:only-child {
+  border-bottom: 0;
+  padding: 10px 0 0;
+  color: #475467;
+  font-size: 14px;
+}
+
+
+/* Image */
+.recently-added-products .product-img {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eef2f7;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.recently-added-products .product-img img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover;
+  display: block;
+}
+
+
+/* Info */
+.recently-added-products .product-info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+
+.recently-added-products a.product-title {
+ color: #0b2a6f;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+
+.recently-added-products a.product-title:hover {
+  text-decoration: underline;
+}
+
+
+/* Price label on right */
+.recently-added-products a.product-title .label.pull-right {
+ background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+
+
+  color: #0b2a6f !important;     /* navy price */
+  font-size: 16px !important;
+  font-weight: 800 !important;
+  line-height: 1.2 !important;
+  white-space: nowrap;
+}
+
+
+.recently-added-products a.product-title .label{
+  box-shadow: none !important;
+}
+/* Description */
+.recently-added-products .product-description {
+   color: #5a6b8a;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+
+/* Footer + button like dev screenshot */
+.recently-added-products .box-footer {
+  padding: 14px 18px 18px;
+  border-top: 1px solid #eef2f7;
+  background: #fff;
+  text-align: center;
+}
+
+
+.recently-added-products .box-footer a.uppercase {
+border-color: #0b2a6f;
+  color: #0b2a6f;
+  font-weight: 800;
+}
+
+
+.recently-added-products .box-footer a.uppercase:hover {
+  background: #f5f8ff;
+
+
+}
+
+
+/* Responsive */
+@media (max-width: 992px) {
+  .recently-added-products .box-header.with-border,
+  .recently-added-products .box-body,
+  .recently-added-products .box-footer {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
+</style>
+
+
+<!-- PRODUCT LIST -->
+<div class="box box-primary recently-added-products">
+    <div class="box-header with-border">
+        <h3 class="box-title"><?php echo $block->getBlockTitle()?></h3>
+    </div><!-- /.box-header -->
+
+
+    <div class="box-body">
+        <ul class="products-list product-list-in-box">
+        <?php if($block->getProductCollection()->count()):?>
+            <?php foreach($block->getProductCollection() as $_product):?>
+            <li class="item">
+                <div class="product-img">
+                    <?php echo $block->getImage($_product)->toHtml(); ?>
+                </div>
+                <div class="product-info">
+                    <a href="<?php echo $block->getEditUrl($_product);?>" class="product-title">
+                        <?php echo $_product->getName();?>
+                        <span class="label <?php echo $block->getStatusClass($_product->getApproval())?> pull-right">
+                            <?php echo $this->formatPrice($_product->getFinalPrice());?>
+                        </span>
+                    </a>
+                    <span class="product-description">
+                        <?php echo $this->formatDescription($_product->getShortDescription())?>
+                    </span>
+                </div>
+            </li><!-- /.item -->
+            <?php endforeach;?>
+        <?php else:?>
+             <li class="item"><?php echo __("We couldn't find any records.")?></li>
+        <?php endif;?>
+        </ul>
+    </div><!-- /.box-body -->
+
+
+    <div class="box-footer text-center">
+        <a href="<?php echo $block->getProductListUrl();?>" class="uppercase">
+            <?php echo __("View All Products")?>
+        </a>
+    </div><!-- /.box-footer -->
+</div><!-- /.box -->

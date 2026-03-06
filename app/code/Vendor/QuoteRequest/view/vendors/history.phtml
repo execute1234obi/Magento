@@ -1,0 +1,30 @@
+<?php $quotes = $block->getVendorQuotes(); ?>
+
+<h2>My RFQ History</h2>
+
+<table class="data table">
+    <thead>
+        <tr>
+            <th>RFQ ID</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($quotes as $quote): ?>
+            <tr>
+                <td><?= $quote->getId(); ?></td>
+                <td><?= $quote->getCustomerName(); ?></td>
+                <td><?= $quote->getStatus(); ?></td>
+                <td><?= $quote->getCreatedAt(); ?></td>
+                <td>
+                    <a href="<?= $block->getUrl('rfq/vendor/view', ['id' => $quote->getId()]); ?>">
+                        View
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_invoice_save_commit_after">
+    	<!-- Add credit amount to customer credit account -->
+        <observer name="vnecoms_vendormembership_invoice_save_after" instance="Vnecoms\VendorsMembership\Observer\InvoiceSaveAfterObserver" />
+    </event>
+    
+    <event name="vendor_save_before">
+    	<!-- Set default expiry date for new vendor -->
+        <observer name="vnecoms_vendormembership_vendor_save_before" instance="Vnecoms\VendorsMembership\Observer\VendorSaveBeforeObserver" />
+    </event>
+</config>

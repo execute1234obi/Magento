@@ -1,0 +1,16 @@
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+
+<!--@subject You have new private message" @-->
+
+{{template config_path="design/email/header_template"}}
+<p>{{trans "Dear %receiver_name," receiver_name=$message.getReceiverName()}}</p>
+
+<p>{{trans "%sender_name has just sent you a Private Message titled %message_subject" sender_name=$message.sender_name message_subject=$message.subject}}</p>
+<p>You can view the message by logging in and viewing your Inbox at: <a href="{{var message_url}}">{{var message_url}}</a></p>
+
+{{template config_path="design/email/footer_template"}}

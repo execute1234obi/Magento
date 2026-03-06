@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Remove sidebar -->
+        <referenceContainer name="sidebar.main" remove="true"/>
+        <referenceContainer name="sidebar.additional" remove="true"/>
+
+        <!-- Remove recently ordered block if exists -->
+        <referenceBlock name="checkout.cart.sidebar" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" 
+                   name="quote.success" 
+                   template="Vendor_QuoteRequest::success.phtml" />
+        </referenceContainer>
+    </body>
+</page>

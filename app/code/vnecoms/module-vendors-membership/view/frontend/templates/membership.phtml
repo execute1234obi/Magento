@@ -1,0 +1,121 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+use Magento\Framework\App\Action\Action;
+// @codingStandardsIgnoreFile
+?>
+<?php
+/** @var $block \Vnecoms\Membership\Block\Membership */
+?>
+
+<h1 class="pricing-heading"><?php echo $block->escapeHtml($block->getTitlePage() ? $block->getTitlePage() : __("Pricing Overview")); ?></h1>
+
+<div class="pricing-table">
+    <?php $i = 1; ?>
+    <?php foreach ($block->getMembershipCollection() as $_package): ?>
+        <?php $_package->load($_package->getId()); ?>
+
+        <?php
+            // Card-specific content (you can adjust as needed)
+            $planName = $_package->getName() ? $_package->getName() : ($i === 1 ? 'Silver Membership' : 'Gold Membership');
+
+            $subtitle = ($i === 1)
+                ? 'For small businesses with big goals'
+                : 'For growing growing businesses';
+
+            $iconChar = ($i === 1) ? '◉' : '♕';
+        ?>
+
+        <div class="membership-block membership-block-<?php echo (int)$i; ?> membership-block-<?php echo (int)$_package->getId(); ?>">
+            <div class="membership-head">
+                <span class="plan-icon" aria-hidden="true"><?php echo $iconChar; ?></span>
+
+                <h2 class="membership-title">
+                    <?php echo $block->escapeHtml($planName); ?>
+                </h2>
+
+                <p class="membership-subtitle">
+                    <?php echo $block->escapeHtml(__($subtitle)); ?>
+                </p>
+            </div>
+
+            <div class="membership-content">
+                <div class="membership-price">
+                    <?php
+                    // Preferred: dynamic Magento price
+                    // Keep your CSS targeting .price-box/.price and it will style this correctly
+                    echo $block->getProductPrice($_package);
+                    ?>
+<p>per month</p>
+                    <?php
+                    // If you want hardcoded figma text instead of Magento price, replace above line with:
+                    // echo '<h3><span class="amount">$2.00</span><span class="per">per month</span></h3>';
+                    ?>
+                </div>
+            </div>
+
+            <div class="membership-features">
+                <?php echo $_package->getDescription() ? htmlspecialchars_decode($_package->getDescription()) : ""; ?>
+
+                <div class="membership-tocart">
+                    <label for="vnecoms_membership_duration_<?php echo (int)$_package->getId(); ?>">
+                        <?php echo $block->escapeHtml(__('Selected by times')); ?>
+                    </label>
+
+                    <?php $postParams = $block->getAddToCartPostParams($_package); ?>
+                    <form data-role="tocart-form"
+                          action="<?php /* @escapeNotVerified */ echo $postParams['action']; ?>"
+                          method="post">
+
+                        <select name="membership[duration]"
+                                data-validate="{required:true}"
+                                id="vnecoms_membership_duration_<?php echo (int)$_package->getId(); ?>"
+                                class="super-attribute-select">
+                        </select>
+
+                        <input type="hidden"
+                               name="product"
+                               value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+
+                        <input type="hidden"
+                               name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>"
+                               value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+
+                        <?php echo $block->getBlockHtml('formkey'); ?>
+
+                        <button type="submit"
+                                title="<?php echo $block->escapeHtml(__('Choose Plan')); ?>"
+                                class="action tocart primary">
+                            <span><?php echo $block->escapeHtml(__('Choose Plan')); ?></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <script type="text/x-magento-init">
+            {
+                "#vnecoms_membership_duration_<?php echo (int)$_package->getId(); ?>": {
+                    "Vnecoms_VendorsMembership/js/membership": {
+                        "valueFieldSelector": "#vnecoms_membership_duration_<?php echo (int)$_package->getId(); ?>",
+                        "priceHolderSelector": ".membership-block-<?php echo (int)$i; ?> .price-box",
+                        "durationOptions": <?php /* @escapeNotVerified */ echo $block->getOptionsJSON($_package); ?>,
+                        "priceFormat": <?php echo $this->getPriceFormatJSON(); ?>
+                    }
+                }
+            }
+            </script>
+        </div>
+
+        <?php $i++; ?>
+    <?php endforeach; ?>
+
+    <script type="text/x-magento-init">
+    {
+        "[data-role=tocart-form], .form.map.checkout": {
+            "catalogAddToCart": {}
+        }
+    }
+    </script>
+</div>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceBlock name="page.main.title">
+            <action method="setPageTitle">
+                <argument translate="true" name="title" xsi:type="string">Sent</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="div.sidebar.main">
+        	<block class="Vnecoms\VendorsMessage\Block\Customer\Account\Message\Folders" name="customer.message.folders" before="sidebar.main" template="customer/account/message/folders.phtml">
+           		<arguments>
+	    			<argument name="active_box" xsi:type="string">outbox</argument>
+    			</arguments>
+           	</block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Vnecoms\VendorsMessage\Block\Customer\Account\Message" name="customer.message.container" template="customer/account/message.phtml" cacheable="false">           	
+            	<block class="Vnecoms\VendorsMessage\Block\Customer\Account\Message\Sent" name="customer.message.sent" as="message_list" template="customer/account/message/list-sent.phtml" />
+            </block>
+        </referenceContainer>
+    </body>
+</page>

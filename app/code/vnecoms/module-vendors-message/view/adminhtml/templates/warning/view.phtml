@@ -1,0 +1,62 @@
+
+<?php $_message = $block->getMessage();?>
+<div class="row">
+    <div class="col-md-9 view-message ">
+        <div class="page-actions">
+            <div class="message-buttons page-actions-buttons">
+                <button id="back" title="Back" type="button"
+                        class="action-default scalable back"
+                        onclick="setLocation('<?php echo $block->getBackUrl() ?>')" data-ui-id="vendors-group-edit-back-button">
+                    <span><?php echo __("Back") ?></span>
+                </button>
+
+                <button id="delete" title="Delete" type="button"
+                        class="action-default scalable delete"
+                        onclick="setLocation('<?php echo $block->getDeleteUrl() ?>')" data-ui-id="vendors-group-edit-back-button">
+                    <span><?php echo __("Delete") ?></span>
+                </button>
+
+                <button id="save" title="Save" type="button"
+                        class="action-default scalable save primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                        onclick="setLocation('<?php echo $block->getBlockUrl() ?>')" data-ui-id="vendors-group-edit-back-button">
+                    <span><?php echo __("Block this Sender") ?></span>
+                </button>
+
+            </div>
+        </div>
+
+        <div class="box box-primary box-message-list">
+            <?php echo $block->getChildHtml('message_content')?>
+        </div>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+//<![CDATA[
+window.tinyMCE_GZ = window.tinyMCE_GZ || {}; window.tinyMCE_GZ.loaded = true;
+require([
+    "jquery",
+    "Magento_Ui/js/modal/alert",
+    "mage/translate",
+    "Vnecoms_VendorsMessage/js/wysiwyg/tiny_mce/setup",
+ ], function(jQuery, alert, $t){
+
+    window.buttons_top_offset = jQuery(".message-buttons").offset().top;
+
+    function toggleFixedButtons(){
+		if (jQuery(window).scrollTop() > window.buttons_top_offset) {
+	        jQuery('.message-buttons-footer').removeClass('hide');
+	    } else {
+	        jQuery('.message-buttons-footer').addClass('hide');
+	    }
+    }
+
+	jQuery(window).bind('scroll', function () {
+		toggleFixedButtons();
+	});
+	toggleFixedButtons();
+});
+//]]>
+</script>

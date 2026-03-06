@@ -1,0 +1,13 @@
+<?php
+/** @var $block \Vnecoms\Membership\Block\Css*/
+?>
+<?php for($i = 1; $i <=6; $i ++):?>
+.membership-block-<?php echo $i;?> .membership-title,
+.membership-block-<?php echo $i;?> .membership-content,
+.membership-block-<?php echo $i;?> .membership-tocart .action.primary{        
+    background: <?php echo $block->getPackageColor($i)?>;
+}
+.membership-block-<?php echo $i;?> .membership-tocart .action.primary{
+	border-color: <?php echo $block->getPackageColor($i)?>;;
+}
+<?php endfor;?>

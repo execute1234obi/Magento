@@ -1,0 +1,21 @@
+<?php
+/**
+ * Category view template
+ *
+ * @var $block \Vnecoms\VendorsMessage\Block\Customer\Account\Message
+ */
+?>
+<div class="vnecoms-message-container">
+    <div class="box box-solid message-folders">
+        <div class="box-header with-border">
+          <h3 class="box-title"><?php echo __("Messages")?></h3>
+        </div>
+        <div class="box-body no-padding">
+            <ul class="nav nav-pills nav-stacked">
+                <li<?php if($block->isActiveBox('inbox')):?> class="active"<?php endif;?>><a href="<?php echo $block->isActiveBox('inbox')?'javascript:void(0)':$block->getInboxURL();?>"><i class="message-icon-inbox"></i> Inbox <span class="vnecoms-message-count-right"><?php echo $block->getUnreadMessageCount()?></span></a></li>
+                <li<?php if($block->isActiveBox('outbox')):?> class="active"<?php endif;?>><a href="<?php echo $block->isActiveBox('outbox')?'javascript:void(0)':$block->getOutboxURL();?>"><i class="message-icon-envelope"></i> Sent</a></li>
+                <li<?php if($block->isActiveBox('trash')):?> class="active"<?php endif;?>><a href="<?php echo $block->isActiveBox('trash')?'javascript:void(0)':$block->getTrashURL();?>"><i class="message-icon-trash"></i> Trash</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,112 @@
+.new-message-container button span{margin-left: 5px;}
+
+.vnecoms-msg-btn{border: 1px solid #d3d3d3; color: #888; display: block; padding: 10px; text-align: center; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px;}
+.vnecoms-msg-btn:hover, .vnecoms-msg-btn:active, .vnecoms-msg-btn:focus {background: #f9f9f9; color: #888; text-decoration: none;}
+.vnecoms-msg-btn:active, .vnecoms-msg-btn:focus {background: #f7f7f7;}
+.vendor-profile-top .vnecoms-msg-btn{width: 160px;}
+
+
+.new-message-container {background: #fff none repeat scroll 0 0; border: 1px solid #d3d3d3; bottom: 0; padding: 15px; position: fixed; right: 60px; width: 450px; z-index: 10;}
+.block-new-message .block-title {font-size: 18px; margin-bottom: 20px; text-transform: uppercase; padding-bottom: 10px; border-bottom: 1px solid #dfdfdf;}
+.block-new-message button.action{font-weight: normal;}
+.block-control{position: absolute; right: 10px; top: 10px;}
+.block-control > a.close-btn {display: block; font-weight: normal; height: 20px; text-align: center; width: 20px; text-decoration: none; color: #888;}
+.block-control > a.close-btn:hover{color: #222;}
+.block-new-message .send-btn-container{float: right;}
+.hide{display: none !important;}
+.message-notification-box{position: fixed; top: 10px;left: 50%; margin-left: -30px; z-index: 9999; margin-left: -40px; display: block; padding: 6px 10px;font-weight: bold; background-color: #f9edbe; border: 1px solid #f0c36d; border-radius: 2px; -moz-border-radius: 2px;-webkit-border-radius: 2px;box-shadown: 0 2px 4px rgba(0, 0, 0, 0.2);}
+
+
+.header.panel > .header.links > li.vendor-message-link{position: relative; margin-right: 5px;}
+.vnecoms-unread-message-count{width: 10px; height: 10px; line-height: 10px;margin-top: -4px;font-size: 9px;padding: 2px;position: absolute;text-align: center;display: inline-block; color: #FFF;background: #dd4b39; border-radius: 0.25rem;-moz-border-radius: 0.25rem;-webkit-border-radius: 0.25rem;}
+.customer-vnecoms-message-link{position: relative;}
+.customer-vnecoms-message-link .vnecoms-unread-message-count {margin: 2px 0;right: 10px;}
+li.current .vnecoms-unread-message-count{display: none;}
+
+/*Customer account message*/
+.vnecoms-message-container:after{display: table; content:""; clear: both;}
+.vnecoms-message-container .message-folders,
+.vnecoms-message-container .message-list{min-height: 1px;padding-right: 15px;position: relative;}
+.vnecoms-message-container .message-list{width: 100%; float: left;padding-right: 0;}
+.message-list-wrapper{margin-bottom: 25px;}
+
+.message-list .unread .sender,
+.message-list .unread .message{font-weight: 600;}
+.message-list table > thead > tr > th{background-color: #f0efe9;}
+.message-list table tr .last-update{width: 100px;}
+.message-list table tr .action{width: 60px;text-align: center;}
+.message-list table tr .control{width: 20px;}
+.message-list table tr .sender{width: 150px;}
+.message-list .message-action{display: block;margin-bottom: 10px;}
+.message-list .message-action select{width: auto;}
+
+.vnecoms-message-container .box {background: #ffffff;border: 1px solid #dfdfdf;width: 100%; margin-bottom: 25px;}
+.vnecoms-message-container .box-header {color: #444;display: block;padding: 10px;position: relative;border-bottom: 1px solid #f4f4f4;}
+.vnecoms-message-container .box-header h3{margin: 0;}
+.vnecoms-message-container .box-body {border-radius: 0 0 3px 3px;padding: 10px;}
+.vnecoms-message-container .box-footer {background-color: #ffffff;border-radius: 0 0 3px 3px;border-top: 1px solid #f4f4f4;padding: 10px; overflow: hidden;}
+
+.vnecoms-message-container .box-message-list .box-header.with-border {border-bottom: none;}
+.vnecoms-message-container .box-message-list .box-body {border-radius: 0 0 3px 3px; border-bottom: 1px solid #dfdfdf;}
+.vnecoms-message-container .box-message-list .box-body.last {border-bottom: none}
+
+.vnecoms-message-container .nav {list-style: outside none none;margin-bottom: 0;padding-left: 0;}
+.vnecoms-message-container .box .nav > li {border-bottom: 1px solid #f4f4f4;margin: 0;}
+.vnecoms-message-container .box .nav > li:last-child {border-bottom: none;}
+.vnecoms-message-container .nav > li > a {display: block;padding: 10px 15px;position: relative;border-left: 3px solid transparent;color: #444;text-decoration: none;}
+.vnecoms-message-container .nav > li.active > a,
+.vnecoms-message-container .nav > li.active > a:hover {border-left-color: #3c8dbc;}
+.vnecoms-message-container .nav > li > a:hover, .vnecoms-message-container .nav > li > a:active, .vnecoms-message-container .nav > li > a:focus {background: #f7f7f7;color: #444;}
+.vnecoms-message-count-right{float: right; background-color: #3c8dbc;color: #fff;display: inline;font-size: 75%;font-weight: 700;line-height: 1;padding: 0.2em 0.6em 0.3em;text-align: center;vertical-align: baseline;white-space: nowrap;border-radius: 0.25em; -moz-border-radius: 0.25em; -webkit-border-radius: 0.25em;}
+
+.message-icon {margin-right: 10px;}
+.message-icon .fa {font-size: 17px;color: #89d3b2;border: 1px solid #ccc;padding: 10px;display: block;}
+.message-icon img{width: 40px;height: 35px;}
+.message-icon.owner-message .fa{color: #a4c2f4;}
+.mailbox-read-info{border-bottom: 0 none; cursor: pointer;padding: 10px;border-top: 1px solid #dfdfdf;}
+.message-1 .mailbox-read-info {border-top: 0 none;}
+
+.mailbox-read-info.one-message, .last .mailbox-read-info{cursor: auto;}
+.mailbox-read-info.read{background: #F5F5F5;}
+.mailbox-read-info:after, .message-buttons:after {clear: both;content: "";display: table;}
+.mailbox-read-info h3 {font-size: 14px;font-weight: bold;display: inline;}
+.mailbox-read-message{display: block; padding: 10px;}
+.message-buttons{margin-bottom: 10px;}
+.message-buttons button, .box-footer button{margin-right: 5px;font-weight: normal;}
+
+
+.pull-left{float: left !important;}
+.pull-right{float: right !important;}
+.no-padding {padding: 0 !important;}
+
+.customer-message-view .file-uploader-button {
+    background: #eeeeee;
+    border: 1px solid #cccccc;
+    color: #333333;
+    font-weight: normal;
+    border-radius: 3px;
+}
+
+.customer-message-view .file-uploader-button:hover {
+    background: #e1e1e1;
+    border: 1px solid #cccccc;
+    color: #333333;
+}
+
+.message-upload-wrapper {
+    float: left;
+    width: 78%;
+}
+
+.message-upload-wrapper .extensions-allowed {
+    margin: 8px 0;
+    display: inline-block;
+    vertical-align: middle;
+    float: left;
+    clear: both;
+}
+
+@media screen and (max-width: 600px) {
+    .new-message-container{width: 90%; right: 0; bottom: 60px;}
+    .vendor-profile-review .rating-summary .rating-result > span:before{z-index: 1;}
+}

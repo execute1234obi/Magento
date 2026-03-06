@@ -1,0 +1,307 @@
+<?php $rfqs = (array) $block->getRfqs(); ?>
+
+<div class="rfq-history-wrap">
+  <div class="rfq-history-head">
+    <div>
+      <h2 class="rfq-history-title">My RFQs</h2>
+      <p class="rfq-history-subtitle"><?= count($rfqs) ?> request(s)</p>
+    </div>
+  </div>
+
+  <?php if (!count($rfqs)): ?>
+    <div class="rfq-empty">No RFQs found.</div>
+  <?php else: ?>
+    <div class="rfq-table-shell">
+      <table class="rfq-table">
+        <thead>
+          <tr>
+            <th class="rfq-col-id">#</th>
+            <th>Product</th>
+            <th>SKU</th>
+            <th>Price</th>
+            <th class="rfq-col-qty">Qty</th>
+            <th class="rfq-col-status">Status</th>
+            <th class="rfq-col-date">Date</th>
+            <th class="rfq-col-action">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <?php $i=1; foreach ($rfqs as $rfq): ?>
+            <?php
+              $product = $block->getProduct($rfq['product_id']);
+              $status = strtolower(trim((string)($rfq['status'] ?? '')));
+              $badge = 'rfq-badge--default';
+              if ($status === 'pending') $badge = 'rfq-badge--pending';
+              if ($status === 'approved') $badge = 'rfq-badge--approved';
+              if ($status === 'rejected') $badge = 'rfq-badge--rejected';
+            ?>
+            <tr>
+              <td class="rfq-col-id" data-label="#">#<?= $i++ ?></td>
+
+              <td data-label="Product">
+                <?php if ($product && $product->getId()): ?>
+                  <div class="rfq-product">
+                    <div class="rfq-product-img">
+                      <img src="<?= $block->escapeUrl($block->getImageUrl($product)) ?>"
+                           alt="<?= $block->escapeHtmlAttr($product->getName()) ?>" />
+                    </div>
+                    <div>
+                      <p class="rfq-product-name"><?= $block->escapeHtml($product->getName()) ?></p>
+                      <p class="rfq-product-meta"><?= $product->isSaleable() ? 'In stock' : 'Out of stock' ?></p>
+                    </div>
+                  </div>
+                <?php else: ?>
+                  <span>Product not available</span>
+                <?php endif; ?>
+              </td>
+
+              <td data-label="SKU"><?= $product ? $block->escapeHtml($product->getSku()) : '-' ?></td>
+              <td data-label="Price"><?= $product ? $block->escapeHtml($block->formatPrice($product->getFinalPrice())) : '-' ?></td>
+              <td class="rfq-col-qty" data-label="Qty"><?= (int)($rfq['qty'] ?? 0) ?></td>
+
+              <td class="rfq-col-status" data-label="Status">
+                <span class="rfq-badge <?= $badge ?>"><?= $block->escapeHtml(ucfirst($status ?: 'N/A')) ?></span>
+              </td>
+
+              <td class="rfq-col-date" data-label="Date">
+                <?= !empty($rfq['created_at']) ? date('d M Y', strtotime($rfq['created_at'])) : '-' ?>
+              </td>
+
+              <td class="rfq-col-action" data-label="Action">
+                <?php if ($product && $product->getId()): ?>
+                  <a class="rfq-btn" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">View product</a>
+                <?php else: ?>
+                  -
+                <?php endif; ?>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
+  <?php endif; ?>
+</div>
+
+<style>
+    /* RFQ History Page */
+.rfq-history-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 16px 40px;
+}
+
+.rfq-history-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.rfq-history-title {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
+.rfq-history-subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.rfq-empty {
+  border: 1px dashed #d1d5db;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  text-align: center;
+  color: #111827;
+}
+
+/* Table shell */
+.rfq-table-shell {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
+}
+
+/* Table */
+.rfq-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.rfq-table thead th {
+  background: #f9fafb;
+  color: #374151;
+  text-align: left;
+  font-weight: 700;
+  padding: 12px 14px;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.rfq-table tbody td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #111827;
+  vertical-align: middle;
+}
+
+.rfq-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.rfq-col-id { width: 70px; white-space: nowrap; }
+.rfq-col-action { width: 140px; text-align: right; white-space: nowrap; }
+.rfq-col-qty { width: 70px; white-space: nowrap; }
+.rfq-col-status { width: 120px; white-space: nowrap; }
+.rfq-col-date { width: 120px; white-space: nowrap; }
+
+/* Product cell */
+.rfq-product {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 260px;
+}
+
+.rfq-product-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  overflow: hidden;
+  flex: 0 0 auto;
+  border: 1px solid #eef2f7;
+}
+
+.rfq-product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rfq-product-name {
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.rfq-product-meta {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Badge */
+.rfq-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.rfq-badge--pending { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
+.rfq-badge--approved { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
+.rfq-badge--rejected { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+.rfq-badge--default { background: #f3f4f6; color: #374151; border-color: #e5e7eb; }
+
+/* Button */
+.rfq-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid #2563eb;
+  color: #2563eb;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 13px;
+  transition: 150ms ease;
+}
+
+.rfq-btn:hover {
+  background: #eff6ff;
+}
+
+/* Responsive: turn table rows into cards */
+@media (max-width: 900px) {
+  .rfq-history-head {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rfq-table-shell {
+    border-radius: 12px;
+  }
+
+  .rfq-table,
+  .rfq-table thead,
+  .rfq-table tbody,
+  .rfq-table th,
+  .rfq-table td,
+  .rfq-table tr {
+    display: block;
+    width: 100%;
+  }
+
+  .rfq-table thead {
+    display: none;
+  }
+
+  .rfq-table tbody tr {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    margin: 12px;
+    overflow: hidden;
+    box-shadow: 0 6px 16px rgba(17, 24, 39, 0.06);
+  }
+
+  .rfq-table tbody td {
+    border-bottom: 1px solid #f1f5f9;
+    position: relative;
+    padding: 12px 12px 12px 46%;
+    min-height: 42px;
+  }
+
+  .rfq-table tbody td:last-child {
+    border-bottom: none;
+  }
+
+  .rfq-table tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 12px;
+    top: 12px;
+    width: 40%;
+    font-weight: 800;
+    color: #374151;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+
+  .rfq-col-action {
+    text-align: left;
+  }
+
+  .rfq-product {
+    min-width: 0;
+  }
+}
+    </style>

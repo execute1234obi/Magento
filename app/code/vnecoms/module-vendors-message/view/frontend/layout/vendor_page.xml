@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<body>
+         <referenceContainer name="vendor.profile.left.description.container">
+    		<container name="vendor.profile.left.message.container" htmlTag="div" htmlClass="col-xs-12 vendor-profile-message" after="vendor.profile.left.social.container">
+    			<block class="Vnecoms\VendorsMessage\Block\Profile\Message" name="vendor.profile.left.message" template="Vnecoms_VendorsMessage::profile/message.phtml"/>
+    		</container>
+    	</referenceContainer>
+    	
+    	<referenceContainer name="vendor.profile.top.description.container">
+    		<container name="vendor.profile.top.message.container" htmlTag="div" htmlClass="col-xs-12 vendor-profile-message" after="vendor.profile.top.social.container">
+    			<block class="Vnecoms\VendorsMessage\Block\Profile\Message" name="vendor.profile.top.message" template="Vnecoms_VendorsMessage::profile/message.phtml"/>
+    		</container>
+    	</referenceContainer>
+    	
+    	<referenceContainer name="content">
+    		<container name="container.message.new" after="-">
+    			<block class="Vnecoms\VendorsMessage\Block\Message" name="message.editor" template="Vnecoms_VendorsMessage::message.phtml" />
+    		</container>
+    	</referenceContainer>
+    </body>
+</page>

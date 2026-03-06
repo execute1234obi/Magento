@@ -1,0 +1,35 @@
+<li class="dropdown messages-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-envelope-o"></i>
+        <span class="label label-success"><?= $block->escapeHtml($block->getUnreadMessageCount()); ?></span>
+    </a>
+    <ul class="dropdown-menu">
+        <li class="header"><?= $block->escapeHtml(__("You have %1 messages", $block->getUnreadMessageCount())) ?></li>
+        <li>
+            <ul class="menu">
+                <?php foreach ($block->getUnreadMessageCollection() as $message): ?>
+                    <?php $detail = $message->getLastMessageDetail(); ?>
+                    <li><!-- start message -->
+                        <a href="<?= $block->escapeHtml($block->getViewMessageUrl($message)) ?>">
+                            <div class="pull-left">
+                                <img src="<?=
+                                $block->escapeHtml($block->getAvatarUrl($detail->getSenderId())) ?>" class="img-circle"
+                                     alt="User Image">
+                            </div>
+                            <h4>
+                                <?= $block->escapeHtml($detail->getSenderName()) ?>
+                                <small><i class="fa fa-clock-o"></i>
+                                    <?= $block->escapeHtml($block->getMessageTime($detail->getCreatedAt())); ?>
+                                </small>
+                            </h4>
+                            <p><?= $block->escapeHtml($detail->getSubject()) ?></p>
+                        </a>
+                    </li><!-- end message -->
+                <?php endforeach; ?>
+            </ul>
+        </li>
+        <li class="footer"><a href="<?= $block->escapeHtml($block->getMessageUrl()); ?>">
+                <?= $block->escapeHtml(__('See All Messages')) ?></a>
+        </li>
+    </ul>
+</li>

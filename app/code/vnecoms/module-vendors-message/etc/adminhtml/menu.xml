@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Vnecoms_VendorsMessage::message" title="Message" sortOrder="20" module="Vnecoms_VendorsMessage" parent="Vnecoms_Vendors::marketplace" dependsOnModule="Vnecoms_VendorsMessage" resource="Vnecoms_VendorsMessage::message"/>
+        <add id="Vnecoms_VendorsMessage::manage_message" title="All Messages" sortOrder="1" module="Vnecoms_VendorsMessage" parent="Vnecoms_VendorsMessage::message" action="vendors/message_all" dependsOnModule="Vnecoms_VendorsMessage" resource="Vnecoms_VendorsMessage::manage_message"/>
+        <add id="Vnecoms_VendorsMessage::manage_warning" title="Message Warning" sortOrder="2" module="Vnecoms_VendorsMessage" parent="Vnecoms_VendorsMessage::message" action="vendors/message_warning" dependsOnModule="Vnecoms_VendorsMessage" resource="Vnecoms_VendorsMessage::manage_warning"/>
+        <add id="Vnecoms_VendorsMessage::message_pattern" title="Message Pattern" sortOrder="10" module="Vnecoms_VendorsMessage" parent="Vnecoms_VendorsMessage::message" action="vendors/message_pattern" dependsOnModule="Vnecoms_VendorsMessage" resource="Vnecoms_VendorsMessage::message_pattern"/>
+        <add id="Vnecoms_VendorsMessage::block_list" title="Block List" sortOrder="20" module="Vnecoms_VendorsMessage" parent="Vnecoms_VendorsMessage::message" action="vendors/message_block" dependsOnModule="Vnecoms_VendorsMessage" resource="Vnecoms_VendorsMessage::block_list"/>
+    </menu>
+</config>

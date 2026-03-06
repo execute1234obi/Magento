@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<page layout="checkout"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+
+        <!-- Remove header -->
+        <referenceBlock name="header.container" remove="true"/>
+        <referenceBlock name="logo" remove="true"/>
+
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+
+                                <!-- ✅ Disable sidebar cart items -->
+                                <item name="sidebar" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="summary" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="cart_items" xsi:type="array">
+                                                    <item name="componentDisabled" xsi:type="boolean">true</item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+
+                                <!-- ✅ Add cart items in payment area -->
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="billing-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="payment" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+<item name="beforeMethods" xsi:type="array">
+    <item name="children" xsi:type="array">
+
+        <item name="cart_items_custom" xsi:type="array">
+            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/cart-items</item>
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">Magento_Checkout/summary/cart-items</item>
+            </item>
+            <item name="children" xsi:type="array">
+                <item name="details" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details</item>
+                    <item name="children" xsi:type="array">
+                        <item name="thumbnail" xsi:type="array">
+                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details/thumbnail</item>
+                            <item name="displayArea" xsi:type="string">before_details</item>
+                        </item>
+                        <item name="subtotal" xsi:type="array">
+                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details/subtotal</item>
+                            <item name="displayArea" xsi:type="string">after_details</item>
+                        </item>
+                    </item>
+                </item>
+            </item>
+            <item name="sortOrder" xsi:type="string">1</item>
+        </item>
+
+        <!-- Discount -->
+        <item name="discount" xsi:type="array">
+            <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/discount</item>
+            <item name="config" xsi:type="array">
+                <item name="template" xsi:type="string">Magento_SalesRule/payment/discount</item>
+            </item>
+            <item name="sortOrder" xsi:type="string">2</item>
+        </item>
+
+        <!-- Store Credit -->
+      <item name="credit" xsi:type="array">
+    <item name="component" xsi:type="string">Vnecoms_Credit/js/view/payment/credit</item>
+    <item name="sortOrder" xsi:type="string">3</item>
+    <item name="children" xsi:type="array">
+        <item name="errors" xsi:type="array">
+            <item name="component" xsi:type="string">Vnecoms_Credit/js/view/payment/credit-messages</item>
+            <item name="displayArea" xsi:type="string">messages</item>
+        </item>
+    </item>
+</item>
+
+    </item>
+</item>
+                                                   
+                                                                                                      
+                                                  </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+
+                            </item>
+                        </item>
+                    </item>
+
+                </argument>
+            </arguments>
+        </referenceBlock>
+
+    </body>
+</page>

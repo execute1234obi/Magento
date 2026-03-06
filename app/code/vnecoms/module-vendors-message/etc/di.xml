@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="vendor_messages_detail_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Message\Detail\Grid\Collection</item>
+                <item name="vendor_messages_grid_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Message\Grid\InboxCollection</item>
+                <item name="vendor_messages_outbox_grid_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Message\Grid\OutboxCollection</item>
+                <item name="vendor_messages_trash_grid_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Message\Grid\TrashCollection</item>
+                <item name="vendor_message_pattern_listing_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Pattern\Grid\Collection</item>
+                <item name="vendor_message_warning_listing_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Warning\Grid\Collection</item>
+                <item name="vendor_message_block_listing_data_source" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Block\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <type name="Vnecoms\VendorsMessage\Model\ResourceModel\Pattern\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">ves_vendor_message_pattern</argument>
+            <argument name="eventPrefix" xsi:type="string">message_pattern_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">message_pattern_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Pattern</argument>
+        </arguments>
+    </type>
+
+    <type name="Vnecoms\VendorsMessage\Model\ResourceModel\Warning\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">ves_vendor_message_warning</argument>
+            <argument name="eventPrefix" xsi:type="string">message_warning_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">message_warning_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Warning</argument>
+        </arguments>
+    </type>
+
+    <type name="Vnecoms\VendorsMessage\Model\ResourceModel\Block\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">ves_vendor_message_block</argument>
+            <argument name="eventPrefix" xsi:type="string">message_block_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">message_block_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Block</argument>
+        </arguments>
+    </type>
+
+    <type name="Vnecoms\VendorsMessage\Model\ResourceModel\Message\Detail\Grid\Collection">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">ves_vendor_message_detail</argument>
+            <argument name="eventPrefix" xsi:type="string">message_detail_grid_collection</argument>
+            <argument name="eventObject" xsi:type="string">message_detail_grid_collection</argument>
+            <argument name="resourceModel" xsi:type="string">Vnecoms\VendorsMessage\Model\ResourceModel\Message\Detail</argument>
+        </arguments>
+    </type>
+
+</config>
