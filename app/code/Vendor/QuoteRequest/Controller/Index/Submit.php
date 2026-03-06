@@ -143,25 +143,65 @@ $this->saveToVnecomsInbox(
     $post['customer_note']
 );
                 // 4. Send Vendor Email (Individual Try-Catch to prevent crash)
-                try {
-                    $vendor = $this->vendorFactory->create()->load($vId);
-                    $this->sendEmail('rfq_vendor_email_template', $vendor->getEmail(), $vendor->getName(), [
-                        'quote_id' => $newQuoteId,
-                        'customer_name' => $customerName
-                    ]);
-                } catch (\Exception $e) {
-                    // Silent fail for vendor email
-                }
+                // try {
+                //     $vendor = $this->vendorFactory->create()->load($vId);
+                //     $this->sendEmail('rfq_vendor_email_template', $vendor->getEmail(), $vendor->getName(), [
+                //         'quote_id' => $newQuoteId,
+                //         'customer_name' => $customerName
+                //     ]);
+                // } catch (\Exception $e) {
+                //     // Silent fail for vendor email
+                // }
+                $vendor = $this->vendorFactory->create()->load($vId);
+
+if ($vendor && $vendor->getEmail()) {
+
+    $this->sendEmail(
+        'rfq_vendor_email_template',
+        $vendor->getEmail(),
+        $vendor->getName(),
+        [
+            'quote_id' => $newQuoteId,
+            'customer_name' => $customerName
+        ]
+    );
+
+} else {
+    $this->_logger->error("Vendor email missing for Vendor ID: " . $vId);
+}
             }
 
             // 5. Send Customer & Admin Email (Individual Try-Catch)
-            try {
-                $this->sendEmail('rfq_customer_email_template', $customer->getEmail(), $customerName, ['quote_id' => $lastQuoteId, 'customer_name' => $customerName]);
-                $this->sendEmail('rfq_admin_email_template', 'admin@example.com', 'Admin', ['quote_id' => $lastQuoteId, 'customer_name' => $customerName]);
-            } catch (\Exception $e) {
-                $this->messageManager->addWarningMessage(__('Quote saved, but confirmation email could not be sent.'));
-            }
+            // try {
+            //     $this->sendEmail('rfq_customer_email_template', $customer->getEmail(), $customerName, ['quote_id' => $lastQuoteId, 'customer_name' => $customerName]);
+            //     $this->sendEmail('rfq_admin_email_template', 'admin@example.com', 'Admin', ['quote_id' => $lastQuoteId, 'customer_name' => $customerName]);
+            // } catch (\Exception $e) {
+            //     $this->messageManager->addWarningMessage(__('Quote saved, but confirmation email could not be sent.'));
+            // }
+            if ($customer->getEmail()) {
 
+    $this->sendEmail(
+        'rfq_customer_email_template',
+        $customer->getEmail(),
+        $customerName,
+        [
+            'quote_id' => $lastQuoteId,
+            'customer_name' => $customerName
+        ]
+    );
+
+}
+$adminEmail = 'admin@example.com';
+
+$this->sendEmail(
+    'rfq_admin_email_template',
+    $adminEmail,
+    'Admin',
+    [
+        'quote_id' => $lastQuoteId,
+        'customer_name' => $customerName
+    ]
+);
             $this->catalogSession->setQuoteItems([]); 
             $this->messageManager->addSuccessMessage(__('Your quotation requests have been sent successfully and added to your inbox!'));
             
@@ -340,8 +380,31 @@ public function saveToVnecomsInbox($customerId, $vendorId, $subject, $content)
 //     }
 // }
 
-    public function sendEmail($templateId, $toEmail, $toName, $templateVars)
-    {
+    // public function sendEmail($templateId, $toEmail, $toName, $templateVars)
+    // {
+    //     $transport = $this->transportBuilder
+    //         ->setTemplateIdentifier($templateId)
+    //         ->setTemplateOptions([
+    //             'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
+    //             'store' => $this->storeManager->getStore()->getId(),
+    //         ])
+    //         ->setTemplateVars($templateVars)
+    //         ->setFrom(['name' => 'Admin', 'email' => 'admin@example.com'])
+    //         ->addTo($toEmail, $toName)
+    //         ->getTransport();
+
+    //     $transport->sendMessage();
+    // }
+public function sendEmail($templateId, $toEmail, $toName, $templateVars)
+{
+    try {
+
+        // Email empty check
+        if (empty($toEmail)) {
+            $this->_logger->error("RFQ Email Error: Email address missing for template " . $templateId);
+            return false;
+        }
+
         $transport = $this->transportBuilder
             ->setTemplateIdentifier($templateId)
             ->setTemplateOptions([
@@ -349,10 +412,20 @@ public function saveToVnecomsInbox($customerId, $vendorId, $subject, $content)
                 'store' => $this->storeManager->getStore()->getId(),
             ])
             ->setTemplateVars($templateVars)
-            ->setFrom(['name' => 'Admin', 'email' => 'admin@example.com'])
-            ->addTo($toEmail, $toName)
+            ->setFrom([
+                'name'  => 'Admin',
+                'email' => 'admin@example.com'
+            ])
+            ->addTo([$toEmail])
             ->getTransport();
 
         $transport->sendMessage();
+
+        return true;
+
+    } catch (\Exception $e) {
+        $this->_logger->error("RFQ Email Sending Failed: " . $e->getMessage());
+        return false;
     }
+}
 }
