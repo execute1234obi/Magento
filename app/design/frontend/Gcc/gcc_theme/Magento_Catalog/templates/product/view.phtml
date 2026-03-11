@@ -9,6 +9,10 @@
 $product = $block->getProduct();
 $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 
+//for quote button 
+$helper = $this->helper(\Vendor\QuoteRequest\Helper\Data::class);
+$quoteUrl = $helper->getAddToQuoteUrl($product->getId());
+
 // Fetching configurable product data if available
 $configurableData = '';
 if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE) {
@@ -577,11 +581,11 @@ body {
         /* VENDOR LEFT - THE 2x2 GRID (from provided CSS) */
         .vendor-left{
             display:grid;
-            grid-template-columns:44px auto;  /* logo | text */
-            grid-template-rows:auto auto;     /* row1 name, row2 button */
+            grid-template-columns:44px auto;  /* logo | text */
+            grid-template-rows:auto auto;     /* row1 name, row2 button */
             column-gap:12px;
             row-gap:6px;
-            align-items:start;              
+            align-items:start;              
         }
 
         /* LOGO STYLES (from provided CSS) */
@@ -606,7 +610,7 @@ body {
         /* VENDOR NAME (from provided CSS) */
         .vendor-name{
             grid-column: 2; 
-            grid-row: 1;                     
+            grid-row: 1;                     
             margin:0;
             line-height:1.1;
             display:inline-flex; 
@@ -1067,7 +1071,18 @@ $country = $country_id->getName();
                     } ?>
                 </div>
                 <?php if ($product->getTypeId() !== \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE): ?>
-                    <button type="submit" id="add-to-quote-btn" class="add-quote-btn"><?= __("Add To Quote") ?></button>
+                     <?php
+    // $quoteUrl = $block->getUrl(
+    //     'quoterequest/index/create',
+    //     ['product_id' => $product->getId()]
+    // );
+    ?>
+
+   <button type="button" id="add-to-quote-btn" class="add-quote-btn"
+        onclick="location.href='<?= $quoteUrl ?>'">
+    <?= __("Add To Quote") ?>
+</button>
+                    <!-- <button type="submit" id="add-to-quote-btn" class="add-quote-btn"><?= __("Add To Quote") ?></button> -->
                 <?php endif; ?>
             </form>
         </div>
@@ -1342,6 +1357,7 @@ require(['jquery'], function($) {
 <?php endif; ?>
 
 <script type="text/javascript">
+    
 require([
     'jquery',
     'mage/url',
@@ -1480,7 +1496,8 @@ require([
         });
      /* Form Validation */
     var dataForm = $('#new-msg-form');
-    dataForm.mage('validation');
-});
-
+	    dataForm.mage('validation');
+            } // Closes if(dataForm.valid())
+        }); // Closes $("#new-msg-send-btn").click
+    }); // Closes second require block
 </script>

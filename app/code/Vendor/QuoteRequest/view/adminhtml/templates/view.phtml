@@ -1,0 +1,118 @@
+<?php
+$quote = $block->getQuote();
+$items = $block->getItems();
+?>
+<div class="page-main-actions">
+    <div class="page-actions">
+        <div class="page-actions-inner">
+
+            <div class="page-actions-buttons">
+
+                <a href="<?= $block->getUrl('vendorquotation/index/index') ?>"
+                   class="action-default scalable back">
+                    <span>Back to Grid</span>
+                </a>
+
+                <!-- <button class="action-primary scalable">
+                    <span>Reject RFQ</span>
+                </button> -->
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="page-main-actions">
+    <h1 class="page-title">
+        <span class="base">RFQ #<?= $quote->getId(); ?></span>
+    </h1>
+</div>
+
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title">RFQ Information</span>
+    </div>
+
+    <div class="admin__page-section-content">
+
+        <table class="admin__table-secondary">
+            <tbody>
+
+                <tr>
+                    <th>RFQ ID #</th>
+                    <td><?= $block->escapeHtml($quote->getId()) ?></td>
+                </tr>
+
+                <tr>
+                    <th>Vendor</th>
+                    <td><?= $block->escapeHtml($block->getVendorName()) ?></td>
+                </tr>
+
+                <tr>
+                    <th>Customer</th>
+                    <td><?= $block->escapeHtml($block->getCustomerName()) ?></td>
+                </tr>
+
+                <tr>
+                    <th>Status</th>
+                    <td>
+                        <span class="grid-severity-notice">
+                            <span><?= $block->escapeHtml($quote->getStatus()) ?></span>
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Message</th>
+                    <td><?= $block->escapeHtml($quote->getCustomerNote()) ?></td>
+                </tr>
+
+                <tr>
+                    <th>Created At</th>
+                    <td><?= $block->escapeHtml($quote->getCreatedAt()) ?></td>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title">Products</span>
+    </div>
+
+    <div class="admin__page-section-content">
+
+        <table class="data-grid">
+            <thead>
+                <tr>
+                    <th class="data-grid-th">Product</th>
+                    <th class="data-grid-th">Qty</th>
+                    <th class="data-grid-th">Proposed Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (count($items)): ?>
+                    <?php foreach ($items as $item): ?>
+                        <tr>
+                            <td>
+                                <?= $block->escapeHtml(
+                                    $block->getProductName($item->getProductId())
+                                ); ?>
+                            </td>
+                            <td><?= (float)$item->getQty(); ?></td>
+                            <td><?= (float)$item->getProposedPrice(); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="3">No products found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+    </div>
+</div>

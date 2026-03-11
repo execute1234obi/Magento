@@ -1,0 +1,45 @@
+<?php
+$quote = $block->getQuote();
+$items = $block->getItems();
+?>
+<?php
+
+//echo $quote->getCustomerNote();
+?>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+<h2>RFQ #<?= $quote->getId(); ?></h2>
+  <button onclick="history.back()" 
+            class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
+        ← Back
+    </button>
+</div>
+
+<div>
+    <p><strong>Customer Message:</strong> <?= $quote->getCustomerNote(); ?></p>
+    <p><strong>Status:</strong> <?= ucfirst($quote->getStatus()); ?></p>
+</div>
+
+<table class="data table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    <?php foreach ($items as $item): ?>
+       <tr>
+            <td><?= $block->getProductName($item->getData('product_id')); ?></td>
+            <td><?= (int)$item->getData('qty'); ?></td>
+            <td>
+                <a href="<?= $block->getProductUrl($item->getData('product_id')); ?>"  target="_blank"
+       rel="noopener noreferrer">
+        View Product
+    </a>
+            </td>
+        </tr>
+    <?php endforeach; ?>
+    </tbody>
+</table>

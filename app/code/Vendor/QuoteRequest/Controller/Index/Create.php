@@ -3,34 +3,35 @@ namespace Vendor\QuoteRequest\Controller\Index;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Catalog\Model\Session as CatalogSession;
 
 class Create extends Action
 {
-    protected $resultRedirectFactory;
+    protected $catalogSession;
 
     public function __construct(
         Context $context,
-        RedirectFactory $resultRedirectFactory
+        CatalogSession $catalogSession
     ) {
+        $this->catalogSession = $catalogSession;
         parent::__construct($context);
-        $this->resultRedirectFactory = $resultRedirectFactory;
     }
 
     public function execute()
     {
-        $productId = (int)$this->getRequest()->getParam('product_id');
+       $productId = (int)$this->getRequest()->getParam('product_id');
+        
+        // Debugging ke liye: 
+        // if (!$productId) { die("Product ID missing in request!"); }
 
-        if (!$productId) {
-            $this->messageManager->addErrorMessage(__('Invalid product.'));
-            return $this->resultRedirectFactory->create()->setPath('/');
+        $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
+
+        if ($productId && !in_array($productId, $quoteItems)) {
+            $quoteItems[] = $productId;
         }
 
-        /** 👉 Save to your quote_request table here **/
+        $this->catalogSession->setQuoteItems($quoteItems);
 
-        $this->messageManager->addSuccessMessage(__('Product added to Quote.'));
-
-        return $this->resultRedirectFactory->create()
-            ->setPath('quoterequest/index/view');
+        return $this->resultRedirectFactory->create()->setPath('quoterequest/view/index');
     }
 }

@@ -127,106 +127,116 @@ else
 
     <div class="flex items-center space-x-6">
       <div class="hidden md:flex items-center space-x-3 final-font gap-3" style="border-right:1px solid #D1D5DB;">
-        <?php if ($block->isLoggedIn()): ?>
-          <?php
-            $layout = $block->getLayout();
-            $messageBlock = $layout->createBlock(\CustomVendor\VendorHeader\Block\VendorMessagesNew::class);
-            $messageCount = $messageBlock ? $messageBlock->getUnreadMessageCount() : 0;
-            $messagesUrl  = $messageBlock ? $messageBlock->getMessagesUrl() : $block->getUrl('*/*/');
-            $vendorLogoUrl= $messageBlock ? $messageBlock->getVendorLogoUrl() : '';
-            $vendorDashboardUrl = $messageBlock ? $messageBlock->getVendorUrl() : '';
-          ?>
-          <!-- <a href="<?= $block->escapeUrl($vendorDashboardUrl) ?>"><?= __('Vendor Dashboard') ?></a> -->
-          <a href="<?= $block->escapeUrl($messagesUrl) ?>" class="relative text-gray-700 hover:text-[#3B82F6]">
-          <svg width="27" height="27" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19.4348 2.57153H8.56627C7.2417 2.57153 6.57999 2.57153 6.04513 2.75782C5.54105 2.93693 5.08496 3.22966 4.71218 3.61334C4.3394 3.99702 4.05993 4.46136 3.89542 4.97039C3.71484 5.52125 3.71484 6.20239 3.71484 7.56582V23.5704C3.71484 24.551 4.84056 25.0721 5.55256 24.4207C5.75231 24.2361 6.0143 24.1336 6.28627 24.1336C6.55825 24.1336 6.82023 24.2361 7.01999 24.4207L7.57199 24.9258C7.92194 25.2494 8.38105 25.4292 8.8577 25.4292C9.33435 25.4292 9.79346 25.2494 10.1434 24.9258C10.4934 24.6022 10.9525 24.4225 11.4291 24.4225C11.9058 24.4225 12.3649 24.6022 12.7148 24.9258C13.0648 25.2494 13.5239 25.4292 14.0006 25.4292C14.4772 25.4292 14.9363 25.2494 15.2863 24.9258C15.6362 24.6022 16.0953 24.4225 16.572 24.4225C17.0486 24.4225 17.5077 24.6022 17.8577 24.9258C18.2077 25.2494 18.6668 25.4292 19.1434 25.4292C19.6201 25.4292 20.0792 25.2494 20.4291 24.9258L20.9811 24.4207C21.1809 24.2361 21.4429 24.1336 21.7148 24.1336C21.9868 24.1336 22.2488 24.2361 22.4486 24.4207C23.1606 25.0721 24.2863 24.551 24.2863 23.5704V7.56582C24.2863 6.20239 24.2863 5.5201 24.1057 4.97153C23.9413 4.46229 23.6619 3.99773 23.2891 3.61384C22.9164 3.22995 22.4602 2.93705 21.956 2.75782C21.4211 2.57153 20.7594 2.57153 19.4348 2.57153Z" stroke="#3B82F6" stroke-width="1.71429"/>
-                            <path d="M12.2861 12.8573H19.7147M8.28613 12.8573H8.85756M8.28613 8.8573H8.85756M8.28613 16.8573H8.85756M12.2861 8.8573H19.7147M12.2861 16.8573H19.7147" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round"/>
-                        </svg> 
-          <!-- icon omitted for brevity -->
-            <?php if ($messageCount > 0): ?>
-              <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border border-white z-10" style="min-width:20px; font-size:10px;"><?= $block->escapeHtml($messageCount) ?></span>
-            <?php endif; ?>
-          </a>
-          <div>
-            <!-- <?php if ($vendorLogoUrl): ?>
-              <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>"><img src="<?= $vendorLogoUrl ?>" alt="Logo" title="customer dashboard" class="w-24" style="height:30px;"></a>
-            <?php endif; ?> -->
+       <?php if ($block->isLoggedIn()): ?>
+  <?php
+    $layout = $block->getLayout();
+    $messageBlock = $layout->createBlock(\CustomVendor\VendorHeader\Block\VendorMessagesNew::class);
+    $messageCount = $messageBlock ? $messageBlock->getUnreadMessageCount() : 0;
+    $messagesUrl  = $messageBlock ? $messageBlock->getMessagesUrl() : $block->getUrl('*/*/');
+    $vendorLogoUrl= $messageBlock ? $messageBlock->getVendorLogoUrl() : '';
+    $vendorDashboardUrl = $messageBlock ? $messageBlock->getVendorUrl() : '';
+  ?>
 
+  <!-- ICON 1: Messages with badge -->
+  <div class="relative flex items-center justify-center" style="width:27px; height:27px;">
+    <a href="<?= $block->escapeUrl($messagesUrl) ?>" 
+       class="flex items-center justify-center text-gray-700 hover:text-[#3B82F6]"
+       title="<?= __('Messages') ?>">
+      <svg width="27" height="27" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.4348 2.57153H8.56627C7.2417 2.57153 6.57999 2.57153 6.04513 2.75782C5.54105 2.93693 5.08496 3.22966 4.71218 3.61334C4.3394 3.99702 4.05993 4.46136 3.89542 4.97039C3.71484 5.52125 3.71484 6.20239 3.71484 7.56582V23.5704C3.71484 24.551 4.84056 25.0721 5.55256 24.4207C5.75231 24.2361 6.0143 24.1336 6.28627 24.1336C6.55825 24.1336 6.82023 24.2361 7.01999 24.4207L7.57199 24.9258C7.92194 25.2494 8.38105 25.4292 8.8577 25.4292C9.33435 25.4292 9.79346 25.2494 10.1434 24.9258C10.4934 24.6022 10.9525 24.4225 11.4291 24.4225C11.9058 24.4225 12.3649 24.6022 12.7148 24.9258C13.0648 25.2494 13.5239 25.4292 14.0006 25.4292C14.4772 25.4292 14.9363 25.2494 15.2863 24.9258C15.6362 24.6022 16.0953 24.4225 16.572 24.4225C17.0486 24.4225 17.5077 24.6022 17.8577 24.9258C18.2077 25.2494 18.6668 25.4292 19.1434 25.4292C19.6201 25.4292 20.0792 25.2494 20.4291 24.9258L20.9811 24.4207C21.1809 24.2361 21.4429 24.1336 21.7148 24.1336C21.9868 24.1336 22.2488 24.2361 22.4486 24.4207C23.1606 25.0721 24.2863 24.551 24.2863 23.5704V7.56582C24.2863 6.20239 24.2863 5.5201 24.1057 4.97153C23.9413 4.46229 23.6619 3.99773 23.2891 3.61384C22.9164 3.22995 22.4602 2.93705 21.956 2.75782C21.4211 2.57153 20.7594 2.57153 19.4348 2.57153Z" stroke="#3B82F6" stroke-width="1.71429"/>
+        <path d="M12.2861 12.8573H19.7147M8.28613 12.8573H8.85756M8.28613 8.8573H8.85756M8.28613 16.8573H8.85756M12.2861 8.8573H19.7147M12.2861 16.8573H19.7147" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round"/>
+      </svg>
+    </a>
+    <?php if ($messageCount > 0): ?>
+      <span class="absolute -top-1 -right-1 bg-red-600 text-white font-bold rounded-full flex items-center justify-center border border-white z-10"
+            style="min-width:18px; height:18px; font-size:10px; padding:0 3px;">
+        <?= $block->escapeHtml($messageCount) ?>
+      </span>
+    <?php endif; ?>
+  </div>
 
-       <div class="relative group">
-          <!-- <a href="<?= $block->escapeUrl($block->getUrl('customer-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;"> -->
-            <button type="button" onclick="toggleDropdown('userMenuProfile')" id="userProfileBtn"
-              class="flex items-center space-x-1 hover:text-[#3B82F6] hover:no-underline hover:border-none hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0">
-             <img src="<?= $vendorLogoUrl ?>" alt="Logo" title="customer dashboard" class="w-24" style="height:30px;">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-          <!-- </a> -->
-          <div id="userMenuProfile" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
-            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+  <!-- ICON 2: RFQ -->
+  <div class="relative flex items-center justify-center" style="width:27px; height:27px;">
+    <a href="<?= $block->escapeUrl($block->getUrl('quoterequest/view/index/')) ?>" 
+       class="flex items-center justify-center text-gray-700 hover:text-[#3B82F6]"
+       title="<?= __('Request for Quotation') ?>">
+      <svg width="27" height="27" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M12 11v4M10 13h4"
+              stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
 
-<svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M11.4167 12.75V11.4167C11.4167 10.7094 11.1357 10.0311 10.6356 9.53105C10.1355 9.03095 9.45724 8.75 8.75 8.75H3.41667C2.70942 8.75 2.03115 9.03095 1.53105 9.53105C1.03095 10.0311 0.75 10.7094 0.75 11.4167V12.75M8.75 3.41667C8.75 4.88943 7.55609 6.08333 6.08333 6.08333C4.61057 6.08333 3.41667 4.88943 3.41667 3.41667C3.41667 1.94391 4.61057 0.75 6.08333 0.75C7.55609 0.75 8.75 1.94391 8.75 3.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-              <div>
-                
-                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('View Profile') ?></p>
-            
-             </div>
-            </a>
-            <a href="<?= $block->escapeUrl($vendorDashboardUrl) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
-              
-<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4.75 14.0833V7.41667H8.75V14.0833M0.75 5.41667L6.75 0.75L12.75 5.41667V12.75C12.75 13.1036 12.6095 13.4428 12.3595 13.6928C12.1094 13.9429 11.7703 14.0833 11.4167 14.0833H2.08333C1.72971 14.0833 1.39057 13.9429 1.14052 13.6928C0.890476 13.4428 0.75 13.1036 0.75 12.75V5.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+  <!-- ICON 3: User Profile Dropdown -->
+  <div class="relative group flex items-center justify-center">
+    <button type="button" onclick="toggleDropdown('userMenuProfile')" id="userProfileBtn"
+      class="flex items-center space-x-1 hover:text-[#3B82F6] hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0">
+      <img src="<?= $vendorLogoUrl ?>" alt="Logo" title="customer dashboard" style="height:30px; width:auto; max-width:80px;">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
 
-              <div>
-                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Vendor Dashboard') ?></p>
-              </div>
-            </a>
-            <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
-              
-<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M5.47667 5.41667C5.6334 4.97111 5.94277 4.5954 6.34997 4.35609C6.75717 4.11677 7.23593 4.02929 7.70145 4.10914C8.16697 4.18899 8.58921 4.43102 8.89338 4.79235C9.19756 5.15369 9.36404 5.61101 9.36333 6.08333C9.36333 7.41667 7.36333 8.08333 7.36333 8.08333M7.41667 10.75H7.42333M14.0833 7.41667C14.0833 11.0986 11.0986 14.0833 7.41667 14.0833C3.73477 14.0833 0.75 11.0986 0.75 7.41667C0.75 3.73477 3.73477 0.75 7.41667 0.75C11.0986 0.75 14.0833 3.73477 14.0833 7.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
+    <div id="userMenuProfile" class="hidden absolute mt-3 w-56 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start"
+         style="border:1px solid #E2E8F0; z-index:999; top:100%; right:0; left:auto;">
 
-              <div>
-                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Support') ?></p>
-             </div>
-            </a>
-             <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
-    
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.00033 9.99999C9.1049 9.99999 10.0003 9.10456 10.0003 7.99999C10.0003 6.89542 9.1049 5.99999 8.00033 5.99999C6.89576 5.99999 6.00033 6.89542 6.00033 7.99999C6.00033 9.10456 6.89576 9.99999 8.00033 9.99999Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M12.9337 9.99999C12.8449 10.2011 12.8184 10.4241 12.8577 10.6404C12.8969 10.8566 13 11.0562 13.1537 11.2133L13.1937 11.2533C13.3176 11.3772 13.416 11.5242 13.4831 11.6861C13.5502 11.8479 13.5847 12.0214 13.5847 12.1967C13.5847 12.3719 13.5502 12.5454 13.4831 12.7072C13.416 12.8691 13.3176 13.0162 13.1937 13.14C13.0698 13.264 12.9228 13.3623 12.7609 13.4294C12.599 13.4965 12.4255 13.531 12.2503 13.531C12.0751 13.531 11.9016 13.4965 11.7397 13.4294C11.5779 13.3623 11.4308 13.264 11.307 13.14L11.267 13.1C11.1099 12.9463 10.9103 12.8432 10.6941 12.804C10.4778 12.7648 10.2547 12.7912 10.0537 12.88C9.85648 12.9645 9.68831 13.1048 9.56986 13.2837C9.45141 13.4625 9.38785 13.6721 9.38699 13.8867V14C9.38699 14.3536 9.24652 14.6928 8.99647 14.9428C8.74642 15.1928 8.40728 15.3333 8.05366 15.3333C7.70004 15.3333 7.3609 15.1928 7.11085 14.9428C6.8608 14.6928 6.72033 14.3536 6.72033 14V13.94C6.71516 13.7193 6.64374 13.5053 6.51533 13.3258C6.38693 13.1463 6.20748 13.0095 6.00033 12.9333C5.79925 12.8446 5.5762 12.8181 5.35993 12.8573C5.14367 12.8965 4.94411 12.9996 4.78699 13.1533L4.74699 13.1933C4.62316 13.3173 4.47611 13.4156 4.31425 13.4827C4.15238 13.5498 3.97888 13.5844 3.80366 13.5844C3.62844 13.5844 3.45494 13.5498 3.29307 13.4827C3.13121 13.4156 2.98416 13.3173 2.86033 13.1933C2.73636 13.0695 2.63801 12.9224 2.57091 12.7606C2.50381 12.5987 2.46928 12.4252 2.46928 12.25C2.46928 12.0748 2.50381 11.9013 2.57091 11.7394C2.63801 11.5775 2.73636 11.4305 2.86033 11.3067L2.90033 11.2667C3.05402 11.1095 3.15712 10.91 3.19633 10.6937C3.23554 10.4775 3.20907 10.2544 3.12033 10.0533C3.03582 9.85614 2.8955 9.68798 2.71664 9.56953C2.53778 9.45108 2.32818 9.38751 2.11366 9.38666H2.00033C1.6467 9.38666 1.30757 9.24618 1.05752 8.99613C0.807468 8.74608 0.666992 8.40695 0.666992 8.05332C0.666992 7.6997 0.807468 7.36056 1.05752 7.11051C1.30757 6.86047 1.6467 6.71999 2.00033 6.71999H2.06033C2.28099 6.71483 2.495 6.6434 2.67453 6.515C2.85405 6.38659 2.9908 6.20715 3.06699 5.99999C3.15574 5.79891 3.18221 5.57586 3.143 5.3596C3.10378 5.14333 3.00068 4.94378 2.84699 4.78666L2.80699 4.74666C2.68302 4.62283 2.58468 4.47577 2.51758 4.31391C2.45048 4.15205 2.41594 3.97854 2.41594 3.80332C2.41594 3.6281 2.45048 3.4546 2.51758 3.29274C2.58468 3.13087 2.68302 2.98382 2.80699 2.85999C2.93082 2.73602 3.07787 2.63768 3.23974 2.57058C3.4016 2.50348 3.5751 2.46894 3.75033 2.46894C3.92555 2.46894 4.09905 2.50348 4.26091 2.57058C4.42278 2.63768 4.56983 2.73602 4.69366 2.85999L4.73366 2.89999C4.89078 3.05368 5.09034 3.15678 5.3066 3.19599C5.52286 3.23521 5.74592 3.20873 5.94699 3.11999H6.00033C6.19751 3.03548 6.36567 2.89516 6.48412 2.7163C6.60257 2.53744 6.66614 2.32785 6.66699 2.11332V1.99999C6.66699 1.64637 6.80747 1.30723 7.05752 1.05718C7.30757 0.807132 7.6467 0.666656 8.00033 0.666656C8.35395 0.666656 8.69309 0.807132 8.94313 1.05718C9.19318 1.30723 9.33366 1.64637 9.33366 1.99999V2.05999C9.33451 2.27451 9.39808 2.48411 9.51653 2.66297C9.63498 2.84183 9.80315 2.98215 10.0003 3.06666C10.2014 3.1554 10.4245 3.18187 10.6407 3.14266C10.857 3.10345 11.0565 3.00035 11.2137 2.84666L11.2537 2.80666C11.3775 2.68269 11.5245 2.58434 11.6864 2.51724C11.8483 2.45014 12.0218 2.41561 12.197 2.41561C12.3722 2.41561 12.5457 2.45014 12.7076 2.51724C12.8694 2.58434 13.0165 2.68269 13.1403 2.80666C13.2643 2.93049 13.3626 3.07754 13.4297 3.2394C13.4968 3.40127 13.5314 3.57477 13.5314 3.74999C13.5314 3.92521 13.4968 4.09871 13.4297 4.26058C13.3626 4.42244 13.2643 4.56949 13.1403 4.69332L13.1003 4.73332C12.9466 4.89044 12.8435 5.09 12.8043 5.30626C12.7651 5.52253 12.7916 5.74558 12.8803 5.94666V5.99999C12.9648 6.19717 13.1052 6.36533 13.284 6.48379C13.4629 6.60224 13.6725 6.6658 13.887 6.66666H14.0003C14.3539 6.66666 14.6931 6.80713 14.9431 7.05718C15.1932 7.30723 15.3337 7.64637 15.3337 7.99999C15.3337 8.35361 15.1932 8.69275 14.9431 8.9428C14.6931 9.19285 14.3539 9.33332 14.0003 9.33332H13.9403C13.7258 9.33418 13.5162 9.39774 13.3373 9.51619C13.1585 9.63465 13.0182 9.80281 12.9337 9.99999Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-              <div>
-                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Setting') ?></p>
-             </div>
-            </a>
+      <!-- View Profile -->
+      <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>" 
+         class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+        <svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M11.4167 12.75V11.4167C11.4167 10.7094 11.1357 10.0311 10.6356 9.53105C10.1355 9.03095 9.45724 8.75 8.75 8.75H3.41667C2.70942 8.75 2.03115 9.03095 1.53105 9.53105C1.03095 10.0311 0.75 10.7094 0.75 11.4167V12.75M8.75 3.41667C8.75 4.88943 7.55609 6.08333 6.08333 6.08333C4.61057 6.08333 3.41667 4.88943 3.41667 3.41667C3.41667 1.94391 4.61057 0.75 6.08333 0.75C7.55609 0.75 8.75 1.94391 8.75 3.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="text-gray-900 m-0" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('View Profile') ?></p>
+      </a>
 
-             <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M6 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V3.33333C2 2.97971 2.14048 2.64057 2.39052 2.39052C2.64057 2.14048 2.97971 2 3.33333 2H6M10.6667 11.3333L14 8M14 8L10.6667 4.66667M14 8H6" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-              <div>
-                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Logout') ?></p>
-             </div>
-            </a>
+      <!-- Vendor Dashboard -->
+      <a href="<?= $block->escapeUrl($vendorDashboardUrl) ?>" 
+         class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+        <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.75 14.0833V7.41667H8.75V14.0833M0.75 5.41667L6.75 0.75L12.75 5.41667V12.75C12.75 13.1036 12.6095 13.4428 12.3595 13.6928C12.1094 13.9429 11.7703 14.0833 11.4167 14.0833H2.08333C1.72971 14.0833 1.39057 13.9429 1.14052 13.6928C0.890476 13.4428 0.75 13.1036 0.75 12.75V5.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="text-gray-900 m-0" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Vendor Dashboard') ?></p>
+      </a>
 
-          </div>
-        </div>
+      <!-- Support -->
+      <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5.47667 5.41667C5.6334 4.97111 5.94277 4.5954 6.34997 4.35609C6.75717 4.11677 7.23593 4.02929 7.70145 4.10914C8.16697 4.18899 8.58921 4.43102 8.89338 4.79235C9.19756 5.15369 9.36404 5.61101 9.36333 6.08333C9.36333 7.41667 7.36333 8.08333 7.36333 8.08333M7.41667 10.75H7.42333M14.0833 7.41667C14.0833 11.0986 11.0986 14.0833 7.41667 14.0833C3.73477 14.0833 0.75 11.0986 0.75 7.41667C0.75 3.73477 3.73477 0.75 7.41667 0.75C11.0986 0.75 14.0833 3.73477 14.0833 7.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="text-gray-900 m-0" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Support') ?></p>
+      </a>
 
-            
-          </div>
-          <!-- <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="pr-5"><img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/logout-icon.png" alt="logout" class="w-24" style="height:12px; filter:brightness(0) invert(0);" title="logout"></a> -->
-        <?php else: ?>
-          <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="px-5 py-1.5 bg-[#1A3764] rounded-md text-sm custom-style link-text"><?= __('Sign Up') ?></a>
-          <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>"
-   class="sign-in-btn">
-   <?= __('Sign In') ?>
-</a>
+      <!-- Settings -->
+      <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8.00033 9.99999C9.1049 9.99999 10.0003 9.10456 10.0003 7.99999C10.0003 6.89542 9.1049 5.99999 8.00033 5.99999C6.89576 5.99999 6.00033 6.89542 6.00033 7.99999C6.00033 9.10456 6.89576 9.99999 8.00033 9.99999Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12.9337 9.99999C12.8449 10.2011 12.8184 10.4241 12.8577 10.6404C12.8969 10.8566 13 11.0562 13.1537 11.2133L13.1937 11.2533C13.3176 11.3772 13.416 11.5242 13.4831 11.6861C13.5502 11.8479 13.5847 12.0214 13.5847 12.1967C13.5847 12.3719 13.5502 12.5454 13.4831 12.7072C13.416 12.8691 13.3176 13.0162 13.1937 13.14C13.0698 13.264 12.9228 13.3623 12.7609 13.4294C12.599 13.4965 12.4255 13.531 12.2503 13.531C12.0751 13.531 11.9016 13.4965 11.7397 13.4294C11.5779 13.3623 11.4308 13.264 11.307 13.14L11.267 13.1C11.1099 12.9463 10.9103 12.8432 10.6941 12.804C10.4778 12.7648 10.2547 12.7912 10.0537 12.88C9.85648 12.9645 9.68831 13.1048 9.56986 13.2837C9.45141 13.4625 9.38785 13.6721 9.38699 13.8867V14C9.38699 14.3536 9.24652 14.6928 8.99647 14.9428C8.74642 15.1928 8.40728 15.3333 8.05366 15.3333C7.70004 15.3333 7.3609 15.1928 7.11085 14.9428C6.8608 14.6928 6.72033 14.3536 6.72033 14V13.94C6.71516 13.7193 6.64374 13.5053 6.51533 13.3258C6.38693 13.1463 6.20748 13.0095 6.00033 12.9333C5.79925 12.8446 5.5762 12.8181 5.35993 12.8573C5.14367 12.8965 4.94411 12.9996 4.78699 13.1533L4.74699 13.1933C4.62316 13.3173 4.47611 13.4156 4.31425 13.4827C4.15238 13.5498 3.97888 13.5844 3.80366 13.5844C3.62844 13.5844 3.45494 13.5498 3.29307 13.4827C3.13121 13.4156 2.98416 13.3173 2.86033 13.1933C2.73636 13.0695 2.63801 12.9224 2.57091 12.7606C2.50381 12.5987 2.46928 12.4252 2.46928 12.25C2.46928 12.0748 2.50381 11.9013 2.57091 11.7394C2.63801 11.5775 2.73636 11.4305 2.86033 11.3067L2.90033 11.2667C3.05402 11.1095 3.15712 10.91 3.19633 10.6937C3.23554 10.4775 3.20907 10.2544 3.12033 10.0533C3.03582 9.85614 2.8955 9.68798 2.71664 9.56953C2.53778 9.45108 2.32818 9.38751 2.11366 9.38666H2.00033C1.6467 9.38666 1.30757 9.24618 1.05752 8.99613C0.807468 8.74608 0.666992 8.40695 0.666992 8.05332C0.666992 7.6997 0.807468 7.36056 1.05752 7.11051C1.30757 6.86047 1.6467 6.71999 2.00033 6.71999H2.06033C2.28099 6.71483 2.495 6.6434 2.67453 6.515C2.85405 6.38659 2.9908 6.20715 3.06699 5.99999C3.15574 5.79891 3.18221 5.57586 3.143 5.3596C3.10378 5.14333 3.00068 4.94378 2.84699 4.78666L2.80699 4.74666C2.68302 4.62283 2.58468 4.47577 2.51758 4.31391C2.45048 4.15205 2.41594 3.97854 2.41594 3.80332C2.41594 3.6281 2.45048 3.4546 2.51758 3.29274C2.58468 3.13087 2.68302 2.98382 2.80699 2.85999C2.93082 2.73602 3.07787 2.63768 3.23974 2.57058C3.4016 2.50348 3.5751 2.46894 3.75033 2.46894C3.92555 2.46894 4.09905 2.50348 4.26091 2.57058C4.42278 2.63768 4.56983 2.73602 4.69366 2.85999L4.73366 2.89999C4.89078 3.05368 5.09034 3.15678 5.3066 3.19599C5.52286 3.23521 5.74592 3.20873 5.94699 3.11999H6.00033C6.19751 3.03548 6.36567 2.89516 6.48412 2.7163C6.60257 2.53744 6.66614 2.32785 6.66699 2.11332V1.99999C6.66699 1.64637 6.80747 1.30723 7.05752 1.05718C7.30757 0.807132 7.6467 0.666656 8.00033 0.666656C8.35395 0.666656 8.69309 0.807132 8.94313 1.05718C9.19318 1.30723 9.33366 1.64637 9.33366 1.99999V2.05999C9.33451 2.27451 9.39808 2.48411 9.51653 2.66297C9.63498 2.84183 9.80315 2.98215 10.0003 3.06666C10.2014 3.1554 10.4245 3.18187 10.6407 3.14266C10.857 3.10345 11.0565 3.00035 11.2137 2.84666L11.2537 2.80666C11.3775 2.68269 11.5245 2.58434 11.6864 2.51724C11.8483 2.45014 12.0218 2.41561 12.197 2.41561C12.3722 2.41561 12.5457 2.45014 12.7076 2.51724C12.8694 2.58434 13.0165 2.68269 13.1403 2.80666C13.2643 2.93049 13.3626 3.07754 13.4297 3.2394C13.4968 3.40127 13.5314 3.57477 13.5314 3.74999C13.5314 3.92521 13.4968 4.09871 13.4297 4.26058C13.3626 4.42244 13.2643 4.56949 13.1403 4.69332L13.1003 4.73332C12.9466 4.89044 12.8435 5.09 12.8043 5.30626C12.7651 5.52253 12.7916 5.74558 12.8803 5.94666V5.99999C12.9648 6.19717 13.1052 6.36533 13.284 6.48379C13.4629 6.60224 13.6725 6.6658 13.887 6.66666H14.0003C14.3539 6.66666 14.6931 6.80713 14.9431 7.05718C15.1932 7.30723 15.3337 7.64637 15.3337 7.99999C15.3337 8.35361 15.1932 8.69275 14.9431 8.9428C14.6931 9.19285 14.3539 9.33332 14.0003 9.33332H13.9403C13.7258 9.33418 13.5162 9.39774 13.3373 9.51619C13.1585 9.63465 13.0182 9.80281 12.9337 9.99999Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="text-gray-900 m-0" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Setting') ?></p>
+      </a>
 
-        <?php endif; ?>
+      <!-- Logout -->
+      <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" 
+         class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V3.33333C2 2.97971 2.14048 2.64057 2.39052 2.39052C2.64057 2.14048 2.97971 2 3.33333 2H6M10.6667 11.3333L14 8M14 8L10.6667 4.66667M14 8H6" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <p class="text-gray-900 m-0" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Logout') ?></p>
+      </a>
+
+    </div>
+  </div>
+
+<?php else: ?>
+  <!-- Logged OUT: Show Sign Up + Sign In -->
+  <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" 
+     class="px-5 py-1.5 bg-[#1A3764] rounded-md text-sm custom-style link-text">
+    <?= __('Sign Up') ?>
+  </a>
+  <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="sign-in-btn">
+    <?= __('Sign In') ?>
+  </a>
+<?php endif; ?>
       </div>
           <?php
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -424,7 +434,172 @@ header .sign-in-btn {
     color: #3B82F6 !important; /* Optional hover color */
 }
 
+/* ============================= */
+/* ===== HEADER RESPONSIVE ===== */
+/* ============================= */
 
+/* Large screens (already mostly handled by Tailwind) */
+@media (max-width: 1280px) {
+    .max-w-7xl {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+
+    /* Reduce nav spacing */
+    #customHeader nav {
+        gap: 18px !important;
+    }
+
+    /* Reduce logo size slightly */
+    #customHeader img {
+        max-height: 32px;
+    }
+
+    /* Language toggle spacing */
+    #langToggle span {
+        font-size: 13px;
+    }
+}
+
+/* Small Tablets / Large Mobiles */
+@media (max-width: 768px) {
+
+    /* Header padding smaller */
+    #customHeader .header-main {
+        padding: 10px 15px !important;
+    }
+
+    /* Logo smaller */
+    #customHeader img {
+        max-height: 28px;
+    }
+
+    /* Hide desktop right section */
+    #customHeader .final-font {
+        display: none !important;
+    }
+
+    /* Mobile menu full width */
+    #mobileMenu {
+        width: 100%;
+    }
+
+    /* Mobile dropdown spacing */
+    #mobileMenu .flex {
+        gap: 10px;
+    }
+
+    /* Language dropdown full width */
+    #languageMenu {
+        right: 10px !important;
+    }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+
+    /* Reduce logo more */
+    #customHeader img {
+        max-height: 24px;
+    }
+
+    /* Reduce padding */
+    #customHeader .header-main {
+        padding: 8px 12px !important;
+    }
+
+    /* Mobile menu text */
+    #mobileMenu a {
+        font-size: 14px;
+    }
+
+    /* Buttons full width */
+    #mobileMenu .flex a {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Sign in / up buttons adjust */
+    .sign-in-btn,
+    #mobileMenu .custom-style {
+        padding: 8px 14px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+
+    #langToggle span {
+        display: none; /* Hide language text, keep icon */
+    }
+
+    #customHeader img {
+        max-height: 22px;
+    }
+
+    .sign-in-btn {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
+}
+/* ============================= */
+/* ===== TABLET FIX ONLY ====== */
+/* ============================= */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+    /* Reduce container padding */
+    #customHeader .header-main {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* Allow header content to wrap if needed */
+    #customHeader .header-main {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Reduce logo size */
+    #customHeader img {
+        max-height: 30px;
+    }
+
+    /* Reduce nav spacing */
+    #customHeader nav {
+        gap: 16px !important;
+        font-size: 14px !important;
+    }
+
+    /* Reduce dropdown width */
+    #vendorMenu,
+    #customerMenu,
+    #userMenuProfile {
+        width: 280px !important;
+    }
+
+    /* Reduce right section spacing */
+    #customHeader .space-x-6 {
+        gap: 12px !important;
+    }
+
+    /* Adjust sign buttons */
+    .sign-in-btn,
+    #customHeader .custom-style {
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+    }
+
+    /* Language toggle smaller */
+    #langToggle span {
+        font-size: 13px !important;
+    }
+}
 </style>
 
 <script>

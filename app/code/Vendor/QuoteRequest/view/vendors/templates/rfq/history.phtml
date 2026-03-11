@@ -1,0 +1,43 @@
+<?php $quotes = $block->getQuoteHistory(); ?>
+
+<div class="vendor-quote-history">
+    <div class="block-title">
+        <h2>My Quote Requests</h2>
+    </div>
+
+    <table class="data table">
+        <thead>
+            <tr>
+                <th>Quote #</th>
+                <th>Customer</th>
+                <th>Products</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        <?php if ($quotes && $quotes->getSize()): ?>
+            <?php foreach ($quotes as $quote): ?>
+
+                <tr>
+                    <td><?= $quote->getQuoteId(); ?></td>
+                    <td><?= $quote->getCustomerName(); ?></td>
+                   
+                    <td>
+                    <a href="<?= $block->getUrl('quoterequest/rfq/productview', ['id' => $quote->getQuoteId()]); ?>">
+    View Products
+</a>
+                    </td>
+                    <td><?= ucfirst($quote->getStatus()); ?></td>
+                </tr>
+
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="5">No RFQs Found</td>
+            </tr>
+        <?php endif; ?>
+
+        </tbody>
+    </table>
+</div>

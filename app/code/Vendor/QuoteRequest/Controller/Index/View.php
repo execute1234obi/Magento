@@ -1,24 +1,24 @@
 <?php
-namespace Vendor\QuoteRequest\Block;
+namespace Vendor\QuoteRequest\Controller\Index;
 
-use Magento\Framework\View\Element\Template;
-use Vendor\QuoteRequest\Model\ResourceModel\Quote\CollectionFactory as QuoteCollectionFactory;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
+use Magento\Framework\View\Result\PageFactory;
 
-class View extends Template
+class View extends Action
 {
-    protected $quoteCollectionFactory;
+    protected $resultPageFactory;
 
     public function __construct(
-        Template\Context $context,
-        QuoteCollectionFactory $quoteCollectionFactory,
-        array $data = []
+        Context $context,
+        PageFactory $resultPageFactory
     ) {
-        $this->quoteCollectionFactory = $quoteCollectionFactory;
-        parent::__construct($context, $data);
+        parent::__construct($context);
+        $this->resultPageFactory = $resultPageFactory;
     }
 
-    public function getQuotes()
+    public function execute()
     {
-        return $this->quoteCollectionFactory->create();
+        return $this->resultPageFactory->create();
     }
 }

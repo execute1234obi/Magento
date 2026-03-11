@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+
+    <template id="rfq_customer_email_template"
+              label="RFQ Customer Email"
+              file="rfq_customer.html"
+              type="html"
+              module="Vendor_QuoteRequest"
+              area="frontend"/>
+
+    <template id="rfq_vendor_email_template"
+              label="RFQ Vendor Email"
+              file="rfq_vendor.html"
+              type="html"
+              module="Vendor_QuoteRequest"
+              area="frontend"/>
+
+    <template id="rfq_admin_email_template"
+              label="RFQ Admin Email"
+              file="rfq_admin.html"
+              type="html"
+              module="Vendor_QuoteRequest"
+              area="frontend"/>
+
+</config>

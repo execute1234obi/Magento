@@ -1,0 +1,38 @@
+<?php
+$quote = $block->getQuote();
+$items = $block->getItems();
+?>
+
+<h1>RFQ #<?= $quote->getId(); ?></h1>
+<div class="admin__field">
+    <label class="admin__field-label"><strong>Vendor</strong></label>
+    <div class="admin__field-control">
+        <?= $block->getVendorName(); ?>
+    </div>
+</div>
+<p><strong>Customer:</strong> <?= $block->getCustomerName(); ?></p>
+<p><strong>Status:</strong> <?= $quote->getStatus(); ?></p>
+<p><strong>Message:</strong> <?= $quote->getCustomerNote(); ?></p>
+<p><strong>Created At:</strong> <?= $quote->getCreatedAt(); ?></p>
+
+<hr>
+
+<h2>Products</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Product ID</th>
+        <th>Qty</th>
+        <th>Proposed Price</th>
+    </tr>
+
+   <tbody>
+<?php foreach ($items as $item): ?>
+    <tr>
+        <td><?= $block->getProductName($item->getProductId()); ?></td>
+        <td><?= $item->getQty(); ?></td>
+        <td><?= $item->getProposedPrice(); ?></td>
+    </tr>
+<?php endforeach; ?>
+</tbody>
+</table>
