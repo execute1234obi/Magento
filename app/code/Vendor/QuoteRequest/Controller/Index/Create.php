@@ -4,34 +4,43 @@ namespace Vendor\QuoteRequest\Controller\Index;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Catalog\Model\Session as CatalogSession;
+use Magento\Framework\Controller\Result\JsonFactory;
 
 class Create extends Action
 {
     protected $catalogSession;
+    protected $resultJsonFactory;
 
     public function __construct(
         Context $context,
-        CatalogSession $catalogSession
+        CatalogSession $catalogSession,
+        JsonFactory $resultJsonFactory
     ) {
         $this->catalogSession = $catalogSession;
+        $this->resultJsonFactory = $resultJsonFactory;
         parent::__construct($context);
     }
 
-    public function execute()
-    {
-       $productId = (int)$this->getRequest()->getParam('product_id');
-        
-        // Debugging ke liye: 
-        // if (!$productId) { die("Product ID missing in request!"); }
+public function execute()
+{
+    $resultJson = $this->resultJsonFactory->create();
 
-        $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
+    $productId = (int)$this->getRequest()->getParam('product_id');
 
-        if ($productId && !in_array($productId, $quoteItems)) {
-            $quoteItems[] = $productId;
-        }
+    $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
 
-        $this->catalogSession->setQuoteItems($quoteItems);
-
-        return $this->resultRedirectFactory->create()->setPath('quoterequest/view/index');
+    if ($productId && !in_array($productId, $quoteItems)) {
+        $quoteItems[] = $productId;
     }
+
+    $this->catalogSession->setQuoteItems($quoteItems);
+
+    return $resultJson->setData([
+        'success' => true,
+        'product_id' => $productId,
+        'items' => $quoteItems,
+        'count' => count($quoteItems) // ✅ IMPORTANT
+    ]);
+}
+
 }

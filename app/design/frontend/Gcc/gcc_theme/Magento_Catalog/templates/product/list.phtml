@@ -93,13 +93,12 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 </div>
 
             <!-- request quote functionality -->
-             <?php
-                $quoteUrl = $block->getUrl(
-                    'quoterequest/index/create',
-                    ['product_id' => $_product->getId()]
-                );
-                ?>       
-            <button class="u-cta" type="button"  onclick="location.href='<?= $quoteUrl ?>'"><?= $block->escapeHtml(__('Add to Quote')); ?></button>
+                
+            <button class="u-cta add-to-quote"
+                data-product-id="<?= $_product->getId(); ?>"
+                type="button">
+                <?= __('Add to Quote') ?>
+            </button>
         </article>
     <?php endforeach; ?>
     </div>
@@ -138,69 +137,6 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 </style>
 
 <script>
-// require(['jquery'], function($){
-//     const countryFlags = {
-//         /* Middle East */
-//         "SA": "https://flagcdn.com/w40/sa.png",
-//         "AE": "https://flagcdn.com/w40/ae.png",
-//         "QA": "https://flagcdn.com/w40/qa.png",
-
-//         /* South Asia */
-//         "IN": "https://flagcdn.com/w40/in.png",
-//         "PK": "https://flagcdn.com/w40/pk.png",
-//         "BD": "https://flagcdn.com/w40/bd.png",
-
-//         /* East Asia */
-//         "JP": "https://flagcdn.com/w40/jp.png",
-//         "KR": "https://flagcdn.com/w40/kr.png",
-//         "CN": "https://flagcdn.com/w40/cn.png",
-
-//         /* Southeast Asia */
-//         "SG": "https://flagcdn.com/w40/sg.png",
-//         "MY": "https://flagcdn.com/w40/my.png",
-//         "TH": "https://flagcdn.com/w40/th.png",
-
-//         /* Europe */
-//         "GB": "https://flagcdn.com/w40/gb.png",
-//         "DE": "https://flagcdn.com/w40/de.png",
-//         "FR": "https://flagcdn.com/w40/fr.png",
-
-//         /* Africa */
-//         "EG": "https://flagcdn.com/w40/eg.png",
-//         "NG": "https://flagcdn.com/w40/ng.png",
-//         "ZA": "https://flagcdn.com/w40/za.png",
-
-//         /* North America */
-//         "US": "https://flagcdn.com/w40/us.png",
-//         "CA": "https://flagcdn.com/w40/ca.png",
-//         "MX": "https://flagcdn.com/w40/mx.png",
-
-//         /* South America */
-//         "BR": "https://flagcdn.com/w40/br.png",
-//         "AR": "https://flagcdn.com/w40/ar.png",
-//         "CL": "https://flagcdn.com/w40/cl.png",
-
-//         /* Oceania */
-//         "AU": "https://flagcdn.com/w40/au.png",
-//         "NZ": "https://flagcdn.com/w40/nz.png",
-//         "FJ": "https://flagcdn.com/w40/fj.png"
-//     };
-
-//     $(document).ready(function(){
-//         $('.u-country').each(function(){
-//             var $container = $(this);
-//             var countryCode = $container.data('code');
-//             var flagUrl = countryFlags[countryCode] || 'https://via.placeholder.com/40x24?text=?';
-
-//             $container.find('.u-flag').css({
-//                 'background-image': 'url(' + flagUrl + ')',
-//                 'background-size': 'cover',
-//                 'background-position': 'center'
-//             });
-//         });
-//     });
-// });
-
 require(['jquery'], function($) {
   $(document).ready(function() {
     $('.u-country').each(function() {
@@ -216,6 +152,43 @@ require(['jquery'], function($) {
       }).attr('alt', altText);
     });
   });
+  //for ajax content load add to quote button click event
+$(document).on('click', '.add-to-quote', function () {
+
+    var button = $(this);
+    var productId = button.data('product-id');
+
+    $.ajax({
+        url: '<?= $block->getUrl("quoterequest/index/create") ?>',
+        type: 'POST',
+        data: {
+            product_id: productId
+        },
+        showLoader: true,
+
+       success: function (response) {
+
+    button.text('Added');
+    button.prop('disabled', true);
+
+    if (response.count !== undefined) {
+
+        $('#quote-counter')
+            .text(response.count)
+            .show();
+
+    }
+
+},
+
+        error: function (xhr) {
+            console.log(xhr);
+            alert('Error while adding to quote');
+        }
+
+    });
+
+});
 });
 
 </script>
