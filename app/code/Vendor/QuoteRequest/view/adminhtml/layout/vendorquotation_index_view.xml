@@ -4,10 +4,10 @@
       layout="admin-1column">
 
     <body>
-        <referenceContainer name="content">
-          <block class="Vendor\QuoteRequest\Block\Adminhtml\Quote\View"
-       name="vendor_quote_view"
-       template="Vendor_QuoteRequest::view.phtml"/>
-        </referenceContainer>
+      <referenceContainer name="content">
+    <block class="Vendor\QuoteRequest\Block\Adminhtml\Quote\View" name="vendor_quote_view" template="Vendor_QuoteRequest::view.phtml">
+        <block class="Magento\Theme\Block\Html\Pager" name="vendor.quote.pager"/>
+    </block>
+</referenceContainer>
     </body>
 </page>

@@ -1,0 +1,32 @@
+<?php $collection = $block->getCollection(); ?>
+
+<div class="admin__data-grid-header">
+    <div class="admin__data-grid-pager-wrap">
+        <?= $block->getPagerHtml() ?>
+    </div>
+</div>
+
+<table class="data-grid">
+    <thead>
+        <tr>
+            <th class="data-grid-th">ID</th>
+            <th class="data-grid-th">Customer</th>
+            <th class="data-grid-th">Status</th>
+            <th class="data-grid-th">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($collection as $item): ?>
+            <tr>
+                <td><?= $item->getQuoteId() ?></td>
+                <td><?= $item->getCustomerName() ?></td>
+                <td><?= $item->getStatus() ?></td>
+                <td><a href="<?= $block->getUrl('*/*/view', ['quote_id' => $item->getQuoteId()]) ?>">View</a></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+
+<div class="admin__data-grid-footer">
+    <?= $block->getPagerHtml() ?>
+</div>

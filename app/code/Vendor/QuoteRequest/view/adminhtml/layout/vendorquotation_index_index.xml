@@ -6,5 +6,10 @@
         <referenceContainer name="content">
             <uiComponent name="vendor_quote_listing"/>
         </referenceContainer>
+        <!-- <referenceContainer name="content">
+            <block class="Vendor\QuoteRequest\Block\Adminhtml\Quote\Index" name="vendor_quote_index" template="Vendor_QuoteRequest::index.phtml">
+                <block class="Magento\Theme\Block\Html\Pager" name="vendor.quote.pager"/>
+            </block>
+        </referenceContainer> -->
     </body>
 </page>
