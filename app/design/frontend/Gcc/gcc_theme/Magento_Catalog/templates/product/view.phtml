@@ -581,11 +581,11 @@ body {
         /* VENDOR LEFT - THE 2x2 GRID (from provided CSS) */
         .vendor-left{
             display:grid;
-            grid-template-columns:44px auto;  /* logo | text */
-            grid-template-rows:auto auto;     /* row1 name, row2 button */
+            grid-template-columns:44px auto;  /* logo | text */
+            grid-template-rows:auto auto;     /* row1 name, row2 button */
             column-gap:12px;
             row-gap:6px;
-            align-items:start;              
+            align-items:start;              
         }
 
         /* LOGO STYLES (from provided CSS) */
@@ -610,7 +610,7 @@ body {
         /* VENDOR NAME (from provided CSS) */
         .vendor-name{
             grid-column: 2; 
-            grid-row: 1;                     
+            grid-row: 1;                     
             margin:0;
             line-height:1.1;
             display:inline-flex; 
@@ -1367,7 +1367,7 @@ require([
     $('#add-to-quote-btn').on('click', function(e) {
         e.preventDefault();
         // Placeholder for Add to Quote functionality
-        alert('Add to Quote functionality triggered.');
+        //alert('Add to Quote functionality triggered.');
     });
 });
 </script>
@@ -1496,8 +1496,7 @@ require([
         });
      /* Form Validation */
     var dataForm = $('#new-msg-form');
-	    dataForm.mage('validation');
-            } // Closes if(dataForm.valid())
-        }); // Closes $("#new-msg-send-btn").click
-    }); // Closes second require block
+    dataForm.mage('validation');
+});
+
 </script>
