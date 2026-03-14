@@ -13,6 +13,7 @@ use Vnecoms\VendorsMessage\Model\MessageFactory;
 use Vnecoms\VendorsMessage\Model\Message\DetailFactory;
 use Magento\Framework\Stdlib\DateTime\TimezoneInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 
 class Submit extends Action
 {
@@ -30,7 +31,7 @@ class Submit extends Action
     protected $_logger;
     protected $_localeDate;
     protected $customerRepository;
-   
+   protected $scopeConfig;
 
     public function __construct(
 
@@ -48,7 +49,8 @@ class Submit extends Action
          DetailFactory $detailFactory,
          TimezoneInterface $localeDate,
          CustomerRepositoryInterface $customerRepository,
-    \Psr\Log\LoggerInterface $logger
+         ScopeConfigInterface $scopeConfig,
+         \Psr\Log\LoggerInterface $logger
     ) {
         $this->customerSession = $customerSession;
         $this->catalogSession = $catalogSession;
@@ -63,159 +65,218 @@ class Submit extends Action
         $this->detailFactory = $detailFactory;
         $this->_localeDate = $localeDate;
         $this->customerRepository = $customerRepository;
+        $this->scopeConfig = $scopeConfig;
         $this->_logger = $logger;
         parent::__construct($context);
     }
 
-    public function execute()
-    {
-        if (!$this->customerSession->isLoggedIn()) {
-            $this->messageManager->addErrorMessage(__('Please log in.'));
-            return $this->resultRedirectFactory->create()->setPath('customer/account/login');
-        }
+public function execute()
+{
+    if (!$this->customerSession->isLoggedIn()) {
+        $this->messageManager->addErrorMessage(__('Please log in.'));
+        return $this->resultRedirectFactory->create()->setPath('customer/account/login');
+    }
 
-        $post = $this->getRequest()->getPostValue();
-        $currentCustomerId = $this->customerSession->getCustomerId();
-        $customer = $this->customerSession->getCustomer();
-        $customerName = $customer->getFirstname();
+    $post = $this->getRequest()->getPostValue();
+    $currentCustomerId = $this->customerSession->getCustomerId();
+    $customer = $this->customerSession->getCustomer();
+    $customerName = $customer->getFirstname();
 
-        $currentVendorId = 0;
-        if ($this->_vendorSession->isLoggedIn()) {
-            $currentVendorId = $this->_vendorSession->getVendorId();
-        }
+    $currentVendorId = 0;
+    if ($this->_vendorSession->isLoggedIn()) {
+        $currentVendorId = $this->_vendorSession->getVendorId();
+    }
 
-        try {
-            $quantities = $post['qty'] ?? [];
-            $vendorWiseProducts = [];
+    try {
 
-            foreach ($quantities as $productId => $qty) {
-                $product = $this->productRepository->getById($productId);
-                $productVendorId = $product->getVendorId(); 
+        $quantities = $post['qty'] ?? [];
+        $vendorWiseProducts = [];
 
-                if ($currentVendorId > 0 && (int)$currentVendorId === (int)$productVendorId) {
-                    $this->messageManager->addErrorMessage(__('You cannot request a quote for your own product: %1', $product->getName()));
-                    return $this->resultRedirectFactory->create()->setPath('*/*/index');
-                }
+        foreach ($quantities as $productId => $qty) {
 
-                $vendorWiseProducts[$productVendorId][] = [
-                    'product_id' => $productId,
-                    'qty' => $qty,
-                    'name' => $product->getName()
-                ];
-            }
+            $product = $this->productRepository->getById($productId);
+            $productVendorId = $product->getVendorId();
 
-            $lastQuoteId = null;
+           if ($this->_vendorSession->isLoggedIn()) {
 
-            foreach ($vendorWiseProducts as $vId => $items) {
-                // 1. Save Quote
-                $quoteModel = $this->quoteFactory->create();
-                $quoteModel->setData([
-                    'customer_id'   => $currentCustomerId,
-                    'vendor_id'     => $vId,
-                    'status'        => 'pending',
-                   'country_id'    => $post['country_id'] ?? '',
-                'region_id'     => $post['region_id'] ?? 0,
-                'customer_note' => $post['customer_note'] ?? ''
-                ]);
-                $quoteModel->save();
-                $newQuoteId = $quoteModel->getId();
-                $lastQuoteId = $newQuoteId;
+        $loggedVendorId = (int)$this->_vendorSession->getVendorId();
 
-                // 2. Save Items
-                foreach ($items as $itemData) {
-                    $itemModel = $this->itemFactory->create();
-                    $itemModel->setData([
-                        'quote_id'   => $newQuoteId,
-                        'product_id' => $itemData['product_id'],
-                        'qty'        => $itemData['qty']
-                    ]);
-                    $itemModel->save();
-                }
+        if ($loggedVendorId && $loggedVendorId === $productVendorId) {
 
-                // 3. Save to Vnecoms Inbox
-               // $this->saveToVnecomsInbox($vId, $currentCustomerId, $newQuoteId, $post['customer_note']);
-                $subject = 'New Quote Request #' . $newQuoteId;
+            $this->messageManager->addErrorMessage(
+                __('You cannot send RFQ for your own product: %1', $product->getName())
+            );
 
-$this->saveToVnecomsInbox(
-    $currentCustomerId,
-    $vId,
-    $subject,
-    $post['customer_note']
-);
-                // 4. Send Vendor Email (Individual Try-Catch to prevent crash)
-                // try {
-                //     $vendor = $this->vendorFactory->create()->load($vId);
-                //     $this->sendEmail('rfq_vendor_email_template', $vendor->getEmail(), $vendor->getName(), [
-                //         'quote_id' => $newQuoteId,
-                //         'customer_name' => $customerName
-                //     ]);
-                // } catch (\Exception $e) {
-                //     // Silent fail for vendor email
-                // }
-                $vendor = $this->vendorFactory->create()->load($vId);
-
-if ($vendor && $vendor->getEmail()) {
-
-    $this->sendEmail(
-        'rfq_vendor_email_template',
-        $vendor->getEmail(),
-        $vendor->getName(),
-        [
-            'quote_id' => $newQuoteId,
-            'customer_name' => $customerName
-        ]
-    );
-
-} else {
-    $this->_logger->error("Vendor email missing for Vendor ID: " . $vId);
-}
-            }
-
-            // 5. Send Customer & Admin Email (Individual Try-Catch)
-            // try {
-            //     $this->sendEmail('rfq_customer_email_template', $customer->getEmail(), $customerName, ['quote_id' => $lastQuoteId, 'customer_name' => $customerName]);
-            //     $this->sendEmail('rfq_admin_email_template', 'admin@example.com', 'Admin', ['quote_id' => $lastQuoteId, 'customer_name' => $customerName]);
-            // } catch (\Exception $e) {
-            //     $this->messageManager->addWarningMessage(__('Quote saved, but confirmation email could not be sent.'));
-            // }
-            if ($customer->getEmail()) {
-
-    $this->sendEmail(
-        'rfq_customer_email_template',
-        $customer->getEmail(),
-        $customerName,
-        [
-            'quote_id' => $lastQuoteId,
-            'customer_name' => $customerName
-        ]
-    );
-
-}
-$adminEmail = 'admin@example.com';
-
-$this->sendEmail(
-    'rfq_admin_email_template',
-    $adminEmail,
-    'Admin',
-    [
-        'quote_id' => $lastQuoteId,
-        'customer_name' => $customerName
-    ]
-);
-            $this->catalogSession->setQuoteItems([]); 
-            $this->messageManager->addSuccessMessage(__('Your quotation requests have been sent successfully and added to your inbox!'));
-            
-            return $this->resultRedirectFactory->create()->setPath('*/*/success');
-
-        } catch (\Exception $e) {
-           $this->_logger->critical($e->getMessage()); // Yahan log add karein
-    $this->messageManager->addErrorMessage($e->getMessage());
-    
-    // Yahan check karein ki agar index page nahi hai toh referer par bhejien
-    return $this->resultRedirectFactory->create()->setRefererUrl();
+            return $this->resultRedirectFactory
+                ->create()
+                ->setRefererUrl();
         }
     }
 
+            $vendorWiseProducts[$productVendorId][] = [
+                'product_id' => $productId,
+                'qty' => $qty,
+                'name' => $product->getName()
+            ];
+        }
+
+        $lastQuoteId = null;
+
+        /* ---------- ADMIN PRODUCT LIST ---------- */
+
+        $productsHtml = '<table border="1" cellpadding="5" cellspacing="0">';
+        $productsHtml .= '<tr><th>Product</th><th>Qty</th></tr>';
+
+
+        foreach ($vendorWiseProducts as $vId => $items) {
+
+            /* ---------- VENDOR PRODUCT LIST ---------- */
+
+            $vendorProductsHtml = '<table border="1" cellpadding="5" cellspacing="0">';
+            $vendorProductsHtml .= '<tr><th>Product</th><th>Qty</th></tr>';
+
+
+            $quoteModel = $this->quoteFactory->create();
+
+            $quoteModel->setData([
+                'customer_id' => $currentCustomerId,
+                'vendor_id' => $vId,
+                'status' => 'pending',
+                'country_id' => $post['country_id'] ?? '',
+                'region_id' => $post['region_id'] ?? 0,
+                'customer_note' => $post['customer_note'] ?? ''
+            ]);
+
+            $quoteModel->save();
+
+            $newQuoteId = $quoteModel->getId();
+            $lastQuoteId = $newQuoteId;
+
+
+            foreach ($items as $itemData) {
+
+                $itemModel = $this->itemFactory->create();
+
+                $itemModel->setData([
+                    'quote_id' => $newQuoteId,
+                    'product_id' => $itemData['product_id'],
+                    'qty' => $itemData['qty']
+                ]);
+
+                $itemModel->save();
+
+
+                /* admin list */
+                $productsHtml .= "<tr>
+                    <td>{$itemData['name']}</td>
+                    <td>{$itemData['qty']}</td>
+                </tr>";
+
+                /* vendor list */
+                $vendorProductsHtml .= "<tr>
+                    <td>{$itemData['name']}</td>
+                    <td>{$itemData['qty']}</td>
+                </tr>";
+            }
+
+            $productsHtml .= "";
+            $vendorProductsHtml .= "</table>";
+
+
+            $subject = 'New Quote Request #' . $newQuoteId;
+
+            $this->saveToVnecomsInbox(
+                $currentCustomerId,
+                $vId,
+                $subject,
+                $post['customer_note']
+            );
+
+
+            /* ---------- VENDOR EMAIL ---------- */
+
+            try {
+
+                $vendor = $this->vendorFactory->create()->load($vId);
+
+                $this->sendEmail(
+                    'rfq_vendor_email_template',
+                    $vendor->getEmail(),
+                    $vendor->getName(),
+                    [
+                        'quote_id' => $newQuoteId,
+                        'customer_name' => $customerName,
+                        'products_list' => $vendorProductsHtml,
+                        'customer_message' => $post['customer_note'] ?? ''
+                    ]
+                );
+
+            } catch (\Exception $e) {}
+
+        }
+
+
+        $productsHtml .= "</table>";
+
+
+        /* ---------- CUSTOMER + ADMIN ---------- */
+
+        try {
+
+            $this->sendEmail(
+                'rfq_customer_email_template',
+                $customer->getEmail(),
+                $customerName,
+                [
+                    'quote_id' => $lastQuoteId,
+                    'customer_name' => $customerName
+                ]
+            );
+
+
+            $adminEmail = $this->scopeConfig->getValue(
+                'trans_email/ident_general/email',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
+
+            $adminName = $this->scopeConfig->getValue(
+                'trans_email/ident_general/name',
+                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            );
+
+
+            $this->sendEmail(
+                'rfq_admin_email_template',
+                $adminEmail,
+                $adminName,
+                [
+                    'quote_id' => $lastQuoteId,
+                    'customer_name' => $customerName,
+                    'products_list' => $productsHtml,
+                    'customer_message' => $post['customer_note'] ?? ''
+                ]
+            );
+
+        } catch (\Exception $e) {}
+
+
+        $this->catalogSession->setQuoteItems([]);
+
+        $this->messageManager->addSuccessMessage(
+            __('Your quotation requests have been sent successfully!')
+        );
+
+        return $this->resultRedirectFactory->create()->setPath('*/*/success');
+
+    } catch (\Exception $e) {
+
+        $this->_logger->critical($e->getMessage());
+
+        $this->messageManager->addErrorMessage($e->getMessage());
+
+        return $this->resultRedirectFactory->create()->setRefererUrl();
+    }
+}
 
 public function saveToVnecomsInbox($customerId, $vendorId, $subject, $content)
 {
@@ -324,87 +385,10 @@ public function saveToVnecomsInbox($customerId, $vendorId, $subject, $content)
         return false;
     }
 }
-// protected function saveToVnecomsInbox($vendorId, $customerId, $quoteId, $note)
-// {
-//     $identifier = md5(microtime() . $quoteId);
-//     $now = date('Y-m-d H:i:s');
-//     $subject = __('New Quote Request #%1', $quoteId);
-//     $content = $note ?: __('I would like to request a quote for your products.');
 
-//     try {
-//         // 1. Parent Message Entry (Vendor Side)
-//         $message = $this->messageFactory->create();
-//         $message->setData([
-//             'identifier' => $identifier,
-//             'owner_id'   => $vendorId,
-//             'status'     => 1,
-//             'is_inbox'   => 1,
-//             'is_outbox'  => 0,
-//             'is_deleted' => 0,
-//             'created_at' => $now
-//         ]);
-//         $message->save();
-//         $msgId = $message->getId();
 
-//         // 2. Message Detail Entry (Yeh wahi table hai jo aapne abhi dikhayi)
-//         $resource = $this->quoteFactory->create()->getResource();
-//         $connection = $resource->getConnection();
-//         $detailTable = $resource->getTable('ves_vendor_message_detail');
-        
-//         // Customer ki details fetch karein (Optional: for sender_name/email)
-//        $customer = $this->customerSession->getCustomer();
-//        $vendor = $this->vendorFactory->create()->load($vendorId);
-
-//     $detailData = [
-//     'message_id'     => $msgId,
-//     'sender_id'      =>$customer->getId(),   // customer id
-//     'sender_email'   => $customer->getEmail(),
-//     'sender_name'    => $customer->getName(),
-//     'receiver_id'    => $vendorId,
-//     'receiver_email' => $vendor->getEmail(),
-//     'receiver_name'  => $vendor->getName(),
-//     'subject'        => 'New Quote Request #' . $quoteId,
-//     'content'        => $content,
-//     'is_read'        => 0,
-//     'created_at'     => $now
-// ];
-
-// try {
-//     $connection->insert($detailTable, $detailData);
-// } catch (\Exception $e) {
-//     echo $e->getMessage();
-//    // die();
-// }
-//     } catch (\Exception $e) {
-//         $this->_logger->critical("Vnecoms Detail Table Error: " . $e->getMessage());
-//     }
-// }
-
-    // public function sendEmail($templateId, $toEmail, $toName, $templateVars)
-    // {
-    //     $transport = $this->transportBuilder
-    //         ->setTemplateIdentifier($templateId)
-    //         ->setTemplateOptions([
-    //             'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
-    //             'store' => $this->storeManager->getStore()->getId(),
-    //         ])
-    //         ->setTemplateVars($templateVars)
-    //         ->setFrom(['name' => 'Admin', 'email' => 'admin@example.com'])
-    //         ->addTo($toEmail, $toName)
-    //         ->getTransport();
-
-    //     $transport->sendMessage();
-    // }
-public function sendEmail($templateId, $toEmail, $toName, $templateVars)
-{
-    try {
-
-        // Email empty check
-        if (empty($toEmail)) {
-            $this->_logger->error("RFQ Email Error: Email address missing for template " . $templateId);
-            return false;
-        }
-
+    public function sendEmail($templateId, $toEmail, $toName, $templateVars)
+    {
         $transport = $this->transportBuilder
             ->setTemplateIdentifier($templateId)
             ->setTemplateOptions([
@@ -412,20 +396,10 @@ public function sendEmail($templateId, $toEmail, $toName, $templateVars)
                 'store' => $this->storeManager->getStore()->getId(),
             ])
             ->setTemplateVars($templateVars)
-            ->setFrom([
-                'name'  => 'Admin',
-                'email' => 'admin@example.com'
-            ])
-            ->addTo([$toEmail])
+            ->setFrom(['name' => 'Admin', 'email' => 'admin@example.com'])
+            ->addTo($toEmail, $toName)
             ->getTransport();
 
         $transport->sendMessage();
-
-        return true;
-
-    } catch (\Exception $e) {
-        $this->_logger->error("RFQ Email Sending Failed: " . $e->getMessage());
-        return false;
     }
-}
 }

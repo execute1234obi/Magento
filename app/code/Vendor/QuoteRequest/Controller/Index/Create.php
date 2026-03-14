@@ -21,26 +21,34 @@ class Create extends Action
         parent::__construct($context);
     }
 
-public function execute()
-{
-    $resultJson = $this->resultJsonFactory->create();
+    public function execute()
+    {
+        $productId = (int)$this->getRequest()->getParam('product_id');
 
-    $productId = (int)$this->getRequest()->getParam('product_id');
+        $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
 
-    $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
+        if ($productId && !in_array($productId, $quoteItems)) {
+            $quoteItems[] = $productId;
+        }
 
-    if ($productId && !in_array($productId, $quoteItems)) {
-        $quoteItems[] = $productId;
+        $this->catalogSession->setQuoteItems($quoteItems);
+
+        // ✅ check if ajax
+        if ($this->getRequest()->isXmlHttpRequest()) {
+
+            $resultJson = $this->resultJsonFactory->create();
+
+            return $resultJson->setData([
+                'success' => true,
+                'product_id' => $productId,
+                'items' => $quoteItems,
+                'count' => count($quoteItems)
+            ]);
+        }
+
+        // ✅ normal request → redirect
+        return $this->resultRedirectFactory
+            ->create()
+            ->setPath('quoterequest/view/index');
     }
-
-    $this->catalogSession->setQuoteItems($quoteItems);
-
-    return $resultJson->setData([
-        'success' => true,
-        'product_id' => $productId,
-        'items' => $quoteItems,
-        'count' => count($quoteItems) // ✅ IMPORTANT
-    ]);
-}
-
 }

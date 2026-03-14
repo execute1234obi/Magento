@@ -1,12 +1,9 @@
-<h2>New Quote Request Received</h2>
-
 <p>Hello {{var vendor_name}},</p>
+<p>You have received a new quote request #{{var quote_id}} from {{var customer_name}}.</p>
 
-<p>You have received a new Request for Quote.</p>
+<p><strong>Product Details:</strong></p>
+<div>
+    {{var products_list|raw}}
+</div>
 
-<p><strong>Quote ID:</strong> #{{var quote_id}}</p>
-<p><strong>Customer:</strong> {{var customer_name}}</p>
-
-<p>Please login to your vendor dashboard to review the request.</p>
-
-<p>Thank you.</p>
+<p><strong>Customer Note:</strong> {{var customer_note}}</p>
