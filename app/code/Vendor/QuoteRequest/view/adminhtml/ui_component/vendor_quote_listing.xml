@@ -3,100 +3,102 @@
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd" name="vendor_quote_listing">
 
     <argument name="data" xsi:type="array">
-    <item name="js_config" xsi:type="array">
-        <item name="provider" xsi:type="string">
-            vendor_quote_listing.vendor_quote_listing_data_source
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">vendor_quote_listing.vendor_quote_listing_data_source</item>
+            <item name="deps" xsi:type="string">vendor_quote_listing.vendor_quote_listing_data_source</item>
         </item>
-        <item name="deps" xsi:type="string">
-            vendor_quote_listing.vendor_quote_listing_data_source
-        </item>
-    </item>
-    <item name="spinner" xsi:type="string">vendor_quote_columns</item>
-</argument>
-
-  <dataSource name="vendor_quote_listing_data_source">
-    <argument name="dataProvider" xsi:type="configurableObject">
-        <argument name="class" xsi:type="string">
-            Vendor\QuoteRequest\Ui\DataProvider\QuoteDataProvider
-        </argument>
-        <argument name="name" xsi:type="string">vendor_quote_listing_data_source</argument>
-        <argument name="primaryFieldName" xsi:type="string">quote_id</argument>
-        <argument name="requestFieldName" xsi:type="string">quote_id</argument>
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <!-- 🔥 CRITICAL -->
-                <item name="component" xsi:type="string">
-                    Magento_Ui/js/grid/provider
-                </item>
-                <item name="update_url" xsi:type="url" path="mui/index/render"/>
-                <item name="storageConfig" xsi:type="array">
-                    <item name="indexField" xsi:type="string">quote_id</item>
-                </item>
-            </item>
-        </argument>
+        <item name="spinner" xsi:type="string">vendor_quote_columns</item>
     </argument>
-</dataSource>
-       <columns name="vendor_quote_columns">
 
-    <column name="quote_id">
-        <settings>
-            <label>Quote ID</label>
-            <filter>text</filter>
-        </settings>
-    </column>
+    <dataSource name="vendor_quote_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Vendor\QuoteRequest\Ui\DataProvider\QuoteDataProvider</argument>
+            <argument name="name" xsi:type="string">vendor_quote_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">quote_id</argument>
+            <argument name="requestFieldName" xsi:type="string">quote_id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">quote_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
 
-    <column name="customer_name">
-        <settings>
-            <label>Customer Name</label>
-            <filter>text</filter>
-        </settings>
-    </column>
+    <!-- Columns Definition -->
+    <columns name="vendor_quote_columns">
+        <column name="quote_id">
+            <settings>
+                <label>Quote ID</label>
+                <filter>text</filter>
+            </settings>
+        </column>
 
-    <column name="vendor_name">
-        <settings>
-            <label>Vendor Name</label>
-            <filter>text</filter>
-        </settings>
-    </column>
+        <column name="customer_name">
+            <settings>
+                <label>Customer Name</label>
+                <filter>text</filter>
+            </settings>
+        </column>
 
-    <column name="status">
-        <settings>
-            <label>Status</label>
-            <filter>text</filter>
-        </settings>
-    </column>
+        <column name="vendor_name">
+            <settings>
+                <label>Vendor Name</label>
+                <filter>text</filter>
+            </settings>
+        </column>
 
-    <column name="country_name">
-        <settings>
-            <label>Country</label>
-            <filter>text</filter>
-        </settings>
-    </column>
+        <column name="status">
+            <settings>
+                <label>Status</label>
+                <filter>text</filter>
+            </settings>
+        </column>
 
-    <column name="region_name">
-        <settings>
-            <label>Region</label>
-            <filter>text</filter>
-        </settings>
-    </column>
+        <column name="country_name">
+            <settings>
+                <label>Country</label>
+                <filter>text</filter>
+            </settings>
+        </column>
 
-    <column name="created_at">
-        <settings>
-            <label>Created At</label>
-            <filter>dateRange</filter>
-        </settings>
-    </column>
-<actionsColumn name="actions">
-    <settings>
-        <indexField>quote_id</indexField>
-    </settings>
-    <action name="view">
-        <settings>
-            <label>View</label>
-            <url path="vendorquotation/index/view"/>
-            <param name="quote_id">quote_id</param>
-        </settings>
-    </action>
-</actionsColumn>
-</columns>
+        <column name="region_name">
+            <settings>
+                <label>Region</label>
+                <filter>text</filter>
+            </settings>
+        </column>
+
+        <column name="created_at">
+            <settings>
+                <label>Created At</label>
+                <filter>dateRange</filter>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions">
+            <settings>
+                <indexField>quote_id</indexField>
+            </settings>
+            <action name="view">
+                <settings>
+                    <label>View</label>
+                    <url path="vendorquotation/index/view"/>
+                    <param name="quote_id">quote_id</param>
+                </settings>
+            </action>
+        </actionsColumn>
+    </columns>
+
+    <!-- Pagination Configuration -->
+    <pagination name="listing_pagination" xsi:type="array">
+        <item name="page_size" xsi:type="string">10</item> <!-- Default page size -->
+        <item name="total_records" xsi:type="string">totalRecords</item> <!-- Total records passed from DataProvider -->
+        <item name="current_page" xsi:type="string">currentPage</item> <!-- Current page -->
+        <item name="page_var_name" xsi:type="string">page</item> <!-- URL param for the page -->
+    </pagination>
+
 </listing>

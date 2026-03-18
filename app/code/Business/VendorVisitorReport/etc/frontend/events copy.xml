@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
 
-    <event name="controller_action_postdispatch_vendorspage_index_index">
+    <event name="controller_action_postdispatch">
         <observer name="business_vendor_profile_visitor_save"
                   instance="Business\VendorVisitorReport\Observer\SaveProfileVisitor"/>
     </event>

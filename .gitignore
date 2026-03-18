@@ -25,9 +25,12 @@ Thumbs.db
 /pub/static/
 !/pub/static/.htaccess
 
+
 # Media (except .htaccess)
 /pub/media/*
 !/pub/media/.htaccess
+pub/media.7z                  
+
 
 # Local config
 /app/etc/env.php

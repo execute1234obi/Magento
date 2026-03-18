@@ -5,47 +5,34 @@
 ?>
 
 <div class="vendor-quote-history">
-    <div class="block-title">
-        <h2>My Quote Requests </h2>
-    </div>
-
     <table class="data table">
         <thead>
             <tr>
                 <th>Quote #</th>
                 <th>Customer</th>
-                <th>Products</th>
                 <th>Status</th>
+                <th scope="col" class="col action"><?php echo __('Action') ?></th>
             </tr>
         </thead>
         <tbody>
-
-        <?php if ($quotes && $quotes->getSize()): ?>
-            <?php foreach ($quotes as $quote): ?>
-
-                <tr>
-                    <td><?= $quote->getQuoteId(); ?></td>
-                    <td><?= $quote->getCustomerName(); ?></td>
-                   
-                    <td>
-                    <a href="<?= $block->getUrl('quoterequest/rfq/productview', ['id' => $quote->getQuoteId()]); ?>">
-    View Products
-</a>
-                    </td>
-                    <td><?= ucfirst($quote->getStatus()); ?></td>
-                </tr>
-
-            <?php endforeach; ?>
-          
-        <?php else: ?>
-            <tr>
-                <td colspan="5">No RFQs Found</td>
-            </tr>
-        <?php endif; ?>
-            
+            <?php if ($quotes && $quotes->getSize() > 0): ?>
+                <?php foreach ($quotes as $quote): ?>
+                    <tr>
+                        <td><?= $quote->getQuoteId(); ?></td>
+                        <td><?= $quote->getCustomerName(); ?></td>
+                        <td><?= ucfirst($quote->getStatus()); ?></td>
+                    </tr>
+                      <td data-th="Action" class="col action">
+                            <a href="#" class="action view"><span>View Details</span></a>
+                        </td>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <tr><td colspan="3">No Records Found</td></tr>
+            <?php endif; ?>
         </tbody>
     </table>
- <?php if (isset($pager['total_pages']) && $pager['total_pages'] > 1): ?>
+
+    <?php if (isset($pager['total_pages']) && $pager['total_pages'] > 1): ?>
         <div class="custom-pager-container">
             <ul class="custom-pager">
                 <?php if ($pager['has_prev']): ?>
@@ -71,4 +58,3 @@
     .custom-pager li a { padding: 5px 10px; border: 1px solid #ccc; text-decoration: none; color: #333; }
     .custom-pager li.active a { background: #007dbd; color: #fff; border-color: #007dbd; }
 </style>
-</div>

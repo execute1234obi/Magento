@@ -6,21 +6,14 @@ use Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult;
 
 class Collection extends SearchResult
 {
-    /**
-     * @var \Magento\Framework\App\Request\Http
-     */
-    protected $request;
-
     public function __construct(
         \Magento\Framework\Data\Collection\EntityFactoryInterface $entityFactory,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy,
         \Magento\Framework\Event\ManagerInterface $eventManager,
-        \Magento\Framework\App\Request\Http $request,  // Inject Request
         $mainTable = 'vendor_quote',   // 🔥 YOUR MAIN TABLE
         $resourceModel = \Vendor\QuoteRequest\Model\ResourceModel\Quote::class
     ) {
-        $this->request = $request;  // Store the injected request object
         parent::__construct(
             $entityFactory,
             $logger,
@@ -31,7 +24,7 @@ class Collection extends SearchResult
         );
     }
 
-    protected function _initSelect()
+   protected function _initSelect()
     {
         parent::_initSelect();
 
@@ -43,12 +36,16 @@ class Collection extends SearchResult
         );
 
         // Vendor Name Join
+        // $this->getSelect()->joinLeft(
+        //     ['ve' => $this->getTable('ves_vendor_entity')],
+        //     'main_table.vendor_id = ve.entity_id',
+        //     ['vendor_name' => 've.company']
+        // );
         $this->getSelect()->joinLeft(
-            ['cev' => $this->getTable('ves_vendor_entity_varchar')],
-            'main_table.vendor_id = cev.entity_id AND cev.attribute_id = 174', // company
-            ['vendor_name' => 'cev.value']
-        );
-
+    ['cev' => $this->getTable('ves_vendor_entity_varchar')],
+    'main_table.vendor_id = cev.entity_id AND cev.attribute_id = 174', // company
+    ['vendor_name' => 'cev.value']
+);
         // Country Name Join (Custom Table)
         $this->getSelect()->joinLeft(
             ['bc' => $this->getTable('business_visitorcountry_report_country')],
@@ -62,14 +59,8 @@ class Collection extends SearchResult
             'main_table.region_id = r.region_id',
             ['region_name' => 'r.default_name']
         );
-
-        // Add pagination here using Magento's built-in methods
-        $pageSize = $this->request->getParam('page_size', 10);  // Get the page size (default to 10)
-        $currentPage = $this->request->getParam('page', 1);       // Get the current page (default to 1)
-
-        $this->setPageSize($pageSize);      // Set the page size
-        $this->setCurPage($currentPage);    // Set the current page
-
+       //echo $this->getSelect()->__toString();
+       //exit;
         return $this;
     }
 }

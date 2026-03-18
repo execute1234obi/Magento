@@ -1,17 +1,12 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="main.col">
-            <block class="Magento\Framework\View\Element\Text">
-                <arguments>
-                    <argument name="text" xsi:type="string">TEST OK</argument>
-                </arguments>
-            </block>
             <block class="Vendor\QuoteRequest\Block\Rfq\History"
                    name="vendor.rfq.history.list"
-                   template="Vendor_QuoteRequest::rfq/history.phtml"/>
+                   template="Vendor_QuoteRequest::rfq/history.phtml">
+                <block class="Magento\Theme\Block\Html\Pager" name="rfq.history.pager"/>
+            </block>
         </referenceContainer>
     </body>
 </page>
