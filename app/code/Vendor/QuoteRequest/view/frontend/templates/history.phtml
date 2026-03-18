@@ -1,10 +1,17 @@
-<?php $rfqs = (array) $block->getRfqs(); ?>
+<?php
+/** @var \Vendor\QuoteRequest\Block\Customer\History $block */
+$totalCount = $block->getRfqCount();
+$limit = (int)$block->getRequest()->getParam('limit', 10);
+$currentPage = (int)$block->getRequest()->getParam('p', 1);
+$totalPages = ceil($totalCount / $limit);
+$rfqs = (array) $block->getRfqs();
+?>
 
 <div class="rfq-history-wrap">
   <div class="rfq-history-head">
     <div>
       <h2 class="rfq-history-title">My RFQs</h2>
-      <p class="rfq-history-subtitle"><?= count($rfqs) ?> request(s)</p>
+      <p class="rfq-history-subtitle"><?= $totalCount ?> request(s)</p>
     </div>
   </div>
 
@@ -27,7 +34,8 @@
         </thead>
 
         <tbody>
-          <?php $i=1; foreach ($rfqs as $rfq): ?>
+          <?php $i = (($currentPage - 1) * $limit) + 1;
+                foreach ($rfqs as $rfq): ?>
             <?php
               $product = $block->getProduct($rfq['product_id']);
               $status = strtolower(trim((string)($rfq['status'] ?? '')));
@@ -79,6 +87,33 @@
           <?php endforeach; ?>
         </tbody>
       </table>
+      <?php //echo "pagination block here";
+      if ($totalPages > 1): ?>
+  <div class="custom-manual-pager">
+    <ul class="pager-items">
+
+      <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+
+        <li class="item <?= ($page == $currentPage) ? 'current' : '' ?>">
+
+          <?php if ($page == $currentPage): ?>
+            <strong><?= $page ?></strong>
+
+          <?php else: ?>
+
+            <a href="<?= $block->getUrl('*/*/*', ['_current' => true, 'p' => $page]) ?>">
+              <?= $page ?>
+            </a>
+
+          <?php endif; ?>
+
+        </li>
+
+      <?php endfor; ?>
+
+    </ul>
+  </div>
+<?php endif; ?>
     </div>
   <?php endif; ?>
 </div>
@@ -88,7 +123,8 @@
 .rfq-history-wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 28px 16px 40px;
+  padding: 108px 16px 40px;
+ 
 }
 
 .rfq-history-head {
@@ -303,5 +339,38 @@
   .rfq-product {
     min-width: 0;
   }
+}
+/*  Pagination class */
+.custom-manual-pager {
+  margin-top: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.pager-items {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+  padding: 0;
+}
+
+.pager-items .item a,
+.pager-items .item strong {
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pager-items .item a {
+  background: #fff;
+  color: #2563eb;
+}
+
+.pager-items .item.current strong {
+  background: #2563eb;
+  color: #fff;
+  border-color: #2563eb;
 }
     </style>
