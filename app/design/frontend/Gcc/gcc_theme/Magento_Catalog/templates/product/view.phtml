@@ -802,13 +802,6 @@ body {
   </div>
 
                 <div class="vendor-rail">
-                    <span class="meta-item rating-item">
-                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" class="rating-star-svg">
-                            <path d="M12 17.3l-6.18 3.64 1.64-6.99L2 9.77l7.09-.61L12 2.5l2.91 6.66 7.09.61-5.46 4.18 1.64 6.99z" fill="#f59e0b"/>
-                        </svg>
-                        4/5
-                    </span>
-                
                     <span class="meta-item country-item">
                         <img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($vendorLocation ?: 'N/A')) ?>.svg" alt="Saudi Arabia Flag">
                         <?= $block->escapeHtml($vendorLocation ?: 'N/A') ?>
@@ -1102,7 +1095,6 @@ $country = $country_id->getName();
         <button class="active" role="tab" aria-selected="true" aria-controls="tab-desc" id="tab-btn-desc"><?= __("Product Description") ?></button>
         <button role="tab" aria-selected="false" aria-controls="tab-spec" id="tab-btn-spec"><?= __("Product Specification") ?></button>
         <button role="tab" aria-selected="false" aria-controls="tab-pack" id="tab-btn-pack"> <?= __("Packing & Shipping") ?></button>
-        <button role="tab" aria-selected="false" aria-controls="tab-rev" id="tab-btn-rev"><?= __("Reviews") ?></button>
     </div>
     <div class="tab-content tab-panel active" id="tab-desc" role="tabpanel" aria-labelledby="tab-btn-desc">
         <?= /* @noEscape */ $product->getDescription(); ?>
@@ -1151,9 +1143,6 @@ $country = $country_id->getName();
     </div>
     <div class="tab-content tab-panel" id="tab-pack" role="tabpanel" aria-labelledby="tab-btn-pack">
         <p><?= __("Packing and shipping information goes here") ?>.</p>
-    </div>
-    <div class="tab-content tab-panel" id="tab-rev" role="tabpanel" aria-labelledby="tab-btn-rev">
-        <?= $block->getChildHtml('reviews.tab') ?>
     </div>
 </div>
 
