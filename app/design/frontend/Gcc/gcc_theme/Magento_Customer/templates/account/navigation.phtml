@@ -1,0 +1,13 @@
+<?php
+/**
+ * Theme override for customer account navigation.
+ *
+ * Outputs only the navigation list so the parent wrapper controls the mobile
+ * presentation and Magento's collapsible mobile markup does not interfere.
+ */
+?>
+<nav class="account-nav-theme-nav" aria-label="<?= $block->escapeHtmlAttr(__('My Account')) ?>">
+    <ul class="nav items">
+        <?= $block->getChildHtml() ?>
+    </ul>
+</nav>
