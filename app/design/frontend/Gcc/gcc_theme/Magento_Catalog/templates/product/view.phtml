@@ -832,6 +832,11 @@ body {
         gap: 8px; /* Gap between Name/Badge row and Logo/Button row */
         min-width: 0;
     ">
+      <?php
+        $baseUrl = $block->getBaseUrl();
+        $vendor_shop_Id = $vendor->getData('vendor_id');
+$vendorUrl = $baseUrl. 'shop/' . $vendor_shop_Id; // /shop/<vendor_id>/ ?>
+          <a href="<?= $vendorUrl ?>" target="_blank" style="color: inherit; text-decoration: none;">
         <div class="vendor-name" style="
             font-weight: 700;
             font-size: 22px;
@@ -841,12 +846,15 @@ body {
             gap: 8px;
             margin: 0;
         ">
+      
             <?= ucfirst($block->escapeHtml($vendorName)); ?>
             <?php if ($isVerified ?? true): ?>
                 <img src="<?= $block->escapeUrl($varify); ?>" alt="Verified" width="7%">
             <?php endif; ?>
-        </div>
         
+           
+        </div>
+        </a>
         <div style="display: flex; align-items: center; gap: 12px;">
             <div class="vendor-logo" style="
                 width: 44px; height: 44px; border-radius: 9999px;
