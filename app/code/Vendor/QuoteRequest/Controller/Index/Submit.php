@@ -166,7 +166,7 @@ public function execute()
                 $itemModel->save();
 
 
-                /* admin list */
+                /* customer list */
                 $productsHtml .= "<tr>
                     <td>{$itemData['name']}</td>
                     <td>{$itemData['qty']}</td>
@@ -206,6 +206,7 @@ public function execute()
                     [
                         'quote_id' => $newQuoteId,
                         'customer_name' => $customerName,
+                         'vendor_name' => $vendor->getName(),
                         'products_list' => $vendorProductsHtml,
                         'customer_message' => $post['customer_note'] ?? ''
                     ]
@@ -229,33 +230,35 @@ public function execute()
                 $customerName,
                 [
                     'quote_id' => $lastQuoteId,
-                    'customer_name' => $customerName
-                ]
-            );
-
-
-            $adminEmail = $this->scopeConfig->getValue(
-                'trans_email/ident_general/email',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-            );
-
-            $adminName = $this->scopeConfig->getValue(
-                'trans_email/ident_general/name',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-            );
-
-
-            $this->sendEmail(
-                'rfq_admin_email_template',
-                $adminEmail,
-                $adminName,
-                [
-                    'quote_id' => $lastQuoteId,
                     'customer_name' => $customerName,
                     'products_list' => $productsHtml,
                     'customer_message' => $post['customer_note'] ?? ''
                 ]
             );
+
+
+            // $adminEmail = $this->scopeConfig->getValue(
+            //     'trans_email/ident_general/email',
+            //     \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            // );
+
+            // $adminName = $this->scopeConfig->getValue(
+            //     'trans_email/ident_general/name',
+            //     \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            // );
+
+
+            // $this->sendEmail(
+            //     'rfq_admin_email_template',
+            //     $adminEmail,
+            //     $adminName,
+            //     [
+            //         'quote_id' => $lastQuoteId,
+            //         'customer_name' => $customerName,
+            //         'products_list' => $productsHtml,
+            //         'customer_message' => $post['customer_note'] ?? ''
+            //     ]
+            // );
 
         } catch (\Exception $e) {}
 
