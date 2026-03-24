@@ -1,0 +1,32 @@
+<?php
+/**
+ * @var $block \Vnecoms\Vendors\Block\Vendors\Menu
+ */
+$logoUrl = $block->getViewFileUrl('wysiwyg/gcc-logo.png');
+?>
+
+<aside class="main-sidebar" id="vendor-mobile-sidebar">
+    <div class="vendor-mobile-sidebar-head">
+        <a href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')); ?>"
+           class="vendor-mobile-sidebar-brand"
+           aria-label="<?= $block->escapeHtmlAttr(__('GCC Trading dashboard')); ?>">
+            <img src="<?= $block->escapeUrl($logoUrl); ?>"
+                 alt="<?= $block->escapeHtmlAttr(__('GCC Trading')); ?>"
+                 style="display:block; max-width:150px; width:100%; height:auto; filter:brightness(0) invert(1);">
+        </a>
+
+        <button type="button"
+                class="vendor-mobile-sidebar-close"
+                aria-label="<?= $block->escapeHtmlAttr(__('Close menu')); ?>">
+            <span class="vendor-mobile-sidebar-close__line"></span>
+        </button>
+    </div>
+
+    <section class="sidebar">
+        <?= $block->getChildHtml('menu_before'); ?>
+        <?= /* @noEscape */ $block->renderNavigation($block->getMenuModel(), 0, 12); ?>
+        <?= $block->getChildHtml('menu_after'); ?>
+    </section>
+</aside>
+
+<div class="vendor-mobile-sidebar-overlay" aria-hidden="true"></div>
