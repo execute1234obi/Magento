@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GCC Trading Home</title>
+ <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Include Swiper JS and Swiper CSS -->
+<link
+  rel="stylesheet"
+  href="https://unpkg.com/swiper/swiper-bundle.min.css"
+/>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+ <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        /* swipper css */
+        .swiper-container {
+  padding-left: 40px;
+  padding-right: 40px;
+  box-sizing: border-box;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #2563eb; /* Optional: make arrows blue */
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.swiper-button-prev {
+  left: 10px; /* Move left arrow further from the edge */
+}
+
+.swiper-button-next {
+  right: 10px; /* Move right arrow further from the edge */
+}
+    </style>
+</head>
+<body style="margin:0; font-family: Arial, sans-serif;">
+
+  <!-- HERO BANNER -->
+<!-- Outer container with padding (creates the gap outside the section) -->
+<div style="padding-top: 7rem;">
+     <section class="relative bg-cover bg-center rounded-xl overflow-hidden m-8 min-h-[460px]"
+        style="background-image: url({{media url='wysiwyg/hero-img.png'}});">
+        <div class="absolute inset-0 bg-blue-500 opacity-60"></div>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full pt-28 px-4 text-center text-white">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-semibold mb-6 sm:mb-8 leading-snug sm:leading-tight">
+                Your Trusted Directory for <br />
+                GCC Trading
+            </h1>
+         <!-- search form-->
+        <div data-mage-init='{"mstSearchAutocomplete":{"formSelector": "form", "inputSelector": "#search"}}'>
+    <form action="/magento_gcc/catalogsearch/result" method="get"
+        class="flex flex-col sm:flex-row w-full max-w-4xl bg-white rounded-lg shadow-lg pt-2 pb-2 px-4 sm:px-2">
+
+        <input type="text" id="search" name="q"
+            placeholder="Find Global Vendors & Products in the GCC"
+            class="mst-search__input flex-1 py-3 sm:py-4 px-4 rounded-t-lg sm:rounded-t-none sm:rounded-l-lg text-base sm:text-lg text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+        <button type="submit"
+            class="bg-blue-600 text-white py-3 sm:py-4 px-6 sm:px-8 rounded-b-lg sm:rounded-b-none sm:rounded-r-lg text-base sm:text-lg cursor-pointer hover:bg-blue-700 transition duration-200">
+            Search
+        </button>
+    </form>
+        </div>
+
+    </section>
+</div>
+ <!-- category Section -->
+  <section class="py-20  px-6 bg-white" style="background-image: url({{media url='wysiwyg/customer/customer-explore.png'}}); inset: 0;">
+    <!-- Heading Section -->
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-semibold">Explore Key Industrial Sectors</h2>
+        <p class="text-gray-600 mt-2">Discover suppliers and products across various industries to meet your business needs efficiently and compliance with regional standards for optimal sourcing solutions.</p>
+    </div>
+    
+    <!-- Cards Grid Section -->
+    <div class="flex justify-center mb-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-8">
+            <!-- Card 1 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-rfq.png'}}" alt="Manufacturing" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Manufacturing</p>
+            </div>
+            
+            <!-- Card 2 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-specs.png'}}" alt="Electronics" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Electronics</p>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-reviews.png'}}" alt="Mining" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Mining</p>
+            </div>
+
+            <!-- Card 4 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-search.png'}}" alt="Chemical" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Chemical</p>
+            </div>
+
+            <!-- Card 5 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-chat.png'}}" alt="Jewelry" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Jewelry</p>
+            </div>
+
+            <!-- Card 6 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-specs.png'}}" alt="Foods Beverage" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Foods Beverage</p>
+            </div>
+
+            <!-- Card 7 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-chat.png'}}" alt="Motor Vehicle" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Motor Vehicle</p>
+            </div>
+
+            <!-- Card 8 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-rfq.png'}}" alt="Broadcasting" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Broadcasting</p>
+            </div>
+
+            <!-- Card 9 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-reviews.png'}}" alt="Computers" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Computers</p>
+            </div>
+
+            <!-- Card 10 -->
+            <div class="flex flex-col items-center justify-center p-6 border border-gray-200 rounded-xl hover:shadow-lg">
+                <img src="{{media url='wysiwyg/home-search.png'}}" alt="Medicaments" class="w-12 h-12 mb-4">
+                <p class="text-lg font-semibold">Medicaments</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Navigation Arrows -->
+    <div class="flex justify-between max-w-md mx-auto">
+        <button class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700">
+            <span>&lt;</span>
+        </button>
+        <button class="bg-blue-600 text-white py-2 px-4 rounded-full hover:bg-blue-700">
+            <span>&gt;</span>
+        </button>
+    </div>
+</section>
+
+
+  <!-- RFQ SECTION -->
+<div class="bg-gradient-to-r from-blue-100 to-blue-300 py-12">
+  <div class="container mx-auto px-6 flex flex-col lg:flex-row items-center">
+
+    <!-- Left Side Content (Request for Quotes Text & Options) -->
+    <div class="lg:w-1/2 text-center lg:text-left mb-8 lg:mb-0">
+      <h2 class="text-3xl font-bold text-gray-800">Request for Quotes</h2>
+      <p class="mt-4 text-lg text-gray-600">Create one request and get multiple quotes from verified suppliers</p>
+      
+      <!-- Options in a single row -->
+      <div class="mt-6 flex flex-wrap justify-center lg:justify-start space-x-6 text-left text-gray-600">
+        <div class="flex items-center mb-4 lg:mb-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h3v3H9zm3-4V5h2V3h-4v2h2zm0 4h2v2h-2zm-3 4h3v3H9zm3-4V9h-3V7h-2v2H9zm7-1a5 5 0 11-10 0 5 5 0 0110 0z" />
+          </svg>
+          <span class="text-blue-500 font-bold">Only relevant suppliers</span>
+        </div>
+        <div class="flex items-center mb-4 lg:mb-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v12m0 0v4m0-4H8l4 4 4-4h-4z" />
+          </svg>
+          <span class="text-blue-500 font-bold">Data privacy compliant</span>
+        </div>
+        <div class="flex items-center mb-4 lg:mb-0">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h3v3H9zm3-4V5h2V3h-4v2h2zm0 4h2v2h-2zm-3 4h3v3H9zm3-4V9h-3V7h-2v2H9zm7-1a5 5 0 11-10 0 5 5 0 0110 0z" />
+          </svg>
+          <span class="text-blue-500 font-bold">100% free</span>
+        </div>
+      </div>
+
+      <!-- Button -->
+      <div class="mt-6">
+        <button class="bg-blue-500 text-white py-3 px-8 rounded-md hover:bg-blue-600 transition duration-300">Get Multiple Quotes</button>
+      </div>
+    </div>
+
+    <!-- Right Side Content (Quote Cards) -->
+    <div class="lg:w-1/2 mt-8 lg:mt-0 flex justify-center">
+      <div class="space-y-6">
+        <img src="{{media url='wysiwyg/vendor/vendor-groupcard.png'}}" class="w-full max-w-md mx-auto" alt="Vendor Group Card" />
+      </div>
+    </div>
+
+  </div>
+</div><!-- VENDORS NEARBY SECTION -->
+<section class="py-20 px-6 bg-blue-50">
+    <!-- Heading Section -->
+    <div class="text-center mb-12">
+        <h2 class="text-3xl font-semibold">Vendors Nearby</h2>
+        <p class="text-gray-600 mt-2">Explore top vendors from Saudi Arabia, offering specialized products across key industries.</p>
+    </div>
+
+    <!-- Swiper Carousel -->
+   <div class="swiper-container">
+        <div class="swiper-wrapper">
+              {{block class="Custom\VendorList\Block\VendorList" template="Custom_VendorList::vendor_list.phtml"}}
+         </div>
+       <!-- Navigation Arrows -->
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</section>
+<!-- GET IN TOUCH SECTION -->
+ <!-- GET IN TOUCH SECTION -->
+    <section class="text-white py-16 px-8" style="background-image: url({{media url='wysiwyg/home-getin.png'}});">
+        <div class="flex flex-wrap items-center justify-between max-w-screen-xl mx-auto">
+            <div class="flex-1 max-w-lg mb-8 sm:mb-0">
+                <h2 class="text-3xl font-bold mb-4">Get in touch with us now!</h2>
+                <p class="text-lg mb-6 text-opacity-85">Get in touch with our team to access exclusive tools and
+                    resources. Begin your journey towards efficient and effective trading today.</p>
+                <a href="#" class="bg-white text-blue-600 py-3 px-8 rounded-lg text-lg">Contact Us</a>
+            </div>
+            <div class="flex-1 max-w-lg">
+                <img src="{{media url='wysiwyg/home-contact.png'}}"
+                    alt="Contact Illustration" class="w-full rounded-xl" />
+            </div>
+        </div>
+    </section>
+
+<section class="bg-white py-16 px-4 text-center">
+  <h2 class="text-3xl font-semibold text-gray-900 mb-8">GCC Exhibitions & Trading Updates</h2>
+  <p class="text-lg text-gray-600 mb-12">
+    Stay connected with upcoming exhibitions, market opportunities, and the latest developments in the GCC Region.
+  </p>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8 justify-items-center">
+  <!-- First Card -->
+  <div class="bg-white border border-gray-300 rounded-lg w-full pt-6 pb-6 p-10">
+    <img src="{{media url='wysiwyg/home-exibition1.jpg'}}"
+      alt="Exhibition Image 2" class="w-full h-64 object-cover rounded-t-lg mx-auto" />
+    <div class="p-4 mt-4">
+      <p class="text-gray-500 text-sm text-left">October 17, 2024</p>
+      <h3 class="text-xl font-bold text-gray-900 mt-2 text-left">
+        Upcoming Trade Exhibitions in the GCC for 2024
+      </h3>
+    </div>
+  </div>
+
+  <!-- Second Card -->
+  <div class="bg-white border border-gray-300 rounded-lg w-full pt-6 pb-6 p-10">
+    <img src="{{media url='wysiwyg/home-exhib2.png'}}"
+      alt="Exhibition Image 2" class="w-full h-64 object-cover rounded-t-lg mx-auto" />
+    <div class="p-4 mt-4">
+      <p class="text-gray-500 text-sm text-left">October 19, 2024</p>
+      <h3 class="text-xl font-bold text-gray-900 mt-2 text-left">
+        Highlights from the Recent Dubai Trade Expo
+      </h3>
+    </div>
+  </div>
+
+  <!-- Third Card -->
+  <div class="bg-white border border-gray-300 rounded-lg w-full pt-6 pb-6 p-10">
+    <img src="{{media url='wysiwyg/home-exhib3.png'}}"
+      alt="Exhibition Image 2" class="w-full h-64 object-cover rounded-t-lg mx-auto" />
+    <div class="p-4 mt-4">
+      <p class="text-gray-500 text-sm text-left">October 24, 2024</p>
+      <h3 class="text-xl font-bold text-gray-900 mt-2 text-left">
+        New Industry Insights: The Future of Trade in the GCC
+      </h3>
+    </div>
+  </div>
+</div>
+
+
+<!-- "More News" Section -->
+<div class="flex justify-end">
+  <div class="border-2 border-blue-600 rounded-lg flex items-center justify-center p-4 w-auto hover:bg-blue-50 transition">
+    <a href="#" class="text-blue-600 text-sm font-semibold flex items-center gap-1">
+      More News <span class="text-xl">→</span>
+    </a>
+  </div>
+</div>
+</section>
+
+{{block class="Magento\Framework\View\Element\Template" 
+        template="Magento_Theme::html/newsletter.phtml"}}
+
+<!-- Swiper JS Initialization -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var swiper = new Swiper('.swiper-container', {
+        slidesPerView: 1,
+        spaceBetween: 20,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev'
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                 centeredSlides: true // <-- Add here too for tablet
+            },
+            1024: {
+                slidesPerView: 3,
+                centeredSlides: true // <-- Add here too for desktop
+            },
+        }
+    });
+});
+</script>
+</body>
+</html>

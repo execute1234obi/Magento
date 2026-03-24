@@ -1,31 +1,33 @@
-/* Vnecoms Header Bar (जहाँ 'VNECOMS MARKETPLACE' लिखा है) */
+/* Vnecoms Header Bar (à¤œà¤¹à¤¾à¤ 'VNECOMS MARKETPLACE' à¤²à¤¿à¤–à¤¾ à¤¹à¥ˆ) */
 body.page-vendor-dashboard .main-header .navbar-static-top {
-    background-color: #ff4500 !important; /* उदाहरण के लिए चमकीला नारंगी */
+    background-color: #ff4500 !important; /* à¤‰à¤¦à¤¾à¤¹à¤°à¤£ à¤•à¥‡ à¤²à¤¿à¤ à¤šà¤®à¤•à¥€à¤²à¤¾ à¤¨à¤¾à¤°à¤‚à¤—à¥€ */
     border-bottom: 3px solid #cc3700 !important;
 }
 
-/* बाएँ हाथ का मेन्यू बार (Dashboard, Catalog, etc.) */
+/* à¤¬à¤¾à¤à¤ à¤¹à¤¾à¤¥ à¤•à¤¾ à¤®à¥‡à¤¨à¥à¤¯à¥‚ à¤¬à¤¾à¤° (Dashboard, Catalog, etc.) */
 body.page-vendor-dashboard .main-sidebar {
-    background: #1a2226 !important; /* गहरा काला/ग्रे */
+    background: #1a2226 !important; /* à¤—à¤¹à¤°à¤¾ à¤•à¤¾à¤²à¤¾/à¤—à¥à¤°à¥‡ */
 }
 
-/* मेन्यू लिंक (Dashboard, Catalog) का टेक्स्ट रंग */
+/* à¤®à¥‡à¤¨à¥à¤¯à¥‚ à¤²à¤¿à¤‚à¤• (Dashboard, Catalog) à¤•à¤¾ à¤Ÿà¥‡à¤•à¥à¤¸à¥à¤Ÿ à¤°à¤‚à¤— */
 body.page-vendor-dashboard .sidebar-menu > li > a {
-    color: #e6e6e6 !important; 
+    color: #e6e6e6 !important;
     font-weight: bold !important;
 }
 
-/* 'Save Config' बटन का रंग */
+/* 'Save Config' à¤¬à¤Ÿà¤¨ à¤•à¤¾ à¤°à¤‚à¤— */
 body.page-vendor-dashboard .page-actions-inner .action-save {
-    background-color: #28a745 !important; /* हरा */
+    background-color: #28a745 !important; /* à¤¹à¤°à¤¾ */
     border-color: #28a745 !important;
 }
+
 img, video, embed, object {
     max-width: 100%;
     background: aqua;
 }
+
 .skin-blue .main-header .navbar {
-    background-color: aqua!important;
+    background-color: aqua !important;
 }
 
 @media (max-width: 767px) {
@@ -181,5 +183,14 @@ img, video, embed, object {
     body[class*="page-vendor"] .right-side .page-content {
         padding-left: 12px !important;
         padding-right: 12px !important;
+    }
+}
+
+@media (max-width: 767px) {
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle-fixed {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        z-index: 1060;
     }
 }

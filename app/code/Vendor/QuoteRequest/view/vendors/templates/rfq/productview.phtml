@@ -2,44 +2,64 @@
 $quote = $block->getQuote();
 $items = $block->getItems();
 ?>
-<?php
+<div class="vendor-rfq-productview">
+    <div class="vendor-rfq-productview__header">
+        <div>
+            <h2 class="vendor-rfq-productview__title">
+                <?= $block->escapeHtml(__('RFQ #%1', $quote->getId())); ?>
+            </h2>
+        </div>
+        <button type="button" class="vendor-rfq-productview__back" onclick="history.back()">
+            <?= $block->escapeHtml(__('Back')); ?>
+        </button>
+    </div>
 
-//echo $quote->getCustomerNote();
-?>
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-<h2>RFQ #<?= $quote->getId(); ?></h2>
-  <button onclick="history.back()" 
-            class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
-        ← Back
-    </button>
+    <div class="vendor-rfq-productview__summary">
+        <div class="vendor-rfq-productview__card vendor-rfq-productview__card--message">
+            <span class="vendor-rfq-productview__label"><?= $block->escapeHtml(__('Customer Message')); ?></span>
+            <p class="vendor-rfq-productview__message">
+                <?= $block->escapeHtml($quote->getCustomerNote() ?: __('No message provided.')); ?>
+            </p>
+        </div>
+        <div class="vendor-rfq-productview__card vendor-rfq-productview__card--status">
+            <span class="vendor-rfq-productview__label"><?= $block->escapeHtml(__('Status')); ?></span>
+            <span class="vendor-rfq-productview__status vendor-rfq-productview__status--<?= $block->escapeHtmlAttr(strtolower((string) $quote->getStatus())); ?>">
+                <?= $block->escapeHtml(ucfirst((string) $quote->getStatus())); ?>
+            </span>
+        </div>
+    </div>
+
+    <div class="vendor-rfq-productview__table-wrap">
+        <table class="data table vendor-rfq-productview__table">
+            <thead>
+                <tr>
+                    <th scope="col"><?= $block->escapeHtml(__('Product')); ?></th>
+                    <th scope="col"><?= $block->escapeHtml(__('Qty')); ?></th>
+                    <th scope="col"><?= $block->escapeHtml(__('Details')); ?></th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($items as $item): ?>
+                <tr>
+                    <td data-th="<?= $block->escapeHtmlAttr(__('Product')); ?>">
+                        <?= $block->escapeHtml($block->getProductName($item->getData('product_id'))); ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtmlAttr(__('Qty')); ?>">
+                        <?= $block->escapeHtml((int) $item->getData('qty')); ?>
+                    </td>
+                    <td data-th="<?= $block->escapeHtmlAttr(__('Details')); ?>">
+                        <a
+                            class="vendor-rfq-productview__link"
+                            href="<?= $block->escapeUrl($block->getProductUrl($item->getData('product_id'))); ?>"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <?= $block->escapeHtml(__('View Product')); ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
-
-<div>
-    <p><strong>Customer Message:</strong> <?= $quote->getCustomerNote(); ?></p>
-    <p><strong>Status:</strong> <?= ucfirst($quote->getStatus()); ?></p>
-</div>
-
-<table class="data table">
-    <thead>
-        <tr>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Details</th>
-        </tr>
-    </thead>
-
-    <tbody>
-    <?php foreach ($items as $item): ?>
-       <tr>
-            <td><?= $block->getProductName($item->getData('product_id')); ?></td>
-            <td><?= (int)$item->getData('qty'); ?></td>
-            <td>
-                <a href="<?= $block->getProductUrl($item->getData('product_id')); ?>"  target="_blank"
-       rel="noopener noreferrer">
-        View Product
-    </a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>

@@ -1,0 +1,164 @@
+.vendor-quote-history {
+    margin-top: 12px;
+}
+
+.vendor-quote-history .block-title {
+    margin-bottom: 18px;
+}
+
+.vendor-quote-history .block-title h2 {
+    margin: 0;
+    color: #1d2b4f;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.vendor-quote-history .rfq-history-table-wrap {
+    overflow-x: auto;
+}
+
+.vendor-quote-history .rfq-history-table {
+    width: 100%;
+    border: 1px solid #d8dee9;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+}
+
+.vendor-quote-history .rfq-history-table thead th {
+    padding: 14px 16px;
+    border-right: 1px solid #d8dee9;
+    border-bottom: 1px solid #d8dee9;
+    background: #f7faff;
+    color: #0f377f;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+}
+
+.vendor-quote-history .rfq-history-table thead th:last-child {
+    border-right: 0;
+}
+
+.vendor-quote-history .rfq-history-table tbody td {
+    padding: 14px 16px;
+    border-right: 1px dashed #d8dee9;
+    color: #25324a;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+.vendor-quote-history .rfq-history-table tbody td:last-child {
+    border-right: 0;
+}
+
+.vendor-quote-history .rfq-history-table tbody tr {
+    background: #ffffff;
+}
+
+.vendor-quote-history .rfq-history-table tbody tr:nth-child(even) {
+    background: #f7f7f7;
+}
+
+.vendor-quote-history .rfq-history-table tbody tr:hover {
+    background: #eef5ff;
+}
+
+.vendor-quote-history .rfq-history-link {
+    color: #2a7fd1;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.vendor-quote-history .rfq-history-link:hover,
+.vendor-quote-history .rfq-history-link:focus {
+    color: #0f5aa8;
+    text-decoration: underline;
+}
+
+.vendor-quote-history .rfq-status {
+    display: inline-flex;
+    align-items: center;
+    min-width: 92px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: #fff3cd;
+    color: #8a6116;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    justify-content: center;
+}
+
+.vendor-quote-history .rfq-status-approved,
+.vendor-quote-history .rfq-status-completed {
+    background: #e8f7ee;
+    color: #1f7a45;
+}
+
+.vendor-quote-history .rfq-status-rejected,
+.vendor-quote-history .rfq-status-cancelled {
+    background: #fdecec;
+    color: #b43838;
+}
+
+.vendor-quote-history .rfq-history-empty {
+    text-align: center;
+    color: #6b7280;
+}
+
+@media (max-width: 767px) {
+    .vendor-quote-history .rfq-history-table thead {
+        display: none;
+    }
+
+    .vendor-quote-history .rfq-history-table,
+    .vendor-quote-history .rfq-history-table tbody,
+    .vendor-quote-history .rfq-history-table tr,
+    .vendor-quote-history .rfq-history-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .vendor-quote-history .rfq-history-table {
+        border: 0;
+        background: transparent;
+    }
+
+    .vendor-quote-history .rfq-history-table tbody tr {
+        margin-bottom: 14px;
+        border: 1px solid #d8dee9;
+        background: #ffffff;
+    }
+
+    .vendor-quote-history .rfq-history-table tbody td {
+        position: relative;
+        padding: 12px 14px 12px 42%;
+        border-right: 0;
+        border-bottom: 1px solid #eef2f7;
+        text-align: left;
+    }
+
+    .vendor-quote-history .rfq-history-table tbody td:last-child {
+        border-bottom: 0;
+    }
+
+    .vendor-quote-history .rfq-history-table tbody td::before {
+        content: attr(data-th);
+        position: absolute;
+        left: 14px;
+        top: 12px;
+        width: calc(42% - 18px);
+        color: #0f377f;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .vendor-quote-history .rfq-history-empty {
+        padding-left: 14px;
+    }
+
+    .vendor-quote-history .rfq-history-empty::before {
+        content: none;
+    }
+}
