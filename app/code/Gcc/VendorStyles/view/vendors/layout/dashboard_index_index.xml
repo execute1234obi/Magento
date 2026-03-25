@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="vendor.dashboard" template="Gcc_VendorStyles::dashboard/dashboard.phtml"/>
+        <referenceBlock name="membership.info" template="Gcc_VendorStyles::dashboard/membership.phtml"/>
+        <referenceBlock name="new_products" template="Gcc_VendorStyles::dashboard/product/new.phtml"/>
+    </body>
+</page>
