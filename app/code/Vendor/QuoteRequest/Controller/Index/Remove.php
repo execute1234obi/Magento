@@ -40,8 +40,8 @@ class Remove extends Action
 
     $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
 
-    echo "Removing product ID: " . $productId;
-    print_r($quoteItems);
+    //echo "Removing product ID: " . $productId;
+    //print_r($quoteItems);
 
     if (($key = array_search($productId, $quoteItems)) !== false) {
 
@@ -52,7 +52,7 @@ class Remove extends Action
     // reindex
     $quoteItems = array_values($quoteItems);
 
-    print_r($quoteItems); // debug
+    //print_r($quoteItems); // debug
     //exit;
     $this->catalogSession->setQuoteItems($quoteItems);
 

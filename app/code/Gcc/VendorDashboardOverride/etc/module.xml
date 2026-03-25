@@ -9,6 +9,7 @@ xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
             <module name="Vnecoms_Vendors"/>
             <module name="Vnecoms_VendorsDashboard"/>
              <module name="Vnecoms_VendorsProduct"/>
+             <module name="Vnecoms_VendorsCategory"/>
         </sequence>
 
     </module>
