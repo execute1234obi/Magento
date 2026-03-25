@@ -1,0 +1,88 @@
+<?php
+/**
+ * Customer account navigation wrapper for theme-driven account pages.
+ *
+ * Keeps the navigation visible on mobile instead of relying on Magento's
+ * collapsible sidebar behavior.
+ */
+?>
+<div class="block <?= $block->escapeHtmlAttr($block->getBlockCss()) ?> account-nav-theme">
+    <div class="account-nav-mobile-overlay"></div>
+    <div class="title <?= $block->escapeHtmlAttr($block->getBlockCss()) ?>-title">
+        <button
+            type="button"
+            class="account-nav-toggle"
+            aria-expanded="false"
+            aria-controls="customer-account-nav-menu"
+        >
+            <span class="account-nav-toggle-label"><?= $block->escapeHtml(__($block->getBlockTitle())) ?></span>
+            <span class="account-nav-toggle-icon" aria-hidden="true"></span>
+        </button>
+    </div>
+    <div id="customer-account-nav-menu" class="<?= $block->escapeHtmlAttr($block->getBlockCss()) ?>-content account-nav-theme-content">
+        <div class="account-nav-theme-panel-header">
+            <strong><?= $block->escapeHtml(__($block->getBlockTitle())) ?></strong>
+            <button type="button" class="account-nav-close" aria-label="<?= $block->escapeHtmlAttr(__('Close account menu')) ?>">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <?= $block->getChildHtml() ?>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.account-nav-theme').forEach(function (nav) {
+        var toggle = nav.querySelector('.account-nav-toggle');
+        var closeButton = nav.querySelector('.account-nav-close');
+        var overlay = nav.querySelector('.account-nav-mobile-overlay');
+        var mobileBreakpoint = 1024;
+
+        if (!toggle) {
+            return;
+        }
+
+        function setOpenState(isOpen) {
+            nav.classList.toggle('is-open', isOpen);
+            toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            document.body.classList.toggle('account-nav-drawer-open', isOpen && window.innerWidth <= mobileBreakpoint);
+        }
+
+        function syncNavState() {
+            if (window.innerWidth > mobileBreakpoint) {
+                setOpenState(true);
+                document.body.classList.remove('account-nav-drawer-open');
+                return;
+            }
+
+            setOpenState(false);
+        }
+
+        toggle.addEventListener('click', function () {
+            if (window.innerWidth > mobileBreakpoint) {
+                return;
+            }
+
+            setOpenState(!nav.classList.contains('is-open'));
+        });
+
+        if (closeButton) {
+            closeButton.addEventListener('click', function () {
+                if (window.innerWidth <= mobileBreakpoint) {
+                    setOpenState(false);
+                }
+            });
+        }
+
+        if (overlay) {
+            overlay.addEventListener('click', function () {
+                if (window.innerWidth <= mobileBreakpoint) {
+                    setOpenState(false);
+                }
+            });
+        }
+
+        window.addEventListener('resize', syncNavState);
+        syncNavState();
+    });
+});
+</script>

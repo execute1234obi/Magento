@@ -27,6 +27,14 @@ $isArabic = ($currentStore->getCode() === 'arabic'); // change 'arabic' to your 
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
 $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+$request = $block->getRequest();
+$fullActionName = $request->getFullActionName();
+$requestPath = trim((string) $request->getOriginalPathInfo(), '/');
+$isHomePage = $fullActionName === 'cms_index_index' || $requestPath === '' || $requestPath === 'default';
+$isVendorPage = strpos($requestPath, 'vendor-page') !== false;
+$isCustomerPage = strpos($requestPath, 'customer-page') !== false;
+$isAboutPage = strpos($requestPath, 'about-us') !== false;
+$isContactPage = strpos($requestPath, 'contact-us') !== false;
 ?>
 
 
@@ -301,44 +309,184 @@ if ($storeCode === 'default') {
     </div>
   </div>
 
-  <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow-md">
-    <div class="flex flex-col space-y-4 p-5 text-gray-700">
-      <div>
-        <button type="button" onclick="toggleMobileDropdown('mobileVendorMenu')" class="w-full flex justify-between items-center bg-transparent border-0">
-          <span><?= __("Vendors") ?></span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <!-- RTL indent: pl-4 -> pr-4 -->
-        <div id="mobileVendorMenu" class="hidden pr-4 mt-2 space-y-2">
-          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]"><?= __('List Products') ?></a>
-          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]"><?= __('Vendor Dashboard') ?></a>
+  <div id="mobileMenu" class="hidden md:hidden mobile-menu-drawer">
+    <div class="mobile-menu-shell">
+      <div class="mobile-menu-topbar">
+        <a href="<?= $baseUrl; ?>" class="mobile-menu-logo-link" aria-label="<?= __('GCC Trading home') ?>">
+          <img src="<?= $block->escapeUrl($block->getViewFileUrl('wysiwyg/gcc-logo.png')) ?>" alt="GCC Trading" class="mobile-menu-logo">
+        </a>
+
+        <div class="mobile-menu-topbar-actions">
+          <div class="mobile-menu-lang-wrap">
+            <button type="button" id="mobileLangToggle" class="mobile-menu-locale bg-transparent border-0" aria-expanded="false">
+              <img src="<?= $mediaUrl ?>/wysiwyg/gc-lan.png" alt="Language Icon">
+              <span><?= $store_code; ?></span>
+              <svg class="mobile-menu-locale-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </button>
+
+            <div id="mobileLanguageMenu" class="hidden mobile-language-menu">
+              <?php foreach ($stores as $store): ?>
+                <?php
+                if ($store->getId() == $currentStore->getId()) {
+                    continue;
+                }
+
+                $mobileStoreBaseUrl = $store->getBaseUrl();
+                $mobileStoreCode = $store->getCode();
+
+                if ($mobileStoreCode === 'default') {
+                    $mobileStoreBaseUrl = str_replace('/default/', '/', $mobileStoreBaseUrl);
+                }
+                ?>
+                <a href="<?= $block->escapeUrl($mobileStoreBaseUrl) ?>" class="mobile-language-link">
+                  <?= __($store->getName()) ?>
+                </a>
+              <?php endforeach; ?>
+            </div>
+          </div>
+
+          <button type="button" onclick="toggleMobileMenu()" class="mobile-menu-close bg-transparent border-0" aria-label="<?= __('Close menu') ?>">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
       </div>
 
-      <div>
-        <button type="button" onclick="toggleMobileDropdown('mobileCustomerMenu')" class="w-full flex justify-between items-center bg-transparent border-0">
-          <span>Customer</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-        </button>
-        <!-- RTL indent: pl-4 -> pr-4 -->
-        <div id="mobileCustomerMenu" class="hidden pr-4 mt-2 space-y-2">
-          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]">Request for Quotes (RFQ)</a>
-          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]">HS Code</a>
-          <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login/')) ?>" class="block text-sm text-gray-600 hover:text-[#3B82F6]">Join as a Customer</a>
+      <div class="mobile-menu-content">
+        <?php if ($block->isLoggedIn()): ?>
+          <div class="mobile-account-tools">
+            <a href="<?= $block->escapeUrl($messagesUrl) ?>" class="mobile-account-tool" title="<?= __('Messages') ?>">
+              <span class="mobile-account-tool-icon">
+                <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19.4348 2.57153H8.56627C7.2417 2.57153 6.57999 2.57153 6.04513 2.75782C5.54105 2.93693 5.08496 3.22966 4.71218 3.61334C4.3394 3.99702 4.05993 4.46136 3.89542 4.97039C3.71484 5.52125 3.71484 6.20239 3.71484 7.56582V23.5704C3.71484 24.551 4.84056 25.0721 5.55256 24.4207C5.75231 24.2361 6.0143 24.1336 6.28627 24.1336C6.55825 24.1336 6.82023 24.2361 7.01999 24.4207L7.57199 24.9258C7.92194 25.2494 8.38105 25.4292 8.8577 25.4292C9.33435 25.4292 9.79346 25.2494 10.1434 24.9258C10.4934 24.6022 10.9525 24.4225 11.4291 24.4225C11.9058 24.4225 12.3649 24.6022 12.7148 24.9258C13.0648 25.2494 13.5239 25.4292 14.0006 25.4292C14.4772 25.4292 14.9363 25.2494 15.2863 24.9258C15.6362 24.6022 16.0953 24.4225 16.572 24.4225C17.0486 24.4225 17.5077 24.6022 17.8577 24.9258C18.2077 25.2494 18.6668 25.4292 19.1434 25.4292C19.6201 25.4292 20.0792 25.2494 20.4291 24.9258L20.9811 24.4207C21.1809 24.2361 21.4429 24.1336 21.7148 24.1336C21.9868 24.1336 22.2488 24.2361 22.4486 24.4207C23.1606 25.0721 24.2863 24.551 24.2863 23.5704V7.56582C24.2863 6.20239 24.2863 5.5201 24.1057 4.97153C23.9413 4.46229 23.6619 3.99773 23.2891 3.61384C22.9164 3.22995 22.4602 2.93705 21.956 2.75782C21.4211 2.57153 20.7594 2.57153 19.4348 2.57153Z" stroke="#3B82F6" stroke-width="1.71429"/>
+                  <path d="M12.2861 12.8573H19.7147M8.28613 12.8573H8.85756M8.28613 8.8573H8.85756M8.28613 16.8573H8.85756M12.2861 8.8573H19.7147M12.2861 16.8573H19.7147" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round"/>
+                </svg>
+                <?php if (!empty($messageCount)): ?>
+                  <span class="mobile-account-badge"><?= $block->escapeHtml($messageCount) ?></span>
+                <?php endif; ?>
+              </span>
+              <span><?= __('Messages') ?></span>
+            </a>
+
+            <a href="<?= $block->escapeUrl($block->getUrl('quoterequest/view/index/')) ?>" class="mobile-account-tool" title="<?= __('Request for Quotation') ?>">
+              <span class="mobile-account-tool-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M12 11v4M10 13h4" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span id="mobile-quote-counter" class="mobile-account-badge" style="display:none;">0</span>
+              </span>
+              <span><?= __('RFQ') ?></span>
+            </a>
+
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>" class="mobile-account-tool" title="<?= __('Profile') ?>">
+              <span class="mobile-account-tool-avatar">
+                <img src="<?= $vendorLogoUrl ?>" alt="<?= __('Profile') ?>">
+              </span>
+              <span><?= __('Profile') ?></span>
+            </a>
+          </div>
+
+          <div class="mobile-account-links">
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>" class="mobile-menu-link"><?= __('View Profile') ?></a>
+            <a href="<?= $block->escapeUrl($vendorDashboardUrl) ?>" class="mobile-menu-link"><?= __('Vendor Dashboard') ?></a>
+          </div>
+        <?php endif; ?>
+
+        <div class="mobile-menu-section" id="mobileVendorSection">
+          <button
+            type="button"
+            onclick="toggleMobileDropdown('mobileVendorMenu', this)"
+            class="mobile-menu-section-toggle is-open <?= $isVendorPage ? 'is-active' : '' ?>"
+            aria-expanded="true">
+            <span><?= __("Vendor") ?></span>
+            <svg class="mobile-menu-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          <div id="mobileVendorMenu" class="mobile-menu-panel">
+            <a href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')) ?>" class="mobile-menu-card">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="<?= __('Vendor Dashboard') ?>" class="mobile-menu-card-icon">
+              <span class="mobile-menu-card-copy">
+                <strong><?= __('Vendor Dashboard') ?></strong>
+                <small><?= __('Manage orders, view analytics, and optimize sales.') ?></small>
+              </span>
+            </a>
+
+            <a href="javascript:void(0)" class="mobile-menu-card">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-2.png" alt="<?= __('HS Code') ?>" class="mobile-menu-card-icon">
+              <span class="mobile-menu-card-copy">
+                <strong><?= __('HS Code') ?></strong>
+                <small><?= __('Discover the right HS codes for smooth global trade.') ?></small>
+              </span>
+            </a>
+
+            <a href="<?= $block->escapeUrl($block->getUrl('vendors/account/create')) ?>" class="mobile-menu-card">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer3.png" alt="<?= __('Join as a Vendor') ?>" class="mobile-menu-card-icon">
+              <span class="mobile-menu-card-copy">
+                <strong><?= __('Join as a Vendor') ?></strong>
+                <small><?= __('Expand your reach by joining our network.') ?></small>
+              </span>
+            </a>
+          </div>
         </div>
+
+        <div class="mobile-menu-section" id="mobileCustomerSection">
+          <button
+            type="button"
+            onclick="toggleMobileDropdown('mobileCustomerMenu', this)"
+            class="mobile-menu-section-toggle <?= $isCustomerPage ? 'is-active' : '' ?>"
+            aria-expanded="false">
+            <span><?= __('Customer') ?></span>
+            <svg class="mobile-menu-chevron" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+
+          <div id="mobileCustomerMenu" class="mobile-menu-panel hidden">
+            <a href="javascript:void(0)" class="mobile-menu-card">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="<?= __('Request for Quotes (RFQ)') ?>" class="mobile-menu-card-icon">
+              <span class="mobile-menu-card-copy">
+                <strong><?= __('Request for Quotes (RFQ)') ?></strong>
+                <small><?= __('Submit project details and get quotes from trusted suppliers.') ?></small>
+              </span>
+            </a>
+
+            <a href="javascript:void(0)" class="mobile-menu-card">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-2.png" alt="<?= __('HS Code') ?>" class="mobile-menu-card-icon">
+              <span class="mobile-menu-card-copy">
+                <strong><?= __('HS Code') ?></strong>
+                <small><?= __('Discover the right HS codes for smooth global trade.') ?></small>
+              </span>
+            </a>
+
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login/')) ?>" class="mobile-menu-card">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer3.png" alt="<?= __('Join as a Customer') ?>" class="mobile-menu-card-icon">
+              <span class="mobile-menu-card-copy">
+                <strong><?= __('Join as a Customer') ?></strong>
+                <small><?= __('Access unique features to improve your experience.') ?></small>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>" class="mobile-menu-link <?= $isAboutPage ? 'is-active' : '' ?>"><?= __('About Us') ?></a>
+        <a href="<?= $block->escapeUrl($block->getUrl('contact-us')) ?>" class="mobile-menu-link <?= $isContactPage ? 'is-active' : '' ?>"><?= __('Contact Us') ?></a>
       </div>
 
-      <a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>" class="hover:text-[#3B82F6] nav-text-color">About Us</a>
-      <a href="<?= $block->escapeUrl($block->getUrl('contact-us')) ?>" class="hover:text-[#3B82F6] nav-text-color">Contact Us</a>
-
-      <?php if ($block->isLoggedIn()): ?>
-        <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="px-4 py-1 border border-[#3B82F6] text-[#3B82F6] rounded-md text-sm"><?= __('Logout') ?></a>
-      <?php else: ?>
-        <div class="flex space-x-2">
-          <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="px-5 py-1.5 bg-[#3B82F6] rounded-md text-sm custom-style"><?= __('Sign Up') ?></a>
-          <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="px-4 py-1 border border-[#3B82F6] text-[#3B82F6] rounded-md text-sm"><?= __('Sign In') ?></a>
-        </div>
-      <?php endif; ?>
+      <div class="mobile-menu-footer">
+        <?php if ($block->isLoggedIn()): ?>
+          <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="mobile-menu-auth mobile-menu-auth-outline"><?= __('Logout') ?></a>
+        <?php else: ?>
+          <div class="mobile-menu-auth-row">
+            <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="mobile-menu-auth mobile-menu-auth-primary"><?= __('Sign Up') ?></a>
+            <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="mobile-menu-auth mobile-menu-auth-outline"><?= __('Sign In') ?></a>
+          </div>
+        <?php endif; ?>
+      </div>
     </div>
   </div>
 
@@ -444,6 +592,313 @@ header .sign-in-btn {
 /* ===== HEADER RESPONSIVE ===== */
 /* ============================= */
 
+.mobile-menu-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    background: #fff;
+}
+
+.mobile-menu-shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.mobile-menu-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 18px;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.mobile-menu-logo-link {
+    display: inline-flex;
+    align-items: center;
+    width: 52px;
+    height: 52px;
+    overflow: hidden;
+}
+
+.mobile-menu-logo {
+    width: auto;
+    height: 42px !important;
+    max-height: 42px !important;
+    max-width: none;
+    object-fit: contain;
+}
+
+.mobile-menu-topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.mobile-menu-lang-wrap {
+    position: relative;
+}
+
+.mobile-menu-locale {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.mobile-menu-locale-chevron {
+    width: 14px;
+    height: 14px;
+}
+
+.mobile-menu-locale img {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+.mobile-language-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 130px;
+    padding: 8px 0;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+    z-index: 5;
+}
+
+.mobile-language-link {
+    display: block;
+    padding: 8px 14px;
+    color: #1a3764 !important;
+    font-size: 14px;
+    text-decoration: none !important;
+}
+
+.mobile-language-link:hover {
+    background: #f8fafc;
+    color: #2563eb !important;
+}
+
+.mobile-menu-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #2563eb;
+    padding: 4px;
+}
+
+.mobile-menu-content {
+    flex: 1 1 auto;
+    padding: 18px 18px 24px;
+    overflow-y: auto;
+}
+
+.mobile-account-tools {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.mobile-account-tool {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 76px;
+    padding: 10px 8px;
+    background: #f8fafc;
+    border: 1px solid #e5edf7;
+    border-radius: 12px;
+    color: #1a3764 !important;
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+    text-decoration: none !important;
+}
+
+.mobile-account-tool-icon,
+.mobile-account-tool-avatar {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.mobile-account-tool-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.mobile-account-tool-avatar img {
+    width: 32px;
+    height: 32px;
+    max-width: 32px;
+    max-height: 32px;
+    object-fit: contain;
+}
+
+.mobile-account-badge {
+    position: absolute;
+    top: -4px;
+    right: -6px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background: #dc2626;
+    color: #fff;
+    border: 1px solid #fff;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 16px;
+    text-align: center;
+}
+
+.mobile-account-links {
+    margin-bottom: 8px;
+}
+
+.mobile-menu-section {
+    border-bottom: 1px solid #eef2f7;
+}
+
+.mobile-menu-section-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 0;
+    background: transparent;
+    border: 0;
+    color: #1f2937;
+    font-size: 14px;
+    font-weight: 500;
+    text-align: left;
+}
+
+.mobile-menu-section-toggle.is-active,
+.mobile-menu-link.is-active {
+    color: #2563eb !important;
+    font-weight: 600;
+}
+
+.mobile-menu-chevron {
+    width: 18px;
+    height: 18px;
+    color: #6b7280;
+    transition: transform 0.2s ease;
+}
+
+.mobile-menu-section-toggle.is-open .mobile-menu-chevron {
+    transform: rotate(180deg);
+}
+
+.mobile-menu-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 0 18px;
+}
+
+.mobile-menu-panel.hidden {
+    display: none !important;
+}
+
+.mobile-menu-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    background: #f7f8fb;
+    text-decoration: none !important;
+}
+
+.mobile-menu-card-icon {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.mobile-menu-card-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.mobile-menu-card-copy strong {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.mobile-menu-card-copy small {
+    color: #6b7280;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+.mobile-menu-link {
+    display: block;
+    padding: 18px 0;
+    border-bottom: 1px solid #eef2f7;
+    color: #111827 !important;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none !important;
+}
+
+.mobile-menu-footer {
+    margin-top: auto;
+    padding: 18px;
+    background: #fff;
+}
+
+.mobile-menu-auth-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.mobile-menu-auth {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none !important;
+}
+
+.mobile-menu-auth-primary {
+    background: #3b82f6;
+    color: #fff !important;
+    border: 1px solid #3b82f6;
+}
+
+.mobile-menu-auth-outline {
+    background: #fff;
+    color: #2563eb !important;
+    border: 1px solid #3b82f6;
+}
+
 /* Large screens (already mostly handled by Tailwind) */
 @media (max-width: 1280px) {
     .max-w-7xl {
@@ -489,16 +944,6 @@ header .sign-in-btn {
         display: none !important;
     }
 
-    /* Mobile menu full width */
-    #mobileMenu {
-        width: 100%;
-    }
-
-    /* Mobile dropdown spacing */
-    #mobileMenu .flex {
-        gap: 10px;
-    }
-
     /* Language dropdown full width */
     #languageMenu {
         right: 10px !important;
@@ -518,22 +963,15 @@ header .sign-in-btn {
         padding: 8px 12px !important;
     }
 
-    /* Mobile menu text */
-    #mobileMenu a {
-        font-size: 14px;
+    .mobile-menu-content,
+    .mobile-menu-footer,
+    .mobile-menu-topbar {
+        padding-left: 14px;
+        padding-right: 14px;
     }
 
-    /* Buttons full width */
-    #mobileMenu .flex a {
-        flex: 1;
-        text-align: center;
-    }
-
-    /* Sign in / up buttons adjust */
-    .sign-in-btn,
-    #mobileMenu .custom-style {
-        padding: 8px 14px !important;
-        font-size: 13px !important;
+    .mobile-menu-auth-row {
+        gap: 8px;
     }
 }
 
@@ -638,9 +1076,41 @@ function toggleMobileMenu(){
   const m=document.getElementById('mobileMenu');
   const h=document.getElementById('hamburgerIcon');
   const c=document.getElementById('closeIcon');
-  m?.classList.toggle('hidden');h?.classList.toggle('hidden');c?.classList.toggle('hidden');
+  const isHidden = m?.classList.contains('hidden');
+  m?.classList.toggle('hidden');
+  h?.classList.toggle('hidden');
+  c?.classList.toggle('hidden');
+  document.body.style.overflow = isHidden ? 'hidden' : '';
 }
-function toggleMobileDropdown(id){ document.getElementById(id)?.classList.toggle('hidden'); }
+function toggleMobileDropdown(id, button){
+  const targetPanel = document.getElementById(id);
+  if (!targetPanel) return;
+
+  const willOpen = targetPanel.classList.contains('hidden');
+
+  document.querySelectorAll('.mobile-menu-panel').forEach(panel => {
+    if (panel !== targetPanel) {
+      panel.classList.add('hidden');
+    }
+  });
+
+  document.querySelectorAll('.mobile-menu-section-toggle').forEach(toggle => {
+    if (toggle !== button) {
+      toggle.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  if (willOpen) {
+    targetPanel.classList.remove('hidden');
+    button?.classList.add('is-open');
+    button?.setAttribute('aria-expanded', 'true');
+  } else {
+    targetPanel.classList.add('hidden');
+    button?.classList.remove('is-open');
+    button?.setAttribute('aria-expanded', 'false');
+  }
+}
 
 /* language dropdown */
 const langToggle=document.getElementById('langToggle');
@@ -648,6 +1118,24 @@ const languageMenu=document.getElementById('languageMenu');
 if(langToggle && languageMenu){
   langToggle.addEventListener('click',e=>{ e.stopPropagation(); languageMenu.classList.toggle('hidden');});
   document.addEventListener('click',e=>{ if(!langToggle.contains(e.target)&&!languageMenu.contains(e.target)){ languageMenu.classList.add('hidden'); }});
+}
+
+const mobileLangToggle = document.getElementById('mobileLangToggle');
+const mobileLanguageMenu = document.getElementById('mobileLanguageMenu');
+if (mobileLangToggle && mobileLanguageMenu) {
+  mobileLangToggle.addEventListener('click', e => {
+    e.stopPropagation();
+    const willOpen = mobileLanguageMenu.classList.contains('hidden');
+    mobileLanguageMenu.classList.toggle('hidden');
+    mobileLangToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  });
+
+  document.addEventListener('click', e => {
+    if (!mobileLangToggle.contains(e.target) && !mobileLanguageMenu.contains(e.target)) {
+      mobileLanguageMenu.classList.add('hidden');
+      mobileLangToggle.setAttribute('aria-expanded', 'false');
+    }
+  });
 }
 //counter for clicks of rfq 
 require(['jquery'], function ($) {
@@ -662,6 +1150,10 @@ require(['jquery'], function ($) {
                 if (res.count > 0) {
 
                     $('#quote-counter')
+                        .text(res.count)
+                        .show();
+
+                    $('#mobile-quote-counter')
                         .text(res.count)
                         .show();
 
