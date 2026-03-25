@@ -1,0 +1,614 @@
+<?php
+/** @var \Vendor\QuoteRequest\Block\View $block */
+$items = $block->getQuoteItems();
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+
+<div class="gcc-quote-page">
+    <div class="gcc-container">
+        <div class="quote-page">
+
+            <div class="quote-breadcrumb">
+                <a href="<?= $block->getUrl('') ?>"><?= __('Home') ?></a>
+                <span class="sep">/</span>
+                <span><?= __('Quotation Submission Page') ?></span>
+            </div>
+
+            <h1 class="quote-title"><?= __('Choose your location') ?></h1>
+
+            <div class="quote-card quote-card--location">
+                <div class="quote-grid-2">
+                    <div class="quote-field">
+                        <select id="country" name="country_id" title="Country" class="quote-select" data-validate="{'validate-select':true}">
+                            <option value=""><?= __('Select Country') ?></option>
+                            <?php foreach ($block->getCountryCollection() as $country): ?>
+                            <option value="<?= $country->getCountryId() ?>">
+                                <?= $country->getName() ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    </div>
+                    <div class="quote-field">
+                        <select id="region_id" name="region_id" title="State" class="quote-select" style="display:none;">
+                            <option value=""><?= __('Select State/Region') ?></option>
+                        </select>
+                        <input type="text" id="region" name="region" title="State" class="quote-select" style="display:none;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="quote-card">
+                <div class="quote-card-head">
+                    <div class="quote-card-title">
+                        <h2><?= __('Quotation List') ?></h2>
+                        <span><?= __('(%1 products selected)', count($items)) ?></span>
+                    </div>
+                </div>
+
+                <?php if (!empty($items)): ?>
+                    <label class="quote-select-all">
+                        <input type="checkbox" class="quote-checkbox" checked />
+                        <span><?= __('Select All Product') ?></span>
+                    </label>
+
+                    
+
+                        <?php foreach ($items as $item): ?>
+                            <?php 
+                                $_product = $item['product']; 
+                                $productImage = $imageHelper->init($_product, 'product_thumbnail_image')->getUrl();
+                            ?>
+                                <div class="vendor-block">
+          <div class="vendor-head">
+            <div class="vendor-left">
+              <div class="vendor-logo">
+                <span>⌁</span>
+              </div>
+              <div class="vendor-name">
+                <strong>Adidas</strong>
+                <span class="vendor-verified" title="Verified">✔</span>
+              </div>
+            </div>
+                            
+            <button class="vendor-trash" type="button" title="Remove vendor" data-id=<?= $_product->getId() ?>>🗑</button>
+          </div>
+                            <div class="product-row">
+                                <div class="product-check">
+                                    <input type="checkbox" class="quote-checkbox" checked />
+                                </div>
+
+                                <div class="product-thumb">
+                                    <img src="<?= $productImage ?>" alt="<?= $block->escapeHtml($_product->getName()) ?>" />
+                                </div>
+
+                                <div class="product-info">
+                                    <h3 class="product-title"><?= $block->escapeHtml($_product->getName()) ?></h3>
+
+                                    <div class="product-desc">
+                                        <div class="desc-label"><?= __('SKU:') ?> <?= $block->escapeHtml($_product->getSku()) ?></div>
+                                        <p>
+                                            <?= /* @noEscape */ $block->escapeHtml(strip_tags($_product->getShortDescription())) ?>
+                                            <a href="<?= $_product->getProductUrl() ?>" class="more-link"><?= __('View Product') ?></a>
+                                        </p>
+                                    </div>
+
+                                    <div class="product-meta">
+                                        <div class="meta-item">
+                                            <span class="meta-label"><?= __('Status') ?></span>
+                                            <span class="meta-value"><?= $_product->isAvailable() ? __('In Stock') : __('Out of Stock') ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="product-qty">
+                                    <div class="qty-stepper">
+                                        <button type="button" class="qty-btn minus">−</button>
+                                        <input type="text" value="<?= $item['qty'] ?>" class="qty-input" readonly />
+                                        <button type="button" class="qty-btn plus">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="vendor-divider"></div>
+                        <?php endforeach; ?>
+                    
+                <?php else: ?>
+                    <div class="no-products">
+                        <p><?= __('Your quotation list is empty.') ?></p>
+                        <a href="<?= $block->getUrl('catalog/category/view/id/...') ?>"><?= __('Continue Shopping') ?></a>
+                    </div>
+                <?php endif; ?>
+
+                <div class="draft-inquiry">
+                    <div class="draft-head">
+                        <h3><?= __('Draft inquiry') ?></h3>
+                        <span><?= __('(for the selected product vendors)') ?></span>
+                    </div>
+                    <textarea class="quote-textarea" rows="4" placeholder="<?= __('Write your message here...') ?>"></textarea>
+                </div>
+
+                <div class="quote-bottom-bar">
+                    <div class="bottom-left">
+                        <strong><?= __('Quotation Request Summary') ?></strong>
+                    </div>
+
+                    <div class="bottom-right">
+                        <span class="product-count"><?= count($items) ?> <?= __('Products') ?></span>
+                        <button class="quote-primary-btn" type="button">
+                            <?= __('Confirm Quotation Requests') ?>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+
+
+/* Page wrapper */
+.gcc-quote-page{
+  background: #f6f8fb;
+    padding-top: 103px;
+}
+
+/* ✅ aligned container (same left/right feel as navbar) */
+.gcc-container{
+  width: min(1200px, calc(100% - 48px)); /* 24px + 24px */
+  margin: 0 auto;
+}
+
+/* Base page block (remove old max-width/margins) */
+.quote-page{
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #111827;
+}
+
+/* Breadcrumb */
+.quote-breadcrumb{
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 14px;
+}
+.quote-breadcrumb a{ color:#6b7280; text-decoration:none; }
+.quote-breadcrumb a:hover{ text-decoration:underline; }
+.quote-breadcrumb .sep{ margin:0 8px; color:#9ca3af; }
+
+/* Title */
+.quote-title{
+  font-size: 22px;
+  font-weight: 650;
+  margin: 0 0 14px;
+}
+
+/* Cards */
+.quote-card{
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+  margin-top: 14px;
+}
+.quote-card--location{ padding: 16px; }
+
+/* Quotation list head */
+.quote-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom: 14px;
+}
+.quote-card-title{
+  display:flex;
+  align-items:baseline;
+  gap: 10px;
+}
+.quote-card-title h2{
+  margin:0;
+  font-size: 18px;
+  font-weight: 650;
+}
+.quote-card-title span{
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Select inputs */
+.quote-grid-2{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.quote-select{
+  width: 100%;
+  height: 48px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 0 14px;
+  background: #fff;
+  font-size: 14px;
+  color: #111827;
+}
+.quote-select:focus{
+  outline:none;
+  border-color:#93c5fd;
+  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+}
+
+/* Select all */
+.quote-select-all{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 12px 12px;
+  border: 1px solid #eef2f7;
+  border-radius: 10px;
+  background: #f9fafb;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+.quote-checkbox{
+  width: 16px;
+  height: 16px;
+  accent-color: #2563eb;
+  cursor:pointer;
+}
+
+/* Vendor */
+.vendor-block{
+  border: 1px solid #eef2f7;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 14px;
+}
+.vendor-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eef2f7;
+  margin-bottom: 14px;
+}
+.vendor-left{
+  display:flex;
+  align-items:center;
+  gap: 12px;
+}
+.vendor-logo{
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid #e5e7eb;
+  background:#f9fafb;
+  display:grid;
+  place-items:center;
+  font-size: 14px;
+}
+.vendor-name{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  font-size: 15px;
+}
+.vendor-verified{
+  display:inline-flex;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  align-items:center;
+  justify-content:center;
+  font-size: 12px;
+  background:#e0f2fe;
+  color:#0369a1;
+}
+.vendor-trash{
+  border:none;
+  background:transparent;
+  cursor:pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color:#ef4444;
+}
+.vendor-trash:hover{ background:#fff1f2; }
+
+/* Products row */
+.product-row{
+  display:grid;
+  grid-template-columns: 32px 180px 1fr 160px;
+  gap: 16px;
+  align-items:center;
+  padding: 12px 6px;
+}
+.product-row--compact{
+  grid-template-columns: 32px 160px 1fr 160px;
+}
+.product-check{
+  display:flex;
+  justify-content:center;
+}
+.product-thumb{
+  width: 180px;
+  height: 130px;
+  border-radius: 12px;
+  background:#f3f4f6;
+  border: 1px solid #eef2f7;
+  overflow:hidden;
+  display:grid;
+  place-items:center;
+}
+.product-thumb--small{
+  width: 160px;
+  height: 120px;
+}
+.product-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:10px;
+}
+.product-info{ min-width:0; }
+.product-title{
+  font-size: 16px;
+  font-weight: 650;
+  margin: 0 0 8px;
+}
+.product-desc .desc-label{
+  font-size: 12px;
+  color:#6b7280;
+  margin-bottom: 6px;
+}
+.product-desc p{
+  margin:0;
+  font-size: 13px;
+  line-height: 1.45;
+  color:#374151;
+}
+.more-link{
+  color:#2563eb;
+  font-weight:600;
+  text-decoration:none;
+  margin-left: 6px;
+}
+.more-link:hover{ text-decoration:underline; }
+
+.product-meta{
+  display:flex;
+  gap: 40px;
+  margin-top: 10px;
+}
+.meta-item{ display:grid; gap:2px; }
+.meta-label{ font-size:12px; color:#6b7280; }
+.meta-value{ font-size:13px; font-weight:600; }
+
+/* Qty */
+.product-qty{
+  display:flex;
+  justify-content:flex-end;
+}
+.qty-stepper{
+  display:grid;
+  grid-template-columns: 42px 58px 42px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow:hidden;
+  height: 40px;
+  background:#fff;
+}
+.qty-btn{
+  border:none;
+  background:#fff;
+  cursor:pointer;
+  font-size: 18px;
+}
+.qty-btn:hover{ background:#f9fafb; }
+.qty-input{
+  border:none;
+  text-align:center;
+  font-size: 14px;
+  font-weight: 650;
+  outline:none;
+}
+
+/* Divider */
+.vendor-divider{
+  border-top: 1px solid #eef2f7;
+  margin: 10px 0;
+}
+
+/* Draft inquiry */
+.draft-inquiry{
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid #eef2f7;
+}
+.draft-head{
+  display:flex;
+  align-items:baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.draft-head h3{
+  margin:0;
+  font-size: 16px;
+  font-weight: 650;
+}
+.draft-head span{
+  font-size: 13px;
+  color:#6b7280;
+}
+.quote-textarea{
+  width:100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 14px;
+  min-height: 110px;
+  resize: vertical;
+}
+.quote-textarea:focus{
+  outline:none;
+  border-color:#93c5fd;
+  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
+}
+
+/* Bottom bar */
+.quote-bottom-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding-top: 16px;
+  margin-top: 18px;
+  border-top: 1px solid #eef2f7;
+}
+.bottom-left strong{
+  font-size: 18px;
+  font-weight: 750;
+}
+.bottom-right{
+  display:flex;
+  align-items:center;
+  gap: 16px;
+}
+.product-count{
+  font-size: 14px;
+  font-weight: 650;
+}
+.quote-primary-btn{
+  height: 44px;
+  padding: 0 18px;
+  border:none;
+  border-radius: 10px;
+  background:#0f2f5f;
+  color:#fff;
+  font-weight:650;
+  cursor:pointer;
+}
+.quote-primary-btn:hover{ filter: brightness(1.06); }
+
+/* =======================
+   RESPONSIVE
+   ======================= */
+
+/* tablet */
+@media (max-width: 992px){
+  .gcc-container{
+    width: min(100%, calc(100% - 32px)); /* 16px sides */
+  }
+  .quote-grid-2{ grid-template-columns: 1fr; }
+
+  .product-row,
+  .product-row--compact{
+    grid-template-columns: 24px 140px 1fr;
+    grid-template-rows: auto auto;
+    align-items:start;
+  }
+  .product-qty{
+    grid-column: 2 / -1;
+    justify-content:flex-start;
+    margin-top: 8px;
+  }
+}
+
+/* mobile */
+@media (max-width: 576px){
+  .gcc-container{
+    width: min(100%, calc(100% - 24px)); /* 12px sides */
+  }
+  .quote-card{ padding: 14px; }
+
+  .product-row,
+  .product-row--compact{
+    grid-template-columns: 24px 1fr;
+    gap: 12px;
+  }
+
+  .product-thumb,
+  .product-thumb--small{
+    width: 100%;
+    height: 160px;
+  }
+
+  .product-meta{
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .quote-bottom-bar{
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .bottom-right{
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .quote-primary-btn{ width:100%; }
+}
+
+</style>
+<script type="text/x-magento-init">
+    {
+        "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": true,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#form-validate",
+                "regionJson": <?= /* @noEscape */ $block->getRegionJson() ?>,
+                "defaultRegion": "0",
+                "countriesWithOptionalZip": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
+            }
+        }
+    }
+</script>
+<script>
+require(['jquery'], function($){
+    $(document).ready(function(){
+
+        // Sabse pehle purane events clear karein taaki double increment na ho
+        $(document).off('click', '.qty-btn.plus');
+        $(document).off('click', '.qty-btn.minus');
+        $(document).off('click', '.vendor-trash');
+
+        // 1. PLUS Button logic
+        $(document).on('click', '.qty-btn.plus', function(e){
+            e.preventDefault();
+            var input = $(this).siblings('.qty-input');
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal)) {
+                input.val(currentVal + 1);
+            }
+        });
+
+        // 2. MINUS Button logic
+        $(document).on('click', '.qty-btn.minus', function(e){
+            e.preventDefault();
+            var input = $(this).siblings('.qty-input');
+            var currentVal = parseInt(input.val());
+            if (!isNaN(currentVal) && currentVal > 1) {
+                input.val(currentVal - 1);
+            }
+        });
+
+        // 3. REMOVE (Trash) logic
+        $(document).on('click', '.vendor-trash', function(){
+            var productId = $(this).data('id');
+            var removeUrl = '<?= $block->getUrl("quoterequest/index/remove") ?>' + 'id/' + productId;
+            
+            if(confirm('<?= __("Are you sure you want to remove this product?") ?>')) {
+                window.location.href = removeUrl;
+            }
+        });
+        
+        // 4. Select All Logic (Optional but good to have)
+        $(document).on('change', '.quote-select-all input', function(){
+            $('.product-check input').prop('checked', $(this).prop('checked'));
+        });
+    });
+});
+</script>

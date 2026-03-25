@@ -6,6 +6,9 @@ $attributes = $block->getAllowAttributes();
 $configurableJsonConfig = $block->getJsonConfig();
 $priceConfigData = $block->getJsonPriceConfig();
 
+$helper = $this->helper(\Vendor\QuoteRequest\Helper\Data::class);
+$quoteUrl = $helper->getAddToQuoteUrl($product->getId());
+
 // Only render the script if it's a configurable product and data is available
 if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Configurable::TYPE_CODE && $configurableJsonConfig && $priceConfigData) :
 ?>
@@ -122,11 +125,10 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
         <p><?= __("No configurable attributes found") ?>.</p>
     <?php endif; ?>
 
-    <button type="submit"
-            class="mt-6 w-full bg-blue-600 text-white py-2 rounded text-sm font-semibold hover:bg-blue-700 add-quote-btn"
-            data-product-id="<?= (int) $product->getId() ?>">
-        <?= __("Add To Quote") ?>
-    </button>
+     <button type="button" id="add-to-quote-btn" class="add-quote-btn"
+        onclick="location.href='<?= $quoteUrl ?>'">
+    <?= __("Add To Quote") ?>
+</button>
 </form>
 <script>
 //      require(['jquery', 'domReady!'], function ($) {
@@ -232,6 +234,16 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 
 </script>
 <script>
+$(document).ready(function(){
+
+    var priceBox = $('[data-role=priceBox][data-product-id="<?= $product->getId() ?>"]');
+    var priceText = priceBox.find('.price').text();
+
+    if (priceText.includes('0.00')) {
+        priceBox.hide();
+    }
+
+});
 require(['jquery'], function($) {
     var spConfig = <?= /* @noEscape */ $configurableJsonConfig ?>;
     var selectedAttributes = {};
@@ -254,15 +266,40 @@ require(['jquery'], function($) {
         return matched;
     }
 
+    // function updatePrice(productId) {
+    //     if (!productId) return;
+    //     var prices = spConfig.optionPrices[productId];
+    //     if (prices && prices.finalPrice && prices.finalPrice.amount) {
+    //         var finalPrice = prices.finalPrice.amount;
+    //         $('[data-role=priceBox][data-product-id="<?= $product->getId() ?>"] .price')
+    //             .text('₹' + finalPrice.toFixed(2));
+    //     }
+    // }
     function updatePrice(productId) {
-        if (!productId) return;
-        var prices = spConfig.optionPrices[productId];
-        if (prices && prices.finalPrice && prices.finalPrice.amount) {
-            var finalPrice = prices.finalPrice.amount;
-            $('[data-role=priceBox][data-product-id="<?= $product->getId() ?>"] .price')
+    if (!productId) return;
+
+    var prices = spConfig.optionPrices[productId];
+
+    if (prices && prices.finalPrice) {
+
+        var finalPrice = parseFloat(prices.finalPrice.amount);
+
+        var priceBox = $('[data-role=priceBox][data-product-id="<?= $product->getId() ?>"]');
+
+        if (finalPrice > 0) {
+
+            priceBox.show();
+
+            priceBox.find('.price')
                 .text('₹' + finalPrice.toFixed(2));
+
+        } else {
+
+            priceBox.hide(); // price 0 → hide
+
         }
     }
+}
      function updateDescription(productId) {
         if (!productId) return;
         

@@ -1,0 +1,147 @@
+<?php
+/**  @var $block \Magento\Checkout\Block\Cart */
+?>
+<?php //die("OVERRIDE WORKING"); ?>
+
+<?php $mergedCells = ($this->helper('Magento\Tax\Helper\Data')->displayCartBothPrices() ? 2 : 1); ?>
+
+<?php //if($block->isSliptCart()): ?>
+    <?php if(true): ?>
+<?php $groupItemByVendor = $block->groupItemsByVendor() ?>
+
+<div class="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+
+    <h1 class="text-2xl font-bold mb-6">
+        <?= __('Shopping Cart') ?>
+    </h1>
+<?php //die("OVERRIDE WORKING"); ?>
+    <form action="<?= $block->getUrl('checkout/cart/updatePost') ?>"
+          method="post"
+          id="form-validate"
+          data-mage-init='{"validation":{}}'
+          class="form form-cart">
+
+        <?= $block->getBlockHtml('formkey'); ?>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- LEFT SECTION -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <?php foreach ($groupItemByVendor as $vendorId => $_items): ?>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+
+                        <!-- Vendor Name -->
+                        <div class="mb-4 border-b pb-3">
+                            <?php if($block->getUrlVendorPage($vendorId)): ?>
+                                <a href="<?= $block->getUrlVendorPage($vendorId) ?>" target="_blank"
+                                   class="text-lg font-semibold text-blue-900 hover:underline">
+                                    <?= $block->getVendorName($vendorId) ?>
+                                </a>
+                            <?php else: ?>
+                                <h2 class="text-lg font-semibold text-gray-800">
+                                    <?= $block->getVendorName($vendorId) ?>
+                                </h2>
+                            <?php endif ?>
+                        </div>
+
+                        <!-- Cart Table Wrapper -->
+                        <div class="overflow-x-auto">
+
+                            <table id="shopping-cart-table"
+                                   class="w-full text-sm"
+                                   data-mage-init='{"shoppingCart":{
+                                       "emptyCartButton": "action.clear",
+                                       "updateCartActionContainer": "#update_cart_action_container"
+                                   }}'>
+
+                                <thead>
+                                <tr class="text-left text-gray-500 border-b">
+                                    <th class="py-2"><?= __('Item') ?></th>
+                                    <th class="py-2"><?= __('Price') ?></th>
+                                    <th class="py-2"><?= __('Qty') ?></th>
+                                    <th class="py-2"><?= __('Subtotal') ?></th>
+                                </tr>
+                                </thead>
+
+                                <tbody class="divide-y">
+
+                                <?php foreach ($_items as $_item): ?>
+                                    <?= $block->getItemHtml($_item) ?>
+                                <?php endforeach ?>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                <?php endforeach; ?>
+
+            </div>
+
+            <!-- RIGHT SUMMARY -->
+            <div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sticky top-6">
+
+                    <h2 class="text-lg font-semibold mb-4">
+                        <?= __('Order Summary') ?>
+                    </h2>
+
+                    <?= $block->getChildHtml('cart.summary'); ?>
+
+                    <div class="mt-6">
+                        <?= $block->getChildHtml('checkout.cart.order.actions') ?>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8">
+
+            <?php if ($block->getContinueShoppingUrl()): ?>
+                <a class="text-blue-900 hover:underline"
+                   href="<?= $block->escapeUrl($block->getContinueShoppingUrl()) ?>">
+                    <?= __('Continue Shopping') ?>
+                </a>
+            <?php endif; ?>
+
+            <div class="flex gap-3">
+
+                <button type="submit"
+                        name="update_cart_action"
+                        value="empty_cart"
+                        class="px-4 py-2 border rounded-xl hover:bg-gray-100 transition">
+                    <?= __('Clear Cart') ?>
+                </button>
+
+                <button type="submit"
+                        name="update_cart_action"
+                        value="update_qty"
+                        class="px-5 py-2 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition">
+                    <?= __('Update Cart') ?>
+                </button>
+
+            </div>
+
+        </div>
+
+        <input type="hidden" value="" id="update_cart_action_container" data-cart-item-update=""/>
+
+    </form>
+
+</div>
+
+<?= $block->getChildHtml('shopping.cart.table.after'); ?>
+
+<?php else: ?>
+    <?php include $block->getTemplateFile('Magento_Checkout::cart/form.phtml') ?>
+<?php endif ?>

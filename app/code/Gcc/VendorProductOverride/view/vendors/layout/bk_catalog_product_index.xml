@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Remove old blocks / grids / update handles -->
+        <referenceBlock name="products_list" remove="true"/>
+        <referenceBlock name="vendor.products" remove="true"/>
+        <referenceBlock name="vendor.products.grid" remove="true"/>
+        <update handle="product_grid" remove="true"/>
+        
+        <!-- Load only your UI component -->
+        <referenceContainer name="content">
+            <uiComponent name="vendor_product_listing"/>
+        </referenceContainer>
+    </body>
+</page>

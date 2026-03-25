@@ -64,9 +64,11 @@ $imageHelper = $block->getImage($product, 'product_base_image');
             <input type="hidden" name="product" value="<?= $block->escapeHtmlAttr($product->getId()) ?>">
             <?= $block->getBlockHtml('formkey') ?>
 
-            <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded text-sm font-semibold hover:bg-blue-700">
-                <?= $block->escapeHtml(__('Add To Quote')) ?>
-            </button>
+          
+            <button type="button"
+        onclick="location.href='<?= $quoteUrl ?>'">
+    <?= __("Add To Quote") ?>
+</button>
         </form>
     </div>
 </div>

@@ -1,0 +1,17 @@
+<?php
+$vendor = $block->getVendor();
+$logo = $vendor->getData('upload_logo');
+?>
+TEST OVERRIDE
+<?php if ($logo): ?>
+    <img
+        class="profile-user-img img-responsive img-circle"
+        src="<?= $block->getBaseUrl() . 'media/' . $logo ?>"
+        alt="Vendor Logo"
+    />
+<?php else: ?>
+    <img
+        class="profile-user-img img-responsive img-circle"
+        src="<?= $block->getLogoUrl() ?>"
+    />
+<?php endif; ?>

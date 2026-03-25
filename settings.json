@@ -1,0 +1,5 @@
+{
+  "persistent": {
+    "indices.id_field_data.enabled": true
+  }
+}
