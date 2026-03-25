@@ -2,7 +2,8 @@
 /**
  * @var $block \Vnecoms\Vendors\Block\Vendors\Menu
  */
-$logoUrl = $block->getViewFileUrl('wysiwyg/gcc-logo.png');
+$logoUrl = '/pub/media/Logo_large.png';
+$logoFallbackUrl = '/media/Logo_large.png';
 ?>
 
 <aside class="main-sidebar" id="vendor-mobile-sidebar">
@@ -12,6 +13,7 @@ $logoUrl = $block->getViewFileUrl('wysiwyg/gcc-logo.png');
            aria-label="<?= $block->escapeHtmlAttr(__('GCC Trading dashboard')); ?>">
             <img src="<?= $block->escapeUrl($logoUrl); ?>"
                  alt="<?= $block->escapeHtmlAttr(__('GCC Trading')); ?>"
+                 onerror="this.onerror=null;this.src='<?= $block->escapeJs($logoFallbackUrl); ?>';"
                  style="display:block; max-width:150px; width:100%; height:auto; filter:brightness(0) invert(1);">
         </a>
 

@@ -320,7 +320,9 @@ if ($vendorInitials === '') {
 
                     <div class="vendor-topbar__item" data-dd>
                         <button class="vendor-topbar__btn vendor-topbar__btn--compact" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false">
-                            <span class="vendor-mobile-user-badge" aria-hidden="true"><?= $block->escapeHtml($vendorInitials); ?></span>
+                            <span class="vendor-avatar vendor-avatar--mobile" aria-hidden="true">
+                                <img src="<?= $block->escapeUrl($avatarUrl); ?>" alt="">
+                            </span>
                             <span class="vendor-mobile-topbar__vendor-name"><?= $block->escapeHtml($vendorName); ?></span>
                             <span class="vendor-caret" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
