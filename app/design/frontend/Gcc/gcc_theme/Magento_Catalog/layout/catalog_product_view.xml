@@ -59,11 +59,6 @@
                        name="product.attributes"
                        template="Magento_Catalog::product/view/attributes.phtml"/>
 
-                <!-- Reviews -->
-                <block class="Magento\Review\Block\Product\View\ListView"
-                       name="reviews.tab"
-                       template="Magento_Review::product/view/list.phtml"/>
-
                 <!-- Add to Cart -->
                 <block class="Magento\Catalog\Block\Product\View"
                        name="product.info.addtocart"
