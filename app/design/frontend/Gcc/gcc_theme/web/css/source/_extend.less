@@ -5,10 +5,41 @@
 .catalogsearch-result-index .actions-primary {
     display: none !important;
 }
+.catalogsearch-result-index .columns {
+    align-items: flex-start;
+}
+
+.catalogsearch-result-index .sidebar.sidebar-main,
+.catalogsearch-result-index #vendor-sidebar {
+    width: 100%;
+    max-width: 100%;
+}
+
 .custom-search-bg {
     background-color: #F5F7FA;
     min-height: 100vh;
     padding: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .catalogsearch-result-index .columns {
+        display: block;
+    }
+
+    .catalogsearch-result-index .column.main,
+    .catalogsearch-result-index .sidebar.sidebar-main {
+        width: 100%;
+        float: none;
+        margin: 0;
+    }
+
+    .catalogsearch-result-index .sidebar.sidebar-main {
+        margin-bottom: 20px;
+    }
+
+    .catalogsearch-result-index .sidebar .block {
+        margin-bottom: 16px;
+    }
 }
 
 //Theme setup

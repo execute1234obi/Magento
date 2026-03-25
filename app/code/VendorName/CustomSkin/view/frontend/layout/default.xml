@@ -2,5 +2,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="VendorName_CustomSkin::css/custom_vnecoms_styles.css" />
+        <script src="VendorName_CustomSkin::js/vendor-mobile-sidebar.js"/>
     </head>
 </page>
