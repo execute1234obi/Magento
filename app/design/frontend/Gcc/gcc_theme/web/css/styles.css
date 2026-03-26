@@ -706,8 +706,7 @@ input[type="text"], input[type="password"], input[type="url"], input[type="tel"]
   padding: 10px;
 }
 /* for recently added product hide */
-@media screen and (min-width: 768px) {
+
     .sidebar.sidebar-additional {
-        display: none;
+        display: none !important;
     }
-}
