@@ -3,8 +3,9 @@
     <module name="Gcc_VendorStyles" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Theme"/>
-            <module name="Vnecoms_Vendors"/> 
+            <module name="Vnecoms_Vendors"/>
             <module name="Vnecoms_VendorsDashboard"/>
+            <module name="Vnecoms_VendorsSubAccount"/>
         </sequence>
     </module>
 </config>
