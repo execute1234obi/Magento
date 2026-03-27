@@ -1,0 +1,40 @@
+<style>
+.gcc-recent-products{background:#fff;border:1px solid #e2ebf7;border-radius:14px;box-shadow:0 8px 24px rgba(17,44,98,.05);overflow:hidden}.gcc-recent-products__head{padding:18px 20px 14px;border-bottom:1px solid #edf3fb}.gcc-recent-products__title{margin:0;font-size:18px;line-height:1.3;font-weight:800;color:#173574}.gcc-recent-products__body{padding:10px 20px 8px}.gcc-recent-products__list{list-style:none;margin:0;padding:0}.gcc-recent-products__item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #edf3fb}.gcc-recent-products__item:last-child{border-bottom:0}.gcc-recent-products__thumb{width:42px;height:42px;border-radius:8px;overflow:hidden;border:1px solid #e3ebf7;background:#fff;flex:0 0 42px}.gcc-recent-products__thumb img{width:100%!important;height:100%!important;object-fit:cover;display:block}.gcc-recent-products__content{min-width:0;flex:1 1 auto}.gcc-recent-products__link{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;color:#173574;font-size:15px;line-height:1.35;font-weight:700}.gcc-recent-products__link:hover{color:#173574;text-decoration:none}.gcc-recent-products__price{color:#203b84!important;font-size:15px!important;line-height:1.2!important;font-weight:800!important;background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;white-space:nowrap}.gcc-recent-products__description{margin-top:4px;color:#7485a5;font-size:13px;line-height:1.45}.gcc-recent-products__empty{padding:8px 0 12px;color:#7485a5;font-size:14px}.gcc-recent-products__foot{padding:14px 20px 20px}.gcc-recent-products__btn{width:100%;min-height:42px;border-radius:8px;border:1px solid #2f5da9;color:#2f5da9;background:#fff;font-size:15px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;padding:10px 14px}.gcc-recent-products__btn:hover{text-decoration:none;background:#f6f9ff}@media (max-width:767px){.gcc-recent-products__head,.gcc-recent-products__body,.gcc-recent-products__foot{padding-left:18px;padding-right:18px}}
+</style>
+
+<section class="gcc-recent-products">
+    <div class="gcc-recent-products__head">
+        <h3 class="gcc-recent-products__title"><?php echo $block->escapeHtml($block->getBlockTitle()) ?></h3>
+    </div>
+
+    <div class="gcc-recent-products__body">
+        <ul class="gcc-recent-products__list">
+            <?php if ($block->getProductCollection()->count()): ?>
+                <?php foreach ($block->getProductCollection() as $_product): ?>
+                    <li class="gcc-recent-products__item">
+                        <div class="gcc-recent-products__thumb">
+                            <?php echo $block->getImage($_product)->toHtml(); ?>
+                        </div>
+                        <div class="gcc-recent-products__content">
+                            <a href="<?php echo $block->escapeUrl($block->getEditUrl($_product)) ?>" class="gcc-recent-products__link">
+                                <span><?php echo $block->escapeHtml($_product->getName()) ?></span>
+                                <span class="gcc-recent-products__price"><?php echo $this->formatPrice($_product->getFinalPrice()); ?></span>
+                            </a>
+                            <div class="gcc-recent-products__description">
+                                <?php echo $block->escapeHtml($this->formatDescription($_product->getShortDescription())) ?>
+                            </div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li class="gcc-recent-products__empty"><?php echo __("We couldn't find any records.") ?></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <div class="gcc-recent-products__foot">
+        <a href="<?php echo $block->escapeUrl($block->getProductListUrl()) ?>" class="gcc-recent-products__btn">
+            <?php echo __("View All Products") ?>
+        </a>
+    </div>
+</section>

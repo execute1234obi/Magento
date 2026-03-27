@@ -1,0 +1,134 @@
+<?php
+/** @var \Vendor\QuoteRequest\Block\Customer\History $block */
+
+// 1. Pagination Settings
+$totalCount = $block->getRfqCount();
+$limit = (int)$block->getRequest()->getParam('limit', 5);
+$currentPage = (int)$block->getRequest()->getParam('p', 1);
+$totalPages = ceil($totalCount / $limit);
+
+// 2. Get Data
+$rfqs = $block->getRfqs();
+?>
+
+<div class="rfq-history-wrap">
+    <div class="rfq-history-head">
+        <div>
+            <h2 class="rfq-history-title">My RFQs</h2>
+            <p class="rfq-history-subtitle"><?= $totalCount ?> request(s) found</p>
+        </div>
+    </div>
+
+    <?php if (!$totalCount): ?>
+        <div class="rfq-empty">No RFQs found.</div>
+    <?php else: ?>
+        <div class="rfq-table-shell">
+            <table class="rfq-table">
+                <thead>
+                    <tr>
+                        <th class="rfq-col-id">#</th>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Price</th>
+                        <th class="rfq-col-qty">Qty</th>
+                        <th class="rfq-col-status">Status</th>
+                        <th class="rfq-col-date">Date</th>
+                        <th class="rfq-col-action">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                    $i = (($currentPage - 1) * $limit) + 1; 
+                    foreach ($rfqs as $rfq): 
+                        $product = $block->getProduct($rfq['product_id']);
+                        $status = strtolower(trim((string)($rfq['status'] ?? '')));
+                        $badge = 'rfq-badge--default';
+                        if ($status === 'pending') $badge = 'rfq-badge--pending';
+                        if ($status === 'approved') $badge = 'rfq-badge--approved';
+                        if ($status === 'rejected') $badge = 'rfq-badge--rejected';
+                    ?>
+                        <tr>
+                            <td class="rfq-col-id">#<?= $i++ ?></td>
+                            <td>
+                                <?php if ($product && $product->getId()): ?>
+                                    <div class="rfq-product">
+                                        <div class="rfq-product-img">
+                                            <img src="<?= $block->escapeUrl($block->getImageUrl($product)) ?>" alt="" />
+                                        </div>
+                                        <div>
+                                            <p class="rfq-product-name"><?= $block->escapeHtml($product->getName()) ?></p>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <span>N/A</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= $product ? $block->escapeHtml($product->getSku()) : '-' ?></td>
+                            <td><?= $product ? $block->formatPrice($product->getFinalPrice()) : '-' ?></td>
+                            <td><?= (int)($rfq['qty'] ?? 0) ?></td>
+                            <td><span class="rfq-badge <?= $badge ?>"><?= ucfirst($status) ?></span></td>
+                            <td><?= date('d M Y', strtotime($rfq['created_at'])) ?></td>
+                            <td>
+                                <?php if ($product): ?>
+                                    <a class="rfq-btn" href="<?= $product->getProductUrl() ?>">View</a>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <?php if ($totalPages > 1): ?>
+            <div class="custom-manual-pager">
+                <ul class="pager-items">
+                    <?php for ($page = 1; $page <= $totalPages; $page++): ?>
+                        <li class="item <?= ($page == $currentPage) ? 'current' : '' ?>">
+                            <?php if ($page == $currentPage): ?>
+                                <strong><?= $page ?></strong>
+                            <?php else: ?>
+                                <a href="<?= $block->getUrl('*/*/*', ['_current' => true, 'p' => $page]) ?>">
+                                    <?= $page ?>
+                                </a>
+                            <?php endif; ?>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+    <?php endif; ?>
+</div>
+
+<style>
+    /* Pagination Styling */
+    .custom-manual-pager {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+    }
+    .pager-items {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        gap: 10px;
+    }
+    .pager-items .item a, .pager-items .item strong {
+        padding: 8px 16px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        display: block;
+        border: 1px solid #e5e7eb;
+    }
+    .pager-items .item a {
+        color: #2563eb;
+        background: #fff;
+    }
+    .pager-items .item.current strong {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+    }
+    /* Baki aapki purani CSS yahan add karein */
+</style>

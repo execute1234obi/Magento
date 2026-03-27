@@ -435,3 +435,7 @@ label.file-uploader-preview {
     justify-content: flex-end !important;
     width: 100% !important;
 }
+
+li.item-catalog-product._current._active.active.level-1 {
+    background-color: #4B78B3 !important;
+}

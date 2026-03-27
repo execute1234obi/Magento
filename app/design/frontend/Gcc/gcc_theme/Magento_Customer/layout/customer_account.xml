@@ -8,4 +8,7 @@
         }
         </style>
     </head>
+    <body>
+        <referenceBlock name="sidebar.main.account_nav" template="Magento_Theme::html/account-nav.phtml"/>
+    </body>
 </page>

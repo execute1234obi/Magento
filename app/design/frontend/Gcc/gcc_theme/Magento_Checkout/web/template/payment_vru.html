@@ -1,0 +1,21 @@
+<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-6">
+  <!-- LEFT -->
+  <div class="bg-white rounded-2xl shadow p-6">
+    <div class="flex items-center justify-between mb-6">
+      <div class="text-xl font-semibold">
+        <!-- ko i18n: 'Payment Method' --><!-- /ko -->
+      </div>
+
+      <div class="text-sm text-gray-500">
+        <!-- ko i18n: 'Secure checkout' --><!-- /ko -->
+      </div>
+    </div>
+
+    <!-- Only this region is needed -->
+    <div data-bind="foreach: getRegion('payment-methods-list')" class="space-y-3">
+      <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+  </div>
+
+  <!-- RIGHT column is your order summary (keep whatever you already have there) -->
+</div>
