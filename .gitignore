@@ -8,3 +8,4 @@
 /pub/media/*
 !/pub/media/.htaccess
 #app/etc/env.php
+app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy.phtml
