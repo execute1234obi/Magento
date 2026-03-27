@@ -3,7 +3,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
 
     <body>
-        <referenceBlock name="vendor.toplinks" template="Gcc_VendorStyles::page/toplinks.phtml"/>
+        <!-- <referenceBlock name="vendor.toplinks" template="Gcc_VendorStyles::page/toplinks.phtml"/> -->
         <referenceBlock name="menu" template="Gcc_VendorStyles::menu.phtml"/>
         <referenceBlock name="vendor.mobile.sidebar.toggle" remove="true"/>
         <referenceBlock name="vendor.mobile.sidebar.toggle.handle" remove="true"/>

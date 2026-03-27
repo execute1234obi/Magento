@@ -825,6 +825,11 @@ body {
         gap: 8px; /* Gap between Name/Badge row and Logo/Button row */
         min-width: 0;
     ">
+      <?php
+        $baseUrl = $block->getBaseUrl();
+        $vendor_shop_Id = $vendor->getData('vendor_id');
+$vendorUrl = $baseUrl. 'shop/' . $vendor_shop_Id; // /shop/<vendor_id>/ ?>
+          <a href="<?= $vendorUrl ?>" target="_blank" style="color: inherit; text-decoration: none;">
         <div class="vendor-name" style="
             font-weight: 700;
             font-size: 22px;
@@ -834,12 +839,15 @@ body {
             gap: 8px;
             margin: 0;
         ">
+      
             <?= ucfirst($block->escapeHtml($vendorName)); ?>
             <?php if ($isVerified ?? true): ?>
                 <img src="<?= $block->escapeUrl($varify); ?>" alt="Verified" width="7%">
             <?php endif; ?>
-        </div>
         
+           
+        </div>
+        </a>
         <div style="display: flex; align-items: center; gap: 12px;">
             <div class="vendor-logo" style="
                 width: 44px; height: 44px; border-radius: 9999px;
@@ -1045,13 +1053,15 @@ $country = $country_id->getName();
                         <?= __("More") ?>
                     </button>
                 </div>
-                
+                <?php $price = (float)$product->getFinalPrice(); ?>
+                <?php if ($price > 0): ?>
                 <div class="price-box price-final_price"
                      data-role="priceBox"
                      data-product-id="<?= $product->getId() ?>"
                      data-price-box="product-id-<?= $product->getId() ?>">
                     <?= $block->getProductPriceHtml($product, 'final_price'); ?>
                 </div>
+                <?php endif; ?>
                 <div class="product-info-configurable" id="product-info-configurable">
                     <?= $block->getChildHtml('product.info.options.wrapper'); ?> 
                     <?php
@@ -1087,6 +1097,7 @@ $country = $country_id->getName();
         <button class="active" role="tab" aria-selected="true" aria-controls="tab-desc" id="tab-btn-desc"><?= __("Product Description") ?></button>
         <button role="tab" aria-selected="false" aria-controls="tab-spec" id="tab-btn-spec"><?= __("Product Specification") ?></button>
         <button role="tab" aria-selected="false" aria-controls="tab-pack" id="tab-btn-pack"> <?= __("Packing & Shipping") ?></button>
+        <!-- <button role="tab" aria-selected="false" aria-controls="tab-rev" id="tab-btn-rev"><?= __("Reviews") ?></button> -->
     </div>
     <div class="tab-content tab-panel active" id="tab-desc" role="tabpanel" aria-labelledby="tab-btn-desc">
         <?= /* @noEscape */ $product->getDescription(); ?>

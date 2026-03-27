@@ -2,43 +2,30 @@
 
 namespace Business\VisitorcountryReport\Block\Adminhtml\Visitorcountry\Visited;
 
-/**
- * Adminhtml Visitor Country report grid block
- * 
- */
 class Grid extends \Magento\Reports\Block\Adminhtml\Grid\AbstractGrid
 {
-    /**
-     * GROUP BY criteria
-     *
-     * @var string
-     */
-    protected $_columnGroupBy = 'period';    
-    
-    /**
-     * Grid resource collection name
-     *
-     * @var string
-     */   
-   protected $_resourceCollectionName = \Business\VisitorcountryReport\Model\ResourceModel\Report\VisitorCountry\Visited\Collection::class;
+    protected $_columnGroupBy = 'period';
 
-    /**
-     * {@inheritdoc}
-     * @codeCoverageIgnore
-     */
+    protected $_resourceCollectionName = 'Business\VisitorcountryReport\Model\ResourceModel\Report\VisitorCountry\Visited\Collection';
+
     protected function _construct()
     {
         parent::_construct();
         $this->setCountTotals(false);
     }
 
-    /**
-     * {@inheritdoc}
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
+    protected function _prepareCollection()
+    {
+        $collection = \Magento\Framework\App\ObjectManager::getInstance()
+            ->create($this->_resourceCollectionName);
+
+        $this->setCollection($collection);
+
+        return parent::_prepareCollection();
+    }
+
     protected function _prepareColumns()
-    {       
-        
+    {
         $this->addColumn(
             'period',
             [
@@ -65,18 +52,18 @@ class Grid extends \Magento\Reports\Block\Adminhtml\Grid\AbstractGrid
                 'column_css_class' => 'col-code'
             ]
         );
-        
+
         $this->addColumn(
             'country_name',
             [
                 'header' => __('Country Name'),
                 'sortable' => false,
                 'index' => 'country_name',
-                'header_css_class' => 'col-code',
-                'column_css_class' => 'col-code'
+                'header_css_class' => 'col-country',
+                'column_css_class' => 'col-country'
             ]
         );
-        
+
         $this->addColumn(
             'visitors_num',
             [
@@ -90,24 +77,14 @@ class Grid extends \Magento\Reports\Block\Adminhtml\Grid\AbstractGrid
             ]
         );
 
-
-
-
         $this->addExportType('*/*/ExportViewedCsv', __('CSV'));
         $this->addExportType('*/*/ExportViewedExcel', __('Excel XML'));
 
         return parent::_prepareColumns();
     }
 
-    /**
-     * Add price rule filter
-     *
-     * @param \Magento\Reports\Model\ResourceModel\Report\Collection\AbstractCollection $collection
-     * @param \Magento\Framework\DataObject $filterData
-     * @return \Magento\Reports\Block\Adminhtml\Grid\AbstractGrid
-     */
     protected function _addCustomFilter($collection, $filterData)
-    {    
-        return parent::_addCustomFilter($filterData, $collection);
+    {
+        return parent::_addCustomFilter($collection, $filterData);
     }
 }

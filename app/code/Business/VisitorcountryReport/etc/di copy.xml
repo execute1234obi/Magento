@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Magento\Reports\Model\ResourceModel\Refresh\Collection">
+    <arguments>
+        <argument name="reportLists" xsi:type="array">
+            <item name="report_visitorcountry_visited_aggregated" xsi:type="string">
+                Business\VisitorcountryReport\Model\ResourceModel\Report\VisitorCountry\Visited
+            </item>
+        </argument>
+    </arguments>
+</type>
+
+</config>

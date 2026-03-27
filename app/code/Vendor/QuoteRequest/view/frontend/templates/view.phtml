@@ -17,27 +17,164 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 
                 <h1 class="quote-title"><?= __('Choose your location') ?></h1>
 
+                <!-- LOCATION CARD -->
                 <div class="quote-card quote-card--location">
                     <div class="quote-grid-2">
-                        <div class="quote-field">
-                            <select id="country" name="country_id" title="Country" class="quote-select">
-                                <option value=""><?= __('Select Country') ?></option>
-                                <?php foreach ($block->getCountryCollection() as $country): ?>
-                                    <option value="<?= $country->getCountryId() ?>">
-                                        <?= $country->getName() ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="quote-field">
-                            <select id="region_id" name="region_id" title="State" class="quote-select" style="display:none;">
-                                <option value=""><?= __('Select State/Region') ?></option>
-                            </select>
-                            <input type="text" id="region" name="region" title="State" class="quote-select" style="display:none;" />
-                        </div>
-                    </div>
-                </div>
 
+                        <!-- ── COUNTRY DROPDOWN ── -->
+                        <div class="quote-field">
+                            <div class="csd-wrapper" id="country-wrapper">
+                                <div class="csd-trigger" id="country-trigger" onclick="csdToggle('country')">
+                                    <span class="csd-label" id="country-label"><?= __('Select Your Country') ?></span>
+                                    <svg class="csd-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 9l6 6 6-6" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="csd-panel" id="country-panel">
+                                    <div class="csd-search-row">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="11" cy="11" r="8" stroke="#9ca3af" stroke-width="2"/>
+                                            <path d="M21 21l-4.35-4.35" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                        <input class="csd-search-input" id="country-search" type="text"
+                                               placeholder="<?= __('Search country') ?>"
+                                               oninput="csdFilter('country')" autocomplete="off">
+                                    </div>
+                                    <div class="csd-list" id="country-list">
+
+                                        <!-- Gulf -->
+                                        <div class="csd-group" data-gid="gulf">
+                                            <div class="csd-group-hd" onclick="csdGroupToggle('gulf')">
+                                                <span><?= __('Gulf') ?></span>
+                                                <svg class="csd-group-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M6 9l6 6 6-6" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </div>
+                                            <div class="csd-group-body" id="gbody-gulf">
+                                                <label class="csd-item" data-val="SA" data-lbl="Saudi Arabia" onclick="csdPickCountry('SA','Saudi Arabia')">
+                                                    <span>Saudi Arabia</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="SA">
+                                                </label>
+                                                <label class="csd-item" data-val="AE" data-lbl="UAE" onclick="csdPickCountry('AE','UAE')">
+                                                    <span>UAE</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="AE">
+                                                </label>
+                                                <label class="csd-item" data-val="QA" data-lbl="Qatar" onclick="csdPickCountry('QA','Qatar')">
+                                                    <span>Qatar</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="QA">
+                                                </label>
+                                                <label class="csd-item" data-val="BH" data-lbl="Bahrain" onclick="csdPickCountry('BH','Bahrain')">
+                                                    <span>Bahrain</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="BH">
+                                                </label>
+                                                <label class="csd-item" data-val="KW" data-lbl="Kuwait" onclick="csdPickCountry('KW','Kuwait')">
+                                                    <span>Kuwait</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="KW">
+                                                </label>
+                                                <label class="csd-item" data-val="OM" data-lbl="Oman" onclick="csdPickCountry('OM','Oman')">
+                                                    <span>Oman</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="OM">
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- South East Asia -->
+                                        <div class="csd-group" data-gid="sea">
+                                            <div class="csd-group-hd" onclick="csdGroupToggle('sea')">
+                                                <span><?= __('South East Asia') ?></span>
+                                                <svg class="csd-group-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M6 9l6 6 6-6" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </div>
+                                            <div class="csd-group-body" id="gbody-sea">
+                                                <label class="csd-item" data-val="ID" data-lbl="Indonesia" onclick="csdPickCountry('ID','Indonesia')">
+                                                    <span>Indonesia</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="ID">
+                                                </label>
+                                                <label class="csd-item" data-val="MY" data-lbl="Malaysia" onclick="csdPickCountry('MY','Malaysia')">
+                                                    <span>Malaysia</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="MY">
+                                                </label>
+                                                <label class="csd-item" data-val="SG" data-lbl="Singapore" onclick="csdPickCountry('SG','Singapore')">
+                                                    <span>Singapore</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="SG">
+                                                </label>
+                                                <label class="csd-item" data-val="TH" data-lbl="Thailand" onclick="csdPickCountry('TH','Thailand')">
+                                                    <span>Thailand</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="TH">
+                                                </label>
+                                                <label class="csd-item" data-val="PH" data-lbl="Philippines" onclick="csdPickCountry('PH','Philippines')">
+                                                    <span>Philippines</span><span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="PH">
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <!-- Other Countries from Magento -->
+                                        <div class="csd-group" data-gid="other">
+                                            <div class="csd-group-hd" onclick="csdGroupToggle('other')">
+                                                <span><?= __('Other Countries') ?></span>
+                                                <svg class="csd-group-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none">
+                                                    <path d="M6 9l6 6 6-6" stroke="#6b7280" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </div>
+                                            <div class="csd-group-body" id="gbody-other">
+                                                <?php
+                                                $skipCodes = ['SA','AE','QA','BH','KW','OM','ID','MY','SG','TH','PH'];
+                                                foreach ($block->getCountryCollection() as $country):
+                                                    if (in_array($country->getCountryId(), $skipCodes)) continue;
+                                                    $cId   = $block->escapeHtml($country->getCountryId());
+                                                    $cName = $block->escapeHtml($country->getName());
+                                                ?>
+                                                <label class="csd-item" data-val="<?= $cId ?>" data-lbl="<?= $cName ?>"
+                                                       onclick="csdPickCountry('<?= $cId ?>','<?= addslashes($cName) ?>')">
+                                                    <span><?= $cName ?></span>
+                                                    <span class="csd-radio"></span>
+                                                    <input type="radio" name="_cr" value="<?= $cId ?>">
+                                                </label>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+
+                                    </div><!-- /country-list -->
+                                </div><!-- /country-panel -->
+                            </div><!-- /country-wrapper -->
+                            <!-- Hidden input — form submit + Magento regionUpdater -->
+                            <input type="hidden" id="country" name="country_id" value="">
+                        </div>
+
+                        <!-- ── CITY DROPDOWN ── -->
+                        <div class="quote-field">
+                            <div class="csd-wrapper" id="city-wrapper">
+                                <div class="csd-trigger" id="city-trigger" onclick="csdToggle('city')">
+                                    <span class="csd-label" id="city-label"><?= __('Select Your City') ?></span>
+                                    <svg class="csd-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                        <path d="M6 9l6 6 6-6" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </div>
+                                <div class="csd-panel" id="city-panel">
+                                    <div class="csd-search-row">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                                            <circle cx="11" cy="11" r="8" stroke="#9ca3af" stroke-width="2"/>
+                                            <path d="M21 21l-4.35-4.35" stroke="#9ca3af" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                        <input class="csd-search-input" id="city-search" type="text"
+                                               placeholder="<?= __('Search city') ?>"
+                                               oninput="csdFilter('city')" autocomplete="off">
+                                    </div>
+                                    <div class="csd-list" id="city-list">
+                                        <p class="csd-empty"><?= __('Please select a country first') ?></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="region_id" name="region_id" value="">
+                            <input type="hidden" id="region"    name="region"    value="">
+                        </div>
+
+                    </div><!-- /quote-grid-2 -->
+                </div><!-- /quote-card--location -->
+
+                <!-- QUOTATION LIST CARD -->
                 <div class="quote-card">
                     <div class="quote-card-head">
                         <div class="quote-card-title">
@@ -53,43 +190,43 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
                         </label>
 
                         <?php foreach ($items as $item): ?>
-                            <?php 
-                                $_product = $item['product']; 
+                            <?php
+                                $_product   = $item['product'];
                                 $productImage = $imageHelper->init($_product, 'product_thumbnail_image')->getUrl();
-                                //$vendorName =  $block->getVendorName($_product) ?: 'Adidas';
-                                $vendorId = $_product->getData('vendor_id');
+                                $vendorId   = $_product->getData('vendor_id');
                                 $vendorName = $block->getVendorCompanyName($vendorId) ?: 'No Name Available';
-                                //$vendorId = $_product->getData('vendor_id');
                                 $vendorLogo = $block->getVendorLogo($vendorId);
                             ?>
                             <div class="vendor-block">
                                 <div class="vendor-head">
                                     <div class="vendor-left">
-                                        <div class="vendor-logo">  <?php if($vendorLogo): ?>
-        <img src="<?= $vendorLogo ?>" alt="Vendor Logo">
-    <?php endif; ?></div>
-                                       <div class="vendor-name">
-    <strong><?= $vendorName ?></strong>
-
-    <?php
-    $verificationBlock = $block->getChildBlock('vendor.verification.block');
-  $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . "pub/media/";
-$mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
-            
-    //$verifyIcon = rtrim($mediaUrl,'/') . '/'  . 'ves_vendors/attribute/upload_logo/v/e/verification_badge_icon_1.png';
-
-    if ($verificationBlock && $verificationBlock->isVendorVerified($vendorId)): ?>
-       <span class="vendor-verified" title="Verified">✔</span>
-    <?php endif; ?>
-</div>
+                                        <div class="vendor-logo">
+                                            <?php if ($vendorLogo): ?>
+                                                <img src="<?= $vendorLogo ?>" alt="Vendor Logo">
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="vendor-name">
+                                            <strong><?= $vendorName ?></strong>
+                                            <?php
+                                            $verificationBlock = $block->getChildBlock('vendor.verification.block');
+                                            $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . "pub/media/";
+                                            $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
+                                            if ($verificationBlock && $verificationBlock->isVendorVerified($vendorId)): ?>
+                                                <span class="vendor-verified" title="Verified">✔</span>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
                                     <button class="vendor-trash" type="button" data-id="<?= $_product->getId() ?>">🗑</button>
                                 </div>
                                 <div class="product-row">
                                     <div class="product-check">
-                                        <input type="checkbox" name="selected_products[]" value="<?= $_product->getId() ?>" class="quote-checkbox product-item-checkbox" checked />
+                                        <input type="checkbox" name="selected_products[]"
+                                               value="<?= $_product->getId() ?>"
+                                               class="quote-checkbox product-item-checkbox" checked />
                                     </div>
-                                    <div class="product-thumb"><img src="<?= $productImage ?>" /></div>
+                                    <div class="product-thumb">
+                                        <img src="<?= $productImage ?>" alt="<?= $block->escapeHtml($_product->getName()) ?>"/>
+                                    </div>
                                     <div class="product-info">
                                         <h3 class="product-title"><?= $_product->getName() ?></h3>
                                         <div class="desc-label">SKU: <?= $_product->getSku() ?></div>
@@ -97,7 +234,8 @@ $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
                                     <div class="product-qty">
                                         <div class="qty-stepper">
                                             <button type="button" class="qty-btn minus">−</button>
-                                            <input type="text" name="qty[<?= $_product->getId() ?>]" value="<?= $item['qty'] ?>" class="qty-input" readonly />
+                                            <input type="text" name="qty[<?= $_product->getId() ?>]"
+                                                   value="<?= $item['qty'] ?>" class="qty-input" readonly />
                                             <button type="button" class="qty-btn plus">+</button>
                                         </div>
                                     </div>
@@ -108,11 +246,12 @@ $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
 
                     <div class="draft-inquiry">
                         <h3><?= __('Draft inquiry') ?></h3>
-                        <textarea name="customer_note" class="quote-textarea" rows="4" placeholder="Write message..."></textarea>
+                        <textarea name="customer_note" class="quote-textarea" rows="4"
+                                  placeholder="<?= __('Write message...') ?>"></textarea>
                     </div>
 
                     <div class="quote-bottom-bar">
-                        <div class="bottom-left"><strong>Summary</strong></div>
+                        <div class="bottom-left"><strong><?= __('Summary') ?></strong></div>
                         <div class="bottom-right">
                             <span class="product-count"><?= count($items) ?> <?= __('Products') ?></span>
                             <button class="quote-primary-btn" type="button" id="submit-quote">
@@ -121,460 +260,432 @@ $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
                         </div>
                     </div>
                 </div>
+
             </div>
         </form>
     </div>
 </div>
 
-<script type="text/x-magento-init">
-    {
-        "#country": {
-            "regionUpdater": {
-                "optionalRegionAllowed": true,
-                "regionListId": "#region_id",
-                "regionInputId": "#region",
-                "postcodeId": "#zip",
-                "form": "#form-validate",
-                "regionJson": <?= /* @noEscape */ $block->getRegionJson() ?>,
-                "defaultRegion": "0",
-                "countriesWithOptionalZip": <?= /* @noEscape */ $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
-            }
-        }
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+     ═══════════════════════════════════════ -->
+<script>
+/* ── City data ─────────────────────────────────────── */
+var CSD_CITIES = {
+    SA: ['Jeddah','Mecca','Abha','Riyadh','Madina','Yanbu','Qassim','Taif','Dammam','Tabuk'],
+    AE: ['Dubai','Abu Dhabi','Sharjah','Ajman','Ras Al Khaimah','Fujairah','Umm Al Quwain'],
+    QA: ['Doha','Al Rayyan','Al Wakrah','Al Khor','Lusail','Mesaieed'],
+    BH: ['Manama','Riffa','Muharraq','Hamad Town','Isa Town','Sitra'],
+    KW: ['Kuwait City','Hawalli','Salmiya','Farwaniya','Ahmadi','Jahra'],
+    OM: ['Muscat','Salalah','Sohar','Nizwa','Sur','Ibri'],
+    ID: ['Jakarta','Surabaya','Bandung','Medan','Bali','Yogyakarta'],
+    MY: ['Kuala Lumpur','Penang','Johor Bahru','Ipoh','Kota Kinabalu','Kuching'],
+    SG: ['Singapore'],
+    TH: ['Bangkok','Chiang Mai','Phuket','Pattaya','Hua Hin','Chiang Rai'],
+    PH: ['Manila','Cebu','Davao','Quezon City','Makati','Pasig']
+};
+
+/* ── Open / close toggle ───────────────────────────── */
+function csdToggle(type) {
+    var wrapper = document.getElementById(type + '-wrapper');
+    var isOpen  = wrapper.classList.contains('csd-open');
+    /* close all */
+    document.querySelectorAll('.csd-wrapper').forEach(function(w){ w.classList.remove('csd-open'); });
+    if (!isOpen) {
+        wrapper.classList.add('csd-open');
+        var inp = document.getElementById(type + '-search');
+        if (inp) setTimeout(function(){ inp.focus(); }, 60);
     }
+}
+
+/* close on outside click */
+document.addEventListener('click', function(e){
+    if (!e.target.closest('.csd-wrapper')) {
+        document.querySelectorAll('.csd-wrapper').forEach(function(w){ w.classList.remove('csd-open'); });
+    }
+});
+
+/* ── Pick country ──────────────────────────────────── */
+function csdPickCountry(code, label) {
+    /* update trigger */
+    var lbl = document.getElementById('country-label');
+    lbl.textContent = label;
+    lbl.classList.add('csd-label--chosen');
+
+    /* hidden input */
+    document.getElementById('country').value = code;
+
+    /* mark selected */
+    document.querySelectorAll('#country-list .csd-item').forEach(function(item){
+        var active = item.dataset.val === code;
+        item.classList.toggle('csd-item--active', active);
+        var r = item.querySelector('input[type=radio]');
+        if (r) r.checked = active;
+    });
+
+    /* close */
+    document.getElementById('country-wrapper').classList.remove('csd-open');
+
+    /* load cities */
+    csdLoadCities(code);
+}
+
+/* ── Load city list ────────────────────────────────── */
+function csdLoadCities(code) {
+    var cities = CSD_CITIES[code] || [];
+    var list   = document.getElementById('city-list');
+
+    /* reset city selection */
+    var cityLbl = document.getElementById('city-label');
+    cityLbl.textContent = 'Select Your City';
+    cityLbl.classList.remove('csd-label--chosen');
+    document.getElementById('region').value    = '';
+    document.getElementById('region_id').value = '';
+
+    if (!cities.length) {
+        list.innerHTML = '<p class="csd-empty">No cities available for this country</p>';
+        return;
+    }
+
+    var html = '';
+    cities.forEach(function(city){
+        html += '<label class="csd-item" data-val="' + city + '" data-lbl="' + city + '" onclick="csdPickCity(\'' + city.replace(/'/g,"\\'") + '\')">' +
+                    '<span>' + city + '</span>' +
+                    '<span class="csd-radio"></span>' +
+                    '<input type="radio" name="_cityR" value="' + city + '">' +
+                '</label>';
+    });
+    list.innerHTML = html;
+}
+
+/* ── Pick city ─────────────────────────────────────── */
+function csdPickCity(city) {
+    var lbl = document.getElementById('city-label');
+    lbl.textContent = city;
+    lbl.classList.add('csd-label--chosen');
+
+    document.getElementById('region').value    = city;
+    document.getElementById('region_id').value = city;
+
+    document.querySelectorAll('#city-list .csd-item').forEach(function(item){
+        var active = item.dataset.val === city;
+        item.classList.toggle('csd-item--active', active);
+        var r = item.querySelector('input[type=radio]');
+        if (r) r.checked = active;
+    });
+
+    document.getElementById('city-wrapper').classList.remove('csd-open');
+}
+
+/* ── Group collapse ────────────────────────────────── */
+function csdGroupToggle(gid) {
+    var g = document.querySelector('.csd-group[data-gid="' + gid + '"]');
+    if (g) g.classList.toggle('csd-group--collapsed');
+}
+
+/* ── Search / filter ───────────────────────────────── */
+function csdFilter(type) {
+    var q    = document.getElementById(type + '-search').value.toLowerCase().trim();
+    var list = document.getElementById(type === 'country' ? 'country-list' : 'city-list');
+
+    list.querySelectorAll('.csd-item').forEach(function(item){
+        var lbl = (item.dataset.lbl || '').toLowerCase();
+        item.style.display = lbl.includes(q) ? '' : 'none';
+    });
+
+    /* expand all groups while searching */
+    if (q) {
+        list.querySelectorAll('.csd-group').forEach(function(g){ g.classList.remove('csd-group--collapsed'); });
+    }
+}
 </script>
 
 <script>
 require(['jquery'], function($){
     $(document).ready(function(){
-        // Submit Logic
-        $(document).on('click', '#submit-quote', function(e){
+
+        /* submit */
+        $(document).on('click','#submit-quote',function(e){
             e.preventDefault();
             var country = $('#country').val();
-            var note = $('.quote-textarea').val();
-
-            if(!country || !note) {
-                alert("Please select country and write a message.");
-                return false;
-            }
+            var note    = $('.quote-textarea').val().trim();
+            if (!country) { alert('<?= __('Please select a country.') ?>'); return; }
+            if (!note)    { alert('<?= __('Please write a message.') ?>');   return; }
             $('#form-validate').submit();
         });
 
-        // Qty Logic
-        $(document).on('click', '.qty-btn.plus', function(){
-            var input = $(this).siblings('.qty-input');
-            input.val(parseInt(input.val()) + 1);
+        /* select all */
+        $(document).on('change','#select-all-products',function(){
+            $('.product-item-checkbox').prop('checked', $(this).is(':checked'));
         });
-        $(document).on('click', '.qty-btn.minus', function(){
-            var input = $(this).siblings('.qty-input');
-            var val = parseInt(input.val());
-            if(val > 1) input.val(val - 1);
+
+        /* qty */
+        $(document).on('click','.qty-btn.plus',function(){
+            var i = $(this).siblings('.qty-input');
+            i.val(parseInt(i.val()) + 1);
         });
+        $(document).on('click','.qty-btn.minus',function(){
+            var i = $(this).siblings('.qty-input');
+            var v = parseInt(i.val());
+            if (v > 1) i.val(v - 1);
+        });
+
+        /* trash */
+      $(document).on('click','.vendor-trash',function(){
+
+    var productId = $(this).data('id');
+
+    if (confirm('Remove this product from quotation?')) {
+
+        window.location.href =
+            "<?= $block->getUrl('quoterequest/index/remove') ?>?id=" + productId;
+
+    }
+
+});
     });
 });
 </script>
+
+
+<!-- ═══════════════════════════════════════
+     STYLES
+     ═══════════════════════════════════════ -->
 <style>
 
+/* ── Page ───────────────────────────────────────────── */
+.gcc-quote-page { background:#f6f8fb; padding-top:103px; }
+.gcc-container  { width:min(1200px,calc(100% - 48px)); margin:0 auto; }
+.quote-page     { font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#111827; }
 
-/* Page wrapper */
-.gcc-quote-page{
-  background: #f6f8fb;
-    padding-top: 103px;
-}
+/* ── Breadcrumb ─────────────────────────────────────── */
+.quote-breadcrumb { font-size:13px; color:#6b7280; margin:0 0 14px; }
+.quote-breadcrumb a { color:#6b7280; text-decoration:none; }
+.quote-breadcrumb a:hover { text-decoration:underline; }
+.quote-breadcrumb .sep { margin:0 8px; color:#9ca3af; }
 
-/* ✅ aligned container (same left/right feel as navbar) */
-.gcc-container{
-  width: min(1200px, calc(100% - 48px)); /* 24px + 24px */
-  margin: 0 auto;
-}
+/* ── Title ──────────────────────────────────────────── */
+.quote-title { font-size:22px; font-weight:650; margin:0 0 14px; }
 
-/* Base page block (remove old max-width/margins) */
-.quote-page{
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-  color: #111827;
+/* ── Cards ──────────────────────────────────────────── */
+.quote-card {
+    background:#fff; border:1px solid #e5e7eb; border-radius:12px;
+    padding:18px; box-shadow:0 1px 0 rgba(0,0,0,.02); margin-top:14px;
 }
+.quote-card--location { padding:20px; }
+.quote-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
 
-/* Breadcrumb */
-.quote-breadcrumb{
-  font-size: 13px;
-  color: #6b7280;
-  margin: 0 0 14px;
-}
-.quote-breadcrumb a{ color:#6b7280; text-decoration:none; }
-.quote-breadcrumb a:hover{ text-decoration:underline; }
-.quote-breadcrumb .sep{ margin:0 8px; color:#9ca3af; }
+/* ── Quotation list head ────────────────────────────── */
+.quote-card-head  { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.quote-card-title { display:flex; align-items:baseline; gap:10px; }
+.quote-card-title h2 { margin:0; font-size:18px; font-weight:650; }
+.quote-card-title span { font-size:13px; color:#6b7280; }
 
-/* Title */
-.quote-title{
-  font-size: 22px;
-  font-weight: 650;
-  margin: 0 0 14px;
+/* ── Select all ─────────────────────────────────────── */
+.quote-select-all {
+    display:flex; align-items:center; gap:10px; padding:12px;
+    border:1px solid #eef2f7; border-radius:10px;
+    background:#f9fafb; margin-bottom:16px; font-size:13px; color:#6b7280;
 }
+.quote-checkbox { width:16px; height:16px; accent-color:#2563eb; cursor:pointer; }
 
-/* Cards */
-.quote-card{
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 18px;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.02);
-  margin-top: 14px;
+/* ── Vendor block ───────────────────────────────────── */
+.vendor-block { border:1px solid #eef2f7; border-radius:12px; padding:14px; margin-bottom:14px; }
+.vendor-head  {
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom:12px; border-bottom:1px solid #eef2f7; margin-bottom:14px;
 }
-.quote-card--location{ padding: 16px; }
+.vendor-left  { display:flex; align-items:center; gap:12px; }
+.vendor-logo  {
+    width:36px; height:36px; border-radius:50%; border:1px solid #e5e7eb;
+    background:#f9fafb; display:grid; place-items:center; overflow:hidden;
+}
+.vendor-logo img  { width:100%; height:100%; object-fit:cover; }
+.vendor-name      { display:flex; align-items:center; gap:8px; font-size:15px; }
+.vendor-verified  {
+    display:inline-flex; width:18px; height:18px; border-radius:50%;
+    align-items:center; justify-content:center;
+    font-size:12px; background:#e0f2fe; color:#0369a1;
+}
+.vendor-trash      { border:none; background:transparent; cursor:pointer; padding:6px 8px; border-radius:8px; color:#ef4444; }
+.vendor-trash:hover { background:#fff1f2; }
 
-/* Quotation list head */
-.quote-card-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom: 14px;
+/* ── Product row ────────────────────────────────────── */
+.product-row {
+    display:grid; grid-template-columns:32px 180px 1fr 160px;
+    gap:16px; align-items:center; padding:12px 6px;
 }
-.quote-card-title{
-  display:flex;
-  align-items:baseline;
-  gap: 10px;
+.product-check { display:flex; justify-content:center; }
+.product-thumb {
+    width:180px; height:130px; border-radius:12px;
+    background:#f3f4f6; border:1px solid #eef2f7; overflow:hidden; display:grid; place-items:center;
 }
-.quote-card-title h2{
-  margin:0;
-  font-size: 18px;
-  font-weight: 650;
-}
-.quote-card-title span{
-  font-size: 13px;
-  color: #6b7280;
-}
+.product-thumb img { width:100%; height:100%; object-fit:contain; padding:10px; }
+.product-info  { min-width:0; }
+.product-title { font-size:16px; font-weight:650; margin:0 0 8px; }
+.desc-label    { font-size:12px; color:#6b7280; margin-bottom:6px; }
 
-/* Select inputs */
-.quote-grid-2{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+/* ── Qty ────────────────────────────────────────────── */
+.product-qty { display:flex; justify-content:flex-end; }
+.qty-stepper {
+    display:grid; grid-template-columns:42px 58px 42px;
+    border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; height:40px; background:#fff;
 }
-.quote-select{
-  width: 100%;
-  height: 48px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  padding: 0 14px;
-  background: #fff;
-  font-size: 14px;
-  color: #111827;
-}
-.quote-select:focus{
-  outline:none;
-  border-color:#93c5fd;
-  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
-}
+.qty-btn   { border:none; background:#fff; cursor:pointer; font-size:18px; }
+.qty-btn:hover { background:#f9fafb; }
+.qty-input { border:none; text-align:center; font-size:14px; font-weight:650; outline:none; }
 
-/* Select all */
-.quote-select-all{
-  display:flex;
-  align-items:center;
-  gap: 10px;
-  padding: 12px 12px;
-  border: 1px solid #eef2f7;
-  border-radius: 10px;
-  background: #f9fafb;
-  margin-bottom: 16px;
-  font-size: 13px;
-  color: #6b7280;
+/* ── Draft inquiry ──────────────────────────────────── */
+.draft-inquiry { margin-top:18px; padding-top:14px; border-top:1px solid #eef2f7; }
+.draft-inquiry h3 { font-size:16px; font-weight:650; margin:0 0 10px; }
+.quote-textarea {
+    width:100%; border:1px solid #d1d5db; border-radius:10px;
+    padding:12px 14px; font-size:14px; min-height:110px; resize:vertical; box-sizing:border-box;
 }
-.quote-checkbox{
-  width: 16px;
-  height: 16px;
-  accent-color: #2563eb;
-  cursor:pointer;
-}
+.quote-textarea:focus { outline:none; border-color:#93c5fd; box-shadow:0 0 0 4px rgba(59,130,246,.12); }
 
-/* Vendor */
-.vendor-block{
-  border: 1px solid #eef2f7;
-  border-radius: 12px;
-  padding: 14px;
-  margin-bottom: 14px;
+/* ── Bottom bar ─────────────────────────────────────── */
+.quote-bottom-bar {
+    display:flex; align-items:center; justify-content:space-between;
+    padding-top:16px; margin-top:18px; border-top:1px solid #eef2f7;
 }
-.vendor-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #eef2f7;
-  margin-bottom: 14px;
+.bottom-left strong { font-size:18px; font-weight:750; }
+.bottom-right { display:flex; align-items:center; gap:16px; }
+.product-count { font-size:14px; font-weight:650; }
+.quote-primary-btn {
+    height:44px; padding:0 18px; border:none; border-radius:10px;
+    background:#0f2f5f; color:#fff; font-weight:650; cursor:pointer;
 }
-.vendor-left{
-  display:flex;
-  align-items:center;
-  gap: 12px;
-}
-.vendor-logo{
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid #e5e7eb;
-  background:#f9fafb;
-  display:grid;
-  place-items:center;
-  font-size: 14px;
-}
-.vendor-name{
-  display:flex;
-  align-items:center;
-  gap: 8px;
-  font-size: 15px;
-}
-.vendor-verified{
-  display:inline-flex;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  align-items:center;
-  justify-content:center;
-  font-size: 12px;
-  background:#e0f2fe;
-  color:#0369a1;
-}
-.vendor-trash{
-  border:none;
-  background:transparent;
-  cursor:pointer;
-  padding: 6px 8px;
-  border-radius: 8px;
-  color:#ef4444;
-}
-.vendor-trash:hover{ background:#fff1f2; }
+.quote-primary-btn:hover { filter:brightness(1.06); }
 
-/* Products row */
-.product-row{
-  display:grid;
-  grid-template-columns: 32px 180px 1fr 160px;
-  gap: 16px;
-  align-items:center;
-  padding: 12px 6px;
-}
-.product-row--compact{
-  grid-template-columns: 32px 160px 1fr 160px;
-}
-.product-check{
-  display:flex;
-  justify-content:center;
-}
-.product-thumb{
-  width: 180px;
-  height: 130px;
-  border-radius: 12px;
-  background:#f3f4f6;
-  border: 1px solid #eef2f7;
-  overflow:hidden;
-  display:grid;
-  place-items:center;
-}
-.product-thumb--small{
-  width: 160px;
-  height: 120px;
-}
-.product-thumb img{
-  width:100%;
-  height:100%;
-  object-fit:contain;
-  padding:10px;
-}
-.product-info{ min-width:0; }
-.product-title{
-  font-size: 16px;
-  font-weight: 650;
-  margin: 0 0 8px;
-}
-.product-desc .desc-label{
-  font-size: 12px;
-  color:#6b7280;
-  margin-bottom: 6px;
-}
-.product-desc p{
-  margin:0;
-  font-size: 13px;
-  line-height: 1.45;
-  color:#374151;
-}
-.more-link{
-  color:#2563eb;
-  font-weight:600;
-  text-decoration:none;
-  margin-left: 6px;
-}
-.more-link:hover{ text-decoration:underline; }
 
-.product-meta{
-  display:flex;
-  gap: 40px;
-  margin-top: 10px;
-}
-.meta-item{ display:grid; gap:2px; }
-.meta-label{ font-size:12px; color:#6b7280; }
-.meta-value{ font-size:13px; font-weight:600; }
+/* ════════════════════════════════════════════════════
+   CUSTOM SELECT DROPDOWN  (prefix: csd-)
+   ════════════════════════════════════════════════════ */
 
-/* Qty */
-.product-qty{
-  display:flex;
-  justify-content:flex-end;
+.csd-wrapper { position:relative; width:100%; }
+
+/* ── Trigger button ─────────────────────────────────── */
+.csd-trigger {
+    display:flex; align-items:center; justify-content:space-between;
+    height:52px; padding:0 16px;
+    border:1px solid #d1d5db; border-radius:12px;
+    background:#fff; cursor:pointer;
+    user-select:none;
+    transition:border-color .2s, box-shadow .2s;
 }
-.qty-stepper{
-  display:grid;
-  grid-template-columns: 42px 58px 42px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  overflow:hidden;
-  height: 40px;
-  background:#fff;
+.csd-trigger:hover,
+.csd-wrapper.csd-open .csd-trigger {
+    border-color:#93c5fd;
+    box-shadow:0 0 0 4px rgba(59,130,246,.10);
 }
-.qty-btn{
-  border:none;
-  background:#fff;
-  cursor:pointer;
-  font-size: 18px;
+.csd-label {
+    flex:1; font-size:14px; color:#9ca3af;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-.qty-btn:hover{ background:#f9fafb; }
-.qty-input{
-  border:none;
-  text-align:center;
-  font-size: 14px;
-  font-weight: 650;
-  outline:none;
+.csd-label--chosen { color:#111827; }
+.csd-arrow { flex-shrink:0; transition:transform .2s; }
+.csd-wrapper.csd-open .csd-arrow { transform:rotate(180deg); }
+
+/* ── Panel ──────────────────────────────────────────── */
+.csd-panel {
+    display:none;
+    position:absolute; top:calc(100% + 6px); left:0; right:0;
+    background:#fff; border:1px solid #e5e7eb; border-radius:14px;
+    box-shadow:0 10px 36px rgba(0,0,0,.13); z-index:9999; overflow:hidden;
+}
+.csd-wrapper.csd-open .csd-panel { display:block; }
+
+/* ── Search row ─────────────────────────────────────── */
+.csd-search-row {
+    display:flex; align-items:center; gap:10px;
+    padding:12px 14px; border-bottom:1px solid #f3f4f6;
+}
+.csd-search-input {
+    flex:1; border:none; outline:none;
+    font-size:13px; color:#374151; background:transparent;
+}
+.csd-search-input::placeholder { color:#9ca3af; }
+
+/* ── Scrollable list ────────────────────────────────── */
+.csd-list { max-height:290px; overflow-y:auto; padding:6px 0; }
+.csd-list::-webkit-scrollbar { width:4px; }
+.csd-list::-webkit-scrollbar-thumb { background:#e5e7eb; border-radius:4px; }
+
+/* ── Group header ───────────────────────────────────── */
+.csd-group-hd {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px 6px;
+    font-size:13px; font-weight:700; color:#111827;
+    cursor:pointer; user-select:none;
+}
+.csd-group-hd:hover { background:#f9fafb; }
+.csd-group-arrow { transition:transform .2s; }
+.csd-group--collapsed .csd-group-arrow { transform:rotate(-90deg); }
+.csd-group--collapsed .csd-group-body  { display:none; }
+
+/* ── Individual item ────────────────────────────────── */
+.csd-item {
+    display:flex; align-items:center;
+    padding:10px 16px 10px 30px;
+    font-size:14px; color:#374151;
+    cursor:pointer; transition:background .12s;
+    gap:0;
+}
+.csd-item span:first-child { flex:1; }
+.csd-item:hover { background:#f0f7ff; }
+.csd-item input[type=radio] { display:none; }
+
+/* ── Radio circle ───────────────────────────────────── */
+.csd-radio {
+    width:18px; height:18px; border-radius:50%;
+    border:2px solid #d1d5db; flex-shrink:0;
+    transition:border-color .15s, background .15s;
+    box-sizing:border-box;
+}
+/* selected state */
+.csd-item--active .csd-radio,
+.csd-item--active:hover .csd-radio {
+    border-color:#2563eb;
+    background:#2563eb;
+    box-shadow:inset 0 0 0 3px #fff;
+}
+.csd-item--active {
+    background:#eff6ff;
+    color:#1d4ed8;
+    font-weight:600;
 }
 
-/* Divider */
-.vendor-divider{
-  border-top: 1px solid #eef2f7;
-  margin: 10px 0;
+/* ── Empty / placeholder ────────────────────────────── */
+.csd-empty {
+    padding:18px 16px; margin:0;
+    font-size:13px; color:#9ca3af; text-align:center;
 }
 
-/* Draft inquiry */
-.draft-inquiry{
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid #eef2f7;
-}
-.draft-head{
-  display:flex;
-  align-items:baseline;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-.draft-head h3{
-  margin:0;
-  font-size: 16px;
-  font-weight: 650;
-}
-.draft-head span{
-  font-size: 13px;
-  color:#6b7280;
-}
-.quote-textarea{
-  width:100%;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  padding: 12px 14px;
-  font-size: 14px;
-  min-height: 110px;
-  resize: vertical;
-}
-.quote-textarea:focus{
-  outline:none;
-  border-color:#93c5fd;
-  box-shadow: 0 0 0 4px rgba(59,130,246,.12);
-}
 
-/* Bottom bar */
-.quote-bottom-bar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding-top: 16px;
-  margin-top: 18px;
-  border-top: 1px solid #eef2f7;
-}
-.bottom-left strong{
-  font-size: 18px;
-  font-weight: 750;
-}
-.bottom-right{
-  display:flex;
-  align-items:center;
-  gap: 16px;
-}
-.product-count{
-  font-size: 14px;
-  font-weight: 650;
-}
-.quote-primary-btn{
-  height: 44px;
-  padding: 0 18px;
-  border:none;
-  border-radius: 10px;
-  background:#0f2f5f;
-  color:#fff;
-  font-weight:650;
-  cursor:pointer;
-}
-.quote-primary-btn:hover{ filter: brightness(1.06); }
-
-/* =======================
+/* ════════════════════════════════════════════════════
    RESPONSIVE
-   ======================= */
+   ════════════════════════════════════════════════════ */
 
-/* tablet */
-@media (max-width: 992px){
-  .gcc-container{
-    width: min(100%, calc(100% - 32px)); /* 16px sides */
-  }
-  .quote-grid-2{ grid-template-columns: 1fr; }
-
-  .product-row,
-  .product-row--compact{
-    grid-template-columns: 24px 140px 1fr;
-    grid-template-rows: auto auto;
-    align-items:start;
-  }
-  .product-qty{
-    grid-column: 2 / -1;
-    justify-content:flex-start;
-    margin-top: 8px;
-  }
+@media (max-width:992px) {
+    .gcc-container  { width:min(100%,calc(100% - 32px)); }
+    .quote-grid-2   { grid-template-columns:1fr; }
+    .product-row, .product-row--compact {
+        grid-template-columns:24px 140px 1fr;
+        grid-template-rows:auto auto; align-items:start;
+    }
+    .product-qty { grid-column:2/-1; justify-content:flex-start; margin-top:8px; }
 }
 
-/* mobile */
-@media (max-width: 576px){
-  .gcc-container{
-    width: min(100%, calc(100% - 24px)); /* 12px sides */
-  }
-  .quote-card{ padding: 14px; }
-
-  .product-row,
-  .product-row--compact{
-    grid-template-columns: 24px 1fr;
-    gap: 12px;
-  }
-
-  .product-thumb,
-  .product-thumb--small{
-    width: 100%;
-    height: 160px;
-  }
-
-  .product-meta{
-    gap: 18px;
-    flex-wrap: wrap;
-  }
-
-  .quote-bottom-bar{
-    flex-direction: column;
-    align-items: stretch;
-    gap: 12px;
-  }
-  .bottom-right{
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  .quote-primary-btn{ width:100%; }
+@media (max-width:576px) {
+    .gcc-container { width:min(100%,calc(100% - 24px)); }
+    .quote-card    { padding:14px; }
+    .product-row, .product-row--compact { grid-template-columns:24px 1fr; gap:12px; }
+    .product-thumb, .product-thumb--small { width:100%; height:160px; }
+    .quote-bottom-bar { flex-direction:column; align-items:stretch; gap:12px; }
+    .bottom-right { justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    .quote-primary-btn { width:100%; }
 }
-<?= $this->getChildHtml('extra_css') // Just for structure ?>
+
 </style>

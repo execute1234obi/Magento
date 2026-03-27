@@ -1,0 +1,32 @@
+<div class="mt-6 space-y-4">
+
+    <!-- Name -->
+    <div>
+        <label class="text-sm text-gray-600">Name on Card</label>
+        <input type="text"
+               class="w-full border rounded-xl px-4 py-3 mt-1 focus:ring-2 focus:ring-blue-900 outline-none"
+               data-bind="value: creditCardOwner" />
+    </div>
+
+    <!-- Card Number -->
+    <div>
+        <label class="text-sm text-gray-600">Card Information</label>
+        <input type="text"
+               class="w-full border rounded-xl px-4 py-3 mt-1 focus:ring-2 focus:ring-blue-900 outline-none"
+               data-bind="value: creditCardNumber" />
+    </div>
+
+    <!-- Expiry + CVV -->
+    <div class="grid grid-cols-2 gap-3">
+        <input type="text"
+               placeholder="MM/YY"
+               class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none"
+               data-bind="value: creditCardExpDate" />
+
+        <input type="text"
+               placeholder="CVC"
+               class="border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-900 outline-none"
+               data-bind="value: creditCardVerificationNumber" />
+    </div>
+
+</div>

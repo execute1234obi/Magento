@@ -28,8 +28,8 @@ $mediaBase = $storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA)
 </div>
 
 <!-- Category Grid Wrapper -->
-<div class="category-grid-wrapper w-full mb-12 px-6" style="padding:0 130px;">
-    <!-- <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"> -->
+<div class="category-grid-wrapper w-full mb-12">
+        <!-- <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"> -->
         <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
 
         <?php foreach ($categories as $category): ?>
@@ -70,8 +70,8 @@ if (!empty($imagePath)) {
 </div>
 
 <!-- Navigation Arrows -->
-<div class="flex justify-start space-x-6 pb-12" style="margin:50px 130px;">
-    <!-- Left Arrow Icon -->
+<div class="category-nav-wrapper flex justify-start space-x-6 pb-12">
+        <!-- Left Arrow Icon -->
     <button onclick="scrollCategories(-1)"
             class="bg-[#1A3764] text-white px-4  hover:bg-blue-700 transition-colors duration-300" style="width:40px; height:8px;">
         <i class="fas fa-chevron-left text-2xl"></i>
@@ -106,3 +106,156 @@ function scrollCategories(direction) {
     container.style.transform = `translateX(-${currentIndex * cardWidth * visibleCount}px)`;
 }
 </script>
+
+
+<style>
+/* ================================
+   SECTION TITLE
+================================ */
+
+.section-industrial-title h2 {
+    font-size: clamp(24px, 5vw, 48px);
+}
+
+.section-industrial-title p {
+    font-size: clamp(14px, 2.5vw, 22px);
+}
+
+/* ================================
+   GRID WRAPPER
+================================ */
+
+.category-grid-wrapper {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+}
+
+@media (min-width: 768px) {
+    .category-grid-wrapper {
+        padding-left: 40px !important;
+        padding-right: 40px !important;
+    }
+}
+
+@media (min-width: 1280px) {
+    .category-grid-wrapper {
+        padding-left: 130px !important;
+        padding-right: 130px !important;
+    }
+}
+
+/* ================================
+   CATEGORY GRID
+================================ */
+
+.category-grid {
+    transition: transform 0.4s ease;
+}
+
+/* Prevent overflow issues */
+.category-grid-wrapper {
+    overflow: hidden;
+}
+
+/* ================================
+   CATEGORY CARD
+================================ */
+
+.category-card {
+    padding: 16px;
+}
+
+@media (min-width: 768px) {
+    .category-card {
+        padding: 20px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .category-card {
+        padding: 24px;
+    }
+}
+
+.category-card img {
+    width: 60px;
+    height: 60px;
+}
+
+@media (min-width: 640px) {
+    .category-card img {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .category-card img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+.category-card p {
+    font-size: clamp(14px, 2vw, 22px);
+}
+
+/* ================================
+   NAVIGATION ARROWS
+================================ */
+
+.category-nav-wrapper {
+    margin: 30px 16px;
+}
+
+@media (min-width: 768px) {
+    .category-nav-wrapper {
+        margin: 40px 40px;
+    }
+}
+
+@media (min-width: 1280px) {
+    .category-nav-wrapper {
+        margin: 50px 130px;
+    }
+}
+
+.category-nav-wrapper button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+/* Fix right arrow lighter color */
+.category-nav-wrapper button:last-child {
+    background: #1A376480;
+}
+
+/* ================================
+   MOBILE FIXES
+================================ */
+
+@media (max-width: 640px) {
+
+    .category-grid {
+        gap: 16px !important;
+    }
+
+    .category-card {
+        text-align: center;
+        align-items: center;
+    }
+
+}
+
+/* ================================
+   PREVENT HORIZONTAL SCROLL
+================================ */
+
+body {
+    overflow-x: hidden;
+}
+    </style>

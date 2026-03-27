@@ -1,0 +1,636 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+use Vnecoms\Vendors\Model\Session as VendorSession;
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+$currentStore = $storeManager->getStore();
+
+// Filter frontend stores only
+$stores = array_filter(
+    $storeManager->getStores(),
+    function ($store) {
+        return $store->getId() > 0 && $store->getCode() !== 'admin' && strpos($store->getCode(), 'vendor') === false;
+    }
+);
+
+?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+$currentStore = $storeManager->getStore();
+$currentStoreName = $currentStore->getName();
+
+// Define $isArabic safely
+$isArabic = ($currentStore->getCode() === 'arabic'); // change 'arabic' to your actual Arabic store code
+?>
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+$mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+
+
+<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+
+<header
+  id="customHeader"
+  class="w-full shadow-sm bg-white fixed top-0 left-0 right-0 z-50 <?= $isArabic ? 'rtl-header' : '' ?>"
+  <?= $isArabic ? 'dir="rtl" lang="ar"' : '' ?>
+>
+  <!-- only this row flips in RTL -->
+  <div class="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-12 py-3 header-main">
+    <!-- this inner row also flips so logo sits at far right -->
+    <div class="flex items-center justify-between gap-[4.2vw] brand-nav">
+      <div class="flex items-center space-x-2">
+        <?php 
+        $baseUrl = $block->escapeUrl($block->getUrl(''));
+        if ($currentStore->getCode() === 'default') {
+          $baseUrl = $block->escapeUrl($block->getUrl(''));
+    $baseUrl = str_replace('/default/', '/', $baseUrl);
+    //echo  $baseUrl;
+    $store_code="EN";
+}
+else
+{
+  $store_code=ucwords($currentStore->getCode());
+}
+        ?>
+        <a href="<?=  $baseUrl; ?>">
+          <img src="<?= $block->escapeUrl($block->getViewFileUrl('wysiwyg/gcc-logo.png')) ?>" alt="GCC Trading" class="w-36">
+        </a>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font">
+        <div class="relative group">
+          <a href="<?= $block->escapeUrl($block->getUrl('vendor-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;">
+            <button type="button" onclick="toggleDropdown('vendorMenu')" id="vendorBtn"
+              class="flex items-center space-x-1 hover:text-[#3B82F6] hover:no-underline hover:border-none hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0">
+              <span><?= __("Vendors") ?></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          </a>
+          <!-- add helper class so we can flip anchor side in RTL -->
+          <div id="vendorMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
+            <a href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+             <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="Customer Menu" style="width:60px;">
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('List Products') ?></p>
+                <p class="text-gray-500 pt-2" style="font-size:10px; font-family:Inter;"><?= __('Add and manage your product listings.') ?></p>
+              </div>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+             <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="Customer Menu" style="width:60px;">
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Vendor Dashboard') ?></p>
+                <p class="text-gray-500 pt-2" style="font-size:10px; font-family:Inter;"><?= __('Track sales, manage orders, and grow your business.') ?></p>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="relative group">
+          <a href="<?= $block->escapeUrl($block->getUrl('customer-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;">
+            <button type="button" onclick="toggleDropdown('customerMenu')" id="customerBtn"
+              class="flex items-center space-x-1 hover:text-[#3B82F6] hover:no-underline hover:border-none hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0">
+              <span><?= __('Customer') ?></span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          </a>
+          <div id="customerMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
+            <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+             <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="Customer Menu" style="width:60px;">
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Request for Quotes (RFQ)') ?></p>
+                <p class="text-gray-500 pt-2" style="font-size:10px; font-family:Inter;"><?= __('Submit project details, get quotes from trusted suppliers.') ?></p>
+              </div>
+            </a>
+            <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-2.png" alt="Customer Menu" style="width:60px;">
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('HS Code') ?></p>
+                <p class="text-gray-500 pt-2" style="font-size:10px; font-family:Inter;"><?= __('Discover the right HS codes for smooth global trade.') ?></p>
+              </div>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login/')) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+              <img src="<?= $mediaUrl ?>wysiwyg/customer3.png" alt="Customer Menu" style="width:60px;">
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Join as a Customer') ?></p>
+                <p class="text-gray-500 pt-2" style="font-size:10px; font-family:Inter;"><?= __('Access unique features to improve your experience.') ?></p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>" class="hover:text-[#3B82F6] hover:no-underline hover:border-none hover:bg-[#EFF6FF] py-1 px-2 nav-text-color" style="text-decoration:none;"><?= __('About Us') ?></a>
+        <a href="<?= $block->escapeUrl($block->getUrl('contact-us')) ?>" class="hover:text-[#3B82F6] hover:no-underline hover:border-none hover:bg-[#EFF6FF] py-1 px-2 nav-text-color" style="text-decoration:none;"><?= __('Contact Us') ?></a>
+      </nav>
+    </div>
+
+    <div class="flex items-center space-x-6">
+      <div class="hidden md:flex items-center space-x-3 final-font gap-3" style="border-right:1px solid #D1D5DB;">
+        <?php if ($block->isLoggedIn()): ?>
+          <?php
+            $layout = $block->getLayout();
+            $messageBlock = $layout->createBlock(\CustomVendor\VendorHeader\Block\VendorMessagesNew::class);
+            $messageCount = $messageBlock ? $messageBlock->getUnreadMessageCount() : 0;
+            $messagesUrl  = $messageBlock ? $messageBlock->getMessagesUrl() : $block->getUrl('*/*/');
+            $vendorLogoUrl= $messageBlock ? $messageBlock->getVendorLogoUrl() : '';
+            $vendorDashboardUrl = $messageBlock ? $messageBlock->getVendorUrl() : '';
+          ?>
+          <!-- <a href="<?= $block->escapeUrl($vendorDashboardUrl) ?>"><?= __('Vendor Dashboard') ?></a> -->
+          <a href="<?= $block->escapeUrl($messagesUrl) ?>" class="relative text-gray-700 hover:text-[#3B82F6]">
+          <svg width="27" height="27" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.4348 2.57153H8.56627C7.2417 2.57153 6.57999 2.57153 6.04513 2.75782C5.54105 2.93693 5.08496 3.22966 4.71218 3.61334C4.3394 3.99702 4.05993 4.46136 3.89542 4.97039C3.71484 5.52125 3.71484 6.20239 3.71484 7.56582V23.5704C3.71484 24.551 4.84056 25.0721 5.55256 24.4207C5.75231 24.2361 6.0143 24.1336 6.28627 24.1336C6.55825 24.1336 6.82023 24.2361 7.01999 24.4207L7.57199 24.9258C7.92194 25.2494 8.38105 25.4292 8.8577 25.4292C9.33435 25.4292 9.79346 25.2494 10.1434 24.9258C10.4934 24.6022 10.9525 24.4225 11.4291 24.4225C11.9058 24.4225 12.3649 24.6022 12.7148 24.9258C13.0648 25.2494 13.5239 25.4292 14.0006 25.4292C14.4772 25.4292 14.9363 25.2494 15.2863 24.9258C15.6362 24.6022 16.0953 24.4225 16.572 24.4225C17.0486 24.4225 17.5077 24.6022 17.8577 24.9258C18.2077 25.2494 18.6668 25.4292 19.1434 25.4292C19.6201 25.4292 20.0792 25.2494 20.4291 24.9258L20.9811 24.4207C21.1809 24.2361 21.4429 24.1336 21.7148 24.1336C21.9868 24.1336 22.2488 24.2361 22.4486 24.4207C23.1606 25.0721 24.2863 24.551 24.2863 23.5704V7.56582C24.2863 6.20239 24.2863 5.5201 24.1057 4.97153C23.9413 4.46229 23.6619 3.99773 23.2891 3.61384C22.9164 3.22995 22.4602 2.93705 21.956 2.75782C21.4211 2.57153 20.7594 2.57153 19.4348 2.57153Z" stroke="#3B82F6" stroke-width="1.71429"/>
+                            <path d="M12.2861 12.8573H19.7147M8.28613 12.8573H8.85756M8.28613 8.8573H8.85756M8.28613 16.8573H8.85756M12.2861 8.8573H19.7147M12.2861 16.8573H19.7147" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round"/>
+                        </svg> 
+          <!-- icon omitted for brevity -->
+            <?php if ($messageCount > 0): ?>
+              <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center border border-white z-10" style="min-width:20px; font-size:10px;"><?= $block->escapeHtml($messageCount) ?></span>
+            <?php endif; ?>
+          </a>
+          <div>
+            <!-- <?php if ($vendorLogoUrl): ?>
+              <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>"><img src="<?= $vendorLogoUrl ?>" alt="Logo" title="customer dashboard" class="w-24" style="height:30px;"></a>
+            <?php endif; ?> -->
+
+
+       <div class="relative group">
+          <!-- <a href="<?= $block->escapeUrl($block->getUrl('customer-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;"> -->
+            <button type="button" onclick="toggleDropdown('userMenuProfile')" id="userProfileBtn"
+              class="flex items-center space-x-1 hover:text-[#3B82F6] hover:no-underline hover:border-none hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0">
+             <img src="<?= $vendorLogoUrl ?>" alt="Logo" title="customer dashboard" class="w-24" style="height:30px;">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+          <!-- </a> -->
+          <div id="userMenuProfile" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/')) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+
+<svg width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M11.4167 12.75V11.4167C11.4167 10.7094 11.1357 10.0311 10.6356 9.53105C10.1355 9.03095 9.45724 8.75 8.75 8.75H3.41667C2.70942 8.75 2.03115 9.03095 1.53105 9.53105C1.03095 10.0311 0.75 10.7094 0.75 11.4167V12.75M8.75 3.41667C8.75 4.88943 7.55609 6.08333 6.08333 6.08333C4.61057 6.08333 3.41667 4.88943 3.41667 3.41667C3.41667 1.94391 4.61057 0.75 6.08333 0.75C7.55609 0.75 8.75 1.94391 8.75 3.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+              <div>
+                
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('View Profile') ?></p>
+            
+             </div>
+            </a>
+            <a href="<?= $block->escapeUrl($vendorDashboardUrl) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+              
+<svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M4.75 14.0833V7.41667H8.75V14.0833M0.75 5.41667L6.75 0.75L12.75 5.41667V12.75C12.75 13.1036 12.6095 13.4428 12.3595 13.6928C12.1094 13.9429 11.7703 14.0833 11.4167 14.0833H2.08333C1.72971 14.0833 1.39057 13.9429 1.14052 13.6928C0.890476 13.4428 0.75 13.1036 0.75 12.75V5.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Vendor Dashboard') ?></p>
+              </div>
+            </a>
+            <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+              
+<svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M5.47667 5.41667C5.6334 4.97111 5.94277 4.5954 6.34997 4.35609C6.75717 4.11677 7.23593 4.02929 7.70145 4.10914C8.16697 4.18899 8.58921 4.43102 8.89338 4.79235C9.19756 5.15369 9.36404 5.61101 9.36333 6.08333C9.36333 7.41667 7.36333 8.08333 7.36333 8.08333M7.41667 10.75H7.42333M14.0833 7.41667C14.0833 11.0986 11.0986 14.0833 7.41667 14.0833C3.73477 14.0833 0.75 11.0986 0.75 7.41667C0.75 3.73477 3.73477 0.75 7.41667 0.75C11.0986 0.75 14.0833 3.73477 14.0833 7.41667Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Support') ?></p>
+             </div>
+            </a>
+             <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+    
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.00033 9.99999C9.1049 9.99999 10.0003 9.10456 10.0003 7.99999C10.0003 6.89542 9.1049 5.99999 8.00033 5.99999C6.89576 5.99999 6.00033 6.89542 6.00033 7.99999C6.00033 9.10456 6.89576 9.99999 8.00033 9.99999Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M12.9337 9.99999C12.8449 10.2011 12.8184 10.4241 12.8577 10.6404C12.8969 10.8566 13 11.0562 13.1537 11.2133L13.1937 11.2533C13.3176 11.3772 13.416 11.5242 13.4831 11.6861C13.5502 11.8479 13.5847 12.0214 13.5847 12.1967C13.5847 12.3719 13.5502 12.5454 13.4831 12.7072C13.416 12.8691 13.3176 13.0162 13.1937 13.14C13.0698 13.264 12.9228 13.3623 12.7609 13.4294C12.599 13.4965 12.4255 13.531 12.2503 13.531C12.0751 13.531 11.9016 13.4965 11.7397 13.4294C11.5779 13.3623 11.4308 13.264 11.307 13.14L11.267 13.1C11.1099 12.9463 10.9103 12.8432 10.6941 12.804C10.4778 12.7648 10.2547 12.7912 10.0537 12.88C9.85648 12.9645 9.68831 13.1048 9.56986 13.2837C9.45141 13.4625 9.38785 13.6721 9.38699 13.8867V14C9.38699 14.3536 9.24652 14.6928 8.99647 14.9428C8.74642 15.1928 8.40728 15.3333 8.05366 15.3333C7.70004 15.3333 7.3609 15.1928 7.11085 14.9428C6.8608 14.6928 6.72033 14.3536 6.72033 14V13.94C6.71516 13.7193 6.64374 13.5053 6.51533 13.3258C6.38693 13.1463 6.20748 13.0095 6.00033 12.9333C5.79925 12.8446 5.5762 12.8181 5.35993 12.8573C5.14367 12.8965 4.94411 12.9996 4.78699 13.1533L4.74699 13.1933C4.62316 13.3173 4.47611 13.4156 4.31425 13.4827C4.15238 13.5498 3.97888 13.5844 3.80366 13.5844C3.62844 13.5844 3.45494 13.5498 3.29307 13.4827C3.13121 13.4156 2.98416 13.3173 2.86033 13.1933C2.73636 13.0695 2.63801 12.9224 2.57091 12.7606C2.50381 12.5987 2.46928 12.4252 2.46928 12.25C2.46928 12.0748 2.50381 11.9013 2.57091 11.7394C2.63801 11.5775 2.73636 11.4305 2.86033 11.3067L2.90033 11.2667C3.05402 11.1095 3.15712 10.91 3.19633 10.6937C3.23554 10.4775 3.20907 10.2544 3.12033 10.0533C3.03582 9.85614 2.8955 9.68798 2.71664 9.56953C2.53778 9.45108 2.32818 9.38751 2.11366 9.38666H2.00033C1.6467 9.38666 1.30757 9.24618 1.05752 8.99613C0.807468 8.74608 0.666992 8.40695 0.666992 8.05332C0.666992 7.6997 0.807468 7.36056 1.05752 7.11051C1.30757 6.86047 1.6467 6.71999 2.00033 6.71999H2.06033C2.28099 6.71483 2.495 6.6434 2.67453 6.515C2.85405 6.38659 2.9908 6.20715 3.06699 5.99999C3.15574 5.79891 3.18221 5.57586 3.143 5.3596C3.10378 5.14333 3.00068 4.94378 2.84699 4.78666L2.80699 4.74666C2.68302 4.62283 2.58468 4.47577 2.51758 4.31391C2.45048 4.15205 2.41594 3.97854 2.41594 3.80332C2.41594 3.6281 2.45048 3.4546 2.51758 3.29274C2.58468 3.13087 2.68302 2.98382 2.80699 2.85999C2.93082 2.73602 3.07787 2.63768 3.23974 2.57058C3.4016 2.50348 3.5751 2.46894 3.75033 2.46894C3.92555 2.46894 4.09905 2.50348 4.26091 2.57058C4.42278 2.63768 4.56983 2.73602 4.69366 2.85999L4.73366 2.89999C4.89078 3.05368 5.09034 3.15678 5.3066 3.19599C5.52286 3.23521 5.74592 3.20873 5.94699 3.11999H6.00033C6.19751 3.03548 6.36567 2.89516 6.48412 2.7163C6.60257 2.53744 6.66614 2.32785 6.66699 2.11332V1.99999C6.66699 1.64637 6.80747 1.30723 7.05752 1.05718C7.30757 0.807132 7.6467 0.666656 8.00033 0.666656C8.35395 0.666656 8.69309 0.807132 8.94313 1.05718C9.19318 1.30723 9.33366 1.64637 9.33366 1.99999V2.05999C9.33451 2.27451 9.39808 2.48411 9.51653 2.66297C9.63498 2.84183 9.80315 2.98215 10.0003 3.06666C10.2014 3.1554 10.4245 3.18187 10.6407 3.14266C10.857 3.10345 11.0565 3.00035 11.2137 2.84666L11.2537 2.80666C11.3775 2.68269 11.5245 2.58434 11.6864 2.51724C11.8483 2.45014 12.0218 2.41561 12.197 2.41561C12.3722 2.41561 12.5457 2.45014 12.7076 2.51724C12.8694 2.58434 13.0165 2.68269 13.1403 2.80666C13.2643 2.93049 13.3626 3.07754 13.4297 3.2394C13.4968 3.40127 13.5314 3.57477 13.5314 3.74999C13.5314 3.92521 13.4968 4.09871 13.4297 4.26058C13.3626 4.42244 13.2643 4.56949 13.1403 4.69332L13.1003 4.73332C12.9466 4.89044 12.8435 5.09 12.8043 5.30626C12.7651 5.52253 12.7916 5.74558 12.8803 5.94666V5.99999C12.9648 6.19717 13.1052 6.36533 13.284 6.48379C13.4629 6.60224 13.6725 6.6658 13.887 6.66666H14.0003C14.3539 6.66666 14.6931 6.80713 14.9431 7.05718C15.1932 7.30723 15.3337 7.64637 15.3337 7.99999C15.3337 8.35361 15.1932 8.69275 14.9431 8.9428C14.6931 9.19285 14.3539 9.33332 14.0003 9.33332H13.9403C13.7258 9.33418 13.5162 9.39774 13.3373 9.51619C13.1585 9.63465 13.0182 9.80281 12.9337 9.99999Z" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Setting') ?></p>
+             </div>
+            </a>
+
+             <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M6 14H3.33333C2.97971 14 2.64057 13.8595 2.39052 13.6095C2.14048 13.3594 2 13.0203 2 12.6667V3.33333C2 2.97971 2.14048 2.64057 2.39052 2.39052C2.64057 2.14048 2.97971 2 3.33333 2H6M10.6667 11.3333L14 8M14 8L10.6667 4.66667M14 8H6" stroke="#414651" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+              <div>
+                <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Logout') ?></p>
+             </div>
+            </a>
+
+          </div>
+        </div>
+
+            
+          </div>
+          <!-- <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="pr-5"><img src="<?= $block->getBaseUrl() ?>pub/media/wysiwyg/logout-icon.png" alt="logout" class="w-24" style="height:12px; filter:brightness(0) invert(0);" title="logout"></a> -->
+        <?php else: ?>
+          <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="px-5 py-1.5 bg-[#1A3764] rounded-md text-sm custom-style link-text"><?= __('Sign Up') ?></a>
+          <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>"
+   class="sign-in-btn">
+   <?= __('Sign In') ?>
+</a>
+
+        <?php endif; ?>
+      </div>
+          <?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+
+// Get correct media base URL (no /default/)
+$mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+?>
+      <div class="relative inline-block text-left">
+        <div id="langToggle" class="flex items-center space-x-1 cursor-pointer text-[#3B82F6] gap-2 px-2 py-1 rounded-md hover:bg-gray-50">
+          <img src="<?= $mediaUrl ?>/wysiwyg/gc-lan.png" alt="Language Icon" class="w-24" style="height:18px;">
+          <span class="text-sm font-medium"><?= $store_code;//$block->escapeHtml($currentStore->getCode()) ?></span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </div>
+
+          <div id="languageMenu"
+     class="hidden absolute left-auto right-0 mt-3 w-auto bg-white rounded-xl shadow-lg p-4 space-y-4 border border-gray-200 z-50">
+
+      <!-- <div id="languageMenu" class="hidden absolute right-0 mt-3 w-72 bg-white rounded-xl shadow-lg p-4 space-y-4 border border-gray-200 z-50"> -->
+  <div class="language-switcher">
+    <span><?= $block->escapeHtml($currentStoreName) ?></span>
+    <ul>
+      <?php foreach ($stores as $store): ?>
+        <?php
+          // Skip current store
+          if ($store->getId() == $currentStore->getId()) continue;
+
+          // Get base URL for each store directly
+          $storeBaseUrl = $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_LINK);
+        ?>
+        <?php
+$storeBaseUrl = $store->getBaseUrl();
+$storeCode = $store->getCode();
+
+// Remove '/default/' only for default store
+if ($storeCode === 'default') {
+    $storeBaseUrl = str_replace('/default/', '/', $storeBaseUrl);
+}
+?>
+        <li>
+          <a href="<?= $block->escapeUrl($storeBaseUrl) ?>">
+           <?= __($store->getName()) ?>
+          </a>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </div>
+</div>
+
+      </div>
+
+      <button type="button" onclick="toggleMobileMenu()" class="md:hidden focus:outline-none bg-transparent border-0">
+        <svg id="hamburgerIcon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <svg id="closeIcon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="mobileMenu" class="hidden md:hidden bg-white border-t shadow-md">
+    <div class="flex flex-col space-y-4 p-5 text-gray-700">
+      <div>
+        <button type="button" onclick="toggleMobileDropdown('mobileVendorMenu')" class="w-full flex justify-between items-center bg-transparent border-0">
+          <span><?= __("Vendors") ?></span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- RTL indent: pl-4 -> pr-4 -->
+        <div id="mobileVendorMenu" class="hidden pr-4 mt-2 space-y-2">
+          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]"><?= __('List Products') ?></a>
+          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]"><?= __('Vendor Dashboard') ?></a>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" onclick="toggleMobileDropdown('mobileCustomerMenu')" class="w-full flex justify-between items-center bg-transparent border-0">
+          <span>Customer</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <!-- RTL indent: pl-4 -> pr-4 -->
+        <div id="mobileCustomerMenu" class="hidden pr-4 mt-2 space-y-2">
+          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]">Request for Quotes (RFQ)</a>
+          <a href="#" class="block text-sm text-gray-600 hover:text-[#3B82F6]">HS Code</a>
+          <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login/')) ?>" class="block text-sm text-gray-600 hover:text-[#3B82F6]">Join as a Customer</a>
+        </div>
+      </div>
+
+      <a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>" class="hover:text-[#3B82F6] nav-text-color">About Us</a>
+      <a href="<?= $block->escapeUrl($block->getUrl('contact-us')) ?>" class="hover:text-[#3B82F6] nav-text-color">Contact Us</a>
+
+      <?php if ($block->isLoggedIn()): ?>
+        <a href="<?= $block->escapeUrl($block->getLogoutUrl()) ?>" class="px-4 py-1 border border-[#3B82F6] text-[#3B82F6] rounded-md text-sm"><?= __('Logout') ?></a>
+      <?php else: ?>
+        <div class="flex space-x-2">
+          <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="px-5 py-1.5 bg-[#3B82F6] rounded-md text-sm custom-style"><?= __('Sign Up') ?></a>
+          <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="px-4 py-1 border border-[#3B82F6] text-[#3B82F6] rounded-md text-sm"><?= __('Sign In') ?></a>
+        </div>
+      <?php endif; ?>
+    </div>
+  </div>
+
+  <?php
+    $request       = $block->getRequest();
+    $fullActionName= $request->getFullActionName();
+    $isCmsPage     = ($block->getRequest()->getModuleName() === 'cms');
+    $isLoginPage   = ($fullActionName === 'customer_account_login');
+    $isRegisterPage= ($fullActionName === 'customer_account_create');
+    $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage;
+  ?>
+  <?php if (!$hideSearchBar): ?>
+    <?php
+      if (!isset($layout)) { $layout = $block->getLayout(); }
+      $searchBlock = $layout->createBlock(\Magento\Framework\View\Element\Template::class);
+      $searchBlock->setTemplate('Magento_CatalogSearch::custom-search-box.phtml');
+      echo $searchBlock->toHtml();
+    ?>
+  <?php endif; ?>
+</header>
+
+<style>
+/* ===== your existing styles (kept) ===== */
+.dropdown-active{color:#3B82F6!important;font-weight:600!important;}
+#customHeader .custom-style,#customHeader a.custom-style,#customHeader .custom-style:visited{color:#fff!important;text-decoration:none!important;padding:12px 20px;border-radius:11px;}
+#customHeader .custom-style:hover{color:#fff!important;}
+#customHeader .nav-text-color{color:#4B5563!important;}
+#customHeader img{max-height:37px;width:auto;}
+#customHeader a{font-size:1.rem;}
+.max-w-7xl{max-width:1280px;margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem;}
+.final-font{font-size:clamp(15px,4vw,7px)!important}
+.link-text{font-size:clamp(15px,4vw,7px)!important}
+.border-\[\#3B82F6\]{--tw-border-opacity:1;border-color:rgb(59 130 246/var(--tw-border-opacity,1));text-decoration:none!important;padding:12px 20px!important;border-radius:11px!important;}
+
+/* ===== RTL core ===== */
+.rtl-header{direction:rtl;text-align:right;--tw-space-x-reverse:1;}
+/* flip ONLY these two rows */
+.rtl-header .header-main{flex-direction:row-reverse!important;}
+.rtl-header .brand-nav{flex-direction:row-reverse!important;}
+/* mirror tailwind spacing */
+.rtl-header .space-x-6 > :not([hidden]) ~ :not([hidden]){margin-left:calc(1.5rem*var(--tw-space-x-reverse));margin-right:calc(1.5rem*(1 - var(--tw-space-x-reverse)));}
+.rtl-header .space-x-3 > :not([hidden]) ~ :not([hidden]){margin-left:calc(.75rem*var(--tw-space-x-reverse));margin-right:calc(.75rem*(1 - var(--tw-space-x-reverse)));}
+.rtl-header .space-x-2 > :not([hidden]) ~ :not([hidden]){margin-left:calc(.5rem*var(--tw-space-x-reverse));margin-right:calc(.5rem*(1 - var(--tw-space-x-reverse)));}
+.rtl-header .space-x-1 > :not([hidden]) ~ :not([hidden]){margin-left:calc(.25rem*var(--tw-space-x-reverse));margin-right:calc(.25rem*(1 - var(--tw-space-x-reverse)));}
+/* dropdowns open aligned to trigger on right in RTL */
+.rtl-header .dropdown-start{left:auto!important;right:0!important;}
+/* optional: logical text alignment */
+.rtl-header a,.rtl-header span,.rtl-header p{text-align:right;}
+/* RTL dropdown fix */
+.language-switcher .dropdown-menu {
+    min-width: auto !important;
+    width: auto !important;
+    right: 0 !important;
+    left: auto !important;
+    text-align: right;
+    direction: rtl;
+}
+.sign-in-btn {
+    padding: 6px 20px; /* px-5 py-1.5 same as Sign Up */
+    border: 1px solid #1A3764; /* same blue color */
+    color: #1A3764; /* outline text color */
+    border-radius: 6px; /* rounded-md */
+    font-size: 14px; /* text-sm */
+    font-weight: 400; /* match Sign Up */
+    line-height: 1.2; /* correct height */
+    display: inline-block;
+    background: transparent;
+}
+
+.sign-in-btn:hover {
+    text-decoration :none;
+    color: #fff;
+}
+header .sign-in-btn {
+    color: #1A3764 !important;
+}
+/* Lang toggle (globe icon, text, arrow) */
+#langToggle,
+#langToggle span,
+#langToggle svg {
+    color: #1A3764 !important; /* Text and arrow */
+    fill: #1A3764 !important;  /* SVG arrow */
+}
+
+/* Image icon inside toggle */
+#langToggle img {
+    filter: brightness(0) saturate(100%) invert(17%) sepia(56%) saturate(1467%) hue-rotate(193deg) brightness(91%) contrast(95%);
+    /* This converts your icon color to #1A3764 roughly; adjust if needed */
+}
+
+/* Dropdown items */
+#languageMenu .language-switcher span,
+#languageMenu .language-switcher a {
+    color: #1A3764 !important;
+}
+
+/* Dropdown links hover */
+#languageMenu .language-switcher a:hover {
+    color: #3B82F6 !important; /* Optional hover color */
+}
+
+/* ============================= */
+/* ===== HEADER RESPONSIVE ===== */
+/* ============================= */
+
+/* Large screens (already mostly handled by Tailwind) */
+@media (max-width: 1280px) {
+    .max-w-7xl {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+
+    /* Reduce nav spacing */
+    #customHeader nav {
+        gap: 18px !important;
+    }
+
+    /* Reduce logo size slightly */
+    #customHeader img {
+        max-height: 32px;
+    }
+
+    /* Language toggle spacing */
+    #langToggle span {
+        font-size: 13px;
+    }
+}
+
+/* Small Tablets / Large Mobiles */
+@media (max-width: 768px) {
+
+    /* Header padding smaller */
+    #customHeader .header-main {
+        padding: 10px 15px !important;
+    }
+
+    /* Logo smaller */
+    #customHeader img {
+        max-height: 28px;
+    }
+
+    /* Hide desktop right section */
+    #customHeader .final-font {
+        display: none !important;
+    }
+
+    /* Mobile menu full width */
+    #mobileMenu {
+        width: 100%;
+    }
+
+    /* Mobile dropdown spacing */
+    #mobileMenu .flex {
+        gap: 10px;
+    }
+
+    /* Language dropdown full width */
+    #languageMenu {
+        right: 10px !important;
+    }
+}
+
+/* Small Phones */
+@media (max-width: 480px) {
+
+    /* Reduce logo more */
+    #customHeader img {
+        max-height: 24px;
+    }
+
+    /* Reduce padding */
+    #customHeader .header-main {
+        padding: 8px 12px !important;
+    }
+
+    /* Mobile menu text */
+    #mobileMenu a {
+        font-size: 14px;
+    }
+
+    /* Buttons full width */
+    #mobileMenu .flex a {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Sign in / up buttons adjust */
+    .sign-in-btn,
+    #mobileMenu .custom-style {
+        padding: 8px 14px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+
+    #langToggle span {
+        display: none; /* Hide language text, keep icon */
+    }
+
+    #customHeader img {
+        max-height: 22px;
+    }
+
+    .sign-in-btn {
+        padding: 6px 10px !important;
+        font-size: 12px !important;
+    }
+}
+/* ============================= */
+/* ===== TABLET FIX ONLY ====== */
+/* ============================= */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+
+    /* Reduce container padding */
+    #customHeader .header-main {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    /* Allow header content to wrap if needed */
+    #customHeader .header-main {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Reduce logo size */
+    #customHeader img {
+        max-height: 30px;
+    }
+
+    /* Reduce nav spacing */
+    #customHeader nav {
+        gap: 16px !important;
+        font-size: 14px !important;
+    }
+
+    /* Reduce dropdown width */
+    #vendorMenu,
+    #customerMenu,
+    #userMenuProfile {
+        width: 280px !important;
+    }
+
+    /* Reduce right section spacing */
+    #customHeader .space-x-6 {
+        gap: 12px !important;
+    }
+
+    /* Adjust sign buttons */
+    .sign-in-btn,
+    #customHeader .custom-style {
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+    }
+
+    /* Language toggle smaller */
+    #langToggle span {
+        font-size: 13px !important;
+    }
+}
+</style>
+
+<script>
+function toggleDropdown(id){
+  const all=['vendorMenu','customerMenu','userMenuProfile'];
+  all.forEach(menuId => {
+    const el=document.getElementById(menuId);
+    if(!el) return;
+    (menuId===id)?el.classList.toggle('hidden'):el.classList.add('hidden');
+  });
+  const v=document.getElementById('vendorBtn'), c=document.getElementById('customerBtn'), u=document.getElementById('userProfileBtn');
+  if(id==='vendorMenu'){ v?.classList.toggle('dropdown-active'); c?.classList.remove('dropdown-active'); u?.classList.remove('dropdown-active'); }
+  if(id==='customerMenu'){ c?.classList.toggle('dropdown-active'); v?.classList.remove('dropdown-active'); u?.classList.remove('dropdown-active');}
+   if(id==='userMenuProfile'){ u?.classList.toggle('dropdown-active'); v?.classList.remove('dropdown-active'); c?.classList.remove('dropdown-active'); }
+}
+
+window.addEventListener('click',e=>{
+  if(!e.target.closest('.group')){
+    document.getElementById('vendorMenu')?.classList.add('hidden');
+    document.getElementById('customerMenu')?.classList.add('hidden');
+    document.getElementById('vendorBtn')?.classList.remove('dropdown-active');
+    document.getElementById('customerBtn')?.classList.remove('dropdown-active');
+    document.getElementById('userMenuProfile')?.classList.add('hidden');
+    document.getElementById('vendorBtn')?.classList.remove('dropdown-active');
+     document.getElementById('userProfileBtn')?.classList.remove('dropdown-active');
+  }
+});
+
+function toggleMobileMenu(){
+  const m=document.getElementById('mobileMenu');
+  const h=document.getElementById('hamburgerIcon');
+  const c=document.getElementById('closeIcon');
+  m?.classList.toggle('hidden');h?.classList.toggle('hidden');c?.classList.toggle('hidden');
+}
+function toggleMobileDropdown(id){ document.getElementById(id)?.classList.toggle('hidden'); }
+
+/* language dropdown */
+const langToggle=document.getElementById('langToggle');
+const languageMenu=document.getElementById('languageMenu');
+if(langToggle && languageMenu){
+  langToggle.addEventListener('click',e=>{ e.stopPropagation(); languageMenu.classList.toggle('hidden');});
+  document.addEventListener('click',e=>{ if(!langToggle.contains(e.target)&&!languageMenu.contains(e.target)){ languageMenu.classList.add('hidden'); }});
+}
+</script>

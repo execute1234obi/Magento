@@ -1,0 +1,180 @@
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background: #f9f9fb; color: #333; font-size: 14px; }
+/* Product Cards */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+}
+.product-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+  /* Add these two lines to enable Flexbox on the card */
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  height: 180px;
+  object-fit: cover;
+}
+
+.product-title {
+  font-weight: 500;
+  font-size: 16px;
+  margin-bottom: 8px;
+  min-height: 40px; /* Ensures space for 2 lines of text */
+  color: #333;
+   /* These are the key changes */
+    height: 40px;            /* Set a fixed height for the title box */
+    overflow: hidden;        /* Hide any text that overflows the box */
+    display: -webkit-box;    /* Use WebKit box for multi-line ellipsis */
+    -webkit-line-clamp: 2;   /* Limit the title to exactly 2 lines */
+    -webkit-box-orient: vertical;
+}
+
+
+.product-price {
+  font-weight: bold;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.product-meta {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: gray;
+  min-height: 20px; /* Provides consistent space for vendor info */
+}
+
+.product-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* This pushes the footer to the bottom */
+}
+
+.product-footer button {
+  background: #fff;
+  border: 1px solid #2d62f0;
+  color: #2d62f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Heart Icon */
+.product-card .heart-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 20px;
+  color: #ff5c8d;
+  cursor: pointer;
+}
+</style>
+<?php
+/** @var \Magento\Catalog\Block\Product\ListProduct $block */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+
+// Get the existing toolbar block from the layout
+$toolbarBlock = $block->getLayout()->getBlock('product_list_toolbar');
+
+// Check if the block exists before trying to use it
+if ($toolbarBlock) {
+    // Set the product collection on the toolbar
+    $toolbarBlock->setCollection($_productCollection);
+}
+
+// Get the Object Manager for testing (not recommended for production)
+// In a real module, you would use dependency injection in your Block class.
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+// Get the Vnecoms Vendor Factory
+$vendorFactory = $objectManager->create(\Vnecoms\Vendors\Model\VendorFactory::class);
+// Get the Vendors Verification Helper
+// This is the line you need to add to fix the error
+$vendorsVerificationHelper = $objectManager->get(\Business\VendorsVerification\Helper\Data::class);
+?>
+<?php
+/** @var $block \Magento\Catalog\Block\Product\ListProduct */
+$_productCollection = $block->getLoadedProductCollection();
+$_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+?>
+ <?php if ($toolbarBlock) { echo $toolbarBlock->toHtml(); } ?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="p-6 text-center text-gray-600">
+        <p><?= $block->escapeHtml(__('We can\'t find products matching the selection.')) ?></p>
+    </div>
+<?php else: ?>
+    
+ <div id="products" class="tab-content">
+<div class="product-grid">
+
+    <?php foreach ($_productCollection as $_product): ?>
+        <?php
+            $vendorId = $_product->getVendorId();
+            $vendorName = '';
+            $vendorLocation = '';
+            
+            if ($vendorId) {
+                try {
+                    // Create a new vendor model instance and load data by ID
+                    $vendor = $vendorFactory->create()->load($vendorId);
+                    if ($vendor && $vendor->getId()) {
+                        // Use the correct methods to get the vendor's data
+                        $vendorName = $vendor->getVendorName() ?: $vendor->getCName();
+                        $vendorLocation = $vendor->getCountryId(); // Or another attribute like getCity()
+                        $isVerified = $vendorsVerificationHelper->isVerifiedVendor($vendorId);
+                    }
+                } catch (NoSuchEntityException $e) {
+            // This is a more specific exception for "not found"
+            $this->messageManager->addErrorMessage('Vendor data not found.');
+            return 'N/A';
+        } catch (\Exception $e) {
+            $this->messageManager->addErrorMessage('An error occurred while fetching vendor data.');
+            return 'N/A';
+        }
+            }
+            ?>
+
+      <div class="product-card">
+        <div class="heart-icon">&#9733;</div> <!-- Heart Icon -->
+        <a href="<?= $_product->getProductUrl() ?>">
+    <img src="<?= $block->getImage($_product, 'product_page_image_large')->getImageUrl(); ?>" 
+                            alt="<?= $block->escapeHtml($_product->getName()); ?>" style="max-width:100%;height:auto;display:block;object-fit:cover;">
+        </a>
+        <div class="product-title"><?= $block->escapeHtml($_product->getName()); ?></div>
+        <div class="product-price"><?= $block->getProductPrice($_product)."/ 1 pcs"; ?> </div>
+        <br />
+        <hr />
+        <br />
+        
+        <div class="product-meta"><?= $block->escapeHtml($vendorName ?: 'N/A'); ?> · <?= $block->escapeHtml($vendorLocation ?: 'N/A'); ?></div>
+        <div class="product-footer">
+          <button>Add to Quote</button>
+      </div>
+      </div>
+<?php endforeach; ?>
+    </div>
+        
+        <?php // The pagination is handled by the toolbar block. The custom pagination is redundant. ?>
+        <?php if ($toolbarBlock): ?>
+            <?= $toolbarBlock->toHtml(); ?>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+  
+       

@@ -330,4 +330,112 @@ label.file-uploader-preview {
     background-color: #ffffff;
     z-index: 800;
 }
+/* for product listing page */
+/* for product listing page */
+/* 1. Grid Container: Isse full width row banayenge */
+.product.col-md-3 {
+    width: 100% !important; /* Har grid ab poori width lega */
+    max-height: 100px;      /* Listing ki height kam kar di */
+    margin-bottom: 5px;    /* Rows ke beech ka gap */
+    padding: 0 10px;
+}
 
+/* 2. Wrapper: Content ko side-by-side laane ke liye */
+.product-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;  /* Sab kuch vertically center rahega */
+    height: 70px;         /* Compact height */
+    padding: 5px 15px;
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    gap: 10px;            /* Elements ke beech ka gap */
+    overflow: hidden;
+}
+
+/* 3. Thumbnail Image: Isko chota aur square banayenge */
+.thumbnail-container {
+    order: 2;
+    flex: 0 0 60px;       /* Fixed width image ke liye */
+    height: 60px !important; 
+    width: 60px !important;
+    margin: 0 !important;
+    padding: 0;
+    border: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.thumbnail-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* "Add Image" button ko hide karna (optional - listing mein ganda lagta hai) */
+.btn-add-image {
+    display: none !important; 
+}
+
+/* 4. Product Info Rows: Inhe columns ki tarah treat karenge */
+.product-info-row {
+     order: 3;
+    flex: 1;              /* Name, Price wagera barabar space lenge */
+    margin: 0 !important;
+    padding: 0 5px;
+}
+
+/* Input Fields ko slim karna listing ke liye */
+.admin__control-text, 
+.form-control {
+    height: 28px !important; /* Patle inputs */
+    padding: 2px 8px !important;
+    font-size: 12px !important;
+}
+
+/* 5. Price aur QTY ko chota karna */
+.product-info-2col1, 
+.product-info-2col2 {
+    display: inline-block;
+    width: 48%;
+}
+
+/* 6. Status Label (Not Submitted) ko end mein rakhein */
+.approval-label {
+    min-width: 100px;
+    font-size: 10px;
+    text-align: center;
+    padding: 3px;
+    border-radius: 3px;
+    order: 10; /* Sabse aakhir mein dikhega */
+}
+
+/* Checkbox alignment */
+.data-grid-checkbox-cell-inner {
+    order: 1;
+    flex: 0 0 30px;
+    max-width: 30px;
+}
+/* checkbox input center */
+.data-grid-checkbox-cell-inner input {
+    margin: 0 auto;
+    display: block;
+}
+/* Product List not shown */
+.product-list {
+    display: none; /* ya flex/grid, jo required ho */
+    margin: 10px 0; 
+}
+/* for pagination alignment */
+.admin__data-grid-pager-wrap {
+    /* text-align: right; */
+    /* float: right; */
+    display: flex!important;
+    justify-content: flex-end !important;
+    width: 100% !important;
+}
+
+li.item-catalog-product._current._active.active.level-1 {
+    background-color: #4B78B3 !important;
+}

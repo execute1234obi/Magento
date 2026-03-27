@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Reports:etc/report_options.xsd">
+    <group name="order" label="Orders">
+        <report name="report_visitorcountry_visited_aggregated" label="Visitor Country Report" />
+    </group>
+</config>
