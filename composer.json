@@ -36,7 +36,7 @@
         "vnecoms/module-vendors-membership": "2.4.*",
         "vnecoms/module-vendors-notification-graphql": "2.0.*",
         "vnecoms/module-vendors-page-builder": "2.4.*",
-        "vnecoms/module-vendors-product-form": "2.4.*",
+        "vnecoms/module-vendors-product-form": "^2.4",
         "vnecoms/module-vendors-product-graphql": "2.0.*",
         "vnecoms/module-vendors-product-inventory": "2.0.*",
         "vnecoms/module-vendors-report-graphql": "2.0.*",
