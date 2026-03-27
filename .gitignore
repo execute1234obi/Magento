@@ -1,58 +1,13 @@
-# ================================
-# Magento 2 .gitignore for live/dev
-# ================================
-
-# Ignore Magento generated and cache directories
 /var/*
 !/var/.htaccess
 /pub/static/*
 !/pub/static/.htaccess
 /generated/*
 /node_modules/
-vendor/
-
-# Ignore media except .htaccess
+/vendor/
 /pub/media/*
 !/pub/media/.htaccess
+app/etc/env.php
+app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy.phtml
+ app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy 2.phtml
 
-# Ignore environment config
-/app/etc/env.php
-/app/etc/config.php   # optional: include if you want to track module enable/disable
-
-# Ignore IDE/editor files
-/.idea/
-/*.iml
-/.vscode/
-
-# Ignore logs and reports
-/var/log/
-/var/report/
-
-# Ignore backup files and temp files
-*.bak
-*.backup
-*.swp
-*~
-*.old
-*.tmp
-
-# Ignore OS files
-.DS_Store
-Thumbs.db
-
-# Ignore copies of templates or test files
-* copy.phtml
-
-# Ignore npm/node_modules if using frontend tooling
-/node_modules/
-
-# Ignore test results
-/test/var/
-/phpunit.xml.cache
-
-# Ignore local generated media files (optional)
-pub/media/catalog/product/tmp/
-
-# Any other local dev artifacts
-*.local
-*.dist
