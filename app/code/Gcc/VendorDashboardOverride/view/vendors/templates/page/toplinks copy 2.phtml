@@ -1,0 +1,390 @@
+<?php
+/**
+ * @var $block \Vnecoms\Vendors\Block\Vendors\Page\Toplinks
+ */
+
+$title = '';
+$titleBlock = $block->getLayout()->getBlock('vendor.page.title');
+if ($titleBlock) {
+    $title = (string)$titleBlock->getTitle();
+}
+
+//$messagesCount = 2;
+$messagesBlock = $block->getLayout()->getBlock('vendor.toplinks.messages');
+
+$messagesCount = 0;
+
+if ($messagesBlock) {
+    $messagesCount = (int)$messagesBlock->getUnreadMessageCount();
+}
+
+//$notificationsCount = 26;
+//$notificationsCount = 26;
+//$walletAmount = '$13.00';
+// ================== MESSAGES ==================
+$messagesBlock = $block->getLayout()->getBlock('vendor.toplinks.messages');
+$messagesCount = 0;
+
+if ($messagesBlock) {
+    $messagesCount = (int)$messagesBlock->getUnreadMessageCount();
+}
+
+// ================== NOTIFICATIONS ==================
+$notificationsBlock = $block->getLayout()->getBlock('vendor.toplinks.notifications');
+$notificationsCount = 0;
+
+if ($notificationsBlock) {
+    // method name module ke hisaab se change ho sakta hai
+    if (method_exists($notificationsBlock, 'getUnreadNotificationCount')) {
+        $notificationsCount = (int)$notificationsBlock->getUnreadNotificationCount();
+    } elseif (method_exists($notificationsBlock, 'getUnreadCount')) {
+        $notificationsCount = (int)$notificationsBlock->getUnreadCount();
+    }
+}
+
+// ================== WALLET ==================
+$walletBlock = $block->getLayout()->getBlock('vendor.toplinks.wallet');
+$walletAmount = '';
+
+if ($walletBlock) {
+    if (method_exists($walletBlock, 'getFormattedBalance')) {
+        $walletAmount = $walletBlock->getFormattedBalance();
+    } elseif (method_exists($walletBlock, 'getBalance')) {
+        $walletAmount = $walletBlock->getBalance();
+    }
+}
+$langLabel = 'Eng';
+
+$userLinksBlock = $block->getChildBlock('vendor.toplinks.users');
+$vendorName = (string)__('Vendor');
+$accountUrl = $block->getUrl('account');
+$buyerDashboardUrl = $block->getBaseUrl() . 'customer/account';
+$logoutUrl = $block->getUrl('account/logout');
+
+if ($userLinksBlock) {
+    $vendor = $userLinksBlock->getVendor();
+    $user = $userLinksBlock->getUser();
+
+    if ($vendor && $vendor->getName()) {
+        $vendorName = (string)$vendor->getName();
+    } elseif ($user && $user->getName()) {
+        $vendorName = (string)$user->getName();
+    }
+
+    $accountUrl = $userLinksBlock->getMyAccountLink();
+    $logoutUrl = $userLinksBlock->getLogoutLink();
+
+    if ($userLinksBlock->canShowBuyerDashboardLink()) {
+        $buyerDashboardUrl = $userLinksBlock->getBuyerDashboardUrl();
+    }
+}
+
+$avatarUrl = $block->getViewFileUrl('Vnecoms_Vendors::images/user.png');
+$vendorInitials = '';
+$vendorWords = preg_split('/\s+/', trim((string)$vendorName));
+
+foreach ($vendorWords as $vendorWord) {
+    if ($vendorWord === '') {
+        continue;
+    }
+
+    $vendorInitials .= strtoupper(substr($vendorWord, 0, 1));
+    if (strlen($vendorInitials) >= 2) {
+        break;
+    }
+}
+
+if ($vendorInitials === '') {
+    $vendorInitials = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', (string)$vendorName), 0, 2));
+}
+?>
+
+<nav class="vendor-topbar" aria-label="<?= $block->escapeHtmlAttr(__('Vendor top navigation')); ?>">
+    <div class="vendor-topbar__inner">
+        <div class="vendor-topbar__desktop">
+            <h1 class="vendor-topbar__title"><?= $block->escapeHtml($title); ?></h1>
+
+            <ul class="vendor-topbar__nav">
+                <li class="vendor-topbar__item" data-dd>
+                    <button class="vendor-topbar__btn" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false">
+                        <span class="vendor-lang-badge" aria-hidden="true"><?= $block->escapeHtml(substr($langLabel, 0, 2)); ?></span>
+                        <span><?= $block->escapeHtml($langLabel); ?></span>
+                        <span class="vendor-caret" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                    </button>
+
+                    <div class="vendor-dropdown vendor-dropdown--menu" data-dd-panel role="menu">
+                        <ul class="vendor-menu">
+                            <li><a href="#" role="menuitem"><?= $block->escapeHtml(__('English')); ?></a></li>
+                            <li><a href="#" role="menuitem"><?= $block->escapeHtml(__('Arabic')); ?></a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="vendor-topbar__item">
+                    <a class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+                       href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')); ?>"
+                       aria-label="<?= $block->escapeHtmlAttr(__('Dashboard')); ?>">
+                        <span class="vendor-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M3 11l9-8 9 8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M5 10v11h14V10" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </span>
+                    </a>
+                </li>
+
+                <li class="vendor-topbar__divider" aria-hidden="true"></li>
+
+                <li class="vendor-topbar__item" data-dd>
+
+    <button
+        class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+        type="button"
+        data-dd-btn
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-label="<?= $block->escapeHtmlAttr(__('Messages')); ?>"
+    >
+
+        <span class="vendor-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 4h16v16H4V4z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M4 7l8 6 8-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </span>
+
+        <?php if ($messagesCount > 0): ?>
+            <span class="vendor-badge vendor-badge--green">
+                <?= (int)$messagesCount; ?>
+            </span>
+        <?php endif; ?>
+
+    </button>
+
+    <div class="vendor-dropdown" data-dd-panel>
+
+        <?= $block->getChildHtml('vendor.toplinks.messages') ?>
+
+    </div>
+
+</li>
+
+                  
+                <li class="vendor-topbar__item" data-dd>
+                    <button class="vendor-topbar__btn vendor-topbar__btn--icon-only" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false" aria-label="<?= $block->escapeHtmlAttr(__('Notifications')); ?>">
+                        <span class="vendor-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M13.73 21a2 2 0 01-3.46 0" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </span>
+                        <?php if ($notificationsCount > 0): ?>
+                            <span class="vendor-badge vendor-badge--orange"><?= (int)$notificationsCount; ?></span>
+                        <?php endif; ?>
+                   </button>
+
+                    <div class="vendor-dropdown" data-dd-panel>
+                        <div class="vendor-dropdown__head">
+                            <div class="vendor-dropdown__title"><?= $block->escapeHtml(__('Notifications')); ?></div>
+                            <a class="vendor-dropdown__action" href="#"><?= $block->escapeHtml(__('Mark all as read')); ?></a>
+                        </div>
+                        <ul class="vendor-dropdown__list">
+                            <li>
+                                <a class="vendor-dropdown__row" href="#">
+                                    <div class="vendor-row__icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 2l9 5-9 5-9-5 9-5Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M3 7v10l9 5 9-5V7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                            <path d="M12 12v10" stroke-width="2" stroke-linecap="round"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="vendor-row__main">
+                                        <div class="vendor-row__top">
+                                            <div class="vendor-row__name"><?= $block->escapeHtml(__('Package')); ?></div>
+                                            <div class="vendor-row__time"><?= $block->escapeHtml(__('Today')); ?></div>
+                                        </div>
+                                        <div class="vendor-row__desc"><?= $block->escapeHtml(__('Updates of Iphone 13 Pro are approved')); ?></div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="vendor-dropdown__footer">
+                            <a href="#"><?= $block->escapeHtml(__('View All Notifications')); ?></a>
+                        </div>
+                    </div>
+                </li>
+                <li class="vendor-topbar__item" data-dd>
+    <button class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+            type="button"
+            data-dd-btn
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="<?= $block->escapeHtmlAttr(__('Notifications')); ?>">
+
+        <span class="vendor-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7" stroke-width="2"></path>
+                <path d="M13.73 21a2 2 0 01-3.46 0" stroke-width="2"></path>
+            </svg>
+        </span>
+
+        <?php if ($notificationsCount > 0): ?>
+            <span class="vendor-badge vendor-badge--orange">
+                <?= (int)$notificationsCount; ?>
+            </span>
+        <?php endif; ?>
+    </button>
+
+    <div class="vendor-dropdown" data-dd-panel>
+        <?php if ($notificationsBlock): ?>
+            <?= $notificationsBlock->toHtml(); ?>
+        <?php endif; ?>
+    </div>
+</li>
+                <li class="vendor-topbar__item" data-dd>
+                    <button class="vendor-topbar__btn" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false">
+                        <span class="vendor-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M3 7h18v14H3V7Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M3 7l2-4h16v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M16 14h5" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </span>
+                        <span class="vendor-wallet-value"><?= $block->escapeHtml($walletAmount); ?></span>
+                        <span class="vendor-caret" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                    </button>
+
+                    <div class="vendor-dropdown vendor-dropdown--menu" data-dd-panel role="menu">
+                        <ul class="vendor-menu">
+                            <li><a href="#" role="menuitem"><?= $block->escapeHtml(__('Wallet History')); ?></a></li>
+                            <li><a href="#" role="menuitem"><?= $block->escapeHtml(__('Withdraw')); ?></a></li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="vendor-topbar__item" data-dd>
+                    <button class="vendor-topbar__btn" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false">
+                        <span class="vendor-avatar" aria-hidden="true">
+                            <img src="<?= $block->escapeUrl($avatarUrl); ?>" alt="">
+                        </span>
+                        <span><?= $block->escapeHtml($vendorName); ?></span>
+                        <span class="vendor-caret" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                    </button>
+
+                    <div class="vendor-dropdown vendor-dropdown--menu" data-dd-panel role="menu">
+                        <ul class="vendor-menu">
+                            <li><a href="<?= $block->escapeUrl($accountUrl); ?>" role="menuitem"><?= $block->escapeHtml(__('Vendor Information')); ?></a></li>
+                            <li><a href="<?= $block->escapeUrl($buyerDashboardUrl); ?>" role="menuitem"><?= $block->escapeHtml(__('Buyer Dashboard')); ?></a></li>
+                            <li><hr class="vendor-menu-divider"></li>
+                            <li><a href="<?= $block->escapeUrl($logoutUrl); ?>" role="menuitem" class="logout"><?= $block->escapeHtml(__('Logout')); ?></a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="vendor-mobile-topbar">
+            <div class="vendor-mobile-topbar__row vendor-mobile-topbar__row--primary">
+                <button type="button"
+                        class="vendor-mobile-nav-toggle"
+                        aria-controls="vendor-mobile-sidebar"
+                        aria-expanded="false"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Open menu')); ?>">
+                    <span class="vendor-mobile-nav-toggle__bar"></span>
+                </button>
+
+                <div class="vendor-mobile-topbar__actions">
+                   <div class="vendor-topbar__item" data-dd>
+
+    <button
+        class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+        type="button"
+        data-dd-btn
+        aria-haspopup="true"
+        aria-expanded="false"
+        aria-label="<?= $block->escapeHtmlAttr(__('Messages')); ?>"
+    >
+
+        <span class="vendor-ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 4h16v16H4V4z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M4 7l8 6 8-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+        </span>
+
+        <?php if ($messagesCount > 0): ?>
+            <span class="vendor-badge vendor-badge--green">
+                <?= (int)$messagesCount; ?>
+            </span>
+        <?php endif; ?>
+
+    </button>
+
+    <div class="vendor-dropdown vendor-dropdown--mobile" data-dd-panel>
+
+        <?= $block->getChildHtml('vendor.toplinks.messages') ?>
+
+    </div>
+
+</div>
+<div class="vendor-dropdown vendor-dropdown--mobile" data-dd-panel>
+    <?php if ($notificationsBlock): ?>
+        <?= $notificationsBlock->toHtml(); ?>
+    <?php endif; ?>
+</div>
+
+                    <div class="vendor-topbar__item" data-dd>
+                        <button class="vendor-topbar__btn vendor-topbar__btn--compact" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false">
+                            <span class="vendor-avatar vendor-avatar--mobile" aria-hidden="true">
+                                <img src="<?= $block->escapeUrl($avatarUrl); ?>" alt="">
+                            </span>
+                            <span class="vendor-mobile-topbar__vendor-name"><?= $block->escapeHtml($vendorName); ?></span>
+                            <span class="vendor-caret" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </span>
+                        </button>
+                        <div class="vendor-dropdown vendor-dropdown--mobile" data-dd-panel role="menu">
+                            <ul class="vendor-menu">
+                                <li><a href="<?= $block->escapeUrl($accountUrl); ?>" role="menuitem"><?= $block->escapeHtml(__('Vendor Information')); ?></a></li>
+                                <li><a href="<?= $block->escapeUrl($buyerDashboardUrl); ?>" role="menuitem"><?= $block->escapeHtml(__('Buyer Dashboard')); ?></a></li>
+                                <li><hr class="vendor-menu-divider"></li>
+                                <li><a href="<?= $block->escapeUrl($logoutUrl); ?>" role="menuitem" class="logout"><?= $block->escapeHtml(__('Logout')); ?></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="vendor-mobile-topbar__row vendor-mobile-topbar__row--secondary">
+                <div class="vendor-mobile-topbar__page-title"><?= $block->escapeHtml($title); ?></div>
+                <div class="vendor-topbar__item" data-dd>
+                    <button class="vendor-topbar__btn vendor-topbar__btn--wallet" type="button" data-dd-btn aria-haspopup="true" aria-expanded="false">
+                        <span class="vendor-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M3 7h18v14H3V7Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M3 7l2-4h16v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M16 14h5" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </span>
+                        <span class="vendor-wallet-value"><?= $block->escapeHtml($walletAmount); ?></span>
+                        <span class="vendor-caret" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                    </button>
+                    <div class="vendor-dropdown vendor-dropdown--mobile vendor-dropdown--wallet" data-dd-panel role="menu">
+                        <ul class="vendor-menu">
+                            <li><a href="#" role="menuitem"><?= $block->escapeHtml(__('Wallet History')); ?></a></li>
+                            <li><a href="#" role="menuitem"><?= $block->escapeHtml(__('Withdraw')); ?></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
