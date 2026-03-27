@@ -27,3 +27,159 @@ img, video, embed, object {
 .skin-blue .main-header .navbar {
     background-color: aqua!important;
 }
+
+@media (max-width: 767px) {
+    body[class*="page-vendor"] {
+        overflow-x: hidden;
+    }
+
+    body[class*="page-vendor"] .main-header .logo,
+    body[class*="page-vendor"] .main-header .navbar,
+    body[class*="page-vendor"] .content-wrapper,
+    body[class*="page-vendor"] .right-side,
+    body[class*="page-vendor"] .main-footer {
+        margin-left: 0 !important;
+    }
+
+    body[class*="page-vendor"] .main-header .logo,
+    body[class*="page-vendor"] .main-header .navbar {
+        width: 100% !important;
+    }
+
+    body[class*="page-vendor"] .main-header .logo {
+        position: relative;
+        z-index: 12;
+    }
+
+    body[class*="page-vendor"] .main-header .navbar {
+        min-height: auto;
+        position: relative;
+        z-index: 13;
+    }
+
+    body[class*="page-vendor"] .vendor-topbar,
+    body[class*="page-vendor"] .vendor-topbar__inner {
+        width: 100% !important;
+        max-width: none !important;
+    }
+
+    body[class*="page-vendor"] .vendor-topbar__inner {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 12px !important;
+        height: auto !important;
+        min-height: 52px;
+    }
+
+    body[class*="page-vendor"] .vendor-topbar__inner > * {
+        min-width: 0;
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        border: 0;
+        border-radius: 10px;
+        background: #1e56a0;
+        color: #ffffff;
+        cursor: pointer;
+        box-shadow: 0 6px 16px rgba(16, 42, 86, 0.18);
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle:hover,
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle:focus {
+        background: #163f78;
+        color: #ffffff;
+        outline: none;
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle-bar {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 999px;
+        position: relative;
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle-bar::before,
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle-bar::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 18px;
+        height: 2px;
+        background: currentColor;
+        border-radius: 999px;
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle-bar::before {
+        top: -6px;
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-toggle-bar::after {
+        top: 6px;
+    }
+
+    body[class*="page-vendor"] .main-sidebar,
+    body[class*="page-vendor"] .left-side {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 260px !important;
+        max-width: 82vw;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.28s ease;
+        z-index: 1045 !important;
+        box-shadow: 10px 0 30px rgba(16, 42, 86, 0.2);
+    }
+
+    body[class*="page-vendor"].vendor-mobile-sidebar-open .main-sidebar,
+    body[class*="page-vendor"].vendor-mobile-sidebar-open .left-side {
+        transform: translateX(0);
+    }
+
+    body[class*="page-vendor"] .vendor-mobile-sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 24, 43, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        z-index: 1040;
+    }
+
+    body[class*="page-vendor"].vendor-mobile-sidebar-open .vendor-mobile-sidebar-overlay {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    body[class*="page-vendor"] .vendor-topbar img,
+    body[class*="page-vendor"] .vendor-topbar svg {
+        max-width: 100%;
+        height: auto;
+    }
+
+    body[class*="page-vendor"] .vendor-topbar .admin__action-dropdown,
+    body[class*="page-vendor"] .vendor-topbar .action,
+    body[class*="page-vendor"] .vendor-topbar a,
+    body[class*="page-vendor"] .vendor-topbar span {
+        white-space: normal;
+    }
+
+    body[class*="page-vendor"] .page-main,
+    body[class*="page-vendor"] .content-wrapper .page-content,
+    body[class*="page-vendor"] .right-side .page-content {
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+    }
+}

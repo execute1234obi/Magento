@@ -1,11 +1,11 @@
 <?php
-namespace Vendor\QuoteRequest\Controller\Index;
+namespace Vendor\QuoteRequest\Controller\View;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 
-class View extends Action
+class Index extends Action
 {
     protected $resultPageFactory;
 
@@ -13,8 +13,8 @@ class View extends Action
         Context $context,
         PageFactory $resultPageFactory
     ) {
-        parent::__construct($context);
         $this->resultPageFactory = $resultPageFactory;
+        parent::__construct($context);
     }
 
     public function execute()

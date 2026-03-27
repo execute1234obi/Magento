@@ -3,34 +3,52 @@ namespace Vendor\QuoteRequest\Controller\Index;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\RedirectFactory;
+use Magento\Catalog\Model\Session as CatalogSession;
+use Magento\Framework\Controller\Result\JsonFactory;
 
 class Create extends Action
 {
-    protected $resultRedirectFactory;
+    protected $catalogSession;
+    protected $resultJsonFactory;
 
     public function __construct(
         Context $context,
-        RedirectFactory $resultRedirectFactory
+        CatalogSession $catalogSession,
+        JsonFactory $resultJsonFactory
     ) {
+        $this->catalogSession = $catalogSession;
+        $this->resultJsonFactory = $resultJsonFactory;
         parent::__construct($context);
-        $this->resultRedirectFactory = $resultRedirectFactory;
     }
 
     public function execute()
     {
         $productId = (int)$this->getRequest()->getParam('product_id');
 
-        if (!$productId) {
-            $this->messageManager->addErrorMessage(__('Invalid product.'));
-            return $this->resultRedirectFactory->create()->setPath('/');
+        $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
+
+        if ($productId && !in_array($productId, $quoteItems)) {
+            $quoteItems[] = $productId;
         }
 
-        /** 👉 Save to your quote_request table here **/
+        $this->catalogSession->setQuoteItems($quoteItems);
 
-        $this->messageManager->addSuccessMessage(__('Product added to Quote.'));
+        // ✅ check if ajax
+        if ($this->getRequest()->isXmlHttpRequest()) {
 
-        return $this->resultRedirectFactory->create()
-            ->setPath('quoterequest/index/view');
+            $resultJson = $this->resultJsonFactory->create();
+
+            return $resultJson->setData([
+                'success' => true,
+                'product_id' => $productId,
+                'items' => $quoteItems,
+                'count' => count($quoteItems)
+            ]);
+        }
+
+        // ✅ normal request → redirect
+        return $this->resultRedirectFactory
+            ->create()
+            ->setPath('quoterequest/view/index');
     }
 }

@@ -1,0 +1,9 @@
+<p>Hello {{var vendor_name}},</p>
+<p>You have received a new quote request #{{var quote_id}} from {{var customer_name}}.</p>
+
+<p><strong>Product Details:</strong></p>
+<div>
+    {{var products_list|raw}}
+</div>
+
+<p><strong>Customer Note:</strong> {{var customer_message}}</p>

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="VendorName_CustomSkin::css/custom_vnecoms_styles.css"/>
+        <script src="VendorName_CustomSkin::js/vendor-mobile-sidebar.js"/>
+    </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="vendor.mobile.sidebar.toggle.handle"
+                   template="VendorName_CustomSkin::mobile-sidebar-toggle.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

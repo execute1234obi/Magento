@@ -6,9 +6,9 @@
     <body>      
         <referenceContainer name="content">          
             <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="vendor.verificationForm" template="Vendor_VendorsVerification::verification/form.phtml">
-                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.businessinfo" template="Vendor_VendorsVerification::verification/sections/Vendor-info.phtml" />
-                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.addressinfo" template="Vendor_VendorsVerification::verification/sections/Vendor-address.phtml" />
-                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.contactinfo" template="Vendor_VendorsVerification::verification/sections/Vendor-contact.phtml" />
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.businessinfo" template="Vendor_VendorsVerification::verification/sections/vendor-info.phtml" />
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.addressinfo" template="Vendor_VendorsVerification::verification/sections/vendor-address.phtml" />
+                <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.contactinfo" template="Vendor_VendorsVerification::verification/sections/vendor-contact.phtml" />
                 <block class="Vendor\VendorsVerification\Block\Vendors\Verification\Form" name="verification.documents" template="Vendor_VendorsVerification::verification/sections/documents.phtml" />
             </block>      
         </referenceContainer>

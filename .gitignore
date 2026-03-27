@@ -1,54 +1,58 @@
-############################
-# Magento 2 Gitignore File #
-############################
+# ================================
+# Magento 2 .gitignore for live/dev
+# ================================
 
-# OS files
-.DS_Store
-Thumbs.db
-
-# IDE files
-.idea/
-.vscode/
-*.iml
-*.swp
-*.swo
-*.bak
-
-# Composer
-/vendor/
-
-# Magento generated files
-/generated/
+# Ignore Magento generated and cache directories
 /var/*
 !/var/.htaccess
-
-/pub/static/
+/pub/static/*
 !/pub/static/.htaccess
+/generated/*
+/node_modules/
+vendor/
 
-# Media (except .htaccess)
+# Ignore media except .htaccess
 /pub/media/*
 !/pub/media/.htaccess
 
-# Local config
+# Ignore environment config
 /app/etc/env.php
-.env
+/app/etc/config.php   # optional: include if you want to track module enable/disable
 
-# Logs
-*.log
+# Ignore IDE/editor files
+/.idea/
+/*.iml
+/.vscode/
 
-# Cache & temp
-/.cache
-/var/cache/
-/var/page_cache/
-/var/session/
-/var/view_preprocessed/
+# Ignore logs and reports
+/var/log/
+/var/report/
 
-# PHPUnit
-.phpunit.result.cache
-.phpunit.cache
+# Ignore backup files and temp files
+*.bak
+*.backup
+*.swp
+*~
+*.old
+*.tmp
 
-# Node
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore copies of templates or test files
+* copy.phtml
+
+# Ignore npm/node_modules if using frontend tooling
 /node_modules/
 
-# Archives
-app.7z
+# Ignore test results
+/test/var/
+/phpunit.xml.cache
+
+# Ignore local generated media files (optional)
+pub/media/catalog/product/tmp/
+
+# Any other local dev artifacts
+*.local
+*.dist

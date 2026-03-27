@@ -3,9 +3,9 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <block class="Vendor\QuoteRequest\Block\View"
-                   name="quoterequest.view"
-                   template="Vendor_QuoteRequest::view.phtml"/>
+            <block class="Vendor\QuoteRequest\Block\Rfq\Productview"
+                   name="vendor.rfq.productview"
+                   template="Vendor_QuoteRequest::rfq/productview.phtml"/>
         </referenceContainer>
     </body>
 </page>

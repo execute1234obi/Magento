@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+
+    <menu>
+        <add id="Vendor_QuoteRequest::rfq_root"
+             title="Quote Request"
+             module="Vendor_QuoteRequest"
+             sortOrder="90"
+             parent="Magento_Backend::content"
+             resource="Vendor_QuoteRequest::rfq_root"/>
+
+        <add id="Vendor_QuoteRequest::rfq_history"
+             title="Vendor Quotes"
+             module="Vendor_QuoteRequest"
+             sortOrder="10"
+             parent="Vendor_QuoteRequest::rfq_root"
+             action="vendorquotation/index/index"
+             resource="Vendor_QuoteRequest::rfq_history"/>
+    </menu>
+</config>
