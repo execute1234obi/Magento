@@ -1,3 +1,62 @@
+<?php
+$vendorProductFallbackAddUrl = '';
+$vendorProductFallbackAddSet = 0;
+$vendorProductFallbackAddType = '';
+
+try {
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $productHelper = $objectManager->get(\Vnecoms\VendorsProduct\Helper\Data::class);
+    $productFactory = $objectManager->get(\Magento\Catalog\Model\ProductFactory::class);
+    $productTypeFactory = $objectManager->get(\Magento\Catalog\Model\Product\TypeFactory::class);
+    $attributeSetCollectionFactory = $objectManager->get(\Magento\Eav\Model\ResourceModel\Entity\Attribute\Set\CollectionFactory::class);
+
+    $product = $productFactory->create();
+    $defaultAttributeSetId = (int)$product->getDefaultAttributeSetId();
+    $attributeSetRestrictions = $productHelper->getAttributeSetRestriction();
+    $productTypeRestrictions = $productHelper->getProductTypeRestriction();
+    $types = $productTypeFactory->create()->getTypes();
+    $allowedTypes = [];
+
+    if (in_array($defaultAttributeSetId, $attributeSetRestrictions)) {
+        $attributeSetCollection = $attributeSetCollectionFactory->create()
+            ->setEntityTypeFilter($product->getResource()->getTypeId())
+            ->addFieldToFilter('attribute_set_id', ['nin' => $attributeSetRestrictions]);
+
+        if ($attributeSetCollection->count()) {
+            $defaultAttributeSetId = (int)$attributeSetCollection->getFirstItem()->getId();
+        }
+    }
+
+    uasort($types, function ($left, $right) {
+        return ($left['sort_order'] < $right['sort_order']) ? -1 : 1;
+    });
+
+    foreach ($types as $typeId => $type) {
+        if (in_array($typeId, $productTypeRestrictions)) {
+            continue;
+        }
+
+        $allowedTypes[] = $typeId;
+    }
+
+    if ($defaultAttributeSetId && !empty($allowedTypes)) {
+        $defaultType = in_array(\Magento\Catalog\Model\Product\Type::DEFAULT_TYPE, $allowedTypes, true)
+            ? \Magento\Catalog\Model\Product\Type::DEFAULT_TYPE
+            : reset($allowedTypes);
+        $vendorProductFallbackAddSet = (int)$defaultAttributeSetId;
+        $vendorProductFallbackAddType = (string)$defaultType;
+
+        $vendorProductFallbackAddUrl = $block->getUrl(
+            'catalog/product/new',
+            ['set' => $defaultAttributeSetId, 'type' => $defaultType]
+        );
+    }
+} catch (\Throwable $exception) {
+    $vendorProductFallbackAddUrl = '';
+    $vendorProductFallbackAddSet = 0;
+    $vendorProductFallbackAddType = '';
+}
+?>
 <link rel="stylesheet" type="text/css"
       href="<?= $block->getViewFileUrl('Gcc_VendorStyles::css/CustomAdminLTE.css'); ?>" />
 <link rel="stylesheet" type="text/css"
@@ -8,6 +67,18 @@
       href="<?= $block->getViewFileUrl('Gcc_VendorStyles::css/vendor-mobile-layout.css'); ?>" />
 <link rel="stylesheet" type="text/css"
       href="<?= $block->getViewFileUrl('Gcc_VendorStyles::css/vendor-product-grid.css'); ?>" />
+<?php if ($vendorProductFallbackAddUrl): ?>
+<div id="vendor-product-fallback-actions" hidden>
+    <div class="vendor-product-grid-page-actions vendor-product-grid-page-actions--fallback">
+        <div class="page-actions-buttons">
+            <a class="vendor-product-grid-fallback-add" href="<?= $block->escapeUrl($vendorProductFallbackAddUrl); ?>">
+                <span class="vendor-product-grid-fallback-add__label"><?= $block->escapeHtml(__('Add Product')); ?></span>
+                <span class="vendor-product-grid-fallback-add__caret" aria-hidden="true"></span>
+            </a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
 <style>
 body.subaccount-user-index .page-main-actions,
 body[class*="subaccount-user-index"] .page-main-actions {
@@ -1246,10 +1317,7 @@ body[class*="catalog-product-index"] .page-main-actions {
 
 body.catalog-product-index .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached,
 body.vendors-catalog-product-index .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached,
-body[class*="catalog-product-index"] .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached,
-body.catalog-product-index .vendor-product-grid-reference-header + .vendor-product-grid-page-actions-shell,
-body.vendors-catalog-product-index .vendor-product-grid-reference-header + .vendor-product-grid-page-actions-shell,
-body[class*="catalog-product-index"] .vendor-product-grid-reference-header + .vendor-product-grid-page-actions-shell {
+body[class*="catalog-product-index"] .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached {
     display: none !important;
 }
 
@@ -1342,6 +1410,12 @@ body[class*="catalog-product-index"] .vendor-pagehead .vendor-page-title-gap {
     display: none !important;
 }
 
+body.catalog-product-index .vendor-pagehead .vendor-page-title,
+body.vendors-catalog-product-index .vendor-pagehead .vendor-page-title,
+body[class*="catalog-product-index"] .vendor-pagehead .vendor-page-title {
+    display: none !important;
+}
+
 body.catalog-product-index .vendor-product-grid-reference-header,
 body.vendors-catalog-product-index .vendor-product-grid-reference-header,
 body[class*="catalog-product-index"] .vendor-product-grid-reference-header {
@@ -1387,6 +1461,17 @@ body[class*="catalog-product-index"] .vendor-product-grid-reference-head .page-a
     margin: 0 !important;
 }
 
+body.catalog-product-index .vendor-product-grid-reference-head .page-actions._fixed,
+body.vendors-catalog-product-index .vendor-product-grid-reference-head .page-actions._fixed,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-head .page-actions._fixed {
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    width: auto !important;
+    z-index: auto !important;
+}
+
 body.catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-page-actions,
 body.catalog-product-index .vendor-product-grid-reference-actions .page-actions,
 body.vendors-catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-page-actions,
@@ -1407,6 +1492,110 @@ body.catalog-product-index .vendor-product-grid-reference-actions .page-actions-
 body.vendors-catalog-product-index .vendor-product-grid-reference-actions .page-actions-buttons,
 body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .page-actions-buttons {
     gap: 12px;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-page-actions--fallback,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-page-actions--fallback,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .vendor-product-grid-page-actions--fallback {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 !important;
+    float: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    padding: 0 18px 0 22px;
+    border-radius: 10px;
+    background: #2e5ea8;
+    color: #ffffff !important;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 44px;
+    text-decoration: none !important;
+    white-space: nowrap;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add:hover,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add:hover,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add:hover {
+    background: #254f8f;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add__caret,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add__caret,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .vendor-product-grid-fallback-add__caret {
+    width: 8px;
+    height: 8px;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    transform: rotate(-45deg) translateY(-1px);
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split {
+    position: relative;
+    display: inline-flex !important;
+    align-items: stretch;
+    min-width: 0;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-default,
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-toggle,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-default,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-toggle,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split .action-default,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split .action-toggle {
+    background: #2e5ea8 !important;
+    color: #ffffff !important;
+    border: 0 !important;
+    min-height: 44px;
+    margin: 0 !important;
+    box-shadow: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-default,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-default,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split .action-default {
+    min-width: 160px;
+    padding: 0 48px 0 20px !important;
+    border-radius: 10px !important;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 44px;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-toggle,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-toggle,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split .action-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 42px;
+    padding: 0 !important;
+    border-left: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 0 10px 10px 0 !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-toggle::after,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split .action-toggle::after,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split .action-toggle::after {
+    border-color: #ffffff transparent transparent !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .actions-split .dropdown-menu,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .actions-split .dropdown-menu,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .actions-split .dropdown-menu {
+    right: 0;
+    left: auto;
 }
 
 body.catalog-product-index .vendor-product-grid-hide-quick,
@@ -1885,17 +2074,7 @@ body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-produc
 body.catalog-product-index .vendor-product-grid-toolbar-row,
 body.vendors-catalog-product-index .vendor-product-grid-toolbar-row,
 body[class*="catalog-product-index"] .vendor-product-grid-toolbar-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 18px;
-    min-height: 76px;
-    padding: 16px 18px;
-    border: 1px solid #e2ebf7;
-    border-bottom: 0;
-    border-radius: 16px 16px 0 0;
-    background: #ffffff;
-    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05);
+    display: none !important;
 }
 
 body.catalog-product-index .vendor-product-grid-toolbar-meta,
@@ -2110,6 +2289,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var closeButton = document.querySelector('.vendor-mobile-sidebar-close');
     var overlay = document.querySelector('.vendor-mobile-sidebar-overlay');
     var sidebar = document.querySelector('.main-sidebar, .left-side');
+    var vendorProductFallbackAddUrl = <?= json_encode($vendorProductFallbackAddUrl, JSON_UNESCAPED_SLASHES) ?>;
+    var vendorProductFallbackAddSet = <?= (int)$vendorProductFallbackAddSet ?>;
+    var vendorProductFallbackAddType = <?= json_encode($vendorProductFallbackAddType) ?>;
     var vendorProductPagingComponent = null;
     var vendorProductPageSizeComponent = null;
     var isVendorProductGridPage = body.classList.contains('catalog-product-index') ||
@@ -2514,7 +2696,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (!pageActions) {
-            pageActions = document.querySelector('.page-actions');
+            pageActions = findVendorProductTopPageActions() || document.querySelector('.page-actions');
         }
 
         if (!pageActions || pageActions.closest('.admin__data-grid-header') || pageActions.closest('.vendor-product-grid-footer')) {
@@ -2522,6 +2704,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         pageActions.classList.add('vendor-product-grid-page-actions');
+        pageActions.classList.remove('_fixed');
 
         if (pageActions.parentElement && pageActions.parentElement.classList.contains('page-main-actions')) {
             pageActions.parentElement.classList.add('vendor-product-grid-page-actions-shell');
@@ -2530,6 +2713,108 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getVendorProductReferenceTitle() {
         return 'Catalog';
+    }
+
+    function getVendorProductFallbackAddHref() {
+        var currentPath;
+
+        if (vendorProductFallbackAddUrl) {
+            return vendorProductFallbackAddUrl;
+        }
+
+        if (!vendorProductFallbackAddSet || !vendorProductFallbackAddType) {
+            return '';
+        }
+
+        currentPath = window.location.pathname.replace(/\/$/, '');
+        return currentPath + '/new/set/' + encodeURIComponent(vendorProductFallbackAddSet) + '/type/' + encodeURIComponent(vendorProductFallbackAddType) + '/';
+    }
+
+    function vendorElementVisible(element) {
+        return !!(element && (element.offsetWidth || element.offsetHeight || element.getClientRects().length));
+    }
+
+    function findVisibleVendorProductAddButton(scope) {
+        var candidates = Array.prototype.slice.call((scope || document).querySelectorAll(
+            '#add_new_product, #add_new_product-button, [id*="add_new_product"], [data-ui-id*="add_new_product"], .actions-split .action-default, .page-actions button, .page-actions a'
+        ));
+
+        return candidates.find(function (candidate) {
+            var candidateText;
+
+            if (!vendorElementVisible(candidate)) {
+                return false;
+            }
+
+            candidateText = (candidate.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+            return candidateText.indexOf('add product') !== -1 && candidateText.indexOf('quick new product') === -1;
+        }) || null;
+    }
+
+    function createVendorProductFallbackAddAction() {
+        var href = getVendorProductFallbackAddHref();
+        var actionShell;
+        var buttons;
+        var link;
+        var label;
+        var caret;
+
+        if (!href) {
+            return null;
+        }
+
+        actionShell = document.createElement('div');
+        actionShell.className = 'vendor-product-grid-page-actions vendor-product-grid-page-actions--fallback';
+
+        buttons = document.createElement('div');
+        buttons.className = 'page-actions-buttons';
+        actionShell.appendChild(buttons);
+
+        link = document.createElement('a');
+        link.className = 'vendor-product-grid-fallback-add';
+        link.href = href;
+
+        label = document.createElement('span');
+        label.className = 'vendor-product-grid-fallback-add__label';
+        label.textContent = 'Add Product';
+        link.appendChild(label);
+
+        caret = document.createElement('span');
+        caret.className = 'vendor-product-grid-fallback-add__caret';
+        caret.setAttribute('aria-hidden', 'true');
+        link.appendChild(caret);
+
+        buttons.appendChild(link);
+
+        return actionShell;
+    }
+
+    function vendorProductActionsContainAddButton(candidate) {
+        return !!(candidate && (
+            candidate.querySelector('#add_new_product, #add_new_product-button, [id*="add_new_product"], [data-ui-id*="add_new_product"]') ||
+            Array.prototype.slice.call(candidate.querySelectorAll('button, a, span')).some(function (element) {
+                var elementText = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+                return elementText.indexOf('add product') !== -1 && elementText.indexOf('quick new product') === -1;
+            })
+        ));
+    }
+
+    function findVendorProductTopPageActions() {
+        var candidates = Array.prototype.slice.call(document.querySelectorAll('.page-actions'));
+        var eligibleCandidates = candidates.filter(function (candidate) {
+            return candidate &&
+                !candidate.closest('.sticky-header') &&
+                !candidate.closest('.vendor-product-grid-footer') &&
+                !candidate.closest('.vendor-product-grid-reference-header') &&
+                !candidate.closest('.admin__data-grid-header') &&
+                !candidate.closest('tbody') &&
+                !candidate.closest('td');
+        });
+
+        return eligibleCandidates.find(function (candidate) {
+            return vendorProductActionsContainAddButton(candidate);
+        }) || eligibleCandidates[0] || null;
     }
 
     function findVendorProductHeaderControl(scope, selector) {
@@ -2549,6 +2834,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var gridWrap;
         var scope;
         var gridOuterWrap;
+        var gridHeaderParent;
         var pageActions;
         var pageActionShell;
         var header;
@@ -2573,6 +2859,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var breadcrumbLinks;
         var quickButton;
         var quickCandidates;
+        var fallbackActionShell;
+        var realAddButton;
+        var fallbackReferenceAction;
 
         if (!isVendorProductGridPage) {
             return;
@@ -2595,10 +2884,17 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        pageActions = scope.querySelector('.page-actions:not(.vendor-product-grid-footer-controls)');
+        Array.prototype.forEach.call(document.querySelectorAll('.vendor-product-grid-reference-header'), function (existingHeader) {
+            if (existingHeader && !scope.contains(existingHeader)) {
+                existingHeader.remove();
+            }
+        });
+
+        pageActions = findVendorProductTopPageActions() || scope.querySelector('.page-actions:not(.vendor-product-grid-footer-controls)');
         pageActionShell = pageActions ? pageActions.closest('.page-main-actions') : null;
         header = scope.querySelector('.admin__data-grid-header');
         referenceHeader = scope.querySelector('.vendor-product-grid-reference-header');
+        gridHeaderParent = header && header.parentNode ? header.parentNode : (gridOuterWrap && gridOuterWrap.parentNode ? gridOuterWrap.parentNode : scope);
 
         if (!referenceHeader) {
             referenceHeader = document.createElement('div');
@@ -2628,11 +2924,7 @@ document.addEventListener('DOMContentLoaded', function () {
             referenceControls.className = 'vendor-product-grid-reference-controls';
             referenceToolbar.appendChild(referenceControls);
 
-            if (pageActionShell && pageActionShell.parentNode) {
-                pageActionShell.parentNode.insertBefore(referenceHeader, pageActionShell);
-            } else if (pageActions && pageActions.parentNode) {
-                pageActions.parentNode.insertBefore(referenceHeader, pageActions);
-            } else if (header && header.parentNode) {
+            if (header && header.parentNode) {
                 header.parentNode.insertBefore(referenceHeader, header);
             } else if (gridOuterWrap && gridOuterWrap.parentNode) {
                 gridOuterWrap.parentNode.insertBefore(referenceHeader, gridOuterWrap);
@@ -2648,8 +2940,14 @@ document.addEventListener('DOMContentLoaded', function () {
             referenceControls = referenceHeader.querySelector('.vendor-product-grid-reference-controls');
         }
 
-        if (pageActionShell && referenceHeader.parentNode === pageActionShell && pageActionShell.parentNode) {
-            pageActionShell.parentNode.insertBefore(referenceHeader, pageActionShell);
+        if (referenceHeader && gridHeaderParent && referenceHeader.parentNode !== gridHeaderParent) {
+            if (header && header.parentNode === gridHeaderParent) {
+                gridHeaderParent.insertBefore(referenceHeader, header);
+            } else if (gridOuterWrap && gridOuterWrap.parentNode === gridHeaderParent) {
+                gridHeaderParent.insertBefore(referenceHeader, gridOuterWrap);
+            } else {
+                gridHeaderParent.insertBefore(referenceHeader, gridHeaderParent.firstChild || null);
+            }
         }
 
         titleText = getVendorProductReferenceTitle();
@@ -2691,6 +2989,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (pageActions) {
             pageActions.classList.add('vendor-product-grid-page-actions');
+            pageActions.classList.remove('_fixed');
             quickCandidates = Array.prototype.slice.call(pageActions.querySelectorAll('#add_product_form_btn, button[onclick*="addProduct()"], button, a, span'));
 
             quickCandidates.forEach(function (element) {
@@ -2715,6 +3014,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
             });
+        }
+
+        if (referenceActions) {
+            realAddButton = findVisibleVendorProductAddButton(referenceActions);
+            fallbackReferenceAction = referenceActions.querySelector('.vendor-product-grid-page-actions--fallback');
+
+            if (realAddButton) {
+                if (fallbackReferenceAction) {
+                    fallbackReferenceAction.remove();
+                }
+            } else {
+                if (!fallbackReferenceAction) {
+                    fallbackActionShell = createVendorProductFallbackAddAction();
+
+                    if (fallbackActionShell) {
+                        referenceActions.appendChild(fallbackActionShell);
+                    }
+                }
+            }
         }
 
         actionWrap = findVendorProductHeaderControl(scope, '.action-select-wrap');
@@ -2813,6 +3131,17 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             if (!document.querySelector('.admin__data-grid-wrap table.data-grid')) {
+                return;
+            }
+
+            if (document.querySelector('.vendor-product-grid-reference-header')) {
+                toolbarRow = header.querySelector('.vendor-product-grid-toolbar-row');
+
+                if (toolbarRow) {
+                    toolbarRow.remove();
+                }
+
+                header.classList.add('vendor-product-grid-header-shell');
                 return;
             }
 
