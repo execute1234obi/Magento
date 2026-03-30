@@ -9,6 +9,13 @@ if ($titleBlock) {
     $title = (string)$titleBlock->getTitle();
 }
 
+$request = $block->getRequest();
+$fullActionName = $request ? (string)$request->getFullActionName() : '';
+
+if (in_array($fullActionName, ['vendors_catalog_product_index', 'catalog_product_index'], true)) {
+    $title = (string)__('Catalog');
+}
+
 //$messagesCount = 2;
 $messagesBlock = $block->getLayout()->getBlock('vendor.toplinks.messages');
 

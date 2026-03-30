@@ -1244,6 +1244,15 @@ body[class*="catalog-product-index"] .page-main-actions {
     box-shadow: none !important;
 }
 
+body.catalog-product-index .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached,
+body.vendors-catalog-product-index .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached,
+body[class*="catalog-product-index"] .vendor-product-grid-page-actions-shell.vendor-product-grid-page-actions-shell--detached,
+body.catalog-product-index .vendor-product-grid-reference-header + .vendor-product-grid-page-actions-shell,
+body.vendors-catalog-product-index .vendor-product-grid-reference-header + .vendor-product-grid-page-actions-shell,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-header + .vendor-product-grid-page-actions-shell {
+    display: none !important;
+}
+
 body.catalog-product-index .vendor-product-grid-page-actions,
 body.vendors-catalog-product-index .vendor-product-grid-page-actions,
 body[class*="catalog-product-index"] .vendor-product-grid-page-actions {
@@ -1327,6 +1336,403 @@ body[class*="catalog-product-index"] .page-actions button {
     border-radius: 10px;
 }
 
+body.catalog-product-index .vendor-pagehead .vendor-page-title-gap,
+body.vendors-catalog-product-index .vendor-pagehead .vendor-page-title-gap,
+body[class*="catalog-product-index"] .vendor-pagehead .vendor-page-title-gap {
+    display: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-header,
+body.vendors-catalog-product-index .vendor-product-grid-reference-header,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-header {
+    margin: 10px 0 18px;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-head,
+body.vendors-catalog-product-index .vendor-product-grid-reference-head,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-title,
+body.vendors-catalog-product-index .vendor-product-grid-reference-title,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-title {
+    margin: 0;
+    color: #173574;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-head .page-actions,
+body.vendors-catalog-product-index .vendor-product-grid-reference-head .page-actions,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-head .page-actions {
+    float: none !important;
+    clear: none !important;
+    margin: 0 !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-page-actions,
+body.catalog-product-index .vendor-product-grid-reference-actions .page-actions,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .vendor-product-grid-page-actions,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .page-actions,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .vendor-product-grid-page-actions,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .page-actions {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    float: none !important;
+    clear: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-actions .page-actions-buttons,
+body.vendors-catalog-product-index .vendor-product-grid-reference-actions .page-actions-buttons,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .page-actions-buttons {
+    gap: 12px;
+}
+
+body.catalog-product-index .vendor-product-grid-hide-quick,
+body.vendors-catalog-product-index .vendor-product-grid-hide-quick,
+body[class*="catalog-product-index"] .vendor-product-grid-hide-quick {
+    display: none !important;
+}
+
+body.catalog-product-index #add_product_form_btn,
+body.catalog-product-index .vendor-product-grid-page-actions button#add_product_form_btn,
+body.catalog-product-index .vendor-product-grid-page-actions [onclick*="addProduct()"],
+body.vendors-catalog-product-index #add_product_form_btn,
+body.vendors-catalog-product-index .vendor-product-grid-page-actions button#add_product_form_btn,
+body.vendors-catalog-product-index .vendor-product-grid-page-actions [onclick*="addProduct()"],
+body[class*="catalog-product-index"] #add_product_form_btn,
+body[class*="catalog-product-index"] .vendor-product-grid-page-actions button#add_product_form_btn,
+body[class*="catalog-product-index"] .vendor-product-grid-page-actions [onclick*="addProduct()"] {
+    display: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-toolbar,
+body.vendors-catalog-product-index .vendor-product-grid-reference-toolbar,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    min-height: 78px;
+    padding: 18px;
+    border: 1px solid #e2ebf7;
+    border-bottom: 0;
+    border-radius: 16px 16px 0 0;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05);
+}
+
+body.catalog-product-index .vendor-product-grid-reference-results,
+body.vendors-catalog-product-index .vendor-product-grid-reference-results,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-results {
+    flex: 0 0 auto;
+    color: #45639d;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    flex: 0 0 auto;
+    width: auto;
+    max-width: 100%;
+    margin-left: auto;
+    min-width: 0;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls > *,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls > *,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls > * {
+    margin: 0 !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap {
+    display: block !important;
+    flex: 0 0 auto;
+    position: relative;
+    width: auto !important;
+    min-width: 0;
+    margin: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 84px;
+    width: auto !important;
+    max-width: none !important;
+    height: 40px;
+    padding: 0 28px 0 13px;
+    border: 1px solid #d9e6f6 !important;
+    border-radius: 8px;
+    background: #eef5fd !important;
+    background-image: none !important;
+    color: #2a59a3 !important;
+    font-size: 14px;
+    font-weight: 700;
+    font-style: normal !important;
+    line-height: 1;
+    text-transform: none;
+    white-space: nowrap;
+    box-shadow: none;
+    text-align: left;
+    overflow: hidden;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select:hover,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select:focus,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select:hover,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select:focus,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select:hover,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select:focus {
+    background: #e8f1fd !important;
+    border-color: #cfdff5 !important;
+    box-shadow: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select::before,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select::after,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select::before,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select::after,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select::before,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select::after {
+    display: none !important;
+    content: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap::after,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap::after,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid #2a59a3;
+    border-bottom: 2px solid #2a59a3;
+    transform: translateY(-65%) rotate(45deg);
+    pointer-events: none;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items {
+    display: none !important;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 160px;
+    margin: 0;
+    padding: 8px 0;
+    border: 1px solid #d9e6f6;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 16px 32px rgba(17, 44, 98, 0.12);
+    z-index: 40;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu._active,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items._active,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items > .action-menu._active,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu._active,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items._active,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items > .action-menu._active,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu._active,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items._active,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items > .action-menu._active {
+    display: block !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap._active > .action-menu,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap._active > .action-menu-items,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap.active > .action-menu,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap.active > .action-menu-items,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap._active > .action-menu,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap._active > .action-menu-items,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap.active > .action-menu,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap.active > .action-menu-items,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap._active > .action-menu,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap._active > .action-menu-items,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap.active > .action-menu,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap.active > .action-menu-items {
+    display: block !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu > li,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu > li,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu > li {
+    list-style: none;
+    margin: 0;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu,
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items > .action-menu,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items > .action-menu,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap > .action-menu-items > .action-menu {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+    position: static;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap .action-menu-item,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-select-wrap .action-menu-item,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-select-wrap .action-menu-item {
+    display: block;
+    padding: 10px 14px;
+    color: #234985;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .data-grid-search-control-wrap,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .data-grid-search-control-wrap,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .data-grid-search-control-wrap {
+    flex: 0 0 280px;
+    min-width: 280px;
+    padding-left: 14px;
+    border-left: 1px solid #dfe8f5;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .search-wrapper,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .search-wrapper,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .search-wrapper {
+    position: relative;
+    width: 100% !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .data-grid-search-control,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .data-grid-search-control,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .data-grid-search-control {
+    height: 40px;
+    width: 100% !important;
+    padding-right: 14px;
+    padding-left: 40px !important;
+    border: 1px solid #d9e6f6 !important;
+    border-radius: 8px;
+    background: #ffffff !important;
+    color: #4d6697 !important;
+    font-style: normal !important;
+    box-shadow: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .data-grid-search-control::placeholder,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .data-grid-search-control::placeholder,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .data-grid-search-control::placeholder {
+    color: #7b92bc !important;
+    font-style: normal !important;
+    opacity: 1;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .search-wrapper::before,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .search-wrapper::before,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .search-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    width: 16px;
+    height: 16px;
+    background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234368a4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='m20 20-3.5-3.5'/%3E%3C/svg%3E\");
+    background-repeat: no-repeat;
+    background-size: 16px 16px;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .action-submit,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .action-submit,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .action-submit {
+    display: none !important;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .data-grid-filters-actions-wrap,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .data-grid-filters-actions-wrap,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .data-grid-filters-actions-wrap {
+    flex: 0 0 auto;
+    margin-left: 2px;
+}
+
+body.catalog-product-index .vendor-product-grid-reference-controls .data-grid-filters-action-wrap .action-default,
+body.vendors-catalog-product-index .vendor-product-grid-reference-controls .data-grid-filters-action-wrap .action-default,
+body[class*="catalog-product-index"] .vendor-product-grid-reference-controls .data-grid-filters-action-wrap .action-default {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 18px;
+    border-radius: 8px;
+    border: 1px solid #d9e6f6 !important;
+    background: #eef5fd !important;
+    color: #2a59a3 !important;
+    font-weight: 700;
+    box-shadow: none !important;
+}
+
+body.catalog-product-index .admin__data-grid-header.vendor-product-grid-header-shell,
+body.vendors-catalog-product-index .admin__data-grid-header.vendor-product-grid-header-shell,
+body[class*="catalog-product-index"] .admin__data-grid-header.vendor-product-grid-header-shell {
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+body.catalog-product-index .admin__data-grid-header.vendor-product-grid-header-shell > .admin__data-grid-header-row,
+body.vendors-catalog-product-index .admin__data-grid-header.vendor-product-grid-header-shell > .admin__data-grid-header-row,
+body[class*="catalog-product-index"] .admin__data-grid-header.vendor-product-grid-header-shell > .admin__data-grid-header-row {
+    display: none !important;
+}
+
 body.catalog-product-index .admin__data-grid-header,
 body.vendors-catalog-product-index .admin__data-grid-header,
 body[class*="catalog-product-index"] .admin__data-grid-header {
@@ -1338,9 +1744,9 @@ body[class*="catalog-product-index"] .admin__data-grid-header {
     box-shadow: none !important;
 }
 
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready),
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready),
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) {
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell),
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell),
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1354,30 +1760,30 @@ body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-produc
     box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05) !important;
 }
 
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row,
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter,
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > [class*="col-"],
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row,
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row,
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter,
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > [class*="col-"],
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row,
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row,
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter,
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > [class*="col-"],
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) > .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row {
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row,
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter,
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > [class*="col-"],
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row,
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row,
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter,
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > [class*="col-"],
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row,
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row,
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter,
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > [class*="col-"],
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) > .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row {
     display: contents;
 }
 
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) .admin__data-grid-actions-wrap,
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) .admin__data-grid-actions-wrap,
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) .admin__data-grid-actions-wrap,
-body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) .col-xs-9,
-body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready) .col-xs-9,
-body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready) .col-xs-9 {
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) .admin__data-grid-actions-wrap,
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) .admin__data-grid-actions-wrap,
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) .admin__data-grid-actions-wrap,
+body.catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) .col-xs-9,
+body.vendors-catalog-product-index .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) .col-xs-9,
+body[class*="catalog-product-index"] .admin__data-grid-header:not(.vendor-product-grid-header-ready):not(.vendor-product-grid-header-shell) .col-xs-9 {
     display: none !important;
 }
 
@@ -2122,6 +2528,270 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    function getVendorProductReferenceTitle() {
+        return 'Catalog';
+    }
+
+    function findVendorProductHeaderControl(scope, selector) {
+        var candidates = Array.prototype.slice.call((scope || document).querySelectorAll(selector));
+
+        return candidates.find(function (candidate) {
+            return candidate &&
+                !candidate.closest('.sticky-header') &&
+                !candidate.closest('.vendor-product-grid-footer') &&
+                !candidate.closest('.vendor-product-grid-reference-header') &&
+                !candidate.closest('tbody') &&
+                !candidate.closest('td');
+        }) || null;
+    }
+
+    function normalizeVendorProductReferenceHeader() {
+        var gridWrap;
+        var scope;
+        var gridOuterWrap;
+        var pageActions;
+        var pageActionShell;
+        var header;
+        var referenceHeader;
+        var referenceHead;
+        var referenceTitle;
+        var referenceActions;
+        var referenceToolbar;
+        var referenceResults;
+        var referenceControls;
+        var actionWrap;
+        var searchWrap;
+        var filterWrap;
+        var actionButton;
+        var actionLabel;
+        var searchInput;
+        var filterButton;
+        var resultCount;
+        var titleText;
+        var topbarTitle;
+        var mobileTopbarTitle;
+        var breadcrumbLinks;
+        var quickButton;
+        var quickCandidates;
+
+        if (!isVendorProductGridPage) {
+            return;
+        }
+
+        gridWrap = Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap')).find(function (candidate) {
+            return candidate &&
+                candidate.getAttribute('data-role') !== 'sticky-el-root' &&
+                candidate.querySelector('table.data-grid');
+        }) || null;
+
+        if (!gridWrap) {
+            return;
+        }
+
+        scope = findVendorProductGridScope(gridWrap) || gridWrap.parentElement;
+        gridOuterWrap = scope ? scope.querySelector('.admin__data-grid-outer-wrap') : null;
+
+        if (!scope) {
+            return;
+        }
+
+        pageActions = scope.querySelector('.page-actions:not(.vendor-product-grid-footer-controls)');
+        pageActionShell = pageActions ? pageActions.closest('.page-main-actions') : null;
+        header = scope.querySelector('.admin__data-grid-header');
+        referenceHeader = scope.querySelector('.vendor-product-grid-reference-header');
+
+        if (!referenceHeader) {
+            referenceHeader = document.createElement('div');
+            referenceHeader.className = 'vendor-product-grid-reference-header';
+
+            referenceHead = document.createElement('div');
+            referenceHead.className = 'vendor-product-grid-reference-head';
+            referenceHeader.appendChild(referenceHead);
+
+            referenceTitle = document.createElement('h2');
+            referenceTitle.className = 'vendor-product-grid-reference-title';
+            referenceHead.appendChild(referenceTitle);
+
+            referenceActions = document.createElement('div');
+            referenceActions.className = 'vendor-product-grid-reference-actions';
+            referenceHead.appendChild(referenceActions);
+
+            referenceToolbar = document.createElement('div');
+            referenceToolbar.className = 'vendor-product-grid-reference-toolbar';
+            referenceHeader.appendChild(referenceToolbar);
+
+            referenceResults = document.createElement('div');
+            referenceResults.className = 'vendor-product-grid-reference-results';
+            referenceToolbar.appendChild(referenceResults);
+
+            referenceControls = document.createElement('div');
+            referenceControls.className = 'vendor-product-grid-reference-controls';
+            referenceToolbar.appendChild(referenceControls);
+
+            if (pageActionShell && pageActionShell.parentNode) {
+                pageActionShell.parentNode.insertBefore(referenceHeader, pageActionShell);
+            } else if (pageActions && pageActions.parentNode) {
+                pageActions.parentNode.insertBefore(referenceHeader, pageActions);
+            } else if (header && header.parentNode) {
+                header.parentNode.insertBefore(referenceHeader, header);
+            } else if (gridOuterWrap && gridOuterWrap.parentNode) {
+                gridOuterWrap.parentNode.insertBefore(referenceHeader, gridOuterWrap);
+            } else {
+                scope.insertBefore(referenceHeader, gridWrap);
+            }
+        } else {
+            referenceHead = referenceHeader.querySelector('.vendor-product-grid-reference-head');
+            referenceTitle = referenceHeader.querySelector('.vendor-product-grid-reference-title');
+            referenceActions = referenceHeader.querySelector('.vendor-product-grid-reference-actions');
+            referenceToolbar = referenceHeader.querySelector('.vendor-product-grid-reference-toolbar');
+            referenceResults = referenceHeader.querySelector('.vendor-product-grid-reference-results');
+            referenceControls = referenceHeader.querySelector('.vendor-product-grid-reference-controls');
+        }
+
+        if (pageActionShell && referenceHeader.parentNode === pageActionShell && pageActionShell.parentNode) {
+            pageActionShell.parentNode.insertBefore(referenceHeader, pageActionShell);
+        }
+
+        titleText = getVendorProductReferenceTitle();
+
+        if (referenceTitle) {
+            referenceTitle.textContent = titleText;
+        }
+
+        breadcrumbLinks = Array.prototype.slice.call(document.querySelectorAll('.vendor-pagehead .vendor-breadcrumb__link'));
+        var breadcrumbCurrent = document.querySelector('.vendor-pagehead .vendor-breadcrumb__current');
+
+        if (breadcrumbLinks.length > 1) {
+            breadcrumbLinks[1].textContent = 'Catalog';
+            breadcrumbLinks[1].setAttribute('title', 'Catalog');
+        }
+
+        if (breadcrumbCurrent) {
+            breadcrumbCurrent.textContent = 'Manage Product';
+        }
+
+        topbarTitle = document.querySelector('.vendor-topbar__title');
+        mobileTopbarTitle = document.querySelector('.vendor-mobile-topbar__page-title');
+
+        if (topbarTitle) {
+            topbarTitle.textContent = titleText;
+        }
+
+        if (mobileTopbarTitle) {
+            mobileTopbarTitle.textContent = titleText;
+        }
+
+        if (pageActions && referenceActions && pageActions.parentNode !== referenceActions) {
+            referenceActions.appendChild(pageActions);
+        }
+
+        if (pageActionShell && pageActions && pageActions.parentNode !== pageActionShell) {
+            pageActionShell.classList.add('vendor-product-grid-page-actions-shell--detached');
+        }
+
+        if (pageActions) {
+            pageActions.classList.add('vendor-product-grid-page-actions');
+            quickCandidates = Array.prototype.slice.call(pageActions.querySelectorAll('#add_product_form_btn, button[onclick*="addProduct()"], button, a, span'));
+
+            quickCandidates.forEach(function (element) {
+                var elementText = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+                var directWrapper = element.parentElement && element.parentElement.parentElement && element.parentElement.parentElement.classList.contains('page-actions-buttons')
+                    ? element.parentElement
+                    : null;
+
+                if (element.id === 'add_product_form_btn' || elementText === 'quick new product' || elementText.indexOf('quick new product') !== -1) {
+                    element.classList.add('vendor-product-grid-hide-quick');
+
+                    if (element.parentElement) {
+                        element.parentElement.classList.add('vendor-product-grid-hide-quick');
+                    }
+
+                    if (directWrapper) {
+                        directWrapper.classList.add('vendor-product-grid-hide-quick');
+                    }
+
+                    if (element.closest('.actions-split')) {
+                        element.closest('.actions-split').classList.add('vendor-product-grid-hide-quick');
+                    }
+                }
+            });
+        }
+
+        actionWrap = findVendorProductHeaderControl(scope, '.action-select-wrap');
+        searchWrap = findVendorProductHeaderControl(scope, '.data-grid-search-control-wrap');
+        filterWrap = findVendorProductHeaderControl(scope, '.data-grid-filters-actions-wrap');
+
+        if (actionWrap) {
+            actionWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--action');
+        }
+
+        if (searchWrap) {
+            searchWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--search');
+        }
+
+        if (filterWrap) {
+            filterWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--filter');
+        }
+
+        if (actionWrap && referenceControls && actionWrap.parentNode !== referenceControls) {
+            referenceControls.appendChild(actionWrap);
+        }
+
+        if (searchWrap && referenceControls && searchWrap.parentNode !== referenceControls) {
+            referenceControls.appendChild(searchWrap);
+        }
+
+        if (filterWrap && referenceControls && filterWrap.parentNode !== referenceControls) {
+            referenceControls.appendChild(filterWrap);
+        }
+
+        actionButton = referenceControls ? referenceControls.querySelector('.action-select') : null;
+        actionLabel = actionButton ? actionButton.querySelector('span') : null;
+
+        if (actionLabel) {
+            actionLabel.textContent = 'Action';
+        }
+
+        if (actionButton) {
+            if (!actionLabel) {
+                actionButton.textContent = 'Action';
+            }
+
+            actionButton.setAttribute('title', 'Action');
+        }
+
+        searchInput = referenceControls ? referenceControls.querySelector('.data-grid-search-control') : null;
+
+        if (searchInput) {
+            searchInput.setAttribute('placeholder', 'Search Product');
+            searchInput.setAttribute('aria-label', 'Search Product');
+        }
+
+        filterButton = referenceControls ? referenceControls.querySelector('.data-grid-filters-action-wrap .action-default') : null;
+
+        if (filterButton) {
+            filterButton.textContent = 'Filters';
+        }
+
+        Array.prototype.forEach.call(scope.querySelectorAll('.action-select-wrap .action-select span'), function (element) {
+            var labelText = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+            if (labelText === 'actions') {
+                element.textContent = 'Action';
+            }
+        });
+
+        resultCount = getVendorProductGridResultCount(header || scope);
+
+        if (referenceResults) {
+            referenceResults.textContent = resultCount ? resultCount + ' Results' : '';
+        }
+
+        if (header) {
+            header.classList.add('vendor-product-grid-header-shell');
+        }
+    }
+
     function normalizeVendorProductGridHeader() {
         Array.prototype.forEach.call(document.querySelectorAll('.admin__data-grid-header'), function (header) {
             var toolbarRow;
@@ -2488,6 +3158,7 @@ document.addEventListener('DOMContentLoaded', function () {
             clearTimeout(syncTimer);
             syncTimer = setTimeout(function () {
                 normalizeVendorProductPageActions();
+                normalizeVendorProductReferenceHeader();
                 normalizeVendorProductGridHeader();
                 syncVendorProductGridFooter();
             }, 80);
