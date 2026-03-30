@@ -133,7 +133,113 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
                         </ul>
                     </div>
                 </li>
+                <!-- ================== NOTIFICATIONS ================== -->
+                <li class="vendor-topbar__item" data-dd>
 
+                    <button class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+                            type="button"
+                            data-dd-btn
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            aria-label="<?= $block->escapeHtmlAttr(__('Notifications')); ?>">
+
+                        <!-- ICON -->
+                        <span class="vendor-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                                <path d="M13.73 21a2 2 0 01-3.46 0"
+                                    stroke-width="2"
+                                    stroke-linecap="round"></path>
+                            </svg>
+                        </span>
+
+                        <!-- BADGE COUNT -->
+                        <?php if ($notificationsCount > 0): ?>
+                            <span class="vendor-badge vendor-badge--orange">
+                                <?= (int)$notificationsCount; ?>
+                            </span>
+                        <?php endif; ?>
+
+                    </button>
+
+                    <!-- DROPDOWN -->
+                    <div class="vendor-dropdown" data-dd-panel>
+
+                        <!-- HEADER -->
+                        <div class="vendor-dropdown__head">
+                            <div class="vendor-dropdown__title">
+                                <?= $block->escapeHtml(__('Notifications')); ?>
+                            </div>
+
+                            <?php if ($notificationsBlock): ?>
+                                <a class="vendor-dropdown__action"
+                                href="<?= $notificationsBlock->getMarkAllAsReadUrl(); ?>">
+                                    <?= $block->escapeHtml(__('Mark all as read')); ?>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- LIST -->
+                        <ul class="vendor-dropdown__list">
+
+                            <?php if (!count($notifications)): ?>
+                                <li>
+                                    <div class="vendor-dropdown__row">
+                                        <?= $block->escapeHtml(__('You have no notifications')); ?>
+                                    </div>
+                                </li>
+                            <?php endif; ?>
+
+                            <?php foreach ($notifications as $notification): ?>
+                                <?php $type = $notification->getNotificationType(); ?>
+
+                                <li class="<?= !$notification->getData('is_read') ? 'unread' : '' ?>">
+                                    <a class="vendor-dropdown__row"
+                                    href="<?= $notificationsBlock->getViewUrl($notification); ?>">
+
+                                        <div class="vendor-row__icon" aria-hidden="true">
+                                            <i class="<?= $type->getIconClass(); ?>"></i>
+                                        </div>
+
+                                        <div class="vendor-row__main">
+                                            <div class="vendor-row__top">
+
+                                                <div class="vendor-row__name">
+                                                    <?= $type->getTitle() ?: __('Notification'); ?>
+                                                </div>
+
+                                                <div class="vendor-row__time">
+                                                    <?= __('Now'); ?>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="vendor-row__desc">
+                                                <?= $type->getMessage(); ?>
+                                            </div>
+                                        </div>
+
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+
+                        </ul>
+
+                        <!-- FOOTER -->
+                        <div class="vendor-dropdown__footer">
+                            <?php if ($notificationsBlock): ?>
+                                <a href="<?= $notificationsBlock->getViewAllUrl(); ?>">
+                                    <?= $block->escapeHtml(__('View All Notifications')); ?>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+
+                    </div>
+
+                </li>
                 <li class="vendor-topbar__item" data-dd>
                     <button class="vendor-topbar__btn" type="button" data-dd-btn>
                         <span class="vendor-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7h18v14H3V7ZM3 7l2-4h16v4M16 14h5" stroke-width="2"/></svg></span>
