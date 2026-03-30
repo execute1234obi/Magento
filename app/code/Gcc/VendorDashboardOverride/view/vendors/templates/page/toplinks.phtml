@@ -53,7 +53,11 @@ if ($walletBlock && method_exists($walletBlock, 'getCredit')) {
 
 // ================== LINKS ==================
 $userLinksBlock = $block->getChildBlock('vendor.toplinks.users');
-$accountUrl = $userLinksBlock ? $userLinksBlock->getMyAccountLink() : $block->getUrl('account/index');
+$accountUrl = $block->getUrl('vendors/account');
+
+if ($vendor && $vendor->getId()) {
+    $accountUrl = $block->getUrl('vendors/account');
+}
 $buyerDashboardUrl = $block->getBaseUrl() . 'customer/account';
 $logoutUrl = $block->getBaseUrl() . 'customer/account/logout/';
 
