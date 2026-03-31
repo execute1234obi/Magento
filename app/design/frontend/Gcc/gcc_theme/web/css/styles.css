@@ -386,8 +386,20 @@ button {
   line-height: 1.2 !important;
 }
 
-/* If the button uses <span> inside and it becomes hidden */
-.checkout-index-index #opc-sidebar button span {
-  opacity: 1 !important;
-  visibility: visible !important;
+.checkout-index-index .opc-block-summary .table-totals tr.grand th,
+.checkout-index-index .opc-block-summary .table-totals tr.grand td {
+  font-size: 18px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
 }
+
+/* Product rows inside summary */
+.checkout-index-index .minicart-items .product-item-name,
+.checkout-index-index .items-in-cart .product-item-name {
+  font-size: 15px !important;
+  line-height: 1.35 !important;
+  font-weight: 600;
+}
+
+/* =========================
+   Important reset: remove oversized global type on checkout

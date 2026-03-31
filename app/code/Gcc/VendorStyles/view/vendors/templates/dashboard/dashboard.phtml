@@ -4,11 +4,13 @@
  */
 
 try {
-    $mostViewedBlock = $block->getLayout()->createBlock(\Vendor\MostViewed\Block\Dashboard\MostViewed::class);
+    // Naya updated path Dashboard folder ke saath
+    $mostViewedBlock = $block->getLayout()->createBlock(\Gcc\VendorStyles\Block\Dashboard\MostViewed::class);
     $mostViewedProducts = $mostViewedBlock->getMostViewedProducts();
 } catch (\Exception $e) {
     $mostViewedProducts = [];
 }
+
 
 try {
     $profileVisitorBlock = $block->getLayout()

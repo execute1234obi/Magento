@@ -7,5 +7,7 @@
 /vendor/
 /pub/media/*
 !/pub/media/.htaccess
-#app/etc/env.php
+app/etc/env.php
 app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy.phtml
+ app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy 2.phtml
+ magento_cron.bat

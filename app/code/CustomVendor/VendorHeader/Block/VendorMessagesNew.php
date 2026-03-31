@@ -58,7 +58,7 @@ public function getVendorLogoUrl()
     
     //$mediaUrl = $this->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . "pub/media/";
        $mediaUrl = $this->helper->getCleanMediaUrl();
-    $defualt_logo="/wysiwyg/nousericon1.png";
+    $defualt_logo="wysiwyg/nousericon1.png";
     // Use custom attribute 'upload_logo', fallback to default logo
     $logoPath = !empty($vendor['upload_logo']) ? trim($vendor['upload_logo'], '/') : $defualt_logo;
 
