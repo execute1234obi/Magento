@@ -9,6 +9,20 @@
         </style>
     </head>
     <body>
+        <referenceBlock name="customer_account_navigation">
+    
+    <!-- Stored Payment Methods -->
+     <!-- Remove Stored Payment Methods -->
+            <referenceBlock name="customer-account-navigation-my-credit-cards-link" remove="true"/>
+
+    <!-- My Reviews -->
+     <!-- Remove My Shop Reviews -->
+            <referenceBlock name="customer-account-navigation-vnecoms-review-link" remove="true"/>
+    <!-- My Credit (custom module - name check karna padega) -->
+     <!-- Remove My Credit -->
+            <referenceBlock name="customer-account-navigation-vnecoms-credit-link" remove="true"/>
+
+</referenceBlock>
         <referenceBlock name="sidebar.main.account_nav" template="Magento_Theme::html/account-nav.phtml"/>
     </body>
 </page>
