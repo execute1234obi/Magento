@@ -21,6 +21,8 @@
     <!-- My Credit (custom module - name check karna padega) -->
      <!-- Remove My Credit -->
             <referenceBlock name="customer-account-navigation-vnecoms-credit-link" remove="true"/>
+ <!-- Remove My product review-->
+             <referenceBlock name="customer-account-navigation-product-reviews-link" remove="true"/>
 
 </referenceBlock>
         <referenceBlock name="sidebar.main.account_nav" template="Magento_Theme::html/account-nav.phtml"/>

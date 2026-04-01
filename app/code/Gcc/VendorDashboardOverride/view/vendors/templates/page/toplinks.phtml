@@ -59,10 +59,13 @@ if ($walletBlock && method_exists($walletBlock, 'getCredit')) {
 
 // ================== LINKS ==================
 $userLinksBlock = $block->getChildBlock('vendor.toplinks.users');
-$accountUrl = $block->getUrl('vendors/account');
+$accountUrl = $block->getUrl('account');
+//$accountUrl = $block->getUrl('vendors/account');
 
 if ($vendor && $vendor->getId()) {
-    $accountUrl = $block->getUrl('vendors/account');
+    $accountUrl = $block->getUrl('account');
+
+    //$accountUrl = $block->getUrl('vendors/account/index');
 }
 $buyerDashboardUrl = $block->getBaseUrl() . 'customer/account';
 $logoutUrl = $block->getBaseUrl() . 'customer/account/logout/';
@@ -202,16 +205,7 @@ if ($senderId) {
                                                 </div>
 
                                                 <div class="vendor-row__time">
-                                                   <?php
-                                                    $date = $messagesBlock->getCreatedAt();
-
-                                                    if ($date) {
-                                                        $time = strtotime($date);
-                                                    } else {
-                                                        $time = time(); // ya skip bhi kar sakte ho
-                                                    }
-                                                ?>       
-                                                <?= $block->escapeHtml($time); ?>
+                                                   <?= $block->escapeHtml($messagesBlock ? $messagesBlock->getMessageTime($detail->getCreatedAt()) : ''); ?>
                                                 </div>
                                             </div>
 
@@ -354,7 +348,12 @@ if ($senderId) {
                     </button>
                     <div class="vendor-dropdown vendor-dropdown--menu" data-dd-panel>
                         <ul class="vendor-menu">
-                            <?= $walletBlock ? $walletBlock->getChildHtml('credit_dropdown_item') : '<li><span>No Data</span></li>'; ?>
+                            <!-- <?= $walletBlock ? $walletBlock->getChildHtml('credit_dropdown_item') : '<li><span>No Data</span></li>'; ?> -->
+                             <li>
+    <a href="<?= $block->getUrl('credit/transactions'); ?>">
+        Credit Transactions
+    </a>
+</li>
                         </ul>
                     </div>
                 </li>
