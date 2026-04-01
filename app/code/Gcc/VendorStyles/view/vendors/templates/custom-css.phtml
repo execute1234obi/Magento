@@ -1161,6 +1161,52 @@ body[class*="catalog-product-index"] table.data-grid thead th {
     min-width: 120px;
 }
 
+body.catalog-product-index table.data-grid thead th.data-grid-multicheck-cell,
+body.catalog-product-index table.data-grid tbody td.data-grid-checkbox-cell,
+body.catalog-product-index table.data-grid tbody td.data-grid-multicheck-cell,
+body.vendors-catalog-product-index table.data-grid thead th.data-grid-multicheck-cell,
+body.vendors-catalog-product-index table.data-grid tbody td.data-grid-checkbox-cell,
+body.vendors-catalog-product-index table.data-grid tbody td.data-grid-multicheck-cell,
+body[class*="catalog-product-index"] table.data-grid thead th.data-grid-multicheck-cell,
+body[class*="catalog-product-index"] table.data-grid tbody td.data-grid-checkbox-cell,
+body[class*="catalog-product-index"] table.data-grid tbody td.data-grid-multicheck-cell {
+    display: table-cell !important;
+    visibility: visible !important;
+    width: 52px !important;
+    min-width: 52px !important;
+    max-width: 52px !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+body.catalog-product-index table.data-grid .data-grid-checkbox-cell .admin__control-checkbox,
+body.catalog-product-index table.data-grid .data-grid-multicheck-cell .admin__control-checkbox,
+body.vendors-catalog-product-index table.data-grid .data-grid-checkbox-cell .admin__control-checkbox,
+body.vendors-catalog-product-index table.data-grid .data-grid-multicheck-cell .admin__control-checkbox,
+body[class*="catalog-product-index"] table.data-grid .data-grid-checkbox-cell .admin__control-checkbox,
+body[class*="catalog-product-index"] table.data-grid .data-grid-multicheck-cell .admin__control-checkbox {
+    position: static !important;
+    opacity: 1 !important;
+    overflow: visible !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+    appearance: auto !important;
+    -webkit-appearance: checkbox !important;
+}
+
+body.catalog-product-index table.data-grid .data-grid-checkbox-cell .admin__control-checkbox + label,
+body.catalog-product-index table.data-grid .data-grid-multicheck-cell .admin__control-checkbox + label,
+body.vendors-catalog-product-index table.data-grid .data-grid-checkbox-cell .admin__control-checkbox + label,
+body.vendors-catalog-product-index table.data-grid .data-grid-multicheck-cell .admin__control-checkbox + label,
+body[class*="catalog-product-index"] table.data-grid .data-grid-checkbox-cell .admin__control-checkbox + label,
+body[class*="catalog-product-index"] table.data-grid .data-grid-multicheck-cell .admin__control-checkbox + label {
+    display: none !important;
+}
+
 body.catalog-product-index .vendor-product-grid-footer,
 body.vendors-catalog-product-index .vendor-product-grid-footer,
 body[class*="catalog-product-index"] .vendor-product-grid-footer {
@@ -1536,6 +1582,43 @@ body[class*="catalog-product-index"] .vendor-product-grid-reference-actions .ven
     border-left: 2px solid #ffffff;
     border-bottom: 2px solid #ffffff;
     transform: rotate(-45deg) translateY(-1px);
+}
+
+body.catalog-product-index .vendor-product-grid-name-wrap,
+body.vendors-catalog-product-index .vendor-product-grid-name-wrap,
+body[class*="catalog-product-index"] .vendor-product-grid-name-wrap {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 100%;
+}
+
+body.catalog-product-index .vendor-product-grid-name-text,
+body.vendors-catalog-product-index .vendor-product-grid-name-text,
+body[class*="catalog-product-index"] .vendor-product-grid-name-text {
+    min-width: 0;
+    word-break: break-word;
+}
+
+body.catalog-product-index .vendor-product-grid-name-toggle,
+body.vendors-catalog-product-index .vendor-product-grid-name-toggle,
+body[class*="catalog-product-index"] .vendor-product-grid-name-toggle {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #2e5ea8;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+body.catalog-product-index .vendor-product-grid-name-toggle:hover,
+body.vendors-catalog-product-index .vendor-product-grid-name-toggle:hover,
+body[class*="catalog-product-index"] .vendor-product-grid-name-toggle:hover {
+    color: #254f8f;
 }
 
 body.catalog-product-index .vendor-product-grid-reference-actions .actions-split,
@@ -3244,6 +3327,212 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function normalizeVendorProductNameCells() {
+        var gridTable = Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap table.data-grid')).find(function (candidate) {
+            return candidate &&
+                !candidate.closest('[data-role="sticky-el-root"]') &&
+                candidate.querySelector('tbody tr');
+        }) || null;
+        var headerIndex = -1;
+
+        if (!isVendorProductGridPage || !gridTable) {
+            return;
+        }
+
+        Array.prototype.slice.call(gridTable.querySelectorAll('thead th')).some(function (cell, index) {
+            var labelText = (cell.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+            if (labelText === 'name') {
+                headerIndex = index;
+                return true;
+            }
+
+            return false;
+        });
+
+        Array.prototype.forEach.call(gridTable.querySelectorAll('tbody tr'), function (row) {
+            var cells = Array.prototype.filter.call(row.children, function (cell) {
+                return cell && cell.tagName === 'TD';
+            });
+            var cell = row.querySelector('td[data-column="name"], td[data-index="name"], td.col-name') || (headerIndex > -1 ? cells[headerIndex] : null);
+            var contentTarget = cell ? (cell.querySelector('[data-grid-cell-content]') || cell.querySelector('.data-grid-cell-content') || cell) : null;
+            var existingWrapper = contentTarget ? contentTarget.querySelector('.vendor-product-grid-name-wrap') : null;
+            var fullText = cell ? (cell.getAttribute('data-vendor-product-name-full') || '') : '';
+            var expanded = cell ? cell.getAttribute('data-vendor-product-name-expanded') === 'true' : false;
+            var shortText;
+            var wrapper;
+            var textNode;
+            var toggle;
+
+            if (!cell || !contentTarget) {
+                return;
+            }
+
+            if (!fullText) {
+                fullText = (contentTarget.textContent || '')
+                    .replace(/\s+/g, ' ')
+                    .replace(/\s*Read\s+(more|less)\s*$/i, '')
+                    .trim();
+            }
+
+            if (!fullText) {
+                return;
+            }
+
+            cell.setAttribute('data-vendor-product-name-full', fullText);
+
+            if (fullText.length <= 10) {
+                if (existingWrapper) {
+                    contentTarget.textContent = fullText;
+                }
+                cell.classList.remove('vendor-product-grid-name-cell');
+                cell.removeAttribute('data-vendor-product-name-expanded');
+                return;
+            }
+
+            shortText = fullText.slice(0, 10) + '...';
+            cell.classList.add('vendor-product-grid-name-cell');
+
+            if (!existingWrapper) {
+                contentTarget.textContent = '';
+
+                wrapper = document.createElement('span');
+                wrapper.className = 'vendor-product-grid-name-wrap';
+
+                textNode = document.createElement('span');
+                textNode.className = 'vendor-product-grid-name-text';
+                wrapper.appendChild(textNode);
+
+                toggle = document.createElement('button');
+                toggle.type = 'button';
+                toggle.className = 'vendor-product-grid-name-toggle';
+                toggle.addEventListener('mousedown', function (event) {
+                    event.stopPropagation();
+                });
+                toggle.addEventListener('click', function (event) {
+                    var isExpanded;
+
+                    event.preventDefault();
+                    event.stopPropagation();
+
+                    isExpanded = cell.getAttribute('data-vendor-product-name-expanded') === 'true';
+                    cell.setAttribute('data-vendor-product-name-expanded', isExpanded ? 'false' : 'true');
+                    textNode.textContent = isExpanded ? shortText : fullText;
+                    toggle.textContent = isExpanded ? 'Read more' : 'Read less';
+                    toggle.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+                });
+                wrapper.appendChild(toggle);
+
+                contentTarget.appendChild(wrapper);
+                existingWrapper = wrapper;
+            }
+
+            textNode = existingWrapper.querySelector('.vendor-product-grid-name-text');
+            toggle = existingWrapper.querySelector('.vendor-product-grid-name-toggle');
+
+            if (!textNode || !toggle) {
+                contentTarget.textContent = fullText;
+                cell.removeAttribute('data-vendor-product-name-expanded');
+                return;
+            }
+
+            textNode.textContent = expanded ? fullText : shortText;
+            toggle.textContent = expanded ? 'Read less' : 'Read more';
+            toggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        });
+    }
+
+    function ensureVendorProductSelectionColumn() {
+        var gridTable = Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap table.data-grid')).find(function (candidate) {
+            return candidate &&
+                !candidate.closest('[data-role="sticky-el-root"]') &&
+                candidate.querySelector('tbody tr');
+        }) || null;
+
+        function revealSelectionCells() {
+            if (!gridTable) {
+                return;
+            }
+
+            Array.prototype.forEach.call(
+                gridTable.querySelectorAll('thead th.data-grid-multicheck-cell, tbody td.data-grid-checkbox-cell, tbody td.data-grid-multicheck-cell'),
+                function (cell) {
+                    cell.style.display = 'table-cell';
+                    cell.style.visibility = 'visible';
+                    cell.hidden = false;
+                }
+            );
+
+            Array.prototype.forEach.call(
+                gridTable.querySelectorAll('.data-grid-checkbox-cell .admin__control-checkbox, .data-grid-multicheck-cell .admin__control-checkbox'),
+                function (checkbox) {
+                    checkbox.style.position = 'static';
+                    checkbox.style.opacity = '1';
+                    checkbox.style.visibility = 'visible';
+                }
+            );
+        }
+
+        if (!isVendorProductGridPage) {
+            return;
+        }
+
+        revealSelectionCells();
+
+        if (!window.require) {
+            return;
+        }
+
+        try {
+            window.require(['uiRegistry'], function (registry) {
+                registry.get('vendor_product_listing.vendor_product_listing.product_columns.ids', function (column) {
+                    try {
+                        if (column) {
+                            if (typeof column.visible === 'function') {
+                                column.visible(true);
+                            } else {
+                                column.visible = true;
+                            }
+
+                            if (typeof column.set === 'function') {
+                                column.set('visible', true);
+                            }
+
+                            if (typeof column.disabled === 'function') {
+                                column.disabled(false);
+                            }
+                        }
+                    } catch (error) {
+                        return;
+                    }
+
+                    setTimeout(revealSelectionCells, 50);
+                });
+
+                registry.get('vendor_product_listing.vendor_product_listing.listing_top.bookmarks', function (bookmarks) {
+                    try {
+                        if (!bookmarks || !bookmarks.current) {
+                            return;
+                        }
+
+                        bookmarks.current.columns = bookmarks.current.columns || {};
+                        bookmarks.current.columns.ids = Object.assign({}, bookmarks.current.columns.ids || {}, {
+                            visible: true
+                        });
+
+                        if (typeof bookmarks.saveState === 'function') {
+                            bookmarks.saveState();
+                        }
+                    } catch (error) {
+                        return;
+                    }
+                });
+            });
+        } catch (error) {
+            return;
+        }
+    }
+
     function renderVendorProductGridFooterControls(footer, state) {
         var pagerWrap = footer.querySelector('.vendor-product-grid-footer-controls');
         var sizeContainer;
@@ -3489,6 +3778,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 normalizeVendorProductPageActions();
                 normalizeVendorProductReferenceHeader();
                 normalizeVendorProductGridHeader();
+                ensureVendorProductSelectionColumn();
+                normalizeVendorProductNameCells();
                 syncVendorProductGridFooter();
             }, 80);
         }
