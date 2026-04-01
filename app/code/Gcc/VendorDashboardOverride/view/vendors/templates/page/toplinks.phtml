@@ -19,7 +19,7 @@ $vendorName = (string)__('Vendor'); // Default Fallback Name
 
 // ================== VENDOR SESSION CHECK (FIX) ==================
 $vendor = $vendorSession->getVendor();
-if ($vendor && $vendor->getId()) {
+if ($vendor && $vendor->getId() && $vendorSession->isLoggedIn()) {
     $vendorName = $vendor->getName();
     $logo = $vendor->getData('upload_logo');
     if ($logo) {
@@ -32,8 +32,14 @@ $messagesBlock = $block->getLayout()->getBlock('vendor.toplinks.messages');
 $messagesCount = 0;
 $messagesCollection = [];
 if ($messagesBlock) {
-    $messagesCount = method_exists($messagesBlock, 'getUnreadMessageCount') ? $messagesBlock->getUnreadMessageCount() : 0;
-    $messagesCollection = method_exists($messagesBlock, 'getUnreadMessageCollection') ? $messagesBlock->getUnreadMessageCollection() : [];
+
+    if (method_exists($messagesBlock, 'getUnreadMessageCount')) {
+        $messagesCount = $messagesBlock->getUnreadMessageCount();
+    }
+
+    if (method_exists($messagesBlock, 'getUnreadMessageCollection')) {
+        $messagesCollection = $messagesBlock->getUnreadMessageCollection();
+    }
 }
 
 $notificationsBlock = $block->getLayout()->getBlock('vendor.toplinks.notifications');
@@ -160,15 +166,32 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
                             <?php endif; ?>
 
                             <?php foreach ($messagesCollection as $message): ?>
-                                <?php $detail = $message->getLastMessageDetail(); ?>
+                                <?php $detail = $message->getLastMessageDetail();
+                                    if (!$detail) {
+                                        continue;
+                                    } ?>
 
                                 <li>
                                     <a class="vendor-dropdown__row"
                                     href="<?= $messagesBlock->getViewMessageUrl($message); ?>">
 
                                         <div class="vendor-row__icon" aria-hidden="true">
-                                            <img src="<?= $block->escapeUrl($messagesBlock->getAvatarUrl($detail->getSenderId())); ?>"
-                                                style="width:30px;height:30px;border-radius:50%;">
+                                          <?php
+$senderId = $detail->getSenderId();
+$avatar = '';
+
+if ($senderId) {
+    try {
+        $avatar = $messagesBlock->getAvatarUrl($senderId);
+    } catch (\Exception $e) {
+        $avatar = $block->getViewFileUrl('Vnecoms_Vendors::images/user.png');
+    }
+} else {
+    $avatar = $block->getViewFileUrl('Vnecoms_Vendors::images/user.png');
+}
+?>
+
+<img src="<?= $block->escapeUrl($avatar); ?>" style="width:30px;height:30px;border-radius:50%;">
                                         </div>
 
                                         <div class="vendor-row__main">
@@ -179,7 +202,16 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
                                                 </div>
 
                                                 <div class="vendor-row__time">
-                                                    <?= $block->escapeHtml($messagesBlock->getMessageTime($detail->getCreatedAt())); ?>
+                                                    <?php
+                                                    $date = $messagesBlock->getCreatedAt();
+
+                                                    if ($date) {
+                                                        $time = strtotime($date);
+                                                    } else {
+                                                        $time = time(); // ya skip bhi kar sakte ho
+                                                    }
+                                                ?>       
+                                                <?= $block->escapeHtml($time); ?>
                                                 </div>
                                             </div>
 
@@ -266,7 +298,10 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
                             <?php endif; ?>
 
                             <?php foreach ($notifications as $notification): ?>
-                                <?php $type = $notification->getNotificationType(); ?>
+                                <?php $type = $notification->getNotificationType();
+                                    if (!$type) {
+                                        continue;
+                                    } ?>
 
                                 <li class="<?= !$notification->getData('is_read') ? 'unread' : '' ?>">
                                     <a class="vendor-dropdown__row"

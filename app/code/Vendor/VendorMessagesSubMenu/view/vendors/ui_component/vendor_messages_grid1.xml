@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">vendor_messages_grid1.vendor_messages_grid_data_source</item>
+            <item name="deps" xsi:type="string">vendor_messages_grid1.vendor_messages_grid_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">messages_columns</item>
+    </argument>
+
+    <dataSource name="vendor_messages_grid_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">vendor_messages_grid_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">message_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">message_id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+
+    <columns name="messages_columns">
+        <column name="inbox_row">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">Vendor_VendorMessagesSubMenu/grid/cells/inbox-item</item>
+                    <item name="label" xsi:type="string" translate="true">Messages</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="message_id">
+            <settings>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="subject">
+            <settings>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="sender_name">
+            <settings>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="created_at">
+            <settings>
+                <visible>false</visible>
+            </settings>
+        </column>
+    </columns>
+</listing>

@@ -1,13 +1,8 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Reports:etc/report.xsd">
-
-    <report name="report_business_vendor_mostview_aggregated"
-            instance="Business\VisitorcountryReport\Model\ResourceModel\Report\VisitorCountry\Visited\Collection"
-            group="statistics"
-            translate="title">
-
-        <title>Visitor Country Report</title>
-    </report>
-
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Config/etc/reports.xsd">
+    <group name="products" label="Products">
+        <report name="visitor_country_report" 
+                label="Visitor Country Report" 
+                aggregate_table="business_visitor_country_aggregated" />
+    </group>
 </config>
