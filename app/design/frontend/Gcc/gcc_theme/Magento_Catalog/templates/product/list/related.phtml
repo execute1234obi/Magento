@@ -1,9 +1,12 @@
 <?php
 /** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
 $items = $block->getItems();
+
+/** ViewModel */
+$viewModel = $block->getData('view_model');
 ?>
 
-<?php if (count($items)): ?>
+<?php if (!empty($items)): ?>
   <div class="top-28">
 <div id="related-carousel" class="block related">
   <div class="block-title">
@@ -19,9 +22,14 @@ $items = $block->getItems();
       <div class="rp-track">
         <?php foreach ($items as $_item): ?>
           <?php
-            $imgUrl    = $block->getImage($_item, 'category_page_list')->getImageUrl();
-            $brand     = $_item->getAttributeText('manufacturer');
-            $country   = $_item->getData('country');
+            $imgUrl = $block->getImage($_item, 'category_page_list')->getImageUrl();
+            $brand  = $_item->getAttributeText('manufacturer');
+
+            /** ViewModel se data */
+            $vendorData = $viewModel ? $viewModel->getVendorData($_item) : [];
+            $vendorName = $vendorData['name'] ?? '';
+            $country    = $vendorData['country'] ?? '';
+            $countryCode = $vendorData['country_code'] ?? '';
             $priceHtml = $block->getProductPrice($_item);
           ?>
           <div class="rp-slide">
@@ -36,43 +44,53 @@ $items = $block->getItems();
               </a>
 
               <div class="rp-body">
-                <h3 class="rp-name"><a href="<?= $_item->getProductUrl(); ?>"><?= $block->escapeHtml($_item->getName()); ?></a></h3>
+                <h3 class="rp-name">
+                  <a href="<?= $_item->getProductUrl(); ?>">
+                    <?= $block->escapeHtml($_item->getName()); ?>
+                  </a>
+                </h3>
 
                 <div class="rp-price-line">
                   <span class="rp-price"><?= $priceHtml; ?></span>
-                 
+                  <!-- <span class="rp-per">/ 1 <?= __("pcs") ?></span> -->
                 </div>
 
                 <hr class="rp-divider">
 
-                <?php if ($brand): ?>
+                <?php if ($brand || $vendorName): ?>
                   <div class="rp-meta">
-                    <span class="rp-brand"><?= $block->escapeHtml($brand); ?></span>
+                    <span class="rp-brand">
+                      <?= $block->escapeHtml($vendorName ?: $brand); ?>
+                    </span>
                     <span class="rp-verified" aria-label="verified">
-                      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#2A6FE3" d="M12 2l2.4 2 3-.7 1 2.9 2.9 1-1 2.9 2 2.4-2 2.4 1 2.9-2.9 1-1 2.9-3-.7L12 22l-2.4-2-3 .7-1-2.9-2.9-1 1-2.9L2 12l2-2.4-1-2.9 2.9-1 1-2.9 3 .7L12 2zm-1.2 12.7l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/></svg>
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="#2A6FE3" d="M12 2l2.4 2 3-.7 1 2.9 2.9 1-1 2.9 2 2.4-2 2.4 1 2.9-2.9 1-1 2.9-3-.7L12 22l-2.4-2-3 .7-1-2.9-2.9-1 1-2.9L2 12l2-2.4-1-2.9 2.9-1 1-2.9 3 .7L12 2zm-1.2 12.7l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/>
+                      </svg>
                     </span>
                   </div>
                 <?php endif; ?>
 
-                
-
-              <?php if ($country): ?>
-  
-
-                <div class="rp-meta">
-    <span class="rp-country-chip">
-      <span class="rp-flag" aria-hidden="true">🇸🇦</span>
-      <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
-    </span>
-  </div>
-<?php endif; ?>
-
-
+                <?php if ($country): 
+                 ?>
+                  <div class="rp-meta">
+                    <span class="rp-country-chip">
+                     
+                      <span class="rp-flag" data-code="<?= $countryCode ?>" aria-hidden="true"></span>
+                      <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
+                    </span>
+                  </div>
+                <?php endif; ?>
 
               </div>
 
               <div class="rp-foot">
-                <button class="rp-btn" type="button"><?= __("Add To Quote") ?></button>
+                 <!-- request quote functionality -->
+                
+            <button class="rp-btn add-to-quote"
+                data-product-id="<?= $_item->getId(); ?>"
+                type="button">
+                <?= __('Add to Quote') ?>
+            </button>
               </div>
             </article>
           </div>
@@ -84,7 +102,7 @@ $items = $block->getItems();
 </div>
 <?php endif; ?>
 
-              </br></br>
+</br></br>
 
 <style>
   .top-28{
@@ -190,8 +208,17 @@ $items = $block->getItems();
   background:#F3FBF3; border:1px solid #DCEFE0; color:#14532D;
   font-weight:700; font-size:14px;
 }
-#related-carousel .rp-flag{ font-size:16px }
-
+#related-carousel .rp-flag{
+  width: 26px;
+  height: 18px;
+  min-width: 26px;
+  min-height: 18px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 3px;
+}
 /* Footer button (outlined blue) */
 #related-carousel .rp-foot{ padding:12px 16px 16px; margin-top:auto }
 #related-carousel .rp-btn{
@@ -258,4 +285,70 @@ require(['jquery'], function($){
     updateDisabled();
   });
 });
+</script>
+<script>
+require(['jquery'], function($) {
+
+  // FLAG FIX
+ require(['jquery'], function($){
+  $(document).ready(function(){
+
+    $('#related-carousel .rp-flag').each(function(){
+      var code = $(this).data('code');
+
+      if (code) {
+        code = code.toLowerCase().trim();
+
+        var flagUrl = 'https://flagcdn.com/w40/' + code + '.png';
+
+        $(this).css({
+          'background-image': 'url(' + flagUrl + ')',
+          'background-size': 'cover',
+          'background-position': 'center',
+          'display': 'inline-block'
+        });
+      }
+    });
+
+  });
+});
+
+  // ADD TO QUOTE FIX
+  $(document).on('click', '.add-to-quote', function () {
+
+    var button = $(this);
+    var productId = button.data('product-id');
+
+    if (!productId) {
+      console.log('Product ID missing');
+      return;
+    }
+
+    $.ajax({
+      url: '<?= $block->getUrl("quoterequest/index/create") ?>',
+      type: 'POST',
+      data: {
+        product_id: productId
+      },
+      showLoader: true,
+
+      success: function (response) {
+        button.text('Added');
+        button.prop('disabled', true);
+
+        if (response.count !== undefined) {
+          $('#quote-counter').text(response.count).show();
+        }
+      },
+
+      error: function (xhr) {
+        console.log(xhr);
+        alert('Error while adding to quote');
+      }
+    });
+
+  });
+
+});
+
 </script>

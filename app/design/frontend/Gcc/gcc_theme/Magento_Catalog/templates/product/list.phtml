@@ -52,7 +52,11 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
         }
 
         $displayBrand = $brand ?: ($vendorName ?: __('Brand'));
-        $displayCountry = $countryCode ?: 'SA'; // default country code if missing
+         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+         $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
+         $country_id = $countryFactory->create()->loadByCode($countryCode);
+         $country = $country_id->getName(); 
+         $displayCountry = $country ?: 'SA'; // default country code if missing
         
         ?>
         <article class="u-card">
@@ -96,9 +100,9 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 
             <!-- Country with flag -->
           <div class="u-country" data-code="<?= strtolower($countryCode); ?>">
-  <span class="u-flag" aria-hidden="true"></span>
-  <span><?= $block->escapeHtml($displayCountry); ?></span>
-</div>
+                <span class="u-flag" aria-hidden="true"></span>
+                <span><?= $block->escapeHtml($displayCountry); ?></span>
+           </div>
 
             <!-- request quote functionality -->
                 
