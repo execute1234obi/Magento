@@ -1738,7 +1738,7 @@ $vendorUrl = $baseUrl. 'shop/' . $vendor_shop_Id; // /shop/<vendor_id>/ ?>
             $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
             $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
             $country_id = $countryFactory->create()->loadByCode($vendorLocation);
-$country = $country_id->getName(); 
+            $country = $country_id->getName(); 
             ?>
             <span style="font-family:Inter; color:#374151;"><?= $block->escapeHtml($country ?: 'N/A') ?></span>
         </span>

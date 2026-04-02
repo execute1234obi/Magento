@@ -6,6 +6,18 @@
 <?php
 //echo '<h2 style="color:red">CUSTOM FOLDERS TEMPLATE EXECUTED</h2>';
 ?>
+<?php
+$defaultBlock = $block->getLayout()->createBlock(
+    \Vnecoms\VendorsMessage\Block\Vendors\Messages\ListMessage::class
+);
+
+// optional (safe)
+if (method_exists($block, 'getVendor') && $block->getVendor()) {
+    $defaultBlock->setData('vendor_id', $block->getVendor()->getId());
+}
+
+$messages = $defaultBlock->getMessageCollection();
+?>
 <!-- ================= LEFT MESSAGE SUBJECT LIST ================= -->
 <div class="vendor-left-message-list">
     <?= $block->getChildHtml('vendor.messages.left.list'); ?>
@@ -13,3 +25,20 @@
 <?php
 //echo '<h2 style="color:red">CUSTOM FOLDERS TEMPLATE EXECUTED1</h2>';
 ?>
+<div class="vendor-message-grid">
+    <?= $block->getLayout()
+        ->createBlock(\Magento\Framework\View\Element\UiComponentInterface::class)
+        ->setData('component_name', 'vendor_messages_grid')
+        ->toHtml(); ?>
+</div>
+<div class="vendor-messages-sidebar-folders">
+    <?php /* Folders list logic */ ?>
+</div>
+ <div class="col-md-9 message-list">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title"><?php echo $block->getTitle();?></h3>
+            </div>
+            <?php echo $block->getChildHtml('message_content')?>
+        </div>
+    </div>

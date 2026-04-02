@@ -207,7 +207,24 @@
     padding: 40px;
     text-align: center;
   }
+  /* extra fix */
+.vendor-msg__threadList {
+  overflow: hidden;
+}
 
+.vendor-msg__threadList .admin__data-grid-wrap {
+  width: 100% !important;
+  overflow-x: hidden !important;
+}
+
+.vendor-msg__threadList .data-grid {
+  width: 100% !important;
+  table-layout: fixed;
+}
+
+.vendor-msg__threadList table {
+  width: 100% !important;
+}
   /* Responsive */
   @media (max-width: 1024px) {
     .vendor-msg { flex-direction: column; }
@@ -233,7 +250,7 @@
     </div>
 
     <div class="vendor-msg__folders">
-      <?php echo $block->getChildHtml('folders') ?>
+      <?php //echo $block->getChildHtml('folders') ?>
     </div>
 
     <!-- ✅ Recommended: render inbox grid here via layout as="message_list" -->
@@ -252,7 +269,7 @@
     </div>
 
     <div class="vendor-msg__contentBody" id="vendorMsgContentBody">
-      <?php echo $block->getChildHtml('message_content') ?>
+      <?php //echo $block->getChildHtml('message_content') ?>
     </div>
   </section>
 

@@ -2,56 +2,11 @@
 /** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
 $items = $block->getItems();
 
-$defaultCountry = 'Saudi Arabia';
-$deriveBrand = static function (string $name): string {
-    $parts = preg_split('/\s+/', trim($name)) ?: [];
-    $parts = array_values(array_filter($parts));
-    return $parts ? implode(' ', array_slice($parts, 0, min(2, count($parts)))) : 'Brand';
-};
-
-$buildFallbackImage = static function (string $label, string $accent): string {
-    $svg = <<<SVG
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 360">
-  <rect width="640" height="360" rx="28" fill="#f4f6fa"/>
-  <ellipse cx="320" cy="245" rx="165" ry="22" fill="#dbe4f3"/>
-  <path d="M162 206c20-44 75-95 162-95 65 0 126 29 168 77l31 35c11 12 10 31-2 41-14 12-43 24-92 27H250c-44 0-81-9-97-28-14-15-17-37-9-57l18-0z" fill="{$accent}"/>
-  <path d="M176 206c24-38 75-82 154-82 63 0 120 26 158 69l24 24c8 9 7 23-3 30-13 9-35 18-71 20H248c-38 0-71-8-87-24-11-11-14-28-8-37l23 0z" fill="#ffffff"/>
-  <path d="M345 149c32 0 63 9 92 27l-18 18c-24-12-49-18-74-18-45 0-87 19-121 52h-35c36-51 94-79 156-79z" fill="#111827" opacity=".9"/>
-  <text x="320" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#111827">{$label}</text>
-</svg>
-SVG;
-
-    return 'data:image/svg+xml;charset=UTF-8,' . rawurlencode($svg);
-};
-
-$fallbackCards = [
-    [
-        'name' => "Nike Air Zoom Pegasus 39 Women's Running Shoes",
-        'brand' => 'Nike',
-        'country' => $defaultCountry,
-        'price_html' => '<span class="price">$2300</span>',
-        'image' => $buildFallbackImage('Nike', '#ff7a59'),
-    ],
-    [
-        'name' => "New Balance Fresh Foam 1080v11 Running Shoes Men",
-        'brand' => 'New Balance',
-        'country' => $defaultCountry,
-        'price_html' => '<span class="price">$3000</span>',
-        'image' => $buildFallbackImage('New Balance', '#2a6fe3'),
-    ],
-    [
-        'name' => "Reebok Nano X1 Cross Trainer Shoes Women",
-        'brand' => 'Reebok',
-        'country' => $defaultCountry,
-        'price_html' => '<span class="price">$6700</span>',
-        'image' => $buildFallbackImage('Reebok', '#111827'),
-    ],
-];
-
-$displayItems = count($items) ? $items : $fallbackCards;
+/** ViewModel */
+$viewModel = $block->getData('view_model');
 ?>
 
-<?php if (count($displayItems)): ?>
+<?php if (!empty($items)): ?>
   <div class="top-28">
 <div id="related-carousel" class="block related">
   <div class="block-title">
@@ -65,38 +20,22 @@ $displayItems = count($items) ? $items : $fallbackCards;
   <div class="block-content">
     <div class="rp-viewport">
       <div class="rp-track">
-        <?php foreach ($displayItems as $_item): ?>
+        <?php foreach ($items as $_item): ?>
           <?php
-            $isFallback = is_array($_item);
+            $imgUrl = $block->getImage($_item, 'category_page_list')->getImageUrl();
+            $brand  = $_item->getAttributeText('manufacturer');
 
-            if ($isFallback) {
-                $productUrl = 'javascript:void(0)';
-                $name = (string) ($_item['name'] ?? '');
-                $imgUrl = (string) ($_item['image'] ?? '');
-                $brand = (string) ($_item['brand'] ?? '');
-                $country = (string) ($_item['country'] ?? $defaultCountry);
-                $priceHtml = (string) ($_item['price_html'] ?? '<span class="price">$0</span>');
-            } else {
-                $productUrl = $_item->getProductUrl();
-                $name = (string) $_item->getName();
-                $imgUrl = $block->getImage($_item, 'category_page_list')->getImageUrl();
-                $brand = trim((string) ($_item->getAttributeText('manufacturer') ?: ''));
-                $country = trim((string) ($_item->getData('country') ?: ''));
-                $priceHtml = $block->getProductPrice($_item);
-
-                if ($brand === '') {
-                    $brand = $deriveBrand($name);
-                }
-
-                if ($country === '') {
-                    $country = $defaultCountry;
-                }
-            }
+            /** ViewModel se data */
+            $vendorData = $viewModel ? $viewModel->getVendorData($_item) : [];
+            $vendorName = $vendorData['name'] ?? '';
+            $country    = $vendorData['country'] ?? '';
+            $countryCode = $vendorData['country_code'] ?? '';
+            $priceHtml = $block->getProductPrice($_item);
           ?>
           <div class="rp-slide">
             <article class="rp-card">
-              <a class="rp-thumb" href="<?= $block->escapeUrl($productUrl); ?>">
-                <img src="<?= $block->escapeUrl($imgUrl); ?>" alt="<?= $block->escapeHtmlAttr($name); ?>">
+              <a class="rp-thumb" href="<?= $_item->getProductUrl(); ?>">
+                <img src="<?= $imgUrl; ?>" alt="<?= $block->escapeHtml($_item->getName()); ?>">
                 <button class="rp-like" type="button" aria-label="<?= $block->escapeHtml(__('Save')) ?>">
                   <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
@@ -105,43 +44,53 @@ $displayItems = count($items) ? $items : $fallbackCards;
               </a>
 
               <div class="rp-body">
-                <h3 class="rp-name"><a href="<?= $block->escapeUrl($productUrl); ?>"><?= $block->escapeHtml($name); ?></a></h3>
+                <h3 class="rp-name">
+                  <a href="<?= $_item->getProductUrl(); ?>">
+                    <?= $block->escapeHtml($_item->getName()); ?>
+                  </a>
+                </h3>
 
                 <div class="rp-price-line">
                   <span class="rp-price"><?= $priceHtml; ?></span>
-                  <span class="rp-per">/ 1 <?= __("pcs") ?></span>
+                  <!-- <span class="rp-per">/ 1 <?= __("pcs") ?></span> -->
                 </div>
 
                 <hr class="rp-divider">
 
-                <?php if ($brand): ?>
+                <?php if ($brand || $vendorName): ?>
                   <div class="rp-meta">
-                    <span class="rp-brand"><?= $block->escapeHtml($brand); ?></span>
+                    <span class="rp-brand">
+                      <?= $block->escapeHtml($vendorName ?: $brand); ?>
+                    </span>
                     <span class="rp-verified" aria-label="verified">
-                      <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#2A6FE3" d="M12 2l2.4 2 3-.7 1 2.9 2.9 1-1 2.9 2 2.4-2 2.4 1 2.9-2.9 1-1 2.9-3-.7L12 22l-2.4-2-3 .7-1-2.9-2.9-1 1-2.9L2 12l2-2.4-1-2.9 2.9-1 1-2.9 3 .7L12 2zm-1.2 12.7l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/></svg>
+                      <svg viewBox="0 0 24 24" width="16" height="16">
+                        <path fill="#2A6FE3" d="M12 2l2.4 2 3-.7 1 2.9 2.9 1-1 2.9 2 2.4-2 2.4 1 2.9-2.9 1-1 2.9-3-.7L12 22l-2.4-2-3 .7-1-2.9-2.9-1 1-2.9L2 12l2-2.4-1-2.9 2.9-1 1-2.9 3 .7L12 2zm-1.2 12.7l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/>
+                      </svg>
                     </span>
                   </div>
                 <?php endif; ?>
 
-                
-
-              <?php if ($country): ?>
-  
-
-                <div class="rp-meta">
-    <span class="rp-country-chip">
-      <span class="rp-flag" aria-hidden="true">🇸🇦</span>
-      <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
-    </span>
-  </div>
-<?php endif; ?>
-
-
+                <?php if ($country): 
+                 ?>
+                  <div class="rp-meta">
+                    <span class="rp-country-chip">
+                     
+                      <span class="rp-flag" data-code="<?= $countryCode ?>" aria-hidden="true"></span>
+                      <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
+                    </span>
+                  </div>
+                <?php endif; ?>
 
               </div>
 
               <div class="rp-foot">
-                <button class="rp-btn" type="button"><?= __("Add To Quote") ?></button>
+                 <!-- request quote functionality -->
+                
+            <button class="rp-btn add-to-quote"
+                data-product-id="<?= $_item->getId(); ?>"
+                type="button">
+                <?= __('Add to Quote') ?>
+            </button>
               </div>
             </article>
           </div>
@@ -153,7 +102,7 @@ $displayItems = count($items) ? $items : $fallbackCards;
 </div>
 <?php endif; ?>
 
-              </br></br>
+</br></br>
 
 <style>
   .top-28{
@@ -259,8 +208,17 @@ $displayItems = count($items) ? $items : $fallbackCards;
   background:#F3FBF3; border:1px solid #DCEFE0; color:#14532D;
   font-weight:700; font-size:14px;
 }
-#related-carousel .rp-flag{ font-size:16px }
-
+#related-carousel .rp-flag{
+  width: 26px;
+  height: 18px;
+  min-width: 26px;
+  min-height: 18px;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  border-radius: 3px;
+}
 /* Footer button (outlined blue) */
 #related-carousel .rp-foot{ padding:12px 16px 16px; margin-top:auto }
 #related-carousel .rp-btn{
@@ -278,369 +236,6 @@ $displayItems = count($items) ? $items : $fallbackCards;
   #related-carousel .rp-slide{ flex-basis:100%; max-width:100% }
 }
 
-</style>
-<style>
-  .top-28{
-    width:min(calc(100% - 32px), 1160px);
-    margin:28px auto 0;
-    padding:18px 24px 22px;
-    background:#fff;
-    border:1px solid #edf2f7;
-    border-radius:20px;
-    box-shadow:0 10px 26px rgba(15, 23, 42, 0.04);
-  }
-
-  #related-carousel{
-    width:100%;
-  }
-
-  #related-carousel .block-title{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:16px;
-    margin-bottom:18px;
-  }
-
-  #related-carousel .block-title strong{
-    font-size:18px;
-    font-weight:700;
-    line-height:1.3;
-    color:#111827;
-  }
-
-  #related-carousel .rp-arrows{
-    display:flex;
-    align-items:center;
-    gap:10px;
-  }
-
-  #related-carousel .rp-nav{
-    width:40px;
-    height:40px;
-    border-radius:12px;
-    background:#fff;
-    border:1.5px solid #eaf1ff;
-    color:#2a6fe3;
-    display:grid;
-    place-items:center;
-    font-size:30px;
-    line-height:1;
-    cursor:pointer;
-    box-shadow:0 2px 8px rgba(16,24,40,.06);
-    transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease;
-  }
-
-  #related-carousel .rp-nav:hover{
-    transform:translateY(-1px);
-    border-color:#d5e3ff;
-    box-shadow:0 8px 20px rgba(16,24,40,.08);
-  }
-
-  #related-carousel .rp-viewport{
-    position:relative;
-    overflow:hidden;
-  }
-
-  #related-carousel .rp-track{
-    display:flex;
-    gap:16px;
-    padding:2px 0 2px;
-    overflow-x:auto;
-    scroll-behavior:smooth;
-    scroll-snap-type:x mandatory;
-    -ms-overflow-style:none;
-    scrollbar-width:none;
-  }
-
-  #related-carousel .rp-track::-webkit-scrollbar{
-    display:none;
-  }
-
-  #related-carousel .rp-slide{
-    flex:0 0 calc((100% - 32px) / 3);
-    max-width:calc((100% - 32px) / 3);
-    min-width:calc((100% - 32px) / 3);
-    scroll-snap-align:start;
-  }
-
-  #related-carousel .rp-card{
-    display:flex;
-    flex-direction:column;
-    min-height:100%;
-    background:#fff;
-    border:1.5px solid #d8e5fb;
-    border-radius:16px;
-    overflow:hidden;
-    transition:border-color .15s ease, box-shadow .15s ease, transform .15s ease;
-  }
-
-  #related-carousel .rp-card:hover{
-    border-color:#bfd4ff;
-    box-shadow:0 12px 26px rgba(16,24,40,.08);
-    transform:translateY(-1px);
-  }
-
-  #related-carousel .rp-thumb{
-    position:relative;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    margin:14px 14px 0;
-    padding:14px;
-    min-height:164px;
-    aspect-ratio:1.85 / 1;
-    border-radius:14px;
-    background:#f4f6fa;
-  }
-
-  #related-carousel .rp-thumb img{
-    width:100%;
-    height:100%;
-    object-fit:contain;
-  }
-
-  #related-carousel .rp-like{
-    position:absolute;
-    top:10px;
-    right:10px;
-    width:36px;
-    height:36px;
-    border-radius:11px;
-    background:#fff;
-    border:1.5px solid #d5e3ff;
-    color:#2a6fe3;
-    display:grid;
-    place-items:center;
-    box-shadow:0 2px 10px rgba(16,24,40,.05);
-  }
-
-  #related-carousel .rp-body{
-    padding:18px 16px 0;
-  }
-
-  #related-carousel .rp-name{
-    margin:0 0 10px;
-    min-height:2.7em;
-    font:700 17px/1.35 Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-    letter-spacing:-0.01em;
-  }
-
-  #related-carousel .rp-name a{
-    color:#0f172a;
-    text-decoration:none;
-  }
-
-  #related-carousel .rp-price-line{
-    display:flex;
-    align-items:baseline;
-    flex-wrap:wrap;
-    gap:6px;
-    margin-bottom:14px;
-  }
-
-  #related-carousel .rp-price .price{
-    font-size:16px !important;
-    font-weight:500 !important;
-    color:#1f2937 !important;
-  }
-
-  #related-carousel .rp-per{
-    font-size:13px;
-    color:#667085;
-  }
-
-  #related-carousel .rp-divider{
-    border:0;
-    border-top:1px solid #e6ecf5;
-    margin:0 0 14px;
-  }
-
-  #related-carousel .rp-meta{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin:0 0 8px;
-  }
-
-  #related-carousel .rp-brand{
-    font-size:14px;
-    font-weight:700;
-    color:#111827;
-    line-height:1.35;
-  }
-
-  #related-carousel .rp-verified{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    width:18px;
-    height:18px;
-  }
-
-  #related-carousel .rp-country-chip{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:0;
-    border:0;
-    background:transparent;
-    border-radius:0;
-    color:#4b5563;
-    font-size:14px;
-    font-weight:400;
-    line-height:1.35;
-  }
-
-  #related-carousel .rp-flag{
-    font-size:18px;
-    line-height:1;
-  }
-
-  #related-carousel .rp-country{
-    color:#4b5563;
-  }
-
-  #related-carousel .rp-foot{
-    padding:16px;
-    margin-top:auto;
-  }
-
-  #related-carousel .rp-btn{
-    width:100%;
-    min-height:42px;
-    border-radius:10px;
-    background:#fff;
-    color:#2a6fe3;
-    border:1.5px solid #bcd4ff;
-    font-size:14px;
-    font-weight:700;
-    cursor:pointer;
-    transition:background .12s ease, border-color .12s ease, box-shadow .12s ease;
-  }
-
-  #related-carousel .rp-btn:hover{
-    background:#eef5ff;
-    border-color:#9fc2ff;
-    box-shadow:0 4px 12px rgba(37,99,235,.12);
-  }
-
-  @media (max-width: 1024px){
-    .top-28{
-      width:min(calc(100% - 24px), 100%);
-      padding:18px 18px 20px;
-    }
-
-    #related-carousel .rp-slide{
-      flex:0 0 calc((100% - 16px) / 2);
-      max-width:calc((100% - 16px) / 2);
-      min-width:calc((100% - 16px) / 2);
-    }
-  }
-
-  @media (max-width: 640px){
-    .top-28{
-      width:min(calc(100% - 16px), 100%);
-      margin:18px auto 0;
-      padding:14px 12px 16px;
-    }
-
-    #related-carousel .block-title{
-      margin-bottom:12px;
-    }
-
-    #related-carousel .block-title strong{
-      font-size:15px;
-    }
-
-    #related-carousel .rp-arrows{
-      gap:8px;
-    }
-
-    #related-carousel .rp-nav{
-      width:32px;
-      height:32px;
-      font-size:24px;
-    }
-
-    #related-carousel .rp-slide{
-      flex:0 0 calc((100% - 10px) / 2);
-      max-width:calc((100% - 10px) / 2);
-      min-width:calc((100% - 10px) / 2);
-    }
-
-    #related-carousel .rp-track{
-      gap:10px;
-    }
-
-    #related-carousel .rp-thumb{
-      min-height:94px;
-      margin:10px 10px 0;
-      padding:10px;
-      border-radius:12px;
-    }
-
-    #related-carousel .rp-body{
-      padding:10px 10px 0;
-    }
-
-    #related-carousel .rp-name{
-      min-height:3.15em;
-      margin-bottom:8px;
-      font-size:12px;
-      line-height:1.32;
-    }
-
-    #related-carousel .rp-price-line{
-      margin-bottom:10px;
-    }
-
-    #related-carousel .rp-price .price{
-      font-size:12px !important;
-    }
-
-    #related-carousel .rp-per,
-    #related-carousel .rp-brand,
-    #related-carousel .rp-country-chip{
-      font-size:12px;
-    }
-
-    #related-carousel .rp-divider{
-      margin-bottom:10px;
-    }
-
-    #related-carousel .rp-meta{
-      gap:6px;
-      margin-bottom:6px;
-    }
-
-    #related-carousel .rp-flag{
-      font-size:14px;
-    }
-
-    #related-carousel .rp-like{
-      top:8px;
-      right:8px;
-      width:30px;
-      height:30px;
-      border-radius:10px;
-    }
-
-    #related-carousel .rp-like svg{
-      width:16px;
-      height:16px;
-    }
-
-    #related-carousel .rp-foot{
-      padding:10px;
-    }
-
-    #related-carousel .rp-btn{
-      min-height:36px;
-      border-radius:8px;
-      font-size:12px;
-    }
-  }
 </style>
 <script type="text/x-magento-init">
 {
@@ -690,4 +285,70 @@ require(['jquery'], function($){
     updateDisabled();
   });
 });
+</script>
+<script>
+require(['jquery'], function($) {
+
+  // FLAG FIX
+ require(['jquery'], function($){
+  $(document).ready(function(){
+
+    $('#related-carousel .rp-flag').each(function(){
+      var code = $(this).data('code');
+
+      if (code) {
+        code = code.toLowerCase().trim();
+
+        var flagUrl = 'https://flagcdn.com/w40/' + code + '.png';
+
+        $(this).css({
+          'background-image': 'url(' + flagUrl + ')',
+          'background-size': 'cover',
+          'background-position': 'center',
+          'display': 'inline-block'
+        });
+      }
+    });
+
+  });
+});
+
+  // ADD TO QUOTE FIX
+  $(document).on('click', '.add-to-quote', function () {
+
+    var button = $(this);
+    var productId = button.data('product-id');
+
+    if (!productId) {
+      console.log('Product ID missing');
+      return;
+    }
+
+    $.ajax({
+      url: '<?= $block->getUrl("quoterequest/index/create") ?>',
+      type: 'POST',
+      data: {
+        product_id: productId
+      },
+      showLoader: true,
+
+      success: function (response) {
+        button.text('Added');
+        button.prop('disabled', true);
+
+        if (response.count !== undefined) {
+          $('#quote-counter').text(response.count).show();
+        }
+      },
+
+      error: function (xhr) {
+        console.log(xhr);
+        alert('Error while adding to quote');
+      }
+    });
+
+  });
+
+});
+
 </script>

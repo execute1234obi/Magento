@@ -230,7 +230,8 @@ html[lang="ar"] .page-wrapper {
     <p class="sign-in-text"><?= __('If you have an account, sign in with your email address.') ?></p>
 
     <form action="<?= $block->getUrl('customer/account/loginPost') ?>" method="post">
-        <input type="hidden" name="form_key" value="{{form_key}}" />
+        <?= $block->getBlockHtml('formkey') ?>
+       <input type="hidden" name="referer" value="<?= base64_encode($block->getUrl('')) ?>" />
 
         <div class="form-group">
             <label for="email"><?= __('Email') ?> <span class="required">*</span></label>

@@ -403,3 +403,37 @@ button {
 
 /* =========================
    Important reset: remove oversized global type on checkout
+/* hide customer dashboaed menu items  */
+/* ===== LEFT MENU ITEMS HIDE ===== */
+
+/* Stored Payment Methods */
+.account-nav a[href*="vault"] {
+    display: none !important;
+}
+
+/* My Credit */
+.account-nav a[href*="credit"] {
+    display: none !important;
+}
+
+/* Message */
+.account-nav a[href*="message"] {
+    display: none !important;
+}
+
+/* My Product Reviews */
+.account-nav a[href*="review/customer"] {
+    display: none !important;
+}
+
+/* My Shop Reviews */
+.account-nav a[href*="shop"] {
+    display: none !important;
+}
+
+
+/* ===== RIGHT SIDE SHIPPING ADDRESS HIDE ===== */
+
+.box-shipping-address {
+    display: none !important;
+}

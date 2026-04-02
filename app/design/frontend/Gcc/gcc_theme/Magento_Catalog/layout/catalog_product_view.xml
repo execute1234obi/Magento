@@ -66,10 +66,23 @@
             </block>
 
             <!-- Related Products -->
-           <block class="Magento\Catalog\Block\Product\ProductList\Related"
+           <!-- <block class="Magento\Catalog\Block\Product\ProductList\Related"
        name="catalog.product.related"
        template="Magento_Catalog::product/list/related.phtml"
-       after="custom.product.detail"/>
+       after="custom.product.detail"/> -->
+
+       <block class="Magento\Catalog\Block\Product\ProductList\Related"
+       name="catalog.product.related"
+       template="Magento_Catalog::product/list/related.phtml"
+       after="custom.product.detail">
+
+    <arguments>
+        <argument name="view_model" xsi:type="object">
+            Gcc\VendorProductOverride\ViewModel\ProductData
+        </argument>
+    </arguments>
+
+</block>
         <!-- test message functionality -->
        <!-- <block class="Magento\Framework\View\Element\Template" 
            name="vendor.contact.test" 
