@@ -221,6 +221,103 @@ $mostViewedTotalCount = $mostViewedProducts ? count($mostViewedProducts) : 0;
         padding:14px 16px;
     }
 }
+
+.gcc-dashboard-table-card__sort-wrap{
+    position:relative;
+    min-width:156px;
+    width:156px;
+    flex:0 0 156px;
+}
+
+.gcc-dashboard-table-card__sort{
+    display:inline-flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    width:100%;
+    padding:0 14px;
+    text-align:left;
+    background-image:none !important;
+}
+
+.gcc-dashboard-table-card__sort svg{
+    width:14px;
+    height:14px;
+    flex:0 0 14px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:2;
+    transition:transform .2s ease;
+}
+
+.gcc-dashboard-table-card__sort-wrap.is-open .gcc-dashboard-table-card__sort{
+    border-color:#bcd0ea;
+    box-shadow:0 0 0 3px rgba(46,94,168,.12);
+}
+
+.gcc-dashboard-table-card__sort-wrap.is-open .gcc-dashboard-table-card__sort svg{
+    transform:rotate(180deg);
+}
+
+.gcc-dashboard-table-card__sort-menu{
+    position:absolute;
+    top:calc(100% + 8px);
+    left:0;
+    right:0;
+    z-index:20;
+    padding:6px 0;
+    border:1px solid #d9e6f6;
+    border-radius:10px;
+    background:#ffffff;
+    box-shadow:0 16px 32px rgba(17,44,98,.14);
+    overflow:hidden;
+}
+
+.gcc-dashboard-table-card__sort-menu[hidden]{
+    display:none !important;
+}
+
+.gcc-dashboard-table-card__sort-option{
+    display:flex;
+    align-items:center;
+    width:100%;
+    padding:11px 14px;
+    border:0;
+    background:#ffffff;
+    color:#2a59a3;
+    font-size:13px;
+    font-weight:600;
+    line-height:1.35;
+    text-align:left;
+    cursor:pointer;
+    transition:background-color .2s ease,color .2s ease;
+}
+
+.gcc-dashboard-table-card__sort-option:hover{
+    background:#edf4fb;
+    color:#1f4d93;
+}
+
+.gcc-dashboard-table-card__sort-option.is-selected{
+    background:#2e5ea8;
+    color:#ffffff;
+}
+
+@media (max-width:767px){
+    .gcc-dashboard-table-card__sort-wrap{
+        width:132px;
+        min-width:132px;
+        flex-basis:132px;
+    }
+}
+
+@media (max-width:359px){
+    .gcc-dashboard-table-card__sort-wrap{
+        width:118px;
+        min-width:118px;
+        flex-basis:118px;
+    }
+}
 </style>
 
 <div class="gcc-vendor-dashboard">
@@ -280,12 +377,25 @@ $mostViewedTotalCount = $mostViewedProducts ? count($mostViewedProducts) : 0;
                                     <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
                                     <input type="search" placeholder="<?php echo $block->escapeHtmlAttr(__('Search Product')) ?>" data-role="search">
                                 </label>
-                                <select class="gcc-dashboard-table-card__sort" data-role="sort">
-                                    <option value="popular"><?php echo __("Most Popular") ?></option>
-                                    <option value="price_high"><?php echo __("Highest Price") ?></option>
-                                    <option value="price_low"><?php echo __("Lowest Price") ?></option>
-                                    <option value="name"><?php echo __("Name A-Z") ?></option>
-                                </select>
+                                <div class="gcc-dashboard-table-card__sort-wrap" data-role="sort-dropdown">
+                                    <button
+                                        type="button"
+                                        class="gcc-dashboard-table-card__sort"
+                                        data-role="sort-toggle"
+                                        aria-haspopup="listbox"
+                                        aria-expanded="false"
+                                        aria-controls="gcc-dashboard-sort-menu"
+                                    >
+                                        <span data-role="sort-label"><?php echo __("Most Popular") ?></span>
+                                        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6l5 5 5-5"/></svg>
+                                    </button>
+                                    <div class="gcc-dashboard-table-card__sort-menu" id="gcc-dashboard-sort-menu" data-role="sort-menu" role="listbox" hidden>
+                                        <button type="button" class="gcc-dashboard-table-card__sort-option is-selected" data-role="sort-option" data-sort-value="popular" role="option" aria-selected="true"><?php echo __("Most Popular") ?></button>
+                                        <button type="button" class="gcc-dashboard-table-card__sort-option" data-role="sort-option" data-sort-value="price_high" role="option" aria-selected="false"><?php echo __("Highest Price") ?></button>
+                                        <button type="button" class="gcc-dashboard-table-card__sort-option" data-role="sort-option" data-sort-value="price_low" role="option" aria-selected="false"><?php echo __("Lowest Price") ?></button>
+                                        <button type="button" class="gcc-dashboard-table-card__sort-option" data-role="sort-option" data-sort-value="name" role="option" aria-selected="false"><?php echo __("Name A-Z") ?></button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -407,13 +517,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var tbody = root.querySelector('[data-role="rows"]');
     var searchInput = root.querySelector('[data-role="search"]');
-    var sortSelect = root.querySelector('[data-role="sort"]');
+    var sortDropdown = root.querySelector('[data-role="sort-dropdown"]');
+    var sortToggle = root.querySelector('[data-role="sort-toggle"]');
+    var sortLabel = root.querySelector('[data-role="sort-label"]');
+    var sortMenu = root.querySelector('[data-role="sort-menu"]');
+    var sortOptions = Array.prototype.slice.call(root.querySelectorAll('[data-role="sort-option"]'));
     var pageSizeSelect = root.querySelector('[data-role="page-size"]');
     var pagination = root.querySelector('[data-role="pagination"]');
     var resultsCount = root.querySelector('[data-role="results-count"]');
     var headerSortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="header-sort"]'));
     var allRows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-row]'));
     var currentPage = 1;
+    var currentSortMode = 'popular';
     var activeSort = {
         key: 'views',
         direction: 'desc'
@@ -461,20 +576,40 @@ document.addEventListener('DOMContentLoaded', function () {
         return compareText(a.dataset.name || '', b.dataset.name || '', direction);
     }
 
-    function applySortFromSelect() {
-        var sortMode = sortSelect.value || 'popular';
+    function openSortMenu() {
+        if (!sortDropdown || !sortToggle || !sortMenu) {
+            return;
+        }
 
-        if (sortMode === 'price_high') {
+        sortDropdown.classList.add('is-open');
+        sortToggle.setAttribute('aria-expanded', 'true');
+        sortMenu.hidden = false;
+    }
+
+    function closeSortMenu() {
+        if (!sortDropdown || !sortToggle || !sortMenu) {
+            return;
+        }
+
+        sortDropdown.classList.remove('is-open');
+        sortToggle.setAttribute('aria-expanded', 'false');
+        sortMenu.hidden = true;
+    }
+
+    function applySortMode(sortMode) {
+        currentSortMode = sortMode || 'popular';
+
+        if (currentSortMode === 'price_high') {
             activeSort = {key: 'price', direction: 'desc'};
             return;
         }
 
-        if (sortMode === 'price_low') {
+        if (currentSortMode === 'price_low') {
             activeSort = {key: 'price', direction: 'asc'};
             return;
         }
 
-        if (sortMode === 'name') {
+        if (currentSortMode === 'name') {
             activeSort = {key: 'name', direction: 'asc'};
             return;
         }
@@ -482,25 +617,27 @@ document.addEventListener('DOMContentLoaded', function () {
         activeSort = {key: 'views', direction: 'desc'};
     }
 
-    function syncSortSelect() {
+    function syncSortDropdown() {
         if (activeSort.key === 'price' && activeSort.direction === 'desc') {
-            sortSelect.value = 'price_high';
-            return;
+            currentSortMode = 'price_high';
+        } else if (activeSort.key === 'price' && activeSort.direction === 'asc') {
+            currentSortMode = 'price_low';
+        } else if (activeSort.key === 'name' && activeSort.direction === 'asc') {
+            currentSortMode = 'name';
+        } else {
+            currentSortMode = 'popular';
         }
 
-        if (activeSort.key === 'price' && activeSort.direction === 'asc') {
-            sortSelect.value = 'price_low';
-            return;
-        }
+        sortOptions.forEach(function (option) {
+            var isSelected = option.getAttribute('data-sort-value') === currentSortMode;
 
-        if (activeSort.key === 'name' && activeSort.direction === 'asc') {
-            sortSelect.value = 'name';
-            return;
-        }
+            option.classList.toggle('is-selected', isSelected);
+            option.setAttribute('aria-selected', isSelected ? 'true' : 'false');
 
-        if (activeSort.key === 'views' && activeSort.direction === 'desc') {
-            sortSelect.value = 'popular';
-        }
+            if (isSelected && sortLabel) {
+                sortLabel.textContent = option.textContent.trim();
+            }
+        });
     }
 
     function renderHeaderSortState() {
@@ -642,7 +779,7 @@ document.addEventListener('DOMContentLoaded', function () {
             resultsCount.textContent = String(rows.length) + ' ' + resultsLabel;
         }
 
-        syncSortSelect();
+        syncSortDropdown();
         renderHeaderSortState();
         renderPagination(totalPages);
     }
@@ -692,10 +829,27 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     });
 
-    sortSelect.addEventListener('change', function () {
-        applySortFromSelect();
-        currentPage = 1;
-        render();
+    if (sortToggle) {
+        sortToggle.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (sortDropdown && sortDropdown.classList.contains('is-open')) {
+                closeSortMenu();
+                return;
+            }
+
+            openSortMenu();
+        });
+    }
+
+    sortOptions.forEach(function (option) {
+        option.addEventListener('click', function () {
+            applySortMode(option.getAttribute('data-sort-value') || 'popular');
+            currentPage = 1;
+            closeSortMenu();
+            render();
+        });
     });
 
     pageSizeSelect.addEventListener('change', function () {
@@ -703,7 +857,19 @@ document.addEventListener('DOMContentLoaded', function () {
         render();
     });
 
-    applySortFromSelect();
+    document.addEventListener('click', function (event) {
+        if (sortDropdown && !sortDropdown.contains(event.target)) {
+            closeSortMenu();
+        }
+    });
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeSortMenu();
+        }
+    });
+
+    applySortMode(currentSortMode);
     render();
 });
 </script>
