@@ -170,6 +170,10 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
 
                             <?php foreach ($messagesCollection as $message): ?>
                                 <?php $detail = $message->getLastMessageDetail();
+                                //echo '<pre>';
+                                //print_r($detail->getData());
+                                //echo '</pre>';
+                                //exit;
                                     if (!$detail) {
                                         continue;
                                     } ?>
@@ -205,7 +209,14 @@ if ($senderId) {
                                                 </div>
 
                                                 <div class="vendor-row__time">
-                                                   <?= $block->escapeHtml($messagesBlock ? $messagesBlock->getMessageTime($detail->getCreatedAt()) : ''); ?>
+                                                    <?php
+                                                    $date = $detail['created_at'] ?? '';
+
+                                                    if (!empty($date)) {
+                                                        echo $block->escapeHtml(date('d M Y, h:i A', strtotime($date)));
+                                                    }
+                                                    ?>
+                                                    
                                                 </div>
                                             </div>
 
@@ -443,7 +454,12 @@ if ($senderId) {
                                             <div class="vendor-row__main">
                                                 <div class="vendor-row__top">
                                                     <div class="vendor-row__name"><?= $block->escapeHtml($detail->getSenderName()); ?></div>
-                                                    <div class="vendor-row__time"><?= $block->escapeHtml(__('Now')); ?></div>
+                                                    <div class="vendor-row__time"> <?php
+                                                        $date = $detail->getCreatedAt() ?? '';
+                                                        if ($date) {
+                                                            echo $block->escapeHtml(date('d M Y, h:i A', strtotime($date)));
+                                                        }
+                                                    ?></div>
                                                 </div>
                                                 <div class="vendor-row__desc"><?= $block->escapeHtml($detail->getSubject()); ?></div>
                                             </div>
