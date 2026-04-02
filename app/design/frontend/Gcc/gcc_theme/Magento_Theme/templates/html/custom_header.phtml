@@ -134,7 +134,7 @@ else
     </div>
 
     <div class="flex items-center space-x-6">
-      <div class="hidden md:flex items-center space-x-3 final-font gap-3" style="border-right:1px solid #D1D5DB;">
+      <div class="hidden md:flex items-center space-x-3 final-font gap-3" style="border-right:1px solid #dbe6f3;">
        <?php if ($block->isLoggedIn()): ?>
   <?php
     $layout = $block->getLayout();
@@ -183,15 +183,20 @@ else
 
   <!-- ICON 3: User Profile Dropdown -->
   <div class="relative group flex items-center justify-center">
-    <button type="button" onclick="toggleDropdown('userMenuProfile')" id="userProfileBtn"
-      class="flex items-center space-x-1 hover:text-[#3B82F6] hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0">
+    <button type="button"
+            onclick="toggleDropdown('userMenuProfile')"
+            id="userProfileBtn"
+            class="flex items-center space-x-1 hover:text-[#3B82F6] hover:bg-[#EFF6FF] py-1 px-2 focus:outline-none bg-transparent border-0"
+            aria-haspopup="true"
+            aria-expanded="false">
       <img src="<?= $vendorLogoUrl ?>" alt="Logo" title="customer dashboard" style="height:30px; width:auto; max-width:80px;">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
       </svg>
     </button>
 
-    <div id="userMenuProfile" class="hidden absolute mt-3 w-56 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start"
+    <div id="userMenuProfile" class="hidden absolute mt-3 w-72 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start"
+         role="menu"
          style="border:1px solid #E2E8F0; z-index:999; top:100%; right:0; left:auto;">
 
       <!-- View Profile -->
@@ -511,6 +516,42 @@ if ($storeCode === 'default') {
 <style>
 /* ===== your existing styles (kept) ===== */
 .dropdown-active{color:#3B82F6!important;font-weight:600!important;}
+
+#customHeader #vendorBtn.dropdown-active,
+#customHeader #customerBtn.dropdown-active,
+#customHeader #userProfileBtn.dropdown-active{
+    background:#eef5ff!important;
+    color:#1A3764!important;
+    box-shadow:inset 0 0 0 1px rgba(59,130,246,.14),0 10px 18px rgba(26,55,100,.08);
+}
+
+#customHeader #userProfileBtn{
+    min-height:44px;
+    padding:6px 12px;
+    border:1px solid transparent;
+    border-radius:14px;
+    background:linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+    box-shadow:0 8px 18px rgba(17,44,98,.08);
+    transition:background-color .2s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease;
+}
+
+#customHeader #userProfileBtn:hover,
+#customHeader #userProfileBtn:focus-visible{
+    background:#eef5ff;
+    border-color:#c7daef;
+    color:#1A3764;
+}
+
+#customHeader #userProfileBtn img{
+    height:32px;
+    width:auto;
+    max-width:84px;
+    border-radius:999px;
+    border:2px solid #ffffff;
+    box-shadow:0 0 0 1px rgba(59,130,246,.22);
+    background:#ffffff;
+    object-fit:contain;
+}
 #customHeader .custom-style,#customHeader a.custom-style,#customHeader .custom-style:visited{color:#fff!important;text-decoration:none!important;padding:12px 20px;border-radius:11px;}
 #customHeader .custom-style:hover{color:#fff!important;}
 #customHeader .nav-text-color{color:#4B5563!important;}
@@ -586,6 +627,88 @@ header .sign-in-btn {
 /* Dropdown links hover */
 #languageMenu .language-switcher a:hover {
     color: #3B82F6 !important; /* Optional hover color */
+}
+
+#userMenuProfile{
+    width:288px !important;
+    padding:12px !important;
+    border:1px solid #dbe6f3 !important;
+    border-radius:20px !important;
+    background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%) !important;
+    box-shadow:0 24px 52px rgba(16,42,86,.16) !important;
+}
+
+#userMenuProfile::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:4px;
+    background:linear-gradient(90deg,#1A3764 0%,#3B82F6 100%);
+    border-radius:20px 20px 0 0;
+}
+
+#userMenuProfile.space-y-4 > :not([hidden]) ~ :not([hidden]){
+    margin-top:8px !important;
+}
+
+#userMenuProfile > a{
+    display:flex;
+    align-items:center;
+    min-height:48px;
+    padding:10px 12px;
+    border-radius:14px;
+    text-decoration:none;
+    color:#1A3764;
+    transition:background-color .2s ease,box-shadow .2s ease,color .2s ease;
+}
+
+#userMenuProfile > a:hover{
+    background:#eef5ff !important;
+    box-shadow:0 8px 18px rgba(26,55,100,.08);
+}
+
+#userMenuProfile > a svg{
+    box-sizing:border-box;
+    display:block;
+    flex:0 0 34px;
+    width:34px;
+    height:34px;
+    padding:8px;
+    border-radius:999px;
+    background:#eef5ff;
+}
+
+#userMenuProfile > a svg path{
+    stroke:#1A3764 !important;
+}
+
+#userMenuProfile > a p{
+    margin:0;
+    color:#1A3764 !important;
+    font-size:13px !important;
+    font-weight:700 !important;
+    line-height:1.35;
+}
+
+#userMenuProfile > a:last-of-type{
+    color:#b42318;
+}
+
+#userMenuProfile > a:last-of-type:hover{
+    background:#fff1f2 !important;
+    box-shadow:0 8px 18px rgba(239,68,68,.08);
+}
+
+#userMenuProfile > a:last-of-type svg{
+    background:#fff1f2;
+}
+
+#userMenuProfile > a:last-of-type svg path{
+    stroke:#ef4444 !important;
+}
+
+#userMenuProfile > a:last-of-type p{
+    color:#dc2626 !important;
 }
 
 /* ============================= */
@@ -1058,17 +1181,26 @@ function toggleDropdown(id){
   if(id==='vendorMenu'){ v?.classList.toggle('dropdown-active'); c?.classList.remove('dropdown-active'); u?.classList.remove('dropdown-active'); }
   if(id==='customerMenu'){ c?.classList.toggle('dropdown-active'); v?.classList.remove('dropdown-active'); u?.classList.remove('dropdown-active');}
    if(id==='userMenuProfile'){ u?.classList.toggle('dropdown-active'); v?.classList.remove('dropdown-active'); c?.classList.remove('dropdown-active'); }
+  [ ['vendorMenu','vendorBtn'], ['customerMenu','customerBtn'], ['userMenuProfile','userProfileBtn'] ].forEach(([menuId, buttonId]) => {
+    const menu=document.getElementById(menuId);
+    const button=document.getElementById(buttonId);
+    if(menu && button){
+      button.setAttribute('aria-expanded', menu.classList.contains('hidden') ? 'false' : 'true');
+    }
+  });
 }
 
 window.addEventListener('click',e=>{
   if(!e.target.closest('.group')){
     document.getElementById('vendorMenu')?.classList.add('hidden');
     document.getElementById('customerMenu')?.classList.add('hidden');
-    document.getElementById('vendorBtn')?.classList.remove('dropdown-active');
-    document.getElementById('customerBtn')?.classList.remove('dropdown-active');
     document.getElementById('userMenuProfile')?.classList.add('hidden');
     document.getElementById('vendorBtn')?.classList.remove('dropdown-active');
-     document.getElementById('userProfileBtn')?.classList.remove('dropdown-active');
+    document.getElementById('customerBtn')?.classList.remove('dropdown-active');
+    document.getElementById('userProfileBtn')?.classList.remove('dropdown-active');
+    document.getElementById('vendorBtn')?.setAttribute('aria-expanded', 'false');
+    document.getElementById('customerBtn')?.setAttribute('aria-expanded', 'false');
+    document.getElementById('userProfileBtn')?.setAttribute('aria-expanded', 'false');
   }
 });
 
