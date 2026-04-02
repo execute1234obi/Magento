@@ -220,6 +220,34 @@ $mostViewedTotalCount = $mostViewedProducts ? count($mostViewedProducts) : 0;
         margin:0 -16px;
         padding:14px 16px;
     }
+
+    .gcc-dashboard-table-card__body{
+        overflow-x:auto;
+        overflow-y:hidden;
+        -webkit-overflow-scrolling:touch;
+        scroll-behavior:smooth;
+        overscroll-behavior-x:contain;
+    }
+
+    .gcc-dashboard-table{
+        width:max-content;
+        min-width:820px;
+        table-layout:fixed;
+    }
+
+    .gcc-dashboard-table-card__body::-webkit-scrollbar{
+        height:8px;
+    }
+
+    .gcc-dashboard-table-card__body::-webkit-scrollbar-thumb{
+        background:#7f9fcd;
+        border-radius:999px;
+    }
+
+    .gcc-dashboard-table-card__body::-webkit-scrollbar-track{
+        background:#e8f0fb;
+        border-radius:999px;
+    }
 }
 
 .gcc-dashboard-table-card__sort-wrap{
