@@ -376,6 +376,216 @@ if ($senderId) {
         </div>
         
         <div class="vendor-mobile-topbar">
+            <div class="vendor-mobile-topbar__row vendor-mobile-topbar__row--primary">
+                <button type="button"
+                        class="vendor-mobile-nav-toggle"
+                        aria-controls="vendor-mobile-sidebar"
+                        aria-expanded="false"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Open menu')); ?>">
+                    <span class="vendor-mobile-nav-toggle__bar"></span>
+                </button>
+
+                <div class="vendor-mobile-topbar__actions">
+                    <div class="vendor-topbar__item" data-dd>
+                        <button class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+                                type="button"
+                                data-dd-btn
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-label="<?= $block->escapeHtmlAttr(__('Messages')); ?>">
+                            <span class="vendor-ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M4 4h16v16H4V4z" stroke-width="2"></path>
+                                    <path d="M4 7l8 6 8-6" stroke-width="2"></path>
+                                </svg>
+                            </span>
+                            <?php if ($messagesCount > 0): ?>
+                                <span class="vendor-badge vendor-badge--green"><?= (int)$messagesCount; ?></span>
+                            <?php endif; ?>
+                        </button>
+
+                        <div class="vendor-dropdown vendor-dropdown--mobile" data-dd-panel>
+                            <div class="vendor-dropdown__head">
+                                <div class="vendor-dropdown__title"><?= $block->escapeHtml(__('Messages')); ?></div>
+                                <div class="vendor-dropdown__meta"><?= $block->escapeHtml(__('You have %1 messages', $messagesCount)); ?></div>
+                            </div>
+                            <ul class="vendor-dropdown__list">
+                                <?php if (!count($messagesCollection)): ?>
+                                    <li>
+                                        <div class="vendor-dropdown__row">
+                                            <?= $block->escapeHtml(__('No messages found')); ?>
+                                        </div>
+                                    </li>
+                                <?php endif; ?>
+
+                                <?php foreach ($messagesCollection as $message): ?>
+                                    <?php $detail = $message->getLastMessageDetail();
+                                    if (!$detail) {
+                                        continue;
+                                    } ?>
+                                    <li>
+                                        <a class="vendor-dropdown__row" href="<?= $messagesBlock ? $messagesBlock->getViewMessageUrl($message) : '#'; ?>">
+                                            <div class="vendor-row__icon" aria-hidden="true">
+                                                <?php
+                                                $senderId = $detail->getSenderId();
+                                                $avatar = $block->getViewFileUrl('Vnecoms_Vendors::images/user.png');
+
+                                                if ($senderId && $messagesBlock) {
+                                                    try {
+                                                        $avatar = $messagesBlock->getAvatarUrl($senderId);
+                                                    } catch (\Exception $e) {
+                                                        $avatar = $block->getViewFileUrl('Vnecoms_Vendors::images/user.png');
+                                                    }
+                                                }
+                                                ?>
+                                                <img src="<?= $block->escapeUrl($avatar); ?>" style="width:30px;height:30px;border-radius:50%;" alt="">
+                                            </div>
+                                            <div class="vendor-row__main">
+                                                <div class="vendor-row__top">
+                                                    <div class="vendor-row__name"><?= $block->escapeHtml($detail->getSenderName()); ?></div>
+                                                    <div class="vendor-row__time"><?= $block->escapeHtml(__('Now')); ?></div>
+                                                </div>
+                                                <div class="vendor-row__desc"><?= $block->escapeHtml($detail->getSubject()); ?></div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php if ($messagesBlock): ?>
+                                <div class="vendor-dropdown__footer">
+                                    <a href="<?= $messagesBlock->getMessageUrl(); ?>">
+                                        <?= $block->escapeHtml(__('View All Messages')); ?>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="vendor-topbar__item" data-dd>
+                        <button class="vendor-topbar__btn vendor-topbar__btn--icon-only"
+                                type="button"
+                                data-dd-btn
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-label="<?= $block->escapeHtmlAttr(__('Notifications')); ?>">
+                            <span class="vendor-ico" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none">
+                                    <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 7h18s-3 0-3-7"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                    <path d="M13.73 21a2 2 0 01-3.46 0"
+                                        stroke-width="2"
+                                        stroke-linecap="round"></path>
+                                </svg>
+                            </span>
+                            <?php if ($notificationsCount > 0): ?>
+                                <span class="vendor-badge vendor-badge--orange"><?= (int)$notificationsCount; ?></span>
+                            <?php endif; ?>
+                        </button>
+
+                        <div class="vendor-dropdown vendor-dropdown--mobile" data-dd-panel>
+                            <div class="vendor-dropdown__head">
+                                <div class="vendor-dropdown__title"><?= $block->escapeHtml(__('Notifications')); ?></div>
+                                <?php if ($notificationsBlock): ?>
+                                    <a class="vendor-dropdown__action" href="<?= $notificationsBlock->getMarkAllAsReadUrl(); ?>">
+                                        <?= $block->escapeHtml(__('Mark all as read')); ?>
+                                    </a>
+                                <?php endif; ?>
+                            </div>
+                            <ul class="vendor-dropdown__list">
+                                <?php if (!count($notifications)): ?>
+                                    <li>
+                                        <div class="vendor-dropdown__row">
+                                            <?= $block->escapeHtml(__('You have no notifications')); ?>
+                                        </div>
+                                    </li>
+                                <?php endif; ?>
+
+                                <?php foreach ($notifications as $notification): ?>
+                                    <?php $type = $notification->getNotificationType();
+                                    if (!$type) {
+                                        continue;
+                                    } ?>
+                                    <li class="<?= !$notification->getData('is_read') ? 'unread' : '' ?>">
+                                        <a class="vendor-dropdown__row" href="<?= $notificationsBlock ? $notificationsBlock->getViewUrl($notification) : '#'; ?>">
+                                            <div class="vendor-row__icon" aria-hidden="true">
+                                                <i class="<?= $block->escapeHtmlAttr($type->getIconClass()); ?>"></i>
+                                            </div>
+                                            <div class="vendor-row__main">
+                                                <div class="vendor-row__top">
+                                                    <div class="vendor-row__name"><?= $block->escapeHtml($type->getTitle() ?: __('Notification')); ?></div>
+                                                    <div class="vendor-row__time"><?= $block->escapeHtml(__('Now')); ?></div>
+                                                </div>
+                                                <div class="vendor-row__desc"><?= $type->getMessage(); ?></div>
+                                            </div>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <?php if ($notificationsBlock): ?>
+                                <div class="vendor-dropdown__footer">
+                                    <a href="<?= $notificationsBlock->getViewAllUrl(); ?>">
+                                        <?= $block->escapeHtml(__('View All Notifications')); ?>
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="vendor-topbar__item" data-dd>
+                        <button class="vendor-topbar__btn vendor-topbar__btn--compact"
+                                type="button"
+                                data-dd-btn
+                                aria-haspopup="true"
+                                aria-expanded="false">
+                            <span class="vendor-avatar vendor-avatar--mobile" aria-hidden="true">
+                                <img src="<?= $block->escapeUrl($avatarUrl); ?>" alt="">
+                            </span>
+                            <span class="vendor-mobile-topbar__vendor-name"><?= $block->escapeHtml($vendorName); ?></span>
+                            <span class="vendor-caret" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            </span>
+                        </button>
+                        <div class="vendor-dropdown vendor-dropdown--mobile" data-dd-panel role="menu">
+                            <ul class="vendor-menu">
+                                <li><a href="<?= $block->escapeUrl($accountUrl) ?>" role="menuitem"><?= $block->escapeHtml(__('Vendor Information')); ?></a></li>
+                                <li><a href="<?= $block->escapeUrl($buyerDashboardUrl) ?>" role="menuitem"><?= $block->escapeHtml(__('Buyer Dashboard')); ?></a></li>
+                                <li><hr class="vendor-menu-divider"></li>
+                                <li><a href="<?= $block->escapeUrl($logoutUrl) ?>" role="menuitem" style="color:#ef4444;"><?= $block->escapeHtml(__('Logout')); ?></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="vendor-mobile-topbar__row vendor-mobile-topbar__row--secondary">
+                <div class="vendor-mobile-topbar__page-title"><?= $block->escapeHtml($title); ?></div>
+                <div class="vendor-topbar__item" data-dd>
+                    <button class="vendor-topbar__btn vendor-topbar__btn--wallet"
+                            type="button"
+                            data-dd-btn
+                            aria-haspopup="true"
+                            aria-expanded="false">
+                        <span class="vendor-ico" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none">
+                                <path d="M3 7h18v14H3V7Z" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M3 7l2-4h16v4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                <path d="M16 14h5" stroke-width="2" stroke-linecap="round"></path>
+                            </svg>
+                        </span>
+                        <span class="vendor-wallet-value"><?= $block->escapeHtml($walletAmount); ?></span>
+                        <span class="vendor-caret" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        </span>
+                    </button>
+                    <div class="vendor-dropdown vendor-dropdown--mobile vendor-dropdown--wallet" data-dd-panel role="menu">
+                        <ul class="vendor-menu">
+                            <?= $walletBlock ? $walletBlock->getChildHtml('credit_dropdown_item') : '<li><span>No Data</span></li>'; ?>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </nav>

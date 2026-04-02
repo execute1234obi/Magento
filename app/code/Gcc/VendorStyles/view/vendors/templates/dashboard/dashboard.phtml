@@ -23,10 +23,204 @@ try {
 $formatMetric = static function ($value) {
     return number_format((float)$value, 0, '.', '.');
 };
+
+$truncateDashboardProductName = static function ($value, $limit = 10) {
+    $value = (string)$value;
+
+    if (mb_strlen($value) <= $limit) {
+        return $value;
+    }
+
+    return mb_substr($value, 0, $limit) . '...';
+};
+
+$mostViewedTotalCount = $mostViewedProducts ? count($mostViewedProducts) : 0;
 ?>
 
 <style>
-.content-header{display:none!important}.gcc-vendor-dashboard{color:#163172}.gcc-dashboard-main,.gcc-dashboard-side{display:flex;flex-direction:column}.gcc-dashboard-main{gap:22px}.gcc-dashboard-side{gap:20px}.gcc-dashboard-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.gcc-stat-card,.gcc-dashboard-table-card{background:#fff;border:1px solid #e2ebf7;border-radius:14px;box-shadow:0 8px 24px rgba(17,44,98,.05)}.gcc-stat-card{min-height:122px;padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between}.gcc-stat-card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.gcc-stat-card__label{font-size:16px;line-height:1.35;font-weight:700;color:#173574}.gcc-stat-card__value{margin-top:18px;font-size:28px;line-height:1;font-weight:500;letter-spacing:-.02em;color:#203b84}.gcc-stat-card__icon{width:42px;height:42px;border-radius:10px;background:#fff2ea;display:inline-flex;align-items:center;justify-content:center;flex:0 0 42px}.gcc-stat-card__icon svg{width:22px;height:22px;stroke:#ff963c}.gcc-dashboard-table-card{overflow:hidden}.gcc-dashboard-table-card__head{padding:18px 20px 14px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid #edf3fb}.gcc-dashboard-table-card__title{margin:0;font-size:17px;line-height:1.3;font-weight:800;color:#173574}.gcc-dashboard-table-card__actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap;justify-content:flex-end}.gcc-dashboard-table-card__search{position:relative;min-width:250px}.gcc-dashboard-table-card__search input{width:100%;height:42px;padding:0 14px 0 40px;border:1px solid #d9e6f6;border-radius:8px;background:#fff;color:#173574;outline:none}.gcc-dashboard-table-card__search input::placeholder{color:#7e94be}.gcc-dashboard-table-card__search svg{position:absolute;top:50%;left:14px;width:16px;height:16px;stroke:#4368a4;transform:translateY(-50%)}.gcc-dashboard-table-card__sort{-webkit-appearance:none;appearance:none;height:42px;padding:0 38px 0 14px;border:1px solid #d9e6f6;border-radius:8px;background:#edf4fb;color:#2a59a3;font-weight:700;font-size:13px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#2a59a3 50%),linear-gradient(135deg,#2a59a3 50%,transparent 50%);background-position:calc(100% - 18px) 18px,calc(100% - 12px) 18px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.gcc-dashboard-table-card__body{overflow-x:auto}.gcc-dashboard-table{width:100%;min-width:760px;border-collapse:collapse}.gcc-dashboard-table th,.gcc-dashboard-table td{padding:15px 18px;border-bottom:1px solid #edf3fb;white-space:nowrap;vertical-align:middle}.gcc-dashboard-table th{font-size:13px;font-weight:800;color:#1e3c83;background:#f9fbfe}.gcc-dashboard-table td{font-size:14px;color:#35508c}.gcc-dashboard-table th span{display:inline-flex;align-items:center;gap:8px}.gcc-dashboard-sort-icon{width:8px;height:12px;position:relative;display:inline-block}.gcc-dashboard-sort-icon::before,.gcc-dashboard-sort-icon::after{content:"";position:absolute;left:0;border-left:4px solid transparent;border-right:4px solid transparent}.gcc-dashboard-sort-icon::before{top:0;border-bottom:5px solid #8aa0c7}.gcc-dashboard-sort-icon::after{bottom:0;border-top:5px solid #8aa0c7}.gcc-dashboard-table__index,.gcc-dashboard-table__price,.gcc-dashboard-table__rating{font-weight:700;color:#203b84}.gcc-dashboard-table__product a{color:#4b63a7}.gcc-dashboard-table__product a:hover{color:#203b84}.gcc-dashboard-table__image{width:38px;height:38px;border-radius:8px;overflow:hidden;border:1px solid #e3ebf7;background:#fff;display:flex;align-items:center;justify-content:center}.gcc-dashboard-table__image img{width:100%;height:100%;object-fit:cover;display:block}.gcc-dashboard-table__rating .star{color:#f59a3c;margin-right:4px}.gcc-dashboard-table__views{color:#5b76ae}.gcc-dashboard-table-card__empty{padding:34px 20px 42px;text-align:center;color:#7b8daf;font-size:15px}.gcc-dashboard-table-card__foot{padding:14px 20px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}.gcc-dashboard-table-card__show{display:flex;align-items:center;gap:10px;color:#163172;font-size:14px}.gcc-dashboard-table-card__show select{height:38px;min-width:72px;border:1px solid #d9e6f6;border-radius:8px;padding:0 10px;color:#173574;background:#fff}.gcc-dashboard-table-card__pagination{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.gcc-dashboard-table-card__page,.gcc-dashboard-table-card__page-current{min-width:38px;height:38px;padding:0 12px;border-radius:10px;border:1px solid #d8e5f6;background:#fff;color:#163172;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.gcc-dashboard-table-card__page-current{background:#234f94;border-color:#234f94;color:#fff}.gcc-dashboard-table-card__page[disabled]{opacity:.45;cursor:default}@media (max-width:1199px){.gcc-dashboard-stats{gap:16px}}@media (max-width:991px){.gcc-dashboard-main{gap:18px}.gcc-dashboard-table-card__head,.gcc-dashboard-table-card__foot{flex-direction:column;align-items:stretch}.gcc-dashboard-table-card__actions{justify-content:stretch}.gcc-dashboard-table-card__search{min-width:0;width:100%}.gcc-dashboard-table-card__sort{width:100%}}@media (max-width:767px){.gcc-dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.gcc-stat-card{min-height:112px;padding:12px 12px 14px;border-radius:10px}.gcc-stat-card__top{gap:10px}.gcc-stat-card__label{font-size:13px;line-height:1.4}.gcc-stat-card__value{margin-top:12px;font-size:17px;line-height:1.1}.gcc-stat-card__icon{width:32px;height:32px;flex-basis:32px;border-radius:8px}.gcc-stat-card__icon svg{width:17px;height:17px}.gcc-dashboard-table-card__head{padding:16px}.gcc-dashboard-table-card__foot{padding:14px 16px 16px;align-items:flex-start}.gcc-dashboard-table-card__pagination{justify-content:flex-start}}@media (max-width:359px){.gcc-stat-card__label{font-size:12px}.gcc-stat-card__value{font-size:16px}}
+.content-header{display:none!important}.gcc-vendor-dashboard{color:#163172}.gcc-dashboard-main,.gcc-dashboard-side{display:flex;flex-direction:column}.gcc-dashboard-main{gap:22px}.gcc-dashboard-side{gap:20px}.gcc-dashboard-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}.gcc-stat-card,.gcc-dashboard-table-card{background:#fff;border:1px solid #e2ebf7;border-radius:14px;box-shadow:0 8px 24px rgba(17,44,98,.05)}.gcc-stat-card{min-height:122px;padding:20px 22px;display:flex;flex-direction:column;justify-content:space-between}.gcc-stat-card__top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.gcc-stat-card__label{font-size:16px;line-height:1.35;font-weight:700;color:#173574}.gcc-stat-card__value{margin-top:18px;font-size:28px;line-height:1;font-weight:500;letter-spacing:-.02em;color:#203b84}.gcc-stat-card__icon{width:42px;height:42px;border-radius:10px;background:#fff2ea;display:inline-flex;align-items:center;justify-content:center;flex:0 0 42px}.gcc-stat-card__icon svg{width:22px;height:22px;stroke:#ff963c}.gcc-dashboard-table-card{overflow:hidden}.gcc-dashboard-table-card__head{padding:18px 20px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:18px;row-gap:12px;border-bottom:1px solid #edf3fb}.gcc-dashboard-table-card__title{margin:0;font-size:17px;line-height:1.3;font-weight:800;color:#173574}.gcc-dashboard-table-card__actions{display:flex;align-items:center;gap:12px;flex-wrap:nowrap;justify-content:flex-end;white-space:nowrap}.gcc-dashboard-table-card__search{position:relative;min-width:270px;width:270px;flex:0 0 270px}.gcc-dashboard-table-card__search input{width:100%;height:42px;padding:0 14px 0 40px;border:1px solid #d9e6f6;border-radius:8px;background:#fff;color:#173574;outline:none}.gcc-dashboard-table-card__search input::placeholder{color:#7e94be}.gcc-dashboard-table-card__search svg{position:absolute;top:50%;left:14px;width:16px;height:16px;stroke:#4368a4;transform:translateY(-50%)}.gcc-dashboard-table-card__sort{-webkit-appearance:none;appearance:none;height:42px;min-width:168px;width:168px;flex:0 0 168px;padding:0 38px 0 14px;border:1px solid #d9e6f6;border-radius:8px;background:#edf4fb;color:#2a59a3;font-weight:700;font-size:13px;cursor:pointer;background-image:linear-gradient(45deg,transparent 50%,#2a59a3 50%),linear-gradient(135deg,#2a59a3 50%,transparent 50%);background-position:calc(100% - 18px) 18px,calc(100% - 12px) 18px;background-size:6px 6px,6px 6px;background-repeat:no-repeat}.gcc-dashboard-table-card__body{overflow-x:hidden}.gcc-dashboard-table{width:100%;min-width:100%;border-collapse:collapse;table-layout:fixed}.gcc-dashboard-table th,.gcc-dashboard-table td{padding:15px 14px;border-bottom:1px solid #edf3fb;white-space:nowrap;vertical-align:middle}.gcc-dashboard-table th:nth-child(1),.gcc-dashboard-table td:nth-child(1){width:56px}.gcc-dashboard-table th:nth-child(2),.gcc-dashboard-table td:nth-child(2){width:84px}.gcc-dashboard-table th:nth-child(4),.gcc-dashboard-table td:nth-child(4){width:170px}.gcc-dashboard-table th:nth-child(5),.gcc-dashboard-table td:nth-child(5){width:120px}.gcc-dashboard-table th:nth-child(6),.gcc-dashboard-table td:nth-child(6){width:110px}.gcc-dashboard-table th{font-size:13px;font-weight:800;color:#1e3c83;background:#f9fbfe}.gcc-dashboard-table td{font-size:14px;color:#35508c}.gcc-dashboard-table__sort-trigger{display:inline-flex;align-items:center;gap:8px;width:100%;padding:0;border:0;background:none;color:inherit;font:inherit;font-weight:inherit;cursor:pointer;text-align:left}.gcc-dashboard-table__sort-trigger:hover{color:#234f94}.gcc-dashboard-table__sort-trigger:focus-visible{outline:2px solid #9fbce7;outline-offset:2px;border-radius:4px}.gcc-dashboard-table__sort-trigger.is-active{color:#173574}.gcc-dashboard-sort-icon{width:8px;height:12px;position:relative;display:inline-block;flex:0 0 8px}.gcc-dashboard-sort-icon::before,.gcc-dashboard-sort-icon::after{content:"";position:absolute;left:0;border-left:4px solid transparent;border-right:4px solid transparent;transition:border-color .2s ease,opacity .2s ease}.gcc-dashboard-sort-icon::before{top:0;border-bottom:5px solid #8aa0c7}.gcc-dashboard-sort-icon::after{bottom:0;border-top:5px solid #8aa0c7}.gcc-dashboard-table__sort-trigger.is-active .gcc-dashboard-sort-icon::before,.gcc-dashboard-table__sort-trigger.is-active .gcc-dashboard-sort-icon::after{opacity:.35}.gcc-dashboard-table__sort-trigger.is-asc .gcc-dashboard-sort-icon::before{border-bottom-color:#234f94;opacity:1}.gcc-dashboard-table__sort-trigger.is-desc .gcc-dashboard-sort-icon::after{border-top-color:#234f94;opacity:1}.gcc-dashboard-table__index,.gcc-dashboard-table__price,.gcc-dashboard-table__rating{font-weight:700;color:#203b84}.gcc-dashboard-table__product{white-space:normal;min-width:0;max-width:none}.gcc-dashboard-table__product-wrap{display:block;max-width:100%;min-width:0}.gcc-dashboard-table__product a,.gcc-dashboard-table__product-link{display:block;max-width:100%;color:#4b63a7;overflow-wrap:anywhere;word-break:break-word;white-space:normal;line-height:1.45}.gcc-dashboard-table__product [data-role="product-text"]{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;word-break:break-word}.gcc-dashboard-table__product a:hover,.gcc-dashboard-table__product-link:hover{color:#203b84}.gcc-dashboard-table__product-toggle{display:inline-block;margin-top:6px;padding:0;border:0;background:none;color:#234f94;font-weight:700;font-size:13px;line-height:1.4;text-decoration:underline;cursor:pointer}.gcc-dashboard-table__product-toggle:hover{color:#163172}.gcc-dashboard-table__image{width:38px;height:38px;border-radius:8px;overflow:hidden;border:1px solid #e3ebf7;background:#fff;display:flex;align-items:center;justify-content:center}.gcc-dashboard-table__image img{width:100%;height:100%;object-fit:cover;display:block}.gcc-dashboard-table__rating .star{color:#f59a3c;margin-right:4px}.gcc-dashboard-table__views{color:#5b76ae}.gcc-dashboard-table-card__empty{padding:34px 20px 42px;text-align:center;color:#7b8daf;font-size:15px}.gcc-dashboard-table-card__foot{padding:14px 20px 18px;display:flex;align-items:center;justify-content:space-between;gap:16px}.gcc-dashboard-table-card__show{display:flex;align-items:center;gap:10px;color:#163172;font-size:14px}.gcc-dashboard-table-card__show span{order:2}.gcc-dashboard-table-card__show select{order:1;height:38px;min-width:72px;border:1px solid #d9e6f6;border-radius:8px;padding:0 10px;color:#173574;background:#fff}.gcc-dashboard-table-card__pagination{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}.gcc-dashboard-table-card__page,.gcc-dashboard-table-card__page-current{min-width:38px;height:38px;padding:0 12px;border-radius:10px;border:1px solid #d8e5f6;background:#fff;color:#163172;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.gcc-dashboard-table-card__page:hover{border-color:#c2d7f1;color:#234f94}.gcc-dashboard-table-card__page-current{background:#234f94;border-color:#234f94;color:#fff}.gcc-dashboard-table-card__page[disabled]{opacity:.45;cursor:default}.gcc-dashboard-table-card__ellipsis{min-width:20px;height:38px;display:inline-flex;align-items:center;justify-content:center;color:#7b8daf;font-weight:700}.gcc-dashboard-table-card__body::-webkit-scrollbar{height:10px}.gcc-dashboard-table-card__body::-webkit-scrollbar-thumb{background:#8fa8cc;border-radius:999px}.gcc-dashboard-table-card__body::-webkit-scrollbar-track{background:#e9f0fa;border-radius:999px}@media (max-width:1199px){.gcc-dashboard-stats{gap:16px}}@media (max-width:991px){.gcc-dashboard-main{gap:18px}.gcc-dashboard-side{margin-top:18px}.gcc-dashboard-table-card__head{grid-template-columns:1fr;align-items:stretch}.gcc-dashboard-table-card__foot{flex-direction:column;align-items:stretch}.gcc-dashboard-table-card__actions{justify-content:flex-start;flex-wrap:wrap}.gcc-dashboard-table-card__search,.gcc-dashboard-table-card__sort{min-width:0;width:100%;flex-basis:100%}}@media (max-width:767px){.gcc-dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.gcc-stat-card{min-height:112px;padding:12px 12px 14px;border-radius:10px}.gcc-stat-card__top{gap:10px}.gcc-stat-card__label{font-size:13px;line-height:1.4}.gcc-stat-card__value{margin-top:12px;font-size:17px;line-height:1.1}.gcc-stat-card__icon{width:32px;height:32px;flex-basis:32px;border-radius:8px}.gcc-stat-card__icon svg{width:17px;height:17px}.gcc-dashboard-side{margin-top:20px}.gcc-dashboard-table-card__head{padding:16px 16px 12px;row-gap:14px}.gcc-dashboard-table-card__title{font-size:16px}.gcc-dashboard-table-card__actions{justify-content:flex-start;align-items:stretch;flex-wrap:nowrap;gap:10px}.gcc-dashboard-table-card__search{min-width:0;width:auto;flex:1 1 auto}.gcc-dashboard-table-card__search input{height:40px;padding-left:38px}.gcc-dashboard-table-card__sort{width:132px;min-width:132px;flex:0 0 132px;height:40px;padding-right:34px}.gcc-dashboard-table-card__foot{padding:14px 16px 16px;align-items:flex-start}.gcc-dashboard-table-card__pagination{justify-content:flex-start}.gcc-dashboard-table-card__body{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}.gcc-dashboard-table{min-width:760px;table-layout:fixed}}@media (max-width:359px){.gcc-stat-card__label{font-size:12px}.gcc-stat-card__value{font-size:16px}.gcc-dashboard-table-card__actions{gap:8px}.gcc-dashboard-table-card__sort{width:118px;min-width:118px;flex-basis:118px}}
+
+/* Dashboard table aligned with the catalog grid visual treatment */
+.gcc-dashboard-table-card{
+    border-color:#dfe9f7;
+    border-radius:16px;
+    box-shadow:0 8px 24px rgba(17,44,98,.05);
+}
+
+.gcc-dashboard-table-card__head{
+    display:block;
+    padding:22px 22px 0;
+    border-bottom:0;
+}
+
+.gcc-dashboard-table-card__title{
+    margin:0 0 18px;
+    color:#173574;
+    font-size:19px;
+    font-weight:800;
+    line-height:1.2;
+}
+
+.gcc-dashboard-table-card__toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    min-height:78px;
+    padding:18px 22px;
+    margin:0 -22px;
+    border-top:1px solid #edf3fb;
+    border-bottom:1px solid #edf3fb;
+    background:#ffffff;
+}
+
+.gcc-dashboard-table-card__results{
+    flex:0 0 auto;
+    color:#45639d;
+    font-size:14px;
+    font-weight:500;
+    line-height:1.4;
+}
+
+.gcc-dashboard-table-card__actions{
+    margin-left:auto;
+    justify-content:flex-end;
+    gap:12px;
+}
+
+.gcc-dashboard-table-card__search input{
+    height:40px;
+    border-color:#d9e6f6;
+    border-radius:8px;
+    color:#173574;
+}
+
+.gcc-dashboard-table-card__sort{
+    height:40px;
+    min-width:156px;
+    width:156px;
+    flex-basis:156px;
+    border-color:#d9e6f6;
+    border-radius:8px;
+    background:#eef5fd;
+    color:#2a59a3;
+    font-size:14px;
+    font-weight:700;
+}
+
+.gcc-dashboard-table-card__body{
+    overflow-x:hidden;
+    background:#ffffff;
+}
+
+.gcc-dashboard-table{
+    border-collapse:separate;
+    border-spacing:0;
+}
+
+.gcc-dashboard-table th{
+    padding:16px 14px;
+    border-bottom:1px solid #edf3fb;
+    border-right:1px solid #edf3fb;
+    background:#f9fbfe;
+    color:#1e3c83;
+    font-size:13px;
+    font-weight:800;
+}
+
+.gcc-dashboard-table th:last-child{
+    border-right:0;
+}
+
+.gcc-dashboard-table td{
+    padding:18px 14px;
+    border-bottom:1px solid #edf3fb;
+    border-right:1px solid #edf3fb;
+    color:#4a67a1;
+    font-size:14px;
+    background:#ffffff;
+}
+
+.gcc-dashboard-table td:last-child{
+    border-right:0;
+}
+
+.gcc-dashboard-table tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.gcc-dashboard-table tbody tr:hover td{
+    background:#fcfdff;
+}
+
+.gcc-dashboard-table__sort-trigger{
+    color:#1e3c83;
+}
+
+.gcc-dashboard-table__sort-trigger:hover{
+    color:#234f94;
+}
+
+.gcc-dashboard-table__index,
+.gcc-dashboard-table__price,
+.gcc-dashboard-table__rating{
+    color:#203b84;
+}
+
+.gcc-dashboard-table__product a,
+.gcc-dashboard-table__product-link{
+    color:#4b63a7;
+}
+
+.gcc-dashboard-table__product-toggle{
+    color:#2e5ea8;
+}
+
+.gcc-dashboard-table__views{
+    color:#5b76ae;
+}
+
+.gcc-dashboard-table-card__foot{
+    padding:16px 20px 18px;
+    border-top:1px solid #edf3fb;
+    background:#ffffff;
+}
+
+@media (max-width:991px){
+    .gcc-dashboard-table-card__toolbar{
+        flex-direction:column;
+        align-items:stretch;
+        padding:16px 18px;
+        margin:0 -20px;
+        gap:14px;
+    }
+
+    .gcc-dashboard-table-card__results{
+        order:1;
+    }
+
+    .gcc-dashboard-table-card__actions{
+        order:2;
+        margin-left:0;
+        justify-content:flex-start;
+    }
+}
+
+@media (max-width:767px){
+    .gcc-dashboard-table-card__head{
+        padding:18px 16px 0;
+    }
+
+    .gcc-dashboard-table-card__title{
+        margin-bottom:14px;
+        font-size:18px;
+    }
+
+    .gcc-dashboard-table-card__toolbar{
+        margin:0 -16px;
+        padding:14px 16px;
+    }
+}
 </style>
 
 <div class="gcc-vendor-dashboard">
@@ -77,17 +271,22 @@ $formatMetric = static function ($value) {
                 <section class="gcc-dashboard-table-card" data-gcc-dashboard-table>
                     <div class="gcc-dashboard-table-card__head">
                         <h2 class="gcc-dashboard-table-card__title"><?php echo __("Most Viewed Product") ?></h2>
-                        <div class="gcc-dashboard-table-card__actions">
-                            <label class="gcc-dashboard-table-card__search">
-                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-                                <input type="search" placeholder="<?php echo $block->escapeHtmlAttr(__('Search Product')) ?>" data-role="search">
-                            </label>
-                            <select class="gcc-dashboard-table-card__sort" data-role="sort">
-                                <option value="popular"><?php echo __("Most Popular") ?></option>
-                                <option value="price_high"><?php echo __("Highest Price") ?></option>
-                                <option value="price_low"><?php echo __("Lowest Price") ?></option>
-                                <option value="name"><?php echo __("Name A-Z") ?></option>
-                            </select>
+                        <div class="gcc-dashboard-table-card__toolbar">
+                            <div class="gcc-dashboard-table-card__results" data-role="results-count" data-results-label="<?php echo $block->escapeHtmlAttr(__('Results')) ?>">
+                                <?php echo (int)$mostViewedTotalCount . ' ' . __("Results"); ?>
+                            </div>
+                            <div class="gcc-dashboard-table-card__actions">
+                                <label class="gcc-dashboard-table-card__search">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+                                    <input type="search" placeholder="<?php echo $block->escapeHtmlAttr(__('Search Product')) ?>" data-role="search">
+                                </label>
+                                <select class="gcc-dashboard-table-card__sort" data-role="sort">
+                                    <option value="popular"><?php echo __("Most Popular") ?></option>
+                                    <option value="price_high"><?php echo __("Highest Price") ?></option>
+                                    <option value="price_low"><?php echo __("Lowest Price") ?></option>
+                                    <option value="name"><?php echo __("Name A-Z") ?></option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <?php if ($mostViewedProducts && count($mostViewedProducts) > 0): ?>
@@ -95,25 +294,76 @@ $formatMetric = static function ($value) {
                             <table class="gcc-dashboard-table">
                                 <thead>
                                     <tr>
-                                        <th><span><?php echo __("No") ?><i class="gcc-dashboard-sort-icon"></i></span></th>
-                                        <th><span><?php echo __("Image") ?><i class="gcc-dashboard-sort-icon"></i></span></th>
-                                        <th><span><?php echo __("Product") ?><i class="gcc-dashboard-sort-icon"></i></span></th>
-                                        <th><span><?php echo __("Price") ?><i class="gcc-dashboard-sort-icon"></i></span></th>
-                                        <th><span><?php echo __("Rating") ?><i class="gcc-dashboard-sort-icon"></i></span></th>
-                                        <th><span><?php echo __("Views") ?><i class="gcc-dashboard-sort-icon"></i></span></th>
+                                        <th>
+                                            <button type="button" class="gcc-dashboard-table__sort-trigger" data-role="header-sort" data-sort-key="position" data-default-direction="asc">
+                                                <span><?php echo __("No") ?></span><i class="gcc-dashboard-sort-icon"></i>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button type="button" class="gcc-dashboard-table__sort-trigger" data-role="header-sort" data-sort-key="image" data-default-direction="asc">
+                                                <span><?php echo __("Image") ?></span><i class="gcc-dashboard-sort-icon"></i>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button type="button" class="gcc-dashboard-table__sort-trigger" data-role="header-sort" data-sort-key="name" data-default-direction="asc">
+                                                <span><?php echo __("Product") ?></span><i class="gcc-dashboard-sort-icon"></i>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button type="button" class="gcc-dashboard-table__sort-trigger" data-role="header-sort" data-sort-key="price" data-default-direction="desc">
+                                                <span><?php echo __("Price") ?></span><i class="gcc-dashboard-sort-icon"></i>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button type="button" class="gcc-dashboard-table__sort-trigger" data-role="header-sort" data-sort-key="rating" data-default-direction="desc">
+                                                <span><?php echo __("Rating") ?></span><i class="gcc-dashboard-sort-icon"></i>
+                                            </button>
+                                        </th>
+                                        <th>
+                                            <button type="button" class="gcc-dashboard-table__sort-trigger" data-role="header-sort" data-sort-key="views" data-default-direction="desc">
+                                                <span><?php echo __("Views") ?></span><i class="gcc-dashboard-sort-icon"></i>
+                                            </button>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody data-role="rows">
                                     <?php foreach ($mostViewedProducts as $index => $product): ?>
                                         <?php
+                                        $productName = (string)$product->getName();
+                                        $isLongProductName = mb_strlen($productName) > 10;
+                                        $shortProductName = $truncateDashboardProductName($productName, 10);
                                         $ratingValue = $product->getRatingSummary() ? number_format($product->getRatingSummary() / 20, 1) : '0.0';
                                         $priceValue = (float)$product->getFinalPrice();
                                         $viewsValue = (int)$product->getViews();
                                         ?>
-                                        <tr data-row="1" data-name="<?php echo $block->escapeHtmlAttr(mb_strtolower((string)$product->getName())) ?>" data-price="<?php echo $block->escapeHtmlAttr((string)$priceValue) ?>" data-rating="<?php echo $block->escapeHtmlAttr((string)$ratingValue) ?>" data-views="<?php echo $block->escapeHtmlAttr((string)$viewsValue) ?>">
+                                        <tr data-row="1" data-position="<?php echo $block->escapeHtmlAttr((string)($index + 1)) ?>" data-name="<?php echo $block->escapeHtmlAttr(mb_strtolower($productName)) ?>" data-price="<?php echo $block->escapeHtmlAttr((string)$priceValue) ?>" data-rating="<?php echo $block->escapeHtmlAttr((string)$ratingValue) ?>" data-views="<?php echo $block->escapeHtmlAttr((string)$viewsValue) ?>">
                                             <td class="gcc-dashboard-table__index" data-role="index"><?php echo $index + 1 ?></td>
-                                            <td><span class="gcc-dashboard-table__image"><img src="<?php echo $block->escapeUrl($mostViewedBlock->getProductImage($product)) ?>" alt="<?php echo $block->escapeHtmlAttr($product->getName()) ?>"></span></td>
-                                            <td class="gcc-dashboard-table__product"><a href="<?php echo $block->escapeUrl($product->getProductUrl()) ?>"><?php echo $block->escapeHtml($product->getName()) ?></a></td>
+                                            <td><span class="gcc-dashboard-table__image"><img src="<?php echo $block->escapeUrl($mostViewedBlock->getProductImage($product)) ?>" alt="<?php echo $block->escapeHtmlAttr($productName) ?>"></span></td>
+                                            <td class="gcc-dashboard-table__product">
+                                                <div class="gcc-dashboard-table__product-wrap">
+                                                    <a
+                                                        class="gcc-dashboard-table__product-link"
+                                                        href="<?php echo $block->escapeUrl($product->getProductUrl()) ?>"
+                                                        title="<?php echo $block->escapeHtmlAttr($productName) ?>"
+                                                    >
+                                                        <span
+                                                            data-role="product-text"
+                                                            data-full-name="<?php echo $block->escapeHtmlAttr($productName) ?>"
+                                                            data-short-name="<?php echo $block->escapeHtmlAttr($shortProductName) ?>"
+                                                            data-expanded="0"
+                                                        ><?php echo $block->escapeHtml($shortProductName) ?></span>
+                                                    </a>
+                                                    <?php if ($isLongProductName): ?>
+                                                        <button
+                                                            type="button"
+                                                            class="gcc-dashboard-table__product-toggle"
+                                                            data-role="product-toggle"
+                                                            data-more-label="<?php echo $block->escapeHtmlAttr(__('Read more')) ?>"
+                                                            data-less-label="<?php echo $block->escapeHtmlAttr(__('Read less')) ?>"
+                                                        ><?php echo __("Read more") ?></button>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
                                             <td class="gcc-dashboard-table__price"><?php echo $block->formatPrice($priceValue) ?></td>
                                             <td class="gcc-dashboard-table__rating"><span class="star">&#9733;</span><?php echo $ratingValue ?></td>
                                             <td class="gcc-dashboard-table__views"><?php echo $viewsValue ?> <?php echo __("views") ?></td>
@@ -148,6 +398,313 @@ $formatMetric = static function ($value) {
 
 <?php if ($mostViewedProducts && count($mostViewedProducts) > 0): ?>
 <script>
-document.addEventListener('DOMContentLoaded',function(){var root=document.querySelector('[data-gcc-dashboard-table]');if(!root){return}var tbody=root.querySelector('[data-role="rows"]');var searchInput=root.querySelector('[data-role="search"]');var sortSelect=root.querySelector('[data-role="sort"]');var pageSizeSelect=root.querySelector('[data-role="page-size"]');var pagination=root.querySelector('[data-role="pagination"]');var allRows=Array.prototype.slice.call(tbody.querySelectorAll('tr[data-row]'));var currentPage=1;function compareRows(a,b,mode){if(mode==='price_high'){return parseFloat(b.dataset.price||'0')-parseFloat(a.dataset.price||'0')}if(mode==='price_low'){return parseFloat(a.dataset.price||'0')-parseFloat(b.dataset.price||'0')}if(mode==='name'){return(a.dataset.name||'').localeCompare(b.dataset.name||'')}return parseFloat(b.dataset.views||'0')-parseFloat(a.dataset.views||'0')}function renderPagination(totalPages){pagination.innerHTML='';if(totalPages<=1){var single=document.createElement('span');single.className='gcc-dashboard-table-card__page-current';single.textContent='1';pagination.appendChild(single);return}var prev=document.createElement('button');prev.type='button';prev.className='gcc-dashboard-table-card__page';prev.textContent='<';prev.disabled=currentPage===1;prev.addEventListener('click',function(){if(currentPage>1){currentPage-=1;render()}});pagination.appendChild(prev);for(var page=1;page<=totalPages;page++){var item=document.createElement(page===currentPage?'span':'button');item.textContent=String(page);item.className=page===currentPage?'gcc-dashboard-table-card__page-current':'gcc-dashboard-table-card__page';if(page!==currentPage){item.type='button';item.setAttribute('data-page',String(page));item.addEventListener('click',function(event){currentPage=parseInt(event.currentTarget.getAttribute('data-page'),10);render()})}pagination.appendChild(item)}var next=document.createElement('button');next.type='button';next.className='gcc-dashboard-table-card__page';next.textContent='>';next.disabled=currentPage===totalPages;next.addEventListener('click',function(){if(currentPage<totalPages){currentPage+=1;render()}});pagination.appendChild(next)}function render(){var query=(searchInput.value||'').toLowerCase().trim();var sortMode=sortSelect.value||'popular';var pageSize=parseInt(pageSizeSelect.value,10)||10;var rows=allRows.filter(function(row){return!query||(row.dataset.name||'').indexOf(query)!==-1});rows.sort(function(a,b){return compareRows(a,b,sortMode)});rows.forEach(function(row){tbody.appendChild(row);row.style.display='none'});var totalPages=Math.max(1,Math.ceil(rows.length/pageSize));if(currentPage>totalPages){currentPage=totalPages}var start=(currentPage-1)*pageSize;var end=start+pageSize;rows.slice(start,end).forEach(function(row,rowIndex){var indexCell=row.querySelector('[data-role="index"]');row.style.display='';if(indexCell){indexCell.textContent=String(start+rowIndex+1)}});renderPagination(totalPages)}searchInput.addEventListener('input',function(){currentPage=1;render()});sortSelect.addEventListener('change',function(){currentPage=1;render()});pageSizeSelect.addEventListener('change',function(){currentPage=1;render()});render()});
+document.addEventListener('DOMContentLoaded', function () {
+    var root = document.querySelector('[data-gcc-dashboard-table]');
+
+    if (!root) {
+        return;
+    }
+
+    var tbody = root.querySelector('[data-role="rows"]');
+    var searchInput = root.querySelector('[data-role="search"]');
+    var sortSelect = root.querySelector('[data-role="sort"]');
+    var pageSizeSelect = root.querySelector('[data-role="page-size"]');
+    var pagination = root.querySelector('[data-role="pagination"]');
+    var resultsCount = root.querySelector('[data-role="results-count"]');
+    var headerSortButtons = Array.prototype.slice.call(root.querySelectorAll('[data-role="header-sort"]'));
+    var allRows = Array.prototype.slice.call(tbody.querySelectorAll('tr[data-row]'));
+    var currentPage = 1;
+    var activeSort = {
+        key: 'views',
+        direction: 'desc'
+    };
+
+    function compareNumbers(left, right, direction) {
+        if (direction === 'asc') {
+            return left - right;
+        }
+
+        return right - left;
+    }
+
+    function compareText(left, right, direction) {
+        var comparison = left.localeCompare(right);
+
+        if (direction === 'asc') {
+            return comparison;
+        }
+
+        return comparison * -1;
+    }
+
+    function compareRows(a, b, key, direction) {
+        if (key === 'position') {
+            return compareNumbers(parseFloat(a.dataset.position || '0'), parseFloat(b.dataset.position || '0'), direction);
+        }
+
+        if (key === 'image') {
+            return compareText(a.dataset.name || '', b.dataset.name || '', direction);
+        }
+
+        if (key === 'price') {
+            return compareNumbers(parseFloat(a.dataset.price || '0'), parseFloat(b.dataset.price || '0'), direction);
+        }
+
+        if (key === 'rating') {
+            return compareNumbers(parseFloat(a.dataset.rating || '0'), parseFloat(b.dataset.rating || '0'), direction);
+        }
+
+        if (key === 'views') {
+            return compareNumbers(parseFloat(a.dataset.views || '0'), parseFloat(b.dataset.views || '0'), direction);
+        }
+
+        return compareText(a.dataset.name || '', b.dataset.name || '', direction);
+    }
+
+    function applySortFromSelect() {
+        var sortMode = sortSelect.value || 'popular';
+
+        if (sortMode === 'price_high') {
+            activeSort = {key: 'price', direction: 'desc'};
+            return;
+        }
+
+        if (sortMode === 'price_low') {
+            activeSort = {key: 'price', direction: 'asc'};
+            return;
+        }
+
+        if (sortMode === 'name') {
+            activeSort = {key: 'name', direction: 'asc'};
+            return;
+        }
+
+        activeSort = {key: 'views', direction: 'desc'};
+    }
+
+    function syncSortSelect() {
+        if (activeSort.key === 'price' && activeSort.direction === 'desc') {
+            sortSelect.value = 'price_high';
+            return;
+        }
+
+        if (activeSort.key === 'price' && activeSort.direction === 'asc') {
+            sortSelect.value = 'price_low';
+            return;
+        }
+
+        if (activeSort.key === 'name' && activeSort.direction === 'asc') {
+            sortSelect.value = 'name';
+            return;
+        }
+
+        if (activeSort.key === 'views' && activeSort.direction === 'desc') {
+            sortSelect.value = 'popular';
+        }
+    }
+
+    function renderHeaderSortState() {
+        headerSortButtons.forEach(function (button) {
+            var key = button.getAttribute('data-sort-key') || '';
+            var isActive = key === activeSort.key;
+            var headerCell = button.closest('th');
+
+            button.classList.toggle('is-active', isActive);
+            button.classList.toggle('is-asc', isActive && activeSort.direction === 'asc');
+            button.classList.toggle('is-desc', isActive && activeSort.direction === 'desc');
+
+            if (headerCell) {
+                headerCell.setAttribute('aria-sort', isActive ? (activeSort.direction === 'asc' ? 'ascending' : 'descending') : 'none');
+            }
+        });
+    }
+
+    function appendPageButton(pageNumber) {
+        var item = document.createElement(pageNumber === currentPage ? 'span' : 'button');
+
+        item.textContent = String(pageNumber);
+        item.className = pageNumber === currentPage ? 'gcc-dashboard-table-card__page-current' : 'gcc-dashboard-table-card__page';
+
+        if (pageNumber !== currentPage) {
+            item.type = 'button';
+            item.setAttribute('data-page', String(pageNumber));
+            item.addEventListener('click', function (event) {
+                currentPage = parseInt(event.currentTarget.getAttribute('data-page'), 10);
+                render();
+            });
+        }
+
+        pagination.appendChild(item);
+    }
+
+    function appendEllipsis() {
+        var ellipsis = document.createElement('span');
+        ellipsis.className = 'gcc-dashboard-table-card__ellipsis';
+        ellipsis.textContent = '...';
+        pagination.appendChild(ellipsis);
+    }
+
+    function renderPagination(totalPages) {
+        pagination.innerHTML = '';
+
+        if (totalPages <= 1) {
+            var single = document.createElement('span');
+            single.className = 'gcc-dashboard-table-card__page-current';
+            single.textContent = '1';
+            pagination.appendChild(single);
+            return;
+        }
+
+        var prev = document.createElement('button');
+        prev.type = 'button';
+        prev.className = 'gcc-dashboard-table-card__page';
+        prev.textContent = '‹';
+        prev.disabled = currentPage === 1;
+        prev.addEventListener('click', function () {
+            if (currentPage > 1) {
+                currentPage -= 1;
+                render();
+            }
+        });
+        pagination.appendChild(prev);
+
+        if (totalPages <= 5) {
+            for (var page = 1; page <= totalPages; page++) {
+                appendPageButton(page);
+            }
+        } else if (currentPage <= 3) {
+            appendPageButton(1);
+            appendPageButton(2);
+            appendPageButton(3);
+            appendEllipsis();
+            appendPageButton(totalPages);
+        } else if (currentPage >= totalPages - 2) {
+            appendPageButton(1);
+            appendEllipsis();
+            appendPageButton(totalPages - 2);
+            appendPageButton(totalPages - 1);
+            appendPageButton(totalPages);
+        } else {
+            appendPageButton(1);
+            appendEllipsis();
+            appendPageButton(currentPage - 1);
+            appendPageButton(currentPage);
+            appendPageButton(currentPage + 1);
+            appendEllipsis();
+            appendPageButton(totalPages);
+        }
+
+        var next = document.createElement('button');
+        next.type = 'button';
+        next.className = 'gcc-dashboard-table-card__page';
+        next.textContent = '›';
+        next.disabled = currentPage === totalPages;
+        next.addEventListener('click', function () {
+            if (currentPage < totalPages) {
+                currentPage += 1;
+                render();
+            }
+        });
+        pagination.appendChild(next);
+    }
+
+    function render() {
+        var query = (searchInput.value || '').toLowerCase().trim();
+        var pageSize = parseInt(pageSizeSelect.value, 10) || 10;
+        var rows = allRows.filter(function (row) {
+            return !query || (row.dataset.name || '').indexOf(query) !== -1;
+        });
+
+        rows.sort(function (a, b) {
+            return compareRows(a, b, activeSort.key, activeSort.direction);
+        });
+
+        rows.forEach(function (row) {
+            tbody.appendChild(row);
+            row.style.display = 'none';
+        });
+
+        var totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+
+        var start = (currentPage - 1) * pageSize;
+        var end = start + pageSize;
+
+        rows.slice(start, end).forEach(function (row) {
+            row.style.display = '';
+        });
+
+        if (resultsCount) {
+            var resultsLabel = resultsCount.getAttribute('data-results-label') || 'Results';
+            resultsCount.textContent = String(rows.length) + ' ' + resultsLabel;
+        }
+
+        syncSortSelect();
+        renderHeaderSortState();
+        renderPagination(totalPages);
+    }
+
+    root.addEventListener('click', function (event) {
+        var toggle = event.target.closest('[data-role="product-toggle"]');
+
+        if (!toggle || !root.contains(toggle)) {
+            return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        var productWrap = toggle.closest('.gcc-dashboard-table__product-wrap');
+        var text = productWrap ? productWrap.querySelector('[data-role="product-text"]') : null;
+
+        if (!text) {
+            return;
+        }
+
+        var isExpanded = text.getAttribute('data-expanded') === '1';
+        text.textContent = isExpanded ? (text.getAttribute('data-short-name') || '') : (text.getAttribute('data-full-name') || '');
+        text.setAttribute('data-expanded', isExpanded ? '0' : '1');
+        toggle.textContent = isExpanded ? (toggle.getAttribute('data-more-label') || 'Read more') : (toggle.getAttribute('data-less-label') || 'Read less');
+    });
+
+    headerSortButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            var sortKey = button.getAttribute('data-sort-key') || 'views';
+            var defaultDirection = button.getAttribute('data-default-direction') || 'asc';
+
+            if (activeSort.key === sortKey) {
+                activeSort.direction = activeSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                activeSort.key = sortKey;
+                activeSort.direction = defaultDirection;
+            }
+
+            currentPage = 1;
+            render();
+        });
+    });
+
+    searchInput.addEventListener('input', function () {
+        currentPage = 1;
+        render();
+    });
+
+    sortSelect.addEventListener('change', function () {
+        applySortFromSelect();
+        currentPage = 1;
+        render();
+    });
+
+    pageSizeSelect.addEventListener('change', function () {
+        currentPage = 1;
+        render();
+    });
+
+    applySortFromSelect();
+    render();
+});
 </script>
 <?php endif; ?>

@@ -47,9 +47,6 @@ class MostViewed extends Template
         // Vnecoms products table mein 'vendor_id' column use karta hai
         $collection->addAttributeToFilter('vendor_id', $vendorId);
 
-        $collection->setPageSize(10)
-            ->setCurPage(1);
-            
         return $collection;
     }
 
