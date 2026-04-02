@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0"?>
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <argument name="context" xsi:type="configurableObject">
@@ -40,7 +40,7 @@
             </argument>
         </argument>
     </dataSource>
-    <container name="listing_top">
+    <listingToolbar name="listing_top">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
                 <item name="sticky" xsi:type="boolean">false</item>
@@ -61,7 +61,7 @@
                 </item>
             </argument>
         </paging>
-    </container>
+    </listingToolbar>
     <columns name="user_columns">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
@@ -139,9 +139,12 @@
             </argument>
         </column>
         <actionsColumn class="Gcc\VendorStyles\Ui\Component\Listing\Column\SubaccountUserActions" name="actions">
+            <settings>
+                <bodyTmpl>Gcc_VendorStyles/grid/cells/subaccount-user-actions.html</bodyTmpl>
+            </settings>
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="indexField" xsi:type="string">user_id</item>
+                    <item name="indexField" xsi:type="string">customer_id</item>
                     <item name="sortOrder" xsi:type="number">50</item>
                 </item>
             </argument>
