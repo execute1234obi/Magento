@@ -321,6 +321,7 @@ $itemCount = is_countable($items) ? count($items) : 0;
 
 @media (max-width:480px){
   .top-28{
+    margin-top:16px;
     padding:12px 12px 14px;
   }
   [id$="-carousel"] .block-title strong{
@@ -336,8 +337,8 @@ $itemCount = is_countable($items) ? count($items) : 0;
     padding:2px 0 4px;
   }
   [id$="-carousel"] .rp-slide{
-    flex:0 0 calc((100% - 8px) / 2);
-    max-width:calc((100% - 8px) / 2);
+    flex:0 0 100%;
+    max-width:100%;
   }
   [id$="-carousel"] .rp-thumb{
     margin:8px 8px 0;
