@@ -8,7 +8,15 @@ $productCount = count($products);
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
 
-<div class="container mx-auto px-4 py-6">
+<style>
+@media (max-width: 767px) {
+  .vendor-others-products {
+    display: none !important;
+  }
+}
+</style>
+
+<div class="container mx-auto px-4 py-6 vendor-others-products">
   <div class="flex items-center justify-between mb-4">
     <h2 class="text-sm font-semibold text-gray-900">Other Products from the Same Vendor</h2>
     <div class="flex items-center space-x-2">

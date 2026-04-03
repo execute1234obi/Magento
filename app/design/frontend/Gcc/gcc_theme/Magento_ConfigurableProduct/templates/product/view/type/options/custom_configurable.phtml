@@ -117,9 +117,12 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 }
 
 #product-options-wrapper .option-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     min-width: 72px;
-    min-height: 44px;
-    padding: 0 18px;
+    height: 44px;
+    padding: 0 16px;
     border: 1px solid #d8e1ee;
     border-radius: 8px;
     background: #fff;
@@ -142,9 +145,9 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 
 #product-options-wrapper .option-btn.active {
     border-color: #4285f4;
-    background: #fff;
+    background: #eef5ff;
     color: #2563eb;
-    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.14);
+    box-shadow: none;
 }
 
 #product-options-wrapper .super-attribute-select {
@@ -175,22 +178,37 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
         font-size: 15px;
     }
 
+    #product-options-wrapper .variation {
+        margin: 0 0 16px;
+    }
+
     #product-options-wrapper .variation label {
         margin-bottom: 8px;
         font-size: 13px;
     }
 
     #product-options-wrapper .attribute-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
         gap: 8px;
         margin-bottom: 14px;
     }
 
+    #product-options-wrapper .attribute-options[data-attribute-code="color"] {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    #product-options-wrapper .attribute-options[data-attribute-code="size"] {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
     #product-options-wrapper .option-btn {
-        min-width: 54px;
-        min-height: 38px;
-        padding: 0 12px;
-        font-size: 13px;
-        border-radius: 7px;
+        width: 100%;
+        min-width: 0;
+        height: 38px;
+        padding: 0 8px;
+        font-size: 12px;
+        border-radius: 8px;
     }
 
     #product-options-wrapper .add-quote-btn {
@@ -210,12 +228,11 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 
     <?= $block->getBlockHtml('formkey') ?>
 
-    <?php if (!empty($attributes)): ?>
+<?php if (!empty($attributes)): ?>
                <div class="variation">
             <div class="sub-heading">
             <?= __("Product Variation") ?>
             </div>
-            <br />
              <?php foreach ($attributes as $attribute):
             $attributeLabel = $block->escapeHtml($attribute->getProductAttribute()->getStoreLabel());
             $attributeCode = $attribute->getProductAttribute()->getAttributeCode();
@@ -228,7 +245,8 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
                 <button type="button"
                         class="option-btn"
                         data-attribute-code="<?= $attributeCode ?>"
-                        data-option-id="<?= $block->escapeHtmlAttr($option['value_index'] ?? '') ?>">
+                        data-option-id="<?= $block->escapeHtmlAttr($option['value_index'] ?? '') ?>"
+                        aria-pressed="false">
                     <?= $block->escapeHtml($option['label'] ?? '') ?>
                 </button>
                 <?php endforeach; ?>
@@ -524,6 +542,34 @@ require(['jquery'], function($) {
         // optional setup if initial product has thumbs etc
         bindThumbnailClicks(<?= $product->getId() ?>);
         bindArrowButtons(<?= $product->getId() ?>);
+
+        $('#product-options-wrapper .super-attribute-select').each(function () {
+            var $select = $(this);
+            var name = $select.attr('name') || '';
+            var match = name.match(/^super_attribute\[(.+)\]$/);
+            var currentValue = $select.val();
+
+            if (!match || !currentValue) {
+                return;
+            }
+
+            var attributeCode = match[1];
+            var $container = $('.attribute-options[data-attribute-code="' + attributeCode + '"]');
+
+            $container.find('.option-btn').each(function () {
+                var $optionBtn = $(this);
+                if (String($optionBtn.data('option-id')) === String(currentValue)) {
+                    $optionBtn.addClass('active').attr('aria-pressed', 'true');
+                }
+            });
+        });
+
+        $('#product-options-wrapper .attribute-options').each(function () {
+            var $container = $(this);
+            if (!$container.find('.option-btn.active').length) {
+                $container.find('.option-btn').first().trigger('click');
+            }
+        });
     });
 
     // when user clicks .option-btn
@@ -531,6 +577,8 @@ require(['jquery'], function($) {
         var $btn = $(this);
         var attributeCode = $btn.data('attribute-code');
         var optionId = $btn.data('option-id');
+        var $container = $btn.closest('.attribute-options');
+        var $select = $('#product-options-wrapper .super-attribute-select[name="super_attribute[' + attributeCode + ']"]');
 
         // find attributeId from spConfig
         var attrId = null;
@@ -539,6 +587,13 @@ require(['jquery'], function($) {
                 attrId = attr.id;
             }
         });
+
+        $container.find('.option-btn').removeClass('active').attr('aria-pressed', 'false');
+        $btn.addClass('active').attr('aria-pressed', 'true');
+
+        if ($select.length) {
+            $select.val(optionId).trigger('change');
+        }
 
         if (attrId) {
             selectedAttributes[attrId] = optionId;

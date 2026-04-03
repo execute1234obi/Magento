@@ -4,13 +4,16 @@ $items = $block->getItems();
 
 /** ViewModel */
 $viewModel = $block->getData('view_model');
+$carouselId = $block->getData('carousel_id') ?: 'related-carousel';
+$blockTitle = $block->getData('block_title') ?: __('Similar Products');
+$itemCount = is_countable($items) ? count($items) : 0;
 ?>
 
-<?php if (!empty($items)): ?>
+<?php if ($itemCount): ?>
   <div class="top-28">
-<div id="related-carousel" class="block related">
+<div id="<?= $block->escapeHtmlAttr($carouselId) ?>" class="block related">
   <div class="block-title">
-    <strong><?= __('Similar Products'); ?></strong>
+    <strong><?= $blockTitle; ?></strong>
     <div class="rp-arrows">
       <button class="rp-nav rp-prev" type="button" aria-label="<?= $block->escapeHtml(__('Previous')) ?>">‹</button>
       <button class="rp-nav rp-next" type="button" aria-label="<?= $block->escapeHtml(__('Next')) ?>">›</button>
@@ -52,7 +55,7 @@ $viewModel = $block->getData('view_model');
 
                 <div class="rp-price-line">
                   <span class="rp-price"><?= $priceHtml; ?></span>
-                  <!-- <span class="rp-per">/ 1 <?= __("pcs") ?></span> -->
+                  <span class="rp-per">/ 1 <?= __("pcs") ?></span>
                 </div>
 
                 <hr class="rp-divider">
@@ -70,22 +73,18 @@ $viewModel = $block->getData('view_model');
                   </div>
                 <?php endif; ?>
 
-                <?php if ($country): 
-                 ?>
+                <?php if ($country): ?>
                   <div class="rp-meta">
                     <span class="rp-country-chip">
-                     
                       <span class="rp-flag" data-code="<?= $countryCode ?>" aria-hidden="true"></span>
                       <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
                     </span>
                   </div>
                 <?php endif; ?>
-
               </div>
 
               <div class="rp-foot">
                  <!-- request quote functionality -->
-                
             <button class="rp-btn add-to-quote"
                 data-product-id="<?= $_item->getId(); ?>"
                 type="button">
@@ -102,16 +101,13 @@ $viewModel = $block->getData('view_model');
 </div>
 <?php endif; ?>
 
-</br></br>
-
 <style>
   .top-28{
     background: white;
-    border-radius: 12px;
+    border-radius: 18px;
     margin-top: 28px;
-    padding-top: 14px;
-    padding-left: 21px;
-    padding-right: 21px;
+    padding: 18px 20px 22px;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
   }
 :root{
   --rp-blue-600:#2A6FE3;
@@ -127,88 +123,115 @@ $viewModel = $block->getData('view_model');
 }
 
 /* Title + chevrons (right-aligned) */
-#related-carousel .block-title{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px
+[id$="-carousel"] .block-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px
 }
-#related-carousel .rp-arrows{display:flex;gap:10px}
-#related-carousel .rp-nav{
-  width:32px;height:32px;border-radius:10px;background:#fff;
+[id$="-carousel"] .block-title strong{
+  font-size:20px;
+  line-height:1.2;
+  font-weight:700;
+  color:#0F172A;
+}
+[id$="-carousel"] .rp-arrows{display:flex;gap:12px}
+[id$="-carousel"] .rp-nav{
+  width:34px;height:34px;border-radius:10px;background:#fff;
   border:1.5px solid var(--rp-blue-150); color:var(--rp-blue-600);
   display:grid;place-items:center;font-size:18px;line-height:0;cursor:pointer;
   box-shadow:0 2px 6px rgba(16,24,40,.06); transition:transform .12s, box-shadow .12s
 }
-#related-carousel .rp-nav:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,24,40,.08)}
-#related-carousel .rp-nav[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+[id$="-carousel"] .rp-nav:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,24,40,.08)}
+[id$="-carousel"] .rp-nav[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
 
 /* Carousel layout (unchanged behavior) */
-#related-carousel .rp-viewport{position:relative;overflow:hidden}
-#related-carousel .rp-track{
+[id$="-carousel"] .rp-viewport{position:relative;overflow:hidden}
+[id$="-carousel"] .rp-track{
   display:flex;gap:16px; padding:4px 2px 8px;
   overflow:auto; scroll-behavior:smooth; scroll-snap-type:x mandatory;
+  scrollbar-width:none; -ms-overflow-style:none;
 }
-#related-carousel .rp-track::-webkit-scrollbar{height:8px}
-#related-carousel .rp-track::-webkit-scrollbar-thumb{background:#e9eef9;border-radius:8px}
-#related-carousel .rp-slide{ flex:0 0 340px; max-width:340px; scroll-snap-align:start }
+[id$="-carousel"] .rp-track::-webkit-scrollbar{height:0}
+[id$="-carousel"] .rp-slide{ flex:0 0 330px; max-width:330px; min-width:0; scroll-snap-align:start }
 
 /* Card shell — lighter border and round corners like the ref */
-#related-carousel .rp-card{
+[id$="-carousel"] .rp-card{
   display:flex;flex-direction:column;background:#fff;width:100%;
   border:1.5px solid var(--rp-card-border);
-  border-radius:12px; overflow:hidden;
+  border-radius:16px; overflow:hidden;
   transition:border-color .15s, box-shadow .15s
 }
-#related-carousel .rp-card:hover{
+[id$="-carousel"] .rp-card:hover{
   border-color:var(--rp-blue-200);
   box-shadow:0 10px 28px rgba(16,24,40,.10)
 }
 
 /* Image slab */
-#related-carousel .rp-thumb{
-  position:relative; display:block; margin:16px 16px 0;
-  border-radius:12px; background:var(--rp-slab); padding:16px; aspect-ratio:4/3
+[id$="-carousel"] .rp-thumb{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:12px 12px 0;
+  border-radius:14px;
+  background:var(--rp-slab);
+  padding:14px;
+  aspect-ratio:16/9
 }
-#related-carousel .rp-thumb img{ width:100%; height:100%; object-fit:contain }
+[id$="-carousel"] .rp-thumb img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  object-position:center
+}
 
 /* Heart like the design: white fill, blue outline, blue icon */
-#related-carousel .rp-like{
+[id$="-carousel"] .rp-like{
   position:absolute; top:10px; right:10px;
-  width:34px;height:34px;border-radius:10px;background:#fff;
+  width:34px;height:34px;border-radius:11px;background:#fff;
   border:1.6px solid var(--rp-blue-200); color:var(--rp-blue-600);
   display:grid;place-items:center; box-shadow:0 2px 8px rgba(16,24,40,.05);
   cursor:pointer; transition:background .12s,border-color .12s
 }
-#related-carousel .rp-like:hover{ background:#F7FAFF; border-color:var(--rp-blue-500) }
-#related-carousel .rp-like svg{ stroke:currentColor }
+[id$="-carousel"] .rp-like:hover{ background:#F7FAFF; border-color:var(--rp-blue-500) }
+[id$="-carousel"] .rp-like svg{ stroke:currentColor }
 
 /* Body */
-#related-carousel .rp-body{ padding:14px 18px 0 }
-#related-carousel .rp-name{
-  margin:0 0 10px;
-  font:800 16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+[id$="-carousel"] .rp-body{ padding:12px 16px 0; min-width:0 }
+[id$="-carousel"] .rp-name{
+  margin:0 0 8px;
+  font:700 17px/1.3 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  color:var(--rp-text);
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+  min-height:calc(1.3em * 2);
 }
-#related-carousel .rp-name a{ color:var(--rp-text); text-decoration:none }
-#related-carousel .rp-name a:hover{ text-decoration:underline }
+[id$="-carousel"] .rp-name a{ color:var(--rp-text); text-decoration:none }
+[id$="-carousel"] .rp-name a:hover{ text-decoration:underline }
 
 /* Price row like the ref (amount regular weight; muted “/ 1 pcs”) */
-#related-carousel .rp-price-line{ display:flex; align-items:baseline; gap:6px; margin-bottom:12px }
-#related-carousel .rp-price .price{ font-size:16px !important; font-weight:600 !important; color:#1F2937 !important }
-#related-carousel .rp-per{ font-size:13px; color:var(--rp-muted) }
+[id$="-carousel"] .rp-price-line{ display:flex; align-items:baseline; gap:6px; margin-bottom:10px; flex-wrap:nowrap; white-space:nowrap }
+[id$="-carousel"] .rp-price .price{ font-size:16px !important; font-weight:600 !important; color:#1F2937 !important }
+[id$="-carousel"] .rp-per{ font-size:13px; color:var(--rp-muted); flex-shrink:0 }
 
 /* Divider thinner and lighter */
-#related-carousel .rp-divider{ border:0; border-top:1px solid var(--rp-divider); margin:6px 0 10px }
+[id$="-carousel"] .rp-divider{ border:0; border-top:1px solid var(--rp-divider); margin:8px 0 12px }
 
 /* Brand + verified */
-#related-carousel .rp-meta{ display:flex; align-items:center; gap:8px; margin:6px 0 }
-#related-carousel .rp-brand{ font-weight:800; color:#111827; font-size:14px }
+[id$="-carousel"] .rp-meta{ display:flex; align-items:center; gap:8px; margin:6px 0; min-width:0 }
+[id$="-carousel"] .rp-brand{ font-weight:700; color:#111827; font-size:14px; line-height:1.25 }
 
 /* Country chip (green badge like the reference) */
-#related-carousel .rp-country-chip{
+[id$="-carousel"] .rp-country-chip{
   display:inline-flex; align-items:center; gap:8px;
-  padding:6px 10px; border-radius:10px;
+  padding:7px 10px; border-radius:10px;
   background:#F3FBF3; border:1px solid #DCEFE0; color:#14532D;
   font-weight:700; font-size:14px;
 }
-#related-carousel .rp-flag{
+[id$="-carousel"] .rp-flag{
   width: 26px;
   height: 18px;
   min-width: 26px;
@@ -220,26 +243,149 @@ $viewModel = $block->getData('view_model');
   border-radius: 3px;
 }
 /* Footer button (outlined blue) */
-#related-carousel .rp-foot{ padding:12px 16px 16px; margin-top:auto }
-#related-carousel .rp-btn{
-  width:100%; height:42px; border-radius:12px;
+[id$="-carousel"] .rp-foot{ padding:12px 16px 16px; margin-top:auto }
+[id$="-carousel"] .rp-btn{
+  width:100%; height:44px; border-radius:12px;
   background:#fff; color:var(--rp-blue-600);
   border:1.6px solid var(--rp-blue-200); font-weight:800; font-size:14px; cursor:pointer;
   transition:background .12s, border-color .12s, box-shadow .12s
 }
-#related-carousel .rp-btn:hover{
+[id$="-carousel"] .rp-btn:hover{
   background:#EEF5FF; border-color:#BCD4FF; box-shadow:0 4px 12px rgba(37,99,235,.12)
 }
 
-/* Small screens: one card per view */
-@media (max-width:420px){
-  #related-carousel .rp-slide{ flex-basis:100%; max-width:100% }
+/* Tablet/mobile: two cards per view with tighter spacing */
+@media (max-width:767px){
+  .top-28{
+    margin-top:20px;
+    padding:14px 14px 16px;
+    border-radius:16px;
+  }
+  [id$="-carousel"] .block-title{
+    margin-bottom:14px;
+  }
+  [id$="-carousel"] .block-title strong{
+    font-size:18px;
+    line-height:1.2;
+  }
+  [id$="-carousel"] .rp-arrows{
+    gap:8px;
+    flex-shrink:0;
+  }
+  [id$="-carousel"] .rp-nav{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+  }
+  [id$="-carousel"] .rp-track{
+    gap:10px;
+    padding:2px 0 6px;
+  }
+  [id$="-carousel"] .rp-slide{
+    flex:0 0 calc((100% - 10px) / 2);
+    max-width:calc((100% - 10px) / 2);
+  }
+  [id$="-carousel"] .rp-card{
+    border-radius:14px;
+  }
+  [id$="-carousel"] .rp-thumb{
+    margin:10px 10px 0;
+    padding:10px;
+    aspect-ratio:16/9;
+  }
+  [id$="-carousel"] .rp-body{
+    padding:10px 12px 0;
+  }
+  [id$="-carousel"] .rp-name{
+    font-size:15px;
+    line-height:1.25;
+  }
+  [id$="-carousel"] .rp-price .price{
+    font-size:14px !important;
+  }
+  [id$="-carousel"] .rp-per{
+    font-size:11px;
+  }
+  [id$="-carousel"] .rp-country-chip{
+    font-size:12px;
+    padding:5px 8px;
+  }
+  [id$="-carousel"] .rp-foot{
+    padding:8px 10px 10px;
+  }
+  [id$="-carousel"] .rp-btn{
+    height:40px;
+    font-size:13px;
+  }
+}
+
+@media (max-width:480px){
+  .top-28{
+    padding:12px 12px 14px;
+  }
+  [id$="-carousel"] .block-title strong{
+    font-size:16px;
+  }
+  [id$="-carousel"] .rp-nav{
+    width:28px;
+    height:28px;
+    border-radius:8px;
+  }
+  [id$="-carousel"] .rp-track{
+    gap:8px;
+    padding:2px 0 4px;
+  }
+  [id$="-carousel"] .rp-slide{
+    flex:0 0 calc((100% - 8px) / 2);
+    max-width:calc((100% - 8px) / 2);
+  }
+  [id$="-carousel"] .rp-thumb{
+    margin:8px 8px 0;
+    padding:8px;
+    aspect-ratio:16/9;
+  }
+  [id$="-carousel"] .rp-body{
+    padding:8px 10px 0;
+  }
+  [id$="-carousel"] .rp-name{
+    font-size:13px;
+  }
+  [id$="-carousel"] .rp-price .price{
+    font-size:13px !important;
+  }
+  [id$="-carousel"] .rp-per{
+    font-size:10px;
+  }
+  [id$="-carousel"] .rp-country-chip{
+    font-size:10px;
+    padding:4px 6px;
+    gap:6px;
+  }
+  [id$="-carousel"] .rp-flag{
+    width:22px;
+    height:16px;
+    min-width:22px;
+    min-height:16px;
+  }
+  [id$="-carousel"] .rp-foot{
+    padding:8px 8px 10px;
+  }
+  [id$="-carousel"] .rp-btn{
+    height:36px;
+    font-size:11px;
+    border-radius:10px;
+  }
+  [id$="-carousel"] .rp-like{
+    width:30px;
+    height:30px;
+    border-radius:9px;
+  }
 }
 
 </style>
 <script type="text/x-magento-init">
 {
-  "#related-carousel": {
+  "#<?= $block->escapeHtmlAttr($carouselId) ?>": {
     "Magento_Ui/js/core/app": {}
   }
 }
@@ -248,7 +394,8 @@ $viewModel = $block->getData('view_model');
 <script>
 require(['jquery'], function($){
   $(function(){
-    var $root    = $('#related-carousel');
+    var carouselId = '<?= $block->escapeHtmlAttr($carouselId) ?>';
+    var $root    = $('#' + carouselId);
     var $viewport= $root.find('.rp-viewport');
     var $track   = $root.find('.rp-track');
     var $prev    = $root.find('.rp-prev');
@@ -263,7 +410,7 @@ require(['jquery'], function($){
     }
     function cardWidth() {
       var $first = $root.find('.rp-slide').first();
-      return $first.length ? $first.outerWidth(true) : 340;
+      return $first.length ? $first.outerWidth(true) : 330;
     }
     function step() {
       // Scroll by one full “page” of visible cards
@@ -288,12 +435,11 @@ require(['jquery'], function($){
 </script>
 <script>
 require(['jquery'], function($) {
+  var carouselId = '<?= $block->escapeHtmlAttr($carouselId) ?>';
 
   // FLAG FIX
- require(['jquery'], function($){
   $(document).ready(function(){
-
-    $('#related-carousel .rp-flag').each(function(){
+    $('#' + carouselId + ' .rp-flag').each(function(){
       var code = $(this).data('code');
 
       if (code) {
@@ -309,46 +455,46 @@ require(['jquery'], function($) {
         });
       }
     });
-
   });
-});
 
   // ADD TO QUOTE FIX
-  $(document).on('click', '.add-to-quote', function () {
+  if (!window.__gccQuoteHandlerBound) {
+    window.__gccQuoteHandlerBound = true;
+    $(document).on('click', '.add-to-quote', function () {
+      var button = $(this);
+      var productId = button.data('product-id');
 
-    var button = $(this);
-    var productId = button.data('product-id');
-
-    if (!productId) {
-      console.log('Product ID missing');
-      return;
-    }
-
-    $.ajax({
-      url: '<?= $block->getUrl("quoterequest/index/create") ?>',
-      type: 'POST',
-      data: {
-        product_id: productId
-      },
-      showLoader: true,
-
-      success: function (response) {
-        button.text('Added');
-        button.prop('disabled', true);
-
-        if (response.count !== undefined) {
-          $('#quote-counter').text(response.count).show();
-        }
-      },
-
-      error: function (xhr) {
-        console.log(xhr);
-        alert('Error while adding to quote');
+      if (!productId) {
+        console.log('Product ID missing');
+        return;
       }
-    });
 
-  });
+      $.ajax({
+        url: '<?= $block->getUrl("quoterequest/index/create") ?>',
+        type: 'POST',
+        data: {
+          product_id: productId
+        },
+        showLoader: true,
+
+        success: function (response) {
+          button.text('Added');
+          button.prop('disabled', true);
+
+          if (response.count !== undefined) {
+            $('#quote-counter').text(response.count).show();
+          }
+        },
+
+        error: function (xhr) {
+          console.log(xhr);
+          alert('Error while adding to quote');
+        }
+      });
+    });
+  }
 
 });
 
 </script>
+
