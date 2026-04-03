@@ -102,8 +102,8 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 
 #product-options-wrapper .variation label {
     display: block;
-    margin: 0 0 12px;
-    font-size: 15px;
+    margin: 0 0 14px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 1.4;
     color: #111827;
@@ -112,22 +112,32 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 #product-options-wrapper .attribute-options {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+#product-options-wrapper .attribute-options[data-attribute-code="color"] .option-btn {
+    min-width: 0;
+    flex: 1 1 calc(33.333% - 16px);
+}
+
+#product-options-wrapper .attribute-options[data-attribute-code="size"] .option-btn {
+    min-width: 0;
+    flex: 1 1 calc(16.666% - 16px);
 }
 
 #product-options-wrapper .option-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 72px;
-    height: 44px;
-    padding: 0 16px;
-    border: 1px solid #d8e1ee;
-    border-radius: 8px;
+    min-width: 0;
+    height: 54px;
+    padding: 0 20px;
+    border: 1px solid #d0d5dd;
+    border-radius: 12px;
     background: #fff;
     color: #667085;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 500;
     line-height: 1;
     cursor: pointer;
@@ -145,9 +155,9 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 
 #product-options-wrapper .option-btn.active {
     border-color: #4285f4;
-    background: #eef5ff;
+    background: #eaf2ff;
     color: #2563eb;
-    box-shadow: none;
+    box-shadow: 0 0 0 1px rgba(66, 133, 244, 0.08) inset;
 }
 
 #product-options-wrapper .super-attribute-select {
@@ -156,18 +166,25 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
 
 #product-options-wrapper .add-quote-btn {
     width: 100%;
-    min-height: 56px;
-    margin-top: 28px;
+    min-height: 60px;
+    margin-top: 32px;
+    padding: 18px 24px;
+    border-radius: 14px;
+    background: #4285f4;
+    box-shadow: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 @media (max-width: 820px) {
     #product-options-wrapper .sub-heading {
         margin-bottom: 18px;
-        font-size: 17px;
+        font-size: 18px;
     }
 
     #product-options-wrapper .attribute-options {
-        gap: 10px;
+        gap: 12px;
         margin-bottom: 18px;
     }
 }
@@ -179,19 +196,17 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
     }
 
     #product-options-wrapper .variation {
-        margin: 0 0 16px;
+        margin: 0 0 18px;
     }
 
     #product-options-wrapper .variation label {
-        margin-bottom: 8px;
-        font-size: 13px;
+        margin-bottom: 10px;
+        font-size: 14px;
     }
 
     #product-options-wrapper .attribute-options {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
-        gap: 8px;
-        margin-bottom: 14px;
+        gap: 10px;
+        margin-bottom: 16px;
     }
 
     #product-options-wrapper .attribute-options[data-attribute-code="color"] {
@@ -205,15 +220,303 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
     #product-options-wrapper .option-btn {
         width: 100%;
         min-width: 0;
-        height: 38px;
-        padding: 0 8px;
-        font-size: 12px;
-        border-radius: 8px;
+        height: 44px;
+        padding: 0 12px;
+        font-size: 13px;
+        border-radius: 10px;
     }
 
     #product-options-wrapper .add-quote-btn {
-        min-height: 48px;
-        margin-top: 18px;
+        min-height: 50px;
+        margin-top: 22px;
+        padding: 16px 20px;
+        font-size: 14px !important;
+    }
+}
+</style>
+<style>
+#product-options-wrapper.product-info-main {
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+}
+
+#product-options-wrapper .variation {
+    margin: 0 0 24px;
+}
+
+#product-options-wrapper .variation > br {
+    display: none;
+}
+
+#product-options-wrapper .sub-heading {
+    margin: 0 0 20px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #111827;
+}
+
+#product-options-wrapper .variation label {
+    display: block;
+    margin: 0 0 14px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #111827;
+}
+
+#product-options-wrapper .attribute-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+#product-options-wrapper .attribute-options[data-attribute-code="color"] .option-btn {
+    min-width: 0;
+    flex: 1 1 calc(33.333% - 16px);
+}
+
+#product-options-wrapper .attribute-options[data-attribute-code="size"] .option-btn {
+    min-width: 0;
+    flex: 1 1 calc(16.666% - 16px);
+}
+
+#product-options-wrapper .option-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    height: 54px;
+    padding: 0 20px;
+    border: 1px solid #d0d5dd;
+    border-radius: 12px;
+    background: #fff;
+    color: #667085;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+#product-options-wrapper .option-btn:hover,
+#product-options-wrapper .option-btn:focus-visible {
+    border-color: #4285f4;
+    background: #f8fbff;
+    color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.14);
+    outline: none;
+}
+
+#product-options-wrapper .option-btn.active {
+    border-color: #4285f4;
+    background: #eaf2ff;
+    color: #2563eb;
+    box-shadow: 0 0 0 1px rgba(66, 133, 244, 0.08) inset;
+}
+
+#product-options-wrapper .super-attribute-select {
+    display: none !important;
+}
+
+#product-options-wrapper .add-quote-btn {
+    width: 100%;
+    min-height: 60px;
+    margin-top: 32px;
+    padding: 18px 24px;
+    border-radius: 14px;
+    background: #4285f4;
+    box-shadow: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+@media (max-width: 820px) {
+    #product-options-wrapper .sub-heading {
+        margin-bottom: 18px;
+        font-size: 18px;
+    }
+
+    #product-options-wrapper .attribute-options {
+        gap: 12px;
+        margin-bottom: 18px;
+    }
+}
+
+@media (max-width: 560px) {
+    #product-options-wrapper .sub-heading {
+        margin-bottom: 14px;
+        font-size: 15px;
+    }
+
+    #product-options-wrapper .variation {
+        margin: 0 0 18px;
+    }
+
+    #product-options-wrapper .variation label {
+        margin-bottom: 10px;
+        font-size: 14px;
+    }
+
+    #product-options-wrapper .attribute-options {
+        gap: 10px;
+        margin-bottom: 16px;
+    }
+
+    #product-options-wrapper .attribute-options[data-attribute-code="color"] .option-btn {
+        min-width: 0;
+        flex: 1 1 calc(33.333% - 10px);
+    }
+
+    #product-options-wrapper .attribute-options[data-attribute-code="size"] .option-btn {
+        min-width: 0;
+        flex: 1 1 calc(33.333% - 10px);
+    }
+
+    #product-options-wrapper .option-btn {
+        width: 100%;
+        min-width: 0;
+        height: 44px;
+        padding: 0 12px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+
+    #product-options-wrapper .add-quote-btn {
+        min-height: 50px;
+        margin-top: 22px;
+        padding: 16px 20px;
+        font-size: 14px !important;
+    }
+}
+</style>
+
+<style>
+#product-options-wrapper .variation {
+    margin: 0 0 24px !important;
+}
+
+#product-options-wrapper .sub-heading {
+    margin: 0 0 20px !important;
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    color: #111827 !important;
+}
+
+#product-options-wrapper .variation label {
+    display: block !important;
+    margin: 0 0 14px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    line-height: 1.4 !important;
+    color: #111827 !important;
+}
+
+#product-options-wrapper .attribute-options {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 16px !important;
+    margin-bottom: 22px !important;
+}
+
+#product-options-wrapper .attribute-options[data-attribute-code="color"] .option-btn {
+    min-width: 0 !important;
+    flex: 1 1 calc(33.333% - 16px) !important;
+}
+
+#product-options-wrapper .attribute-options[data-attribute-code="size"] .option-btn {
+    min-width: 0 !important;
+    flex: 1 1 calc(16.666% - 16px) !important;
+}
+
+#product-options-wrapper .option-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 0 !important;
+    height: 54px !important;
+    padding: 0 20px !important;
+    border: 1px solid #d0d5dd !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: #667085 !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    line-height: 1 !important;
+    box-sizing: border-box !important;
+}
+
+#product-options-wrapper .option-btn:hover,
+#product-options-wrapper .option-btn:focus-visible {
+    border-color: #4285f4 !important;
+    background: #f8fbff !important;
+    color: #2563eb !important;
+    box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.14) !important;
+    outline: none !important;
+}
+
+#product-options-wrapper .option-btn.active,
+#product-options-wrapper .option-btn[aria-pressed="true"] {
+    border-color: #4285f4 !important;
+    background: #eaf2ff !important;
+    color: #2563eb !important;
+    box-shadow: inset 0 0 0 1px rgba(66, 133, 244, 0.08) !important;
+}
+
+#product-options-wrapper .add-quote-btn {
+    width: 100% !important;
+    min-height: 60px !important;
+    margin-top: 32px !important;
+    padding: 18px 24px !important;
+    border-radius: 14px !important;
+    background: #4285f4 !important;
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+}
+
+@media (max-width: 560px) {
+    #product-options-wrapper .variation {
+        margin-bottom: 18px !important;
+    }
+
+    #product-options-wrapper .sub-heading {
+        margin-bottom: 16px !important;
+        font-size: 15px !important;
+    }
+
+    #product-options-wrapper .variation label {
+        margin-bottom: 10px !important;
+        font-size: 14px !important;
+    }
+
+    #product-options-wrapper .attribute-options {
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+
+    #product-options-wrapper .attribute-options[data-attribute-code="color"] .option-btn,
+    #product-options-wrapper .attribute-options[data-attribute-code="size"] .option-btn {
+        flex: 1 1 calc(33.333% - 10px) !important;
+    }
+
+    #product-options-wrapper .option-btn {
+        height: 44px !important;
+        padding: 0 12px !important;
+        font-size: 13px !important;
+        border-radius: 10px !important;
+    }
+
+    #product-options-wrapper .add-quote-btn {
+        min-height: 50px !important;
+        margin-top: 22px !important;
+        padding: 16px 20px !important;
         font-size: 14px !important;
     }
 }
@@ -390,6 +693,7 @@ $(document).ready(function(){
 require(['jquery'], function($) {
     var spConfig = <?= /* @noEscape */ $configurableJsonConfig ?>;
     var selectedAttributes = {};
+    var simpleProducts = window.simpleProducts = window.simpleProducts || {};
 
     function findMatchingProduct() {
         var matched = null;
@@ -443,7 +747,7 @@ require(['jquery'], function($) {
         }
     }
 }
-     function updateDescription(productId) {
+     function updateDescriptionLegacy(productId) {
         if (!productId) return;
         
         var productData = simpleProducts[productId];
@@ -475,6 +779,51 @@ require(['jquery'], function($) {
             });
         }
     }
+    function updateDescription(productId) {
+        if (!productId) return;
+
+        var $descText = $('#descText');
+        var $tabDesc = $('#tab-desc');
+        var productData = simpleProducts[productId];
+
+        function applyDescription(descriptionHtml) {
+            if (!descriptionHtml || !$descText.length) {
+                return;
+            }
+
+            $descText.html(descriptionHtml).addClass('is-clamped');
+
+            if ($tabDesc.length) {
+                $tabDesc.html(descriptionHtml);
+            }
+
+            if (window.gccRefreshProductDescription) {
+                window.gccRefreshProductDescription({ reset: true });
+            }
+        }
+
+        if (productData && productData.description) {
+            applyDescription(productData.description);
+            return;
+        }
+
+        $.ajax({
+            url: '<?= $block->getUrl('configurable/product/getdescription') ?>',
+            type: 'GET',
+            data: { product_id: productId },
+            showLoader: true,
+            success: function(data) {
+                if (data.description) {
+                    simpleProducts[productId] = {
+                        description: data.description,
+                        short_description: data.short_description || ''
+                    };
+                    applyDescription(data.description);
+                }
+            }
+        });
+    }
+
     function rebuildThumbnails(productId) {
         if (!productId || !spConfig.images || !spConfig.images[productId]) return;
 
@@ -543,33 +892,35 @@ require(['jquery'], function($) {
         bindThumbnailClicks(<?= $product->getId() ?>);
         bindArrowButtons(<?= $product->getId() ?>);
 
-        $('#product-options-wrapper .super-attribute-select').each(function () {
-            var $select = $(this);
-            var name = $select.attr('name') || '';
-            var match = name.match(/^super_attribute\[(.+)\]$/);
-            var currentValue = $select.val();
+        window.setTimeout(function () {
+            $('#product-options-wrapper .super-attribute-select').each(function () {
+                var $select = $(this);
+                var name = $select.attr('name') || '';
+                var match = name.match(/^super_attribute\[(.+)\]$/);
+                var currentValue = $select.val();
 
-            if (!match || !currentValue) {
-                return;
-            }
+                if (!match || !currentValue) {
+                    return;
+                }
 
-            var attributeCode = match[1];
-            var $container = $('.attribute-options[data-attribute-code="' + attributeCode + '"]');
+                var attributeCode = match[1];
+                var $container = $('.attribute-options[data-attribute-code="' + attributeCode + '"]');
 
-            $container.find('.option-btn').each(function () {
-                var $optionBtn = $(this);
-                if (String($optionBtn.data('option-id')) === String(currentValue)) {
-                    $optionBtn.addClass('active').attr('aria-pressed', 'true');
+                $container.find('.option-btn').each(function () {
+                    var $optionBtn = $(this);
+                    if (String($optionBtn.data('option-id')) === String(currentValue)) {
+                        $optionBtn.addClass('active').attr('aria-pressed', 'true');
+                    }
+                });
+            });
+
+            $('#product-options-wrapper .attribute-options').each(function () {
+                var $container = $(this);
+                if (!$container.find('.option-btn.active').length) {
+                    $container.find('.option-btn').first().trigger('click');
                 }
             });
-        });
-
-        $('#product-options-wrapper .attribute-options').each(function () {
-            var $container = $(this);
-            if (!$container.find('.option-btn.active').length) {
-                $container.find('.option-btn').first().trigger('click');
-            }
-        });
+        }, 0);
     });
 
     // when user clicks .option-btn
