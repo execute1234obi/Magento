@@ -10,252 +10,741 @@ $parentCategoryId = 2;
 $categories = $categoryCollectionFactory->create()
     ->addAttributeToSelect(['name', 'image', 'url_key'])
     ->addIsActiveFilter()
-    ->addAttributeToFilter('parent_id', $parentCategoryId);
+    ->addAttributeToFilter('parent_id', $parentCategoryId)
+    ->setOrder('position', 'ASC');
 
+$categoryItems = iterator_to_array($categories, false);
+$pageSize = 10;
+$categoryPages = array_chunk($categoryItems, $pageSize);
 $mediaBase = $storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
-//echo '<pre>mediaBase: ' . $mediaBase . '</pre>';
-?>
+$defaultCategoryImage = $block->getViewFileUrl('Magento_Catalog::images/default-category.png');
 
+$normalizeCategoryImagePath = static function ($imagePath) {
+    $imagePath = trim((string)$imagePath);
 
-<!-- Section Title -->
-  
-<div class="text-center mb-12 mt-5  pt-12 pb-12">
-    <h2 class="text-6xl font-semibold text-[#1A3764]"> <?= __('Explore Key Industrial Sectors') ?></h2>
-    <p class="text-gray-600 mt-5 text-3xl">
-        <?= __('Discover suppliers and products across various industries to meet your business needs efficiently') ?>.
-        
-    </p>
-</div>
+    if ($imagePath === '' || $imagePath === 'no_selection') {
+        return '';
+    }
 
-<!-- Category Grid Wrapper -->
-<div class="category-grid-wrapper w-full mb-12">
-        <!-- <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6"> -->
-        <div class="category-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
-
-        <?php foreach ($categories as $category): ?>
-<?php
-// $imagePath = $category->getImage();
-
-// if (!empty($imagePath)) {
-//     $imagePath = ltrim($imagePath, '/');
-//     $imagePath = str_replace('media/', '', $imagePath);
-// } else {
-//     $imagePath = '';
-// }echo $imagePath;
-$imagePath = $category->getImage();
-
-if (!empty($imagePath)) {
-    // Remove absolute path
     $imagePath = str_replace(['pub/media/', 'media/'], '', $imagePath);
 
-    // Clean leading slashes
-    $imagePath = ltrim($imagePath, '/');
-}
-?>   <div class="category-card flex flex-col items-start justify-start p-6 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors duration-300">
-                <a href="<?= $category->getUrl() ?>" class="flex flex-col items-center">
-                    <?php if ($category->getImage()): ?>
-                        <img src="<?= $mediaBase . $imagePath ?>"
-                             alt="<?= $category->getName() ?>"
-                             class="w-20 h-20 mb-4 rounded-full object-cover" />
-                    <?php else: ?>
-                        <img src="<?= $block->getViewFileUrl('Magento_Catalog::images/default-category.png') ?>"
-                             alt="No Image"
-                             class="w-20 h-20 mb-4 rounded-full" />
-                    <?php endif; ?>
-                    <p class="text-3xl font-semibold text-center text-gray-800"><?= $category->getName() ?></p>
-                </a>
-            </div>
-        <?php endforeach; ?>
-    </div>
-</div>
+    return ltrim($imagePath, '/');
+};
 
-<!-- Navigation Arrows -->
-<div class="category-nav-wrapper flex justify-start space-x-6 pb-12">
-        <!-- Left Arrow Icon -->
-    <button onclick="scrollCategories(-1)"
-            class="bg-[#1A3764] text-white px-4  hover:bg-blue-700 transition-colors duration-300" style="width:40px; height:8px;">
-        <i class="fas fa-chevron-left text-2xl"></i>
-    </button>
-    <!-- Right Arrow Icon -->
-    <button onclick="scrollCategories(1)"
-            class="bg-[#1A376480] text-white px-4 hover:bg-blue-700 transition-colors duration-300" style="width:15px; height:8px;">
-        <i class="fas fa-chevron-left text-2xl"></i>
-        <i class="fas fa-chevron-right text-2xl"></i>
-    </button>
-</div>
+$buildCategoryImage = static function ($category) use ($mediaBase, $defaultCategoryImage, $normalizeCategoryImagePath) {
+    $imagePath = $normalizeCategoryImagePath($category->getImage());
 
-<script>
-let currentIndex = 0;
-const visibleCount = 5; // Number of categories visible at once
-
-function scrollCategories(direction) {
-    const container = document.querySelector('.category-grid');
-    const card = container.querySelector('.category-card');
-    if (!card) return;
-
-    const cardWidth = card.offsetWidth; // Exact width of each card
-    const total = container.children.length;
-
-    currentIndex += direction;
-
-    if (currentIndex < 0) currentIndex = 0;
-    if (currentIndex > Math.ceil(total / visibleCount) - 1) {
-        currentIndex = Math.ceil(total / visibleCount) - 1;
+    if ($imagePath !== '') {
+        return rtrim($mediaBase, '/') . '/' . $imagePath;
     }
 
-    container.style.transform = `translateX(-${currentIndex * cardWidth * visibleCount}px)`;
-}
-</script>
+    return $defaultCategoryImage;
+};
+?>
 
+<section class="gcc-sector-showcase" aria-labelledby="gcc-sector-showcase-title" data-gcc-sector-showcase>
+    <div class="gcc-sector-showcase__ambient gcc-sector-showcase__ambient--left" aria-hidden="true"></div>
+    <div class="gcc-sector-showcase__ambient gcc-sector-showcase__ambient--right" aria-hidden="true"></div>
+    <div class="gcc-sector-showcase__ambient gcc-sector-showcase__ambient--bottom" aria-hidden="true"></div>
+
+    <div class="gcc-sector-showcase__inner">
+        <header class="gcc-sector-showcase__header">
+            <h2 id="gcc-sector-showcase-title"><?= $block->escapeHtml(__('Explore Key Industrial Sectors')); ?></h2>
+            <p>
+                <?= $block->escapeHtml(__('Discover suppliers and products across various industries to meet your business needs efficiently and compliance with regional standards for optimal sourcing solutions.')); ?>
+            </p>
+        </header>
+
+        <?php if (!empty($categoryPages)): ?>
+            <div class="gcc-sector-carousel" data-gcc-sector-carousel>
+                <div class="gcc-sector-carousel__viewport" data-sector-viewport>
+                    <?php foreach ($categoryPages as $pageIndex => $pageCategories): ?>
+                        <div class="gcc-sector-carousel__page<?= $pageIndex === 0 ? ' is-active' : ''; ?>"
+                             data-sector-page
+                             data-page-index="<?= (int)$pageIndex; ?>"
+                             <?= $pageIndex === 0 ? '' : 'hidden'; ?>>
+                            <div class="gcc-sector-carousel__grid">
+                                <?php foreach ($pageCategories as $category): ?>
+                                    <?php
+                                    $categoryUrl = (string)$category->getUrl();
+                                    $categoryName = (string)$category->getName();
+                                    $categoryImage = $buildCategoryImage($category);
+                                    ?>
+                                    <a class="gcc-sector-card" href="<?= $block->escapeUrl($categoryUrl); ?>">
+                                        <span class="gcc-sector-card__icon" aria-hidden="true">
+                                            <img src="<?= $block->escapeUrl($categoryImage); ?>" alt="" loading="lazy">
+                                        </span>
+                                        <span class="gcc-sector-card__title"><?= $block->escapeHtml($categoryName); ?></span>
+                                    </a>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <div class="gcc-sector-carousel__controls">
+                    <div class="gcc-sector-carousel__dots" data-sector-dots>
+                        <?php foreach ($categoryPages as $pageIndex => $pageCategories): ?>
+                            <button type="button"
+                                    class="gcc-sector-carousel__dot<?= $pageIndex === 0 ? ' is-active' : ''; ?>"
+                                    data-sector-dot
+                                    data-target-page="<?= (int)$pageIndex; ?>"
+                                    aria-label="<?= $block->escapeHtmlAttr(__('Show sector page %1', $pageIndex + 1)); ?>"
+                                    aria-current="<?= $pageIndex === 0 ? 'true' : 'false'; ?>"></button>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="gcc-sector-carousel__nav" aria-label="<?= $block->escapeHtmlAttr(__('Sector carousel controls')); ?>">
+                        <button type="button"
+                                class="gcc-sector-carousel__nav-btn"
+                                data-sector-prev
+                                aria-label="<?= $block->escapeHtmlAttr(__('Previous sectors')); ?>">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M14 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </button>
+                        <button type="button"
+                                class="gcc-sector-carousel__nav-btn gcc-sector-carousel__nav-btn--primary"
+                                data-sector-next
+                                aria-label="<?= $block->escapeHtmlAttr(__('Next sectors')); ?>">
+                            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M10 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="gcc-sector-carousel__empty">
+                <?= $block->escapeHtml(__('No industrial sectors are available at the moment.')); ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
 
 <style>
-/* ================================
-   SECTION TITLE
-================================ */
-
-.section-industrial-title h2 {
-    font-size: clamp(24px, 5vw, 48px);
+.gcc-sector-showcase{
+    position:relative;
+    overflow:hidden;
+    padding:78px 0 146px;
+    background:#ffffff;
 }
 
-.section-industrial-title p {
-    font-size: clamp(14px, 2.5vw, 22px);
+.gcc-sector-showcase,
+.gcc-sector-showcase *{
+    box-sizing:border-box;
 }
 
-/* ================================
-   GRID WRAPPER
-================================ */
-
-.category-grid-wrapper {
-    padding-left: 16px !important;
-    padding-right: 16px !important;
+.gcc-sector-showcase__ambient{
+    position:absolute;
+    pointer-events:none;
+    z-index:0;
 }
 
-@media (min-width: 768px) {
-    .category-grid-wrapper {
-        padding-left: 40px !important;
-        padding-right: 40px !important;
+.gcc-sector-showcase__ambient--left{
+    top:-132px;
+    left:-382px;
+    width:720px;
+    height:980px;
+    border-radius:50%;
+    background:#c8d2de;
+    opacity:.98;
+    filter:saturate(.82);
+}
+
+.gcc-sector-showcase__ambient--right{
+    top:-18px;
+    right:-146px;
+    width:432px;
+    height:432px;
+    border-radius:50%;
+    border:1px solid rgba(217,225,236,.9);
+    background:transparent;
+    opacity:.72;
+}
+
+.gcc-sector-showcase__ambient--right::before,
+.gcc-sector-showcase__ambient--right::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    inset:62px;
+    border:1px solid rgba(217,225,236,.82);
+}
+
+.gcc-sector-showcase__ambient--right::after{
+    inset:126px;
+}
+
+.gcc-sector-showcase__ambient--bottom{
+    right:-148px;
+    bottom:-224px;
+    width:430px;
+    height:430px;
+    border-radius:50%;
+    background:transparent;
+    opacity:1;
+}
+
+.gcc-sector-showcase__ambient--bottom::before,
+.gcc-sector-showcase__ambient--bottom::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+}
+
+.gcc-sector-showcase__ambient--bottom::before{
+    right:8px;
+    bottom:18px;
+    width:276px;
+    height:276px;
+    background:#f7ecb2;
+}
+
+.gcc-sector-showcase__ambient--bottom::after{
+    right:78px;
+    bottom:-86px;
+    width:198px;
+    height:198px;
+    background:#b9c3cf;
+    opacity:.98;
+}
+
+.gcc-sector-showcase__inner{
+    position:relative;
+    z-index:1;
+    max-width:1380px;
+    margin:0 auto;
+    padding:0 32px;
+}
+
+.gcc-sector-showcase__header{
+    max-width:880px;
+    margin:0 auto 44px;
+    text-align:center;
+}
+
+.gcc-sector-showcase__header h2{
+    margin:0;
+    color:#1A3764;
+    font-size:clamp(32px,3.5vw,54px);
+    font-weight:800;
+    line-height:1.08;
+    letter-spacing:-.03em;
+}
+
+.gcc-sector-showcase__header p{
+    max-width:900px;
+    margin:18px auto 0;
+    color:#6d7380;
+    font-size:clamp(16px,1.35vw,20px);
+    font-weight:500;
+    line-height:1.56;
+}
+
+.gcc-sector-carousel{
+    position:relative;
+}
+
+.gcc-sector-carousel__viewport{
+    min-height:344px;
+}
+
+.gcc-sector-carousel__page{
+    animation:gccSectorFade .28s ease;
+}
+
+.gcc-sector-carousel__grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:14px;
+}
+
+.gcc-sector-card{
+    min-height:152px;
+    padding:18px 18px 16px;
+    border:1px solid #d8e3ef;
+    border-radius:14px;
+    background:linear-gradient(180deg,#ffffff 0%,#fbfcff 100%);
+    box-shadow:0 1px 0 rgba(17,44,98,.03);
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    justify-content:flex-start;
+    text-decoration:none;
+    color:#1A2F53;
+    transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
+}
+
+.gcc-sector-card:hover{
+    transform:translateY(-4px);
+    border-color:#bfd0e4;
+    background:#ffffff;
+    box-shadow:0 16px 34px rgba(17,44,98,.08);
+}
+
+.gcc-sector-card__icon{
+    width:58px;
+    height:58px;
+    border-radius:14px;
+    background:#f5f7fb;
+    border:1px solid #edf2f7;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    flex:0 0 58px;
+}
+
+.gcc-sector-card__icon img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.gcc-sector-card__title{
+    margin-top:16px;
+    color:#16243f;
+    font-size:17px;
+    font-weight:800;
+    line-height:1.25;
+}
+
+.gcc-sector-carousel__controls{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:18px;
+    margin-top:38px;
+}
+
+.gcc-sector-carousel__dots{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-height:14px;
+}
+
+.gcc-sector-carousel__dot{
+    width:12px;
+    height:8px;
+    padding:0;
+    border:0;
+    border-radius:999px;
+    background:#b8c4d5;
+    opacity:.98;
+    cursor:pointer;
+    transition:width .2s ease,background-color .2s ease,opacity .2s ease;
+}
+
+.gcc-sector-carousel__dot.is-active{
+    width:44px;
+    background:#1A3764;
+}
+
+.gcc-sector-carousel__nav{
+    display:flex;
+    align-items:center;
+    gap:14px;
+}
+
+.gcc-sector-carousel__nav-btn{
+    width:46px;
+    height:46px;
+    padding:0;
+    border-radius:12px;
+    border:1px solid #d1dceb;
+    background:#ffffff;
+    color:#93a2b8;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:transform .2s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease,background-color .2s ease;
+}
+
+.gcc-sector-carousel__nav-btn svg{
+    width:18px;
+    height:18px;
+    stroke:currentColor;
+    stroke-width:2.3;
+}
+
+.gcc-sector-carousel__nav-btn:hover:not([disabled]){
+    transform:translateY(-1px);
+    border-color:#9fb0c6;
+    color:#1A3764;
+    box-shadow:0 12px 24px rgba(17,44,98,.08);
+}
+
+.gcc-sector-carousel__nav-btn--primary{
+    border-color:#93a8c9;
+    color:#1A3764;
+}
+
+.gcc-sector-carousel__nav-btn[disabled]{
+    opacity:.38;
+    cursor:default;
+    transform:none;
+    box-shadow:none;
+}
+
+.gcc-sector-carousel__empty{
+    padding:24px 0 8px;
+    color:#6d7380;
+    font-size:16px;
+    text-align:center;
+}
+
+@keyframes gccSectorFade{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
     }
 }
 
-@media (min-width: 1280px) {
-    .category-grid-wrapper {
-        padding-left: 130px !important;
-        padding-right: 130px !important;
+@media (max-width: 1279px){
+    .gcc-sector-showcase{
+        padding:70px 0 78px;
+    }
+
+    .gcc-sector-showcase__inner{
+        padding:0 24px;
+    }
+
+    .gcc-sector-carousel__grid{
+        grid-template-columns:repeat(4,minmax(0,1fr));
     }
 }
 
-/* ================================
-   CATEGORY GRID
-================================ */
+@media (max-width: 991px){
+    .gcc-sector-showcase{
+        padding:60px 0 68px;
+    }
 
-.category-grid {
-    transition: transform 0.4s ease;
-}
+    .gcc-sector-carousel__grid{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+    }
 
-/* Prevent overflow issues */
-.category-grid-wrapper {
-    overflow: hidden;
-}
+    .gcc-sector-carousel__controls{
+        flex-direction:row;
+        align-items:center;
+        justify-content:space-between;
+        margin-top:30px;
+    }
 
-/* ================================
-   CATEGORY CARD
-================================ */
-
-.category-card {
-    padding: 16px;
-}
-
-@media (min-width: 768px) {
-    .category-card {
-        padding: 20px;
+    .gcc-sector-carousel__nav{
+        justify-content:flex-end;
     }
 }
 
-@media (min-width: 1280px) {
-    .category-card {
-        padding: 24px;
+@media (max-width: 767px){
+    .gcc-sector-showcase{
+        padding:52px 0 62px;
+    }
+
+    .gcc-sector-showcase__ambient--left{
+        top:-116px;
+        left:-310px;
+        width:540px;
+        height:760px;
+    }
+
+    .gcc-sector-showcase__ambient--right{
+        top:-24px;
+        right:-156px;
+        width:300px;
+        height:300px;
+    }
+
+    .gcc-sector-showcase__ambient--bottom{
+        right:-148px;
+        bottom:-176px;
+        width:320px;
+        height:320px;
+    }
+
+    .gcc-sector-showcase__ambient--bottom::before{
+        right:10px;
+        bottom:24px;
+        width:216px;
+        height:216px;
+    }
+
+    .gcc-sector-showcase__ambient--bottom::after{
+        right:70px;
+        bottom:0;
+        width:188px;
+        height:188px;
+    }
+
+    .gcc-sector-showcase__header{
+        margin-bottom:30px;
+    }
+
+    .gcc-sector-showcase__header p{
+        margin-top:14px;
+        font-size:16px;
+        line-height:1.5;
+    }
+
+    .gcc-sector-carousel__grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:14px;
+    }
+
+    .gcc-sector-card{
+        min-height:136px;
+        padding:16px 14px 16px;
+        border-radius:16px;
+    }
+
+    .gcc-sector-card__icon{
+        width:50px;
+        height:50px;
+        border-radius:12px;
+    }
+
+    .gcc-sector-card__title{
+        margin-top:15px;
+        font-size:16px;
+    }
+
+    .gcc-sector-carousel__controls{
+        margin-top:28px;
+        gap:14px;
+    }
+
+    .gcc-sector-carousel__dots{
+        gap:8px;
+    }
+
+    .gcc-sector-carousel__dot.is-active{
+        width:40px;
+    }
+
+    .gcc-sector-carousel__nav-btn{
+        width:40px;
+        height:40px;
+        border-radius:11px;
+    }
+
+    .gcc-sector-carousel__nav-btn--primary{
+        border-color:#7fa2ff;
+        color:#4b77ff;
     }
 }
 
-.category-card img {
-    width: 60px;
-    height: 60px;
-}
-
-@media (min-width: 640px) {
-    .category-card img {
-        width: 70px;
-        height: 70px;
-    }
-}
-
-@media (min-width: 1024px) {
-    .category-card img {
-        width: 80px;
-        height: 80px;
-    }
-}
-
-.category-card p {
-    font-size: clamp(14px, 2vw, 22px);
-}
-
-/* ================================
-   NAVIGATION ARROWS
-================================ */
-
-.category-nav-wrapper {
-    margin: 30px 16px;
-}
-
-@media (min-width: 768px) {
-    .category-nav-wrapper {
-        margin: 40px 40px;
-    }
-}
-
-@media (min-width: 1280px) {
-    .category-nav-wrapper {
-        margin: 50px 130px;
-    }
-}
-
-.category-nav-wrapper button {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-}
-
-/* Fix right arrow lighter color */
-.category-nav-wrapper button:last-child {
-    background: #1A376480;
-}
-
-/* ================================
-   MOBILE FIXES
-================================ */
-
-@media (max-width: 640px) {
-
-    .category-grid {
-        gap: 16px !important;
+@media (max-width: 479px){
+    .gcc-sector-showcase__inner{
+        padding:0 16px;
     }
 
-    .category-card {
-        text-align: center;
-        align-items: center;
+    .gcc-sector-carousel__grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:12px;
     }
 
-}
+    .gcc-sector-carousel__nav{
+        gap:10px;
+    }
 
-/* ================================
-   PREVENT HORIZONTAL SCROLL
-================================ */
+    .gcc-sector-card{
+        min-height:130px;
+        padding:14px 12px;
+    }
 
-body {
-    overflow-x: hidden;
+    .gcc-sector-card__icon{
+        width:46px;
+        height:46px;
+    }
+
+    .gcc-sector-card__title{
+        margin-top:14px;
+        font-size:15px;
+    }
+
+    .gcc-sector-carousel__controls{
+        margin-top:24px;
+    }
+
+    .gcc-sector-showcase__ambient--left{
+        left:-265px;
+        width:430px;
+        height:660px;
+        opacity:.9;
+    }
+
+    .gcc-sector-showcase__ambient--right{
+        right:-178px;
+        width:260px;
+        height:260px;
+    }
+
+    .gcc-sector-showcase__ambient--bottom{
+        right:-130px;
+        bottom:-154px;
+        width:260px;
+        height:260px;
+    }
+
+    .gcc-sector-showcase__ambient--bottom::before{
+        right:8px;
+        bottom:18px;
+        width:170px;
+        height:170px;
+    }
+
+    .gcc-sector-showcase__ambient--bottom::after{
+        right:58px;
+        width:146px;
+        height:146px;
+    }
 }
-    </style>
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var root = document.querySelector('[data-gcc-sector-carousel]');
+
+    if (!root) {
+        return;
+    }
+
+    var viewport = root.querySelector('[data-sector-viewport]');
+    var dotsContainer = root.querySelector('[data-sector-dots]');
+    var prevButton = root.querySelector('[data-sector-prev]');
+    var nextButton = root.querySelector('[data-sector-next]');
+    var sourceCards = Array.prototype.slice.call(root.querySelectorAll('[data-sector-page] .gcc-sector-card')).map(function (card) {
+        return card.cloneNode(true);
+    });
+    var currentPage = 0;
+    var pages = [];
+    var dots = [];
+    var mobileQuery = window.matchMedia ? window.matchMedia('(max-width: 767px)') : {
+        matches: false
+    };
+
+    if (!viewport || !dotsContainer || !sourceCards.length) {
+        return;
+    }
+
+    function getPageSize() {
+        return mobileQuery.matches ? 6 : 10;
+    }
+
+    function clearRenderedPages() {
+        viewport.innerHTML = '';
+        dotsContainer.innerHTML = '';
+        pages = [];
+        dots = [];
+    }
+
+    function updateNavState() {
+        if (prevButton) {
+            prevButton.disabled = currentPage === 0;
+        }
+
+        if (nextButton) {
+            nextButton.disabled = currentPage === pages.length - 1;
+        }
+    }
+
+    function setActivePage(pageIndex) {
+        currentPage = Math.max(0, Math.min(pageIndex, pages.length - 1));
+
+        pages.forEach(function (page, index) {
+            var isActive = index === currentPage;
+            page.hidden = !isActive;
+            page.classList.toggle('is-active', isActive);
+            page.setAttribute('aria-hidden', isActive ? 'false' : 'true');
+        });
+
+        dots.forEach(function (dot, index) {
+            var isActive = index === currentPage;
+            dot.classList.toggle('is-active', isActive);
+            dot.setAttribute('aria-current', isActive ? 'true' : 'false');
+        });
+
+        updateNavState();
+    }
+
+    function renderCarousel() {
+        var pageSize = getPageSize();
+        var totalPages = Math.max(1, Math.ceil(sourceCards.length / pageSize));
+        var preservedPage = currentPage;
+
+        clearRenderedPages();
+
+        currentPage = Math.min(preservedPage, totalPages - 1);
+
+        for (var pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+            var start = pageIndex * pageSize;
+            var end = start + pageSize;
+            var page = document.createElement('div');
+            var grid = document.createElement('div');
+            var dot = document.createElement('button');
+
+            page.className = 'gcc-sector-carousel__page';
+            page.setAttribute('data-sector-page', '');
+            page.setAttribute('data-page-index', String(pageIndex));
+            page.hidden = pageIndex !== currentPage;
+            page.setAttribute('aria-hidden', pageIndex === currentPage ? 'false' : 'true');
+            page.classList.toggle('is-active', pageIndex === currentPage);
+
+            grid.className = 'gcc-sector-carousel__grid';
+            sourceCards.slice(start, end).forEach(function (card) {
+                grid.appendChild(card.cloneNode(true));
+            });
+            page.appendChild(grid);
+            viewport.appendChild(page);
+            pages.push(page);
+
+            dot.type = 'button';
+            dot.className = 'gcc-sector-carousel__dot' + (pageIndex === currentPage ? ' is-active' : '');
+            dot.setAttribute('data-sector-dot', '');
+            dot.setAttribute('data-target-page', String(pageIndex));
+            dot.setAttribute('aria-label', 'Show sector page ' + (pageIndex + 1));
+            dot.setAttribute('aria-current', pageIndex === currentPage ? 'true' : 'false');
+            dot.addEventListener('click', (function (targetPage) {
+                return function () {
+                    setActivePage(targetPage);
+                };
+            })(pageIndex));
+            dotsContainer.appendChild(dot);
+            dots.push(dot);
+        }
+
+        setActivePage(currentPage);
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', function () {
+            setActivePage(currentPage - 1);
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', function () {
+            setActivePage(currentPage + 1);
+        });
+    }
+
+    if (typeof mobileQuery.addEventListener === 'function') {
+        mobileQuery.addEventListener('change', function () {
+            renderCarousel();
+        });
+    } else if (typeof mobileQuery.addListener === 'function') {
+        mobileQuery.addListener(function () {
+            renderCarousel();
+        });
+    }
+
+    renderCarousel();
+});
+</script>
