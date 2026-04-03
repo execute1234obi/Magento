@@ -346,6 +346,7 @@ return [
         'Vnecoms_VendorsProduct' => 1,
         'Vnecoms_VendorsCustomRegister' => 1,
         'Vnecoms_VendorsAcl' => 1,
+        'Gcc_VendorsLanguage' => 1,
         'Hyperpay_Extension' => 1,
         'Mageplaza_Core' => 1,
         'Mageplaza_Smtp' => 1,

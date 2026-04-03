@@ -74,7 +74,9 @@ $logoutUrl = $block->getBaseUrl() . 'customer/account/logout/';
 $stores = $storeManager->getStores();
 $currentStore = $storeManager->getStore();
 $currentStoreName = $currentStore->getName();
-$currentUrl = $block->getUrl('*/*/*', ['_use_rewrite' => true]);
+//$currentUrl = $block->getUrl('*/*/*', ['_use_rewrite' => true]);
+
+$currentUrl = $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
 
 $homeUrl = '#';
 $homepageBlock = $block->getLayout()->getBlock('vendor.toplinks.homepage');
@@ -97,12 +99,50 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
                     <div class="vendor-dropdown vendor-dropdown--menu" data-dd-panel>
                         <ul class="vendor-menu">
                             <?php foreach ($stores as $store): ?>
-                                <?php if (!$store->isActive() || strtolower($store->getName()) == 'vendor panel') continue; ?>
-                                <li>
-                                    <a href="<?= $block->escapeUrl($currentUrl . 'config/index/switchlanguage/locale/' . $store->getCode()); ?>">
-                                        <?= $block->escapeHtml($store->getName()); ?>
-                                    </a>
-                                </li>
+                                 <?php
+                    if (!$store->isActive()) {
+                        continue;
+                    }
+
+                    if (strtolower($store->getName()) == 'vendor panel') {
+                        continue;
+                    }
+
+                    $storeCode = $store->getCode();
+                    //$this->_storeManager->setCurrentStore($storeCode);
+                    //$locale = $this->_storeManager->getStore()->getConfig('general/locale/code');
+
+                      //  $this->_translate->setLocale($locale);
+                        //$this->_translate->loadData();
+                ?>
+
+                <li>
+                    <!-- <a href="<?= $block->escapeUrl(
+                        $block->getUrl('*/*/*', ['_current' => true]) . '?___store=' . $storeCode
+                    ); ?>">
+                        <?= $block->escapeHtml($store->getName()); ?>
+                    </a> -->
+                   <?php $storeManager = $block->getStoreManager();
+
+$fromStoreCode = '';
+
+if ($storeManager && $storeManager->getStore()) {
+    $fromStoreCode = $storeManager->getStore()->getCode();
+}
+
+$storeCode = $store ? $store->getCode() : '';?>
+                    <a href="<?= $block->escapeUrl(
+    $block->getUrl('stores/store/switch', [
+        '_query' => [
+    '___store' => $storeCode,
+    '___from_store' => $fromStoreCode,
+    'uenc' => base64_encode($block->getUrl('vendors/dashboard'))
+]
+    ])
+); ?>">
+    <?= $block->escapeHtml($store->getName()); ?>
+</a>
+                </li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
@@ -597,7 +637,11 @@ if ($senderId) {
                     </button>
                     <div class="vendor-dropdown vendor-dropdown--mobile vendor-dropdown--wallet" data-dd-panel role="menu">
                         <ul class="vendor-menu">
-                            <?= $walletBlock ? $walletBlock->getChildHtml('credit_dropdown_item') : '<li><span>No Data</span></li>'; ?>
+                            <li>
+                            <a href="<?= $block->getUrl('credit/transactions'); ?>">
+                                Credit Transactions
+                            </a>
+                        </li>
                         </ul>
                     </div>
                 </div>
