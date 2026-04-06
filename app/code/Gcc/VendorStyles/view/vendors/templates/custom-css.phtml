@@ -80,14 +80,20 @@ try {
 </div>
 <?php endif; ?>
 <style>
+body.subaccount-user-index main.page-content,
+body[class*="subaccount-user-index"] main.page-content {
+    background: #ffffff;
+}
+
 body.subaccount-user-index .page-main-actions,
 body[class*="subaccount-user-index"] .page-main-actions {
-    margin: 0 0 14px;
+    margin: 0;
 }
 
 body.subaccount-user-index .page-main-actions .page-actions-buttons,
 body[class*="subaccount-user-index"] .page-main-actions .page-actions-buttons {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
 }
 
@@ -121,6 +127,87 @@ body[class*="subaccount-user-index"] .page-main-actions .btn-primary::before {
     margin-right: 8px;
 }
 
+@media (min-width: 768px) {
+    body.subaccount-user-index main.page-content,
+    body[class*="subaccount-user-index"] main.page-content {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        align-content: flex-start;
+    }
+
+    body.subaccount-user-index main.page-content > .page-title-wrapper,
+    body[class*="subaccount-user-index"] main.page-content > .page-title-wrapper {
+        order: 1;
+        flex: 1 1 auto;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        min-height: 40px;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    body.subaccount-user-index main.page-content > .page-title-wrapper .page-title,
+    body[class*="subaccount-user-index"] main.page-content > .page-title-wrapper .page-title {
+        margin: 0;
+    }
+
+    body.subaccount-user-index main.page-content > .page-main-actions,
+    body[class*="subaccount-user-index"] main.page-content > .page-main-actions {
+        order: 2;
+        flex: 0 0 auto;
+        width: auto;
+        min-width: 0;
+        margin: 0 0 0 auto;
+        padding: 0;
+        float: none;
+        background: transparent;
+        box-shadow: none;
+        transform: translateY(54px);
+    }
+
+    body.subaccount-user-index main.page-content > .page-main-actions .page-actions,
+    body[class*="subaccount-user-index"] main.page-content > .page-main-actions .page-actions {
+        float: none;
+        width: auto;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+        position: static;
+    }
+
+    body.subaccount-user-index main.page-content > .messages,
+    body[class*="subaccount-user-index"] main.page-content > .messages,
+    body.subaccount-user-index main.page-content > #messages,
+    body[class*="subaccount-user-index"] main.page-content > #messages {
+        order: 3;
+        flex: 0 0 100%;
+        width: 100%;
+        margin: 0;
+        min-height: 0;
+        background: transparent;
+    }
+
+    body.subaccount-user-index main.page-content > .messages:empty,
+    body[class*="subaccount-user-index"] main.page-content > .messages:empty,
+    body.subaccount-user-index main.page-content > #messages:empty,
+    body[class*="subaccount-user-index"] main.page-content > #messages:empty {
+        display: none;
+    }
+
+    body.subaccount-user-index main.page-content > [id="page:main-container"],
+    body[class*="subaccount-user-index"] main.page-content > [id="page:main-container"] {
+        order: 4;
+        flex: 0 0 100%;
+        width: 100%;
+        min-width: 0;
+        margin-top: 8px;
+    }
+}
+
 body.subaccount-user-index .admin__data-grid-outer-wrap,
 body[class*="subaccount-user-index"] .admin__data-grid-outer-wrap {
     background: transparent;
@@ -129,12 +216,12 @@ body[class*="subaccount-user-index"] .admin__data-grid-outer-wrap {
 body.subaccount-user-index .admin__data-grid-header,
 body[class*="subaccount-user-index"] .admin__data-grid-header {
     margin: 0;
-    padding: 18px 18px 16px;
+    padding: 16px 18px 14px;
     border: 1px solid #e2ebf7;
     border-bottom: 0;
-    border-radius: 14px 14px 0 0;
+    border-radius: 12px 12px 0 0;
     background: #ffffff;
-    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05);
+    box-shadow: 0 4px 14px rgba(17, 44, 98, 0.04);
 }
 
 body.subaccount-user-index .admin__data-grid-header-row,
@@ -221,14 +308,14 @@ body[class*="subaccount-user-index"] .data-grid-search-label {
 body.subaccount-user-index .data-grid-search-control-wrap .search-wrapper,
 body[class*="subaccount-user-index"] .data-grid-search-control-wrap .search-wrapper {
     position: relative;
-    width: 280px;
+    width: 250px;
     max-width: 100%;
 }
 
 body.subaccount-user-index .data-grid-search-control,
 body[class*="subaccount-user-index"] .data-grid-search-control {
     width: 100%;
-    height: 42px;
+    height: 40px;
     margin: 0;
     padding: 0 14px 0 40px;
     border: 1px solid #d9e6f6;
@@ -265,8 +352,9 @@ body[class*="subaccount-user-index"] .data-grid-filters-action-wrap {
 
 body.subaccount-user-index .data-grid-filters-action-wrap .action-default,
 body[class*="subaccount-user-index"] .data-grid-filters-action-wrap .action-default {
-    height: 42px;
-    padding: 0 16px;
+    min-width: 100px;
+    height: 40px;
+    padding: 0 14px;
     border: 1px solid #d9e6f6;
     border-radius: 8px;
     background: #edf4fb;
@@ -336,9 +424,9 @@ body[class*="subaccount-user-index"] .admin__data-grid-wrap {
     overflow-x: auto;
     border: 1px solid #e2ebf7;
     border-top: 0;
-    border-radius: 0 0 14px 14px;
+    border-radius: 0 0 12px 12px;
     background: #ffffff;
-    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05);
+    box-shadow: 0 4px 14px rgba(17, 44, 98, 0.04);
 }
 
 body.subaccount-user-index table.data-grid,
@@ -352,23 +440,70 @@ body[class*="subaccount-user-index"] table.data-grid {
 
 body.subaccount-user-index table.data-grid thead th,
 body[class*="subaccount-user-index"] table.data-grid thead th {
-    padding: 15px 18px;
-    border-bottom: 1px solid #edf3fb !important;
-    background: #f9fbfe;
+    position: relative;
+    padding: 16px 42px 16px 18px;
+    border-bottom: 1px solid #e7eef8 !important;
+    background: #f8fbff;
     color: #1e3c83;
-    font-size: 13px;
-    font-weight: 800;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2;
     vertical-align: middle;
+}
+
+body.subaccount-user-index table.data-grid thead th._sortable,
+body[class*="subaccount-user-index"] table.data-grid thead th._sortable {
+    cursor: pointer;
+}
+
+body.subaccount-user-index table.data-grid thead th:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body[class*="subaccount-user-index"] table.data-grid thead th:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    width: 10px;
+    height: 14px;
+    transform: translateY(-50%);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none'%3E%3Cpath d='M5 1.25L8.25 4.5H1.75L5 1.25Z' fill='%237d93be'/%3E%3Cpath d='M5 12.75L1.75 9.5H8.25L5 12.75Z' fill='%237d93be'/%3E%3C/svg%3E");
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+body.subaccount-user-index table.data-grid thead th.data-grid-checkbox-cell,
+body.subaccount-user-index table.data-grid thead th.data-grid-multicheck-cell,
+body[class*="subaccount-user-index"] table.data-grid thead th.data-grid-checkbox-cell,
+body[class*="subaccount-user-index"] table.data-grid thead th.data-grid-multicheck-cell {
+    padding-right: 18px;
+}
+
+body.subaccount-user-index table.data-grid thead th._ascend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body[class*="subaccount-user-index"] table.data-grid thead th._ascend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none'%3E%3Cpath d='M5 1.25L8.25 4.5H1.75L5 1.25Z' fill='%232e5ea8'/%3E%3Cpath d='M5 12.75L1.75 9.5H8.25L5 12.75Z' fill='%23a9b9d8'/%3E%3C/svg%3E");
+}
+
+body.subaccount-user-index table.data-grid thead th._descend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body[class*="subaccount-user-index"] table.data-grid thead th._descend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none'%3E%3Cpath d='M5 1.25L8.25 4.5H1.75L5 1.25Z' fill='%23a9b9d8'/%3E%3Cpath d='M5 12.75L1.75 9.5H8.25L5 12.75Z' fill='%232e5ea8'/%3E%3C/svg%3E");
 }
 
 body.subaccount-user-index table.data-grid tbody td,
 body[class*="subaccount-user-index"] table.data-grid tbody td {
-    padding: 16px 18px;
+    padding: 17px 18px;
     border-bottom: 1px solid #edf3fb !important;
     color: #4a67a1;
     font-size: 14px;
+    line-height: 1.35;
     vertical-align: middle;
     background: #ffffff;
+}
+
+body.subaccount-user-index table.data-grid tbody tr:hover td,
+body[class*="subaccount-user-index"] table.data-grid tbody tr:hover td {
+    background: #fbfdff;
 }
 
 body.subaccount-user-index table.data-grid tbody tr:last-child td,
@@ -487,14 +622,139 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
 }
 
 @media (max-width: 767px) {
+    body.subaccount-user-index main.page-content,
+    body[class*="subaccount-user-index"] main.page-content {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-auto-rows: auto;
+        column-gap: 12px;
+        row-gap: 0;
+        align-items: start;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    body.subaccount-user-index .content-header,
+    body[class*="subaccount-user-index"] .content-header {
+        grid-column: 1;
+        min-width: 0;
+        margin: 0;
+        padding: 0 !important;
+        background: transparent;
+    }
+
+    body.subaccount-user-index .content-header .vendor-pagehead,
+    body[class*="subaccount-user-index"] .content-header .vendor-pagehead {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100%;
+    }
+
+    body.subaccount-user-index .content-header .vendor-pagehead .vendor-breadcrumb,
+    body[class*="subaccount-user-index"] .content-header .vendor-pagehead .vendor-breadcrumb {
+        display: none !important;
+    }
+
+    body.subaccount-user-index .content-header .vendor-pagehead .vendor-page-title-gap,
+    body[class*="subaccount-user-index"] .content-header .vendor-pagehead .vendor-page-title-gap {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    body.subaccount-user-index .content-header .vendor-pagehead .vendor-page-title,
+    body[class*="subaccount-user-index"] .content-header .vendor-pagehead .vendor-page-title {
+        margin: 0 !important;
+        font-size: 16px !important;
+        line-height: 1.2 !important;
+        font-weight: 700 !important;
+        color: #163172 !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    body.subaccount-user-index .page-title-breadcrumbs,
+    body[class*="subaccount-user-index"] .page-title-breadcrumbs {
+        display: none;
+    }
+
+    body.subaccount-user-index main.page-content > .page-title-wrapper,
+    body[class*="subaccount-user-index"] main.page-content > .page-title-wrapper {
+        order: 1;
+        flex: 1 1 0;
+        display: flex;
+        align-items: center;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    body.subaccount-user-index main.page-content > .page-title-wrapper .page-title,
+    body[class*="subaccount-user-index"] main.page-content > .page-title-wrapper .page-title {
+        margin: 0;
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+
+    body.subaccount-user-index main.page-content > .page-main-actions,
+    body[class*="subaccount-user-index"] main.page-content > .page-main-actions {
+        grid-column: 2;
+        justify-self: end;
+        align-self: start;
+        width: auto;
+        min-width: 0;
+        margin: 0;
+        padding: 0 !important;
+        float: none;
+        background: transparent;
+        box-shadow: none;
+        transform: none;
+    }
+
+    body.subaccount-user-index main.page-content > .messages,
+    body[class*="subaccount-user-index"] main.page-content > .messages,
+    body.subaccount-user-index main.page-content > #messages,
+    body[class*="subaccount-user-index"] main.page-content > #messages {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    body.subaccount-user-index main.page-content > .messages:empty,
+    body[class*="subaccount-user-index"] main.page-content > .messages:empty,
+    body.subaccount-user-index main.page-content > #messages:empty,
+    body[class*="subaccount-user-index"] main.page-content > #messages:empty {
+        display: none !important;
+    }
+
+    body.subaccount-user-index main.page-content > [id="page:main-container"],
+    body[class*="subaccount-user-index"] main.page-content > [id="page:main-container"] {
+        grid-column: 1 / -1;
+        width: 100%;
+        min-width: 0;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
     body.subaccount-user-index .page-main-actions,
     body[class*="subaccount-user-index"] .page-main-actions {
-        margin-bottom: 12px;
+        margin-bottom: 0;
+    }
+
+    body.subaccount-user-index .page-columns,
+    body[class*="subaccount-user-index"] .page-columns {
+        padding-top: 0 !important;
     }
 
     body.subaccount-user-index .admin__data-grid-header,
     body[class*="subaccount-user-index"] .admin__data-grid-header {
-        padding: 16px;
+        padding: 14px 12px 12px;
     }
 
     body.subaccount-user-index .admin__data-grid-wrap,
@@ -505,6 +765,62 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
     body.subaccount-user-index table.data-grid,
     body[class*="subaccount-user-index"] table.data-grid {
         min-width: 760px;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
+    body.subaccount-user-index .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row > [class*="col-"],
+    body.subaccount-user-index .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row > [class*="col-"],
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row.row.row-gutter > .col-xs-10 > .row > [class*="col-"],
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row.row.row-gutter > .col-xs-12 > .row > [class*="col-"] {
+        width: auto;
+        flex: 0 0 auto;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row .data-grid-search-control-wrap,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row .data-grid-search-control-wrap {
+        flex: 1 1 auto;
+        min-width: 0;
+        width: auto;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row .data-grid-search-control-wrap .search-wrapper,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row .data-grid-search-control-wrap .search-wrapper {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row .data-grid-search-control,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row .data-grid-search-control {
+        min-width: 0;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row .data-grid-filters-actions-wrap,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row .data-grid-filters-actions-wrap {
+        flex: 0 0 auto;
+        width: auto;
+    }
+
+    body.subaccount-user-index .admin__data-grid-header-row .data-grid-filters-action-wrap .action-default,
+    body[class*="subaccount-user-index"] .admin__data-grid-header-row .data-grid-filters-action-wrap .action-default {
+        width: auto;
+        min-width: 88px;
     }
 }
 
@@ -3885,12 +4201,12 @@ body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar {
     justify-content: space-between !important;
     gap: 16px !important;
     margin: 0 !important;
-    padding: 18px 18px 14px !important;
+    padding: 16px 18px 14px !important;
     border: 1px solid #e2ebf7 !important;
     border-bottom: 0 !important;
-    border-radius: 14px 14px 0 0 !important;
+    border-radius: 12px 12px 0 0 !important;
     background: #ffffff !important;
-    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05) !important;
+    box-shadow: 0 4px 14px rgba(17, 44, 98, 0.04) !important;
 }
 
 body.subaccount-user-index .gcc-subaccount-user-grid-toolbar.gcc-subaccount-user-grid-toolbar--hidden,
@@ -3916,8 +4232,8 @@ body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar__controls
     display: flex !important;
     align-items: center !important;
     justify-content: flex-end !important;
-    gap: 12px !important;
-    flex: 1 1 auto !important;
+    gap: 10px !important;
+    flex: 0 0 auto !important;
     min-width: 0 !important;
     flex-wrap: nowrap !important;
 }
@@ -3932,7 +4248,7 @@ body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-gri
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
-    flex: 1 1 320px !important;
+    flex: 0 0 250px !important;
     min-width: 0 !important;
     margin: 0 !important;
 }
@@ -3940,7 +4256,7 @@ body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-gri
 body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-search-control-wrap .search-wrapper,
 body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-search-control-wrap .search-wrapper {
     position: relative !important;
-    width: 320px !important;
+    width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
 }
@@ -3948,7 +4264,7 @@ body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-gri
 body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-search-control,
 body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-search-control {
     width: 100% !important;
-    height: 42px !important;
+    height: 40px !important;
     margin: 0 !important;
     padding: 0 14px 0 40px !important;
     border: 1px solid #d9e6f6 !important;
@@ -3992,9 +4308,9 @@ body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-gri
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    min-width: 116px !important;
-    height: 42px !important;
-    padding: 0 16px !important;
+    min-width: 100px !important;
+    height: 40px !important;
+    padding: 0 14px !important;
     border: 1px solid #d9e6f6 !important;
     border-radius: 8px !important;
     background: #edf4fb !important;
@@ -4039,9 +4355,9 @@ body[class*="subaccount-user-index"] .admin__data-grid-pager-wrap.gcc-subaccount
     padding: 12px 18px 16px !important;
     border: 1px solid #e2ebf7 !important;
     border-top: 0 !important;
-    border-radius: 0 0 14px 14px !important;
+    border-radius: 0 0 12px 12px !important;
     background: #ffffff !important;
-    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05) !important;
+    box-shadow: 0 4px 14px rgba(17, 44, 98, 0.04) !important;
 }
 
 body.subaccount-user-index .admin__data-grid-pager-wrap.gcc-subaccount-user-grid-pager-wrap .selectmenu,
@@ -4306,7 +4622,60 @@ body[class*="subaccount-user-index"] table.data-grid .gcc-subaccount-user-action
 @media (max-width: 767px) {
     body.subaccount-user-index .gcc-subaccount-user-grid-toolbar,
     body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar {
-        padding: 16px !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+        padding: 14px 12px 12px !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar__results,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar__results {
+        width: 100% !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar__controls,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar__controls {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        gap: 10px !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-search-control-wrap,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-search-control-wrap {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        width: auto !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-search-control-wrap .search-wrapper,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-search-control-wrap .search-wrapper {
+        width: 100% !important;
+        max-width: none !important;
+        min-width: 0 !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-search-control,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-search-control {
+        min-width: 0 !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-filters-actions-wrap,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-filters-actions-wrap {
+        flex: 0 0 auto !important;
+        width: auto !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar .data-grid-filters-action-wrap .action-default,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar .data-grid-filters-action-wrap .action-default {
+        width: auto !important;
+        min-width: 92px !important;
+    }
+
+    body.subaccount-user-index .gcc-subaccount-user-grid-toolbar,
+    body[class*="subaccount-user-index"] .gcc-subaccount-user-grid-toolbar {
+        padding: 14px 12px 12px !important;
     }
 
     body.subaccount-user-index .admin__data-grid-pager-wrap.gcc-subaccount-user-grid-pager-wrap,
@@ -4330,6 +4699,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function normalizeText(value) {
         return (value || '').replace(/\s+/g, ' ').trim();
+    }
+
+    function getMessagesNode() {
+        return Array.prototype.slice.call(document.querySelectorAll(
+            'main.page-content > #messages, main.page-content > .messages, #messages, .messages'
+        ));
+    }
+
+    function syncMessagesVisibility() {
+        var messages = getMessagesNode();
+        var hasVisibleMessages = false;
+
+        if (!messages.length) {
+            return;
+        }
+
+        messages.forEach(function (messageNode) {
+            if (!messageNode) {
+                return;
+            }
+
+            if (!normalizeText(messageNode.textContent)) {
+                messageNode.style.display = 'none';
+                return;
+            }
+
+            messageNode.style.display = '';
+            hasVisibleMessages = true;
+        });
+
+        return hasVisibleMessages;
     }
 
     function loadPagingComponent(scheduleSync) {
@@ -4832,6 +5232,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isSubaccountUserPage()) {
             return;
         }
+
+        syncMessagesVisibility();
 
         gridWrap = findGridWrap();
 

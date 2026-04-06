@@ -27,116 +27,106 @@ if ($verificationId) {
     }
 }
 
-//$folderName = 'vendor-verification-documents/';
 $mediaUrl   = $block->getMediaUrl();
 ?>
 
-<!-- ================= CERTIFICATE & DOCUMENTS ================= -->
-<div class="verification-documents-section">
+<?php
+$commentsCount = $block->getCommentsCounts(
+    $verificationId,
+    $certDetailId,
+    InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
+);
 
-    <!-- HEADER -->
-    <div class="verification-card-header">
+$docs = [];
+if (!empty($arrCertDocsData['documents'])) {
+    $docs = is_array($arrCertDocsData['documents'])
+        ? $arrCertDocsData['documents']
+        : explode(',', $arrCertDocsData['documents']);
+}
+?>
+
+<section class="verification-card verification-card--section verification-card--documents">
+    <div class="verification-card__head">
         <h3><?= __('Certificates and Documents') ?></h3>
 
-        <?php
-        $commentsCount = $block->getCommentsCounts(
-            $verificationId,
-            $certDetailId,
-            InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS
-        );
-        ?>
-
-        <div class="header-actions">
-            <button type="button"
-                class="btn btn-link verification-showcomment"
-                data-verificationid="<?= $verificationId ?>"
-                data-verifidtlid="<?= $certDetailId ?>"
-                data-verifigroupid="<?= InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS ?>">
-                <i class="fa fa-comment"></i>
-                <?= __('%1 Comments', $commentsCount) ?>
-            </button>
-
+        <div class="verification-card__actions">
             <?php if ($certVerificationData &&
                 $certVerificationData->getStatus() ==
                 \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
                 <button type="button"
-                    class="btn btn-sm btn-outline verification-edit"
-                    data-modal-id="verification-cert-modal">
-                    <i class="fa fa-pencil"></i> <?= __('Edit') ?>
+                        class="verification-edit verification-action-button verification-action-button--edit"
+                        data-modal-id="verification-cert-modal">
+                    <i class="fa fa-pencil"></i>
+                    <span><?= __('Edit') ?></span>
                 </button>
             <?php endif; ?>
+
+            <button type="button"
+                    class="verification-showcomment verification-comments-link"
+                    data-verificationid="<?= $verificationId ?>"
+                    data-verifidtlid="<?= $certDetailId ?>"
+                    data-verifigroupid="<?= InfoGroup::VENDOR_VERIFICATION_DATAGROUP_CERTI_DOCS ?>">
+                <i class="fa fa-comment"></i>
+                <span><?= __('%1 Comments', $commentsCount) ?></span>
+            </button>
         </div>
     </div>
 
-    <!-- BODY -->
-    <div class="verification-tbl">
-        <table class="table table-striped">
+    <div class="verification-card__body">
+        <table class="verification-table">
             <tbody>
-
-            <!-- STATUS -->
-            <tr>
-                <td><?= __('Status') ?></td>
-                <td>
-                    <span class="status-badge">
+                <tr>
+                    <td><?= __('Status') ?></td>
+                    <td>
                         <?= $certVerificationData && $certVerificationData->getId()
                             ? $block->getStatusLabel($certVerificationData->getStatus())
                             : __('Pending'); ?>
-                    </span>
-                </td>
-            </tr>
-
-            <!-- COMMERCIAL CERTIFICATE -->
-            <tr>
-                <td><?= __('Commercial Registration Certificate') ?></td>
-                <td>
-                    
-                    <?php if (!empty($arrCertDocsData['certificate'])): ?>
-                        <a target="_blank"
-                           class="doc-link"
-                           href="<?= $mediaUrl . $arrCertDocsData['certificate']; ?>">
-                            <i class="fa fa-file-text-o"></i>
-                            <?= basename($arrCertDocsData['certificate']); ?>
-                        </a>
-                    <?php else: ?>
-                        <span class="doc-empty"><?= __('Not Uploaded') ?></span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-
-            <!-- OTHER DOCUMENTS -->
-            <tr>
-                <td><?= __('Other Documents') ?></td>
-                <td>
-                    <?php if (!empty($arrCertDocsData['documents'])): ?>
-                        <?php
-                        $docs = is_array($arrCertDocsData['documents'])
-                            ? $arrCertDocsData['documents']
-                            : explode(',', $arrCertDocsData['documents']);
-                        ?>
-                        <ul class="doc-list">
-                            <?php foreach ($docs as $doc): ?>
-                                <?php if (trim($doc)): ?>
-                                    <li>
-                                        <a target="_blank"
-                                           class="doc-link"
-                                           href="<?= $mediaUrl . trim($doc); ?>">
-                                            <i class="fa fa-file-text-o"></i>
-                                            <?= basename(trim($doc)); ?>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <span class="doc-empty"><?= __('Not Uploaded') ?></span>
-                    <?php endif; ?>
-                </td>
-            </tr>
-
+                    </td>
+                </tr>
+                <tr>
+                    <td><?= __('Commercial Registration Certificate') ?></td>
+                    <td>
+                        <?php if (!empty($arrCertDocsData['certificate'])): ?>
+                            <a target="_blank"
+                               rel="noopener"
+                               class="doc-link"
+                               href="<?= $mediaUrl . $arrCertDocsData['certificate']; ?>">
+                                <i class="fa fa-file-text-o"></i>
+                                <span><?= $block->escapeHtml(basename($arrCertDocsData['certificate'])); ?></span>
+                            </a>
+                        <?php else: ?>
+                            <span class="doc-empty"><?= __('Not Uploaded') ?></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td><?= __('Other Documents') ?></td>
+                    <td>
+                        <?php if (!empty($docs)): ?>
+                            <ul class="doc-list">
+                                <?php foreach ($docs as $doc): ?>
+                                    <?php if (trim($doc)): ?>
+                                        <li>
+                                            <a target="_blank"
+                                               rel="noopener"
+                                               class="doc-link"
+                                               href="<?= $mediaUrl . trim($doc); ?>">
+                                                <i class="fa fa-file-text-o"></i>
+                                                <span><?= $block->escapeHtml(basename(trim($doc))); ?></span>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <span class="doc-empty"><?= __('Not Uploaded') ?></span>
+                        <?php endif; ?>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>
-</div>
+</section>
 
 <!-- ================= EDIT MODAL ================= -->
 <div id="verification-cert-modal" style="display:none;">
