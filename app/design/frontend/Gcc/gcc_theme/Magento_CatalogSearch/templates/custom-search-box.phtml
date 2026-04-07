@@ -113,6 +113,30 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   [class*="__item"] + [class*="__item"] { border-top:1px solid #f1f3f7; margin-top:10px; padding-top:10px; }
 
   @media (max-width:768px){
+    .search-container{
+      width: calc(100% - 12px);
+      margin: 12px auto 8px;
+    }
+    .search-wrap{
+      margin-bottom: 8px;
+    }
+    .search-bar{
+      height: 48px;
+      border-radius: 12px;
+    }
+    .search-icon{
+      left: 14px;
+      width: 18px;
+      height: 18px;
+    }
+    .search-input{
+      font-size: 14px;
+      padding: 0 56px 0 42px !important;
+    }
+    .shortcut{
+      right: 14px;
+      font-size: 12px;
+    }
     .ms-grid{ grid-template-columns:1fr; gap:12px; }
     .ms-col, .ms-full{ max-height:unset; }
   }
