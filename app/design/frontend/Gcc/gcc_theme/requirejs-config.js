@@ -1,7 +1,8 @@
 var config = {
     map: {
         '*': {
-            "vnecoms-vendor-contact-message": "Vnecoms_VendorsMessage/js/message"
+            "vnecoms-vendor-contact-message": "Vnecoms_VendorsMessage/js/message",
+             "mstSearchAutocomplete": "Mirasvit_SearchAutocomplete/js/autocomplete"
         }
     },
 

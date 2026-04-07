@@ -253,7 +253,7 @@ if ($senderId) {
                                                     $date = $detail['created_at'] ?? '';
 
                                                     if (!empty($date)) {
-                                                        echo $block->escapeHtml(date('d M Y, h:i A', strtotime($date)));
+                                                        echo $block->escapeHtml(date('d M Y', strtotime($date)));
                                                     }
                                                     ?>
                                                     
