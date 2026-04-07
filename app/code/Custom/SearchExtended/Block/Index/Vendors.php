@@ -8,6 +8,8 @@ use Magento\Framework\App\RequestInterface;
 use Vnecoms\Vendors\Model\ResourceModel\Vendor\CollectionFactory as VendorCollectionFactory;
 use Vnecoms\VendorsPage\Helper\Data as VendorsPageHelper;
 use Business\VendorsVerification\Helper\Data as VendorsVerificationHelper;
+use Magento\Directory\Model\CountryFactory;
+use Magento\Eav\Model\Config as EavConfig;
 
 class Vendors extends Template
 {
@@ -31,19 +33,26 @@ class Vendors extends Template
      */
     private $vendorsVerificationHelper;
 
+    private $countryFactory;
+    private $eavConfig;
+
     public function __construct(
         Context $context,
         VendorCollectionFactory $vendorCollectionFactory,
         RequestInterface $request,
         VendorsPageHelper $vendorsPageHelper,
         VendorsVerificationHelper $vendorsVerificationHelper,
+        CountryFactory $countryFactory,
+        EavConfig $eavConfig,
         array $data = []
     ) {
         $this->vendorCollectionFactory = $vendorCollectionFactory;
         $this->request = $request;
         $this->vendorsPageHelper = $vendorsPageHelper;
         $this->vendorsVerificationHelper = $vendorsVerificationHelper;
-        
+        $this->countryFactory = $countryFactory;
+        $this->eavConfig = $eavConfig;
+
         parent::__construct($context, $data);
     }
 
@@ -237,9 +246,15 @@ public function getFilterData()
             $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
             $isVerified = $this->isVerifiedVendor($vendor->getId());
             $vendorVerifieds[$isVerified ? 1 : 0] = $isVerified ? 'Verified' : 'Unverified';
+            // if ($vendor->getBusinessType()) {
+            //     $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
+            // }
             if ($vendor->getBusinessType()) {
-                $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
-            }
+    $value = $vendor->getBusinessType();
+    $label = $vendor->getAttributeText('business_type');
+//var_dump($vendor->getAttributeText('business_type'));exit;
+    $businessTypes[$value] = $label ? $label : $value;
+}
         }
 
         return [

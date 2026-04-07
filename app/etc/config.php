@@ -399,7 +399,7 @@ return [
         'Vnecoms_VendorsGroup' => 1,
         'Vnecoms_VendorsLanguage' => 1,
         'Gcc_VendorDashboardOverride' => 1,
-        'Vnecoms_VendorsLiveChat' => 1,
+        'Vnecoms_VendorsLiveChat' => 0,
         'Business_VnecomsMembershipPatch' => 1,
         'Vendor_VendorMessagesSubMenu' => 1,
         'Vnecoms_VendorsConfigApproval' => 1,
