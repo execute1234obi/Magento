@@ -19,23 +19,31 @@ $pager = $block->getPagerHtml();
 
   .vendor-card {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
+    flex-direction: column;
+    gap: 14px;
     width: 100%;
     padding: 20px;
     margin-bottom: 15px;
     background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-decoration: none !important;
     color: inherit;
   }
 
+  .vendor-card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    min-width: 0;
+  }
+
   .vendor-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.09);
   }
 
   .vendor-left {
@@ -79,7 +87,8 @@ $pager = $block->getPagerHtml();
   }
 
   .vendor-desc {
-    max-width: 550px;
+    margin-left: 65px;
+    max-width: 720px;
     font-size: 13px;
     color: #555;
     line-height: 1.5;
@@ -143,45 +152,81 @@ $pager = $block->getPagerHtml();
 
   @media (max-width: 768px) {
     #vendors {
-      padding-top: 12px;
+      padding-top: 10px;
     }
 
     .vendor-card {
-      flex-direction: column;
-      align-items: stretch;
+      gap: 10px;
+      padding: 14px 14px 16px;
+      border-radius: 16px;
+    }
+
+    .vendor-card__top {
+      width: 100%;
       gap: 12px;
-      padding: 16px;
+      align-items: flex-start;
     }
 
     .vendor-left {
-      width: 100%;
       gap: 12px;
+      align-items: flex-start;
+      min-width: 0;
     }
 
-    .vendor-info h3 {
-      font-size: 17px;
-    }
-
-    .vendor-meta,
-    .vendor-desc {
-      font-size: 12px;
+    .vendor-logo {
+      width: 44px;
+      height: 44px;
+      flex: 0 0 44px;
     }
 
     .vendor-right {
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
       gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      margin-left: auto;
     }
 
     .vendor-country {
       min-width: 0;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
+      gap: 5px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .vendor-country img {
+      width: 16px;
+      height: 11px;
     }
 
     .vendor-right .visit-link {
-      padding: 8px 12px;
+      padding: 8px 14px;
       font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .vendor-info h3 {
+      font-size: 16px;
+      line-height: 1.25;
+      margin-bottom: 4px;
+    }
+
+    .vendor-meta {
+      font-size: 12px;
+      margin-bottom: 0;
+    }
+
+    .vendor-desc {
+      margin-left: 0;
+      max-width: 100%;
+      font-size: 12px;
+      line-height: 1.55;
+      color: #4b5563;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
     }
 
     .pager .pages a,
@@ -206,25 +251,27 @@ $pager = $block->getPagerHtml();
         $mediaUrl = $logo ? $mediaUrl . $logo : '';
       ?>
       <a href="<?= $block->escapeUrl($vendorUrl) ?>" class="vendor-card">
-        <div class="vendor-left">
-          <div class="vendor-logo">
-            <?php if ($logo): ?>
-              <img src="<?= $block->escapeUrl($mediaUrl); ?>" alt="<?= $block->escapeHtml($block->getVendorName($vendor)); ?>">
-            <?php endif; ?>
+        <div class="vendor-card__top">
+          <div class="vendor-left">
+            <div class="vendor-logo">
+              <?php if ($logo): ?>
+                <img src="<?= $block->escapeUrl($mediaUrl); ?>" alt="<?= $block->escapeHtml($block->getVendorName($vendor)); ?>">
+              <?php endif; ?>
+            </div>
+            <div class="vendor-info">
+              <h3><?= ucfirst($block->escapeHtml($block->getVendorName($vendor))); ?></h3>
+              <div class="vendor-meta"><?= $block->escapeHtml($category); ?></div>
+            </div>
           </div>
-          <div class="vendor-info">
-            <h3><?= ucfirst($block->escapeHtml($block->getVendorName($vendor))); ?></h3>
-            <div class="vendor-meta"><?= $block->escapeHtml($category); ?></div>
-            <div class="vendor-desc"><?= $block->escapeHtml($block->getBusinessDescriptions($vendor)); ?></div>
+          <div class="vendor-right">
+            <div class="vendor-country">
+              <img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($country ?: 'N/A')) ?>.svg" alt="<?= strtolower($block->escapeHtml($country ?: 'N/A')) ?>">
+              <?= $block->escapeHtml($country); ?>
+            </div>
+            <span class="visit-link"><?= __("Visit Website") ?> -></span>
           </div>
         </div>
-        <div class="vendor-right">
-          <div class="vendor-country">
-            <img class="country-flag" src="https://flagcdn.com/<?= strtolower($block->escapeHtml($country ?: 'N/A')) ?>.svg" alt="<?= strtolower($block->escapeHtml($country ?: 'N/A')) ?>">
-            <?= $block->escapeHtml($country); ?>
-          </div>
-          <span class="visit-link"><?= __("Visit Website") ?> -></span>
-        </div>
+        <div class="vendor-desc"><?= $block->escapeHtml($block->getBusinessDescriptions($vendor)); ?></div>
       </a>
     <?php endforeach; ?>
 

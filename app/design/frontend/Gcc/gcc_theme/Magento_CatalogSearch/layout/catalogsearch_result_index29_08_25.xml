@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      layout="2columns-left"
+      layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-    <referenceBlock name="catalog.topnav" remove="true" />
+        <referenceBlock name="catalog.topnav" remove="true" />
 
         <referenceContainer name="page.top">
             <block class="Magento\Framework\View\Element\Template"
@@ -11,53 +11,35 @@
                    template="Magento_CatalogSearch::custom-search-box.phtml"
                    after="header.panel" />
         </referenceContainer>
+
         <referenceBlock name="catalog.compare.sidebar" remove="true" />
         <referenceBlock name="wishlist_sidebar" remove="true" />
 
-        <!-- Left column custom filter block -->
-        <referenceContainer name="sidebar.main">
+        <referenceBlock name="mst.search.result">
             <block class="Custom\SearchExtended\Block\Index\Vendors"
-                   name="custom.search.filters"
-                   template="Magento_CatalogSearch::custom-filters.phtml" />
-        </referenceContainer>
+                   name="search_filters"
+                   as="search_filters"
+                   template="Magento_CatalogSearch::custom-filters.phtml"
+                   cacheable="false" />
+        </referenceBlock>
 
-        <!-- Right column (Mirasvit or default content stays untouched) -->
-        <!-- Mirasvit automatically renders search.result -->
-        <!-- Place your search result blocks inside the main content container -->
-          <!-- Place your search result blocks inside the main content container -->
         <referenceContainer name="content">
-            <!-- This block explicitly defines the Vendors tab and ensures it is always present. -->
-            <!-- <block class="Custom\SearchExtended\Block\Index\Vendors"
-                   name="search.result.list.vendors"
-                   before="-"
-                   cacheable="false"
-                   template="Custom_SearchExtended::index/vnecoms/vendors/vendors.phtml">
-            </block> -->
-            
-            <!-- This block explicitly defines the Products tab and ensures it is always present. -->
-            <block class="Magento\Framework\View\Element\Template" name="search.result.list.products" after="search.result.list.vendors" cacheable="false">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="search.result.list.products"
+                   after="search.result.list.vendors"
+                   cacheable="false">
                 <arguments>
                     <argument name="index" xsi:type="string">magento_catalog_product</argument>
                     <argument name="title" xsi:type="string" translate="true">Products</argument>
-                    
                 </arguments>
             </block>
         </referenceContainer>
-          <!-- <referenceContainer name="before.footer">
-            <block class="Magento\Framework\View\Element\Template"
-                   name="custom.newsletter"
-                   template="C:/xampp/htdocs/magento_gcc/app/design/frontend/Gcc/gcc_theme/Magento_Theme/templates/html/newsletter.phtml" />
-        </referenceContainer> -->
-         <!-- Newsletter block just before footer, but inside main content -->
-        
 
-      
-         <!-- FULL-WIDTH BLOCK: Place this after the main content container but still inside the main container -->
         <referenceContainer name="main">
             <block class="Magento\Framework\View\Element\Template"
-                    name="custom.newsletter"
-                    template="Magento_Theme::html/newsletter.phtml"
-                    after="content" />
+                   name="custom.newsletter"
+                   template="Magento_Theme::html/newsletter.phtml"
+                   after="content" />
         </referenceContainer>
     </body>
 </page>
