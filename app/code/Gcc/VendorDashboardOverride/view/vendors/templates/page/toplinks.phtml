@@ -20,7 +20,8 @@ $vendorName = (string)__('Vendor'); // Default Fallback Name
 // ================== VENDOR SESSION CHECK (FIX) ==================
 $vendor = $vendorSession->getVendor();
 if ($vendor && $vendor->getId() && $vendorSession->isLoggedIn()) {
-    $vendorName = $vendor->getName();
+       //$vendorName = $vendor->getName();
+    $vendorName = $vendor->getData('b_name');
     $logo = $vendor->getData('upload_logo');
     if ($logo) {
         $avatarUrl = $mediaUrl . $logo;

@@ -243,17 +243,39 @@ public function getFilterData()
         $businessTypes = [];
 
         foreach ($collection as $vendor) {
-            $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
+           // $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
+           if ($vendor->getCountryId()) {
+    $countryCode = $vendor->getCountryId();
+
+    if (!isset($vendorCountries[$countryCode])) {
+        try {
+            $country = $this->countryFactory->create()->loadByCode($countryCode);
+            $countryName = $country->getName();
+        } catch (\Exception $e) {
+            $countryName = $countryCode;
+        }
+
+        $vendorCountries[$countryCode] = $countryName;
+    }
+}
             $isVerified = $this->isVerifiedVendor($vendor->getId());
             $vendorVerifieds[$isVerified ? 1 : 0] = $isVerified ? 'Verified' : 'Unverified';
             // if ($vendor->getBusinessType()) {
             //     $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
             // }
-            if ($vendor->getBusinessType()) {
+         if ($vendor->getBusinessType()) {
     $value = $vendor->getBusinessType();
-    $label = $vendor->getAttributeText('business_type');
-//var_dump($vendor->getAttributeText('business_type'));exit;
-    $businessTypes[$value] = $label ? $label : $value;
+
+    if (!isset($businessTypes[$value])) {
+
+        $attribute = $this->eavConfig->getAttribute('vendor', 'business_type');
+
+        $label = $attribute && $attribute->usesSource()
+            ? $attribute->getSource()->getOptionText($value)
+            : $value;
+
+        $businessTypes[$value] = $label;
+    }
 }
         }
 
