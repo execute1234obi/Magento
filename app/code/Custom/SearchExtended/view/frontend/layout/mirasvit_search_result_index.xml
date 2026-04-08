@@ -1,20 +1,6 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-    <!-- Add sidebars -->
-<referenceContainer name="sidebar.main">
-    <!-- Product (default) sidebar -->
-    <container name="product.sidebar.wrapper" htmlTag="div" htmlId="default-sidebar" htmlClass="sidebar-wrapper">
-        <block class="Magento\LayeredNavigation\Block\Navigation" name="catalog.leftnav" template="Magento_LayeredNavigation::layer/view.phtml"/>
-    </container>
-
-    <!-- Vendor (custom) sidebar -->
-    <container name="vendor.sidebar.wrapper" htmlTag="div" htmlId="vendor-sidebar1" htmlClass="sidebar-wrapper" after="product.sidebar.wrapper">
-        <block class="Custom\SearchExtended\Block\Sidebar\VendorSidebar" name="custom.vendor.sidebar" template="Custom_SearchExtended::sidebar/vendor.phtml"/>
-    </container>
-</referenceContainer>
-
-
         <referenceBlock name="mst.search.result">
             <!-- This block explicitly defines the Vendors tab and ensures it is always present. -->
             <block class="Custom\SearchExtended\Block\Index\Vendors" name="search.result.list.vendors" before="-" cacheable="false">
@@ -24,6 +10,12 @@
                     <argument name="show_always" xsi:type="boolean">true</argument>
                 </arguments>
             </block>
+
+            <block class="Custom\SearchExtended\Block\Index\Vendors"
+                   name="search_filters"
+                   as="search_filters"
+                   template="Magento_CatalogSearch::custom-filters.phtml"
+                   cacheable="false" />
         </referenceBlock>
 
         <!-- Use a different reference to ensure the product block is always configured. -->

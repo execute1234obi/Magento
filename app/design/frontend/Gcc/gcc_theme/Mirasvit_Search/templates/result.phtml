@@ -16,117 +16,349 @@ $productIndex       = false;
 $indexData          = [];
 $aggregations       = $block->getAggregationData();
 $nonce              = CspService::getNonce();
+$searchFiltersHtml  = trim((string) $block->getChildHtml('search_filters'));
+$searchQuery        = trim((string) $block->getRequest()->getParam('q'));
 ?>
-
-<?php if (!empty($aggregations)) : ?>
-    <nav class="mst-search-in__wrapper" role="navigation" aria-labelledby="search-filter-title">
-        <h3 id="search-filter-title" class="mst-search-in__title"><?= $block->escapeHtml(__('Search In')) ?></h3>
-        <ul role="list">
-        <?php foreach ($block->getAggregationData() as $data) : ?>
-            <li role="listitem">
-                <a class="mst-search-in__item" href="<?= $block->escapeUrl($data['url']) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Filter by %1 (%2 results)', $data['name'], $data['count'])) ?>">
-                    <span class="name"><?= $block->escapeHtml($data['name'], ['i']) ?></span>
-                    <span class="count"><?= $block->escapeHtml($data['count']) ?></span>
-                </a>
-            </li>
-        <?php endforeach ?>
-        </ul>
-    </nav>
-<?php endif ?>
-
-<ul class="mst-search__result-tabs" role="tablist" aria-label="<?= $block->escapeHtmlAttr(__('Search result categories')) ?>">
-    <?php foreach ($indexes as $index):
-        if ($index->getIdentifier() == 'catalogsearch_fulltext') {
-            $productIndex = $index;
+<?php if ($searchFiltersHtml !== '') : ?>
+    <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
+            display: grid !important;
+            grid-template-columns: minmax(300px, 30%) minmax(0, 1fr) !important;
+            gap: 40px !important;
+            align-items: start !important;
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 0 auto !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
         }
 
-        $collection                                 = $block->getSearchCollection($index);
-        $size                                       = $collection->getSize();
-        $indexData[$index->getIdentifier()]['size'] = $size;
-        $totalCnt                                   += $size;
-        //commented by vru          
-        // //if ($size == 0) {
-        // if ($size == 0 && $index->getIdentifier() != 'catalogsearch_fulltext') {
-
-        //     continue;
-        // }
-
-        // if ($size < $tabsThreshold && $index->getIdentifier() != 'catalogsearch_fulltext') {
-        //     $lessThanMinIndexes[] = $index;
-        //     continue;
-        // }
-          //commented by vru   
-        if (empty($currentHtml)) {
-            $currentHtml = $block->getContentBlock($index)->toHtml();
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__header {
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 16px auto 28px !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
         }
 
-        $tabsCnt++;
-        if ($index->getTitle() == $block->getCurrentIndex()->getTitle()
-            && $index->getStoreId() == $block->getCurrentIndex()->getStoreId()): ?>
-            <li role="tab" aria-selected="true">
-                <a class="active" href="#" aria-label="<?= $block->escapeHtmlAttr(__('Current tab: %1', $index->getTitle())) ?>">
-                    <?= $block->escapeHtml(__($index->getTitle())) ?>
-                </a>
-            </li>
-        <?php else: ?>
-            <li role="tab" aria-selected="false">
-                <a href="<?= $block->escapeUrl($block->getIndexUrl($index)) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Switch to %1 tab (%2 results)', $index->getTitle(), $size)) ?>">
-                    <?= $block->escapeHtml(__($index->getTitle())) ?> (<?= $block->escapeHtml($size) ?>)
-                </a>
-            </li>
-        <?php endif ?>
-    <?php endforeach ?>
-</ul>
-<!-- commented by vru  -->
-<?php //if ($tabsCnt <= 1): ?>
-    <!-- <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
-        .mst-search__result-tabs {
-            display: none
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__title {
+            margin: 0 !important;
+            color: #111827 !important;
+            font-size: clamp(40px, 4.5vw, 58px) !important;
+            line-height: 1.02 !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.05em !important;
         }
-    </style> -->
-<?php //endif ?>
-<!-- commented by vru  -->
-<?php if ($block->getCurrentIndex()->getIdentifier() == 'catalogsearch_fulltext' &&
-    ($indexData['catalogsearch_fulltext']['size'] > 0 || !empty($lessThanMinIndexes))): ?>
-    <?php if (!empty($lessThanMinIndexes) && $block->getSearchCollection($block->getCurrentIndex())->getCurPage() == 1): ?>
-        <div>
-            <?php foreach ($lessThanMinIndexes as $index): ?>
-                <section class="mst-search__result-index">
-                    <h3 class="mst-search__result-index-title">
-                        <?= $block->escapeHtml(__($index->getTitle())) ?>
-                    </h3>
 
-                    <?= $block->getContentBlock($index)->toHtml() ?>
-                </section>
-            <?php endforeach ?>
-        </div>
-    <?php endif ?>
-                <!-- changes by vru -->
-    <?php if ($block->getCurrentIndexSize() > 0 || $totalCnt == 0): ?>
-        <?php //if ($block->getCurrentIndexSize() > 0): ?>
-        <?= /* @noEscape */ $currentHtml ?>
-    <?php endif ?>
-<?php else : ?>
-     <?= /* @noEscape */ $currentHtml ?>
-<?php endif ?>
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__title-term {
+            display: inline-block !important;
+            color: #111827 !important;
+            font-size: 30px;
+        }
 
-<?php if ($totalCnt == 0): ?>
-    <?= $block->getContentBlock($productIndex)->toHtml(); ?>
-    <?= $block->getLayout()->getBlock("mst.search.no_results")->toHtml(); ?>
-<?php endif ?>
+        body.catalogsearch-result-index .breadcrumbs {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 0 auto 12px !important;
+            padding: 0 16px !important;
+            position: relative !important;
+            z-index: 1 !important;
+            box-sizing: border-box !important;
+        }
 
-<?php if ($block->getCurrentIndexSize() == 0 && $tabsCnt > 1): ?>
-    <div class="message notice">
-        <div><?= $block->escapeHtml(__('Please select other tab to see more results')) ?></div>
-    </div>
-<?php endif ?>
+        body.catalogsearch-result-index .breadcrumbs .items {
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+        }
 
-<?php if ($block->isHighlightingEnabled()): ?>
-    <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
-        require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {
-            let query = '<?= $escaper->escapeUrl($block->getRequest()->getParam('q'))?>';
-            highlight($('.search.results .product-item-link, .mst-search__index a, .mst-search__index .mst-search__index-content'),
-                query, 'mst-search__highlight');
-        });
-    </script>
+        body.catalogsearch-result-index .breadcrumbs .item {
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs a,
+        body.catalogsearch-result-index .breadcrumbs strong {
+            color: #9ca3af !important;
+            font-size: 16px !important;
+            line-height: 1.4 !important;
+            font-weight: 400 !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs a:hover {
+            color: #6b7280 !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs .item:not(:last-child):after {
+            content: "/" !important;
+            color: #d1d5db !important;
+            margin: 0 18px !important;
+            font-size: 16px !important;
+            line-height: 1 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar,
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__main {
+            min-width: 0;
+            box-sizing: border-box;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar {
+            position: relative;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar .sidebar {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs {
+            display: flex !important;
+            align-items: flex-end !important;
+            gap: 28px !important;
+            list-style: none !important;
+            width: 100% !important;
+            margin: 0 0 28px !important;
+            padding: 0 !important;
+            float: none !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            overflow: visible !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs li {
+            float: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a {
+            position: relative !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 14px !important;
+            padding: 0 6px 16px !important;
+            background: transparent !important;
+            border: 0 !important;
+            border-bottom: 3px solid transparent !important;
+            border-radius: 0 !important;
+            color: #6b7280 !important;
+            font-size: 20px !important;
+            line-height: 1.2 !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            box-shadow: none !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a:hover,
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a:focus {
+            color: #1f3f75 !important;
+            background: transparent !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a.active {
+            color: #1f3f75 !important;
+            border-bottom-color: #1f3f75 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__tab-label {
+            display: inline-block !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__tab-count {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-width: 25px !important;
+            height: 25px !important;
+            padding: 0 9px !important;
+            border-radius: 999px !important;
+            background: #b8dcee !important;
+            color: #17386b !important;
+            font-size: 12px !important;
+            line-height: 1 !important;
+            font-weight: 700 !important;
+            flex: 0 0 auto !important;
+            box-sizing: border-box !important;
+        }
+
+        @media (max-width: 767px) {
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
+                display: block !important;
+                max-width: 100% !important;
+                padding: 0 16px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar {
+                margin-bottom: 24px;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__header {
+                margin: 12px auto 22px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__title {
+                font-size: clamp(32px, 9vw, 44px) !important;
+            }
+
+            body.catalogsearch-result-index .breadcrumbs {
+                margin-bottom: 10px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs {
+                gap: 18px !important;
+                margin-bottom: 22px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a {
+                font-size: 17px !important;
+                padding: 0 4px 12px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__tab-count {
+                min-width: 25px !important;
+                height: 25px !important;
+                font-size: 12px !important;
+            }
+        }
+    </style>
 <?php endif; ?>
+<?php if ($searchQuery !== '') : ?>
+    <header class="gcc-search-results__header">
+        <h1 class="gcc-search-results__title">
+            <span class="gcc-search-results__title-term"><?= $block->escapeHtml($searchQuery) ?></span>
+        </h1>
+    </header>
+<?php endif; ?>
+<div class="gcc-search-results<?= $searchFiltersHtml !== '' ? ' gcc-search-results--with-sidebar' : '' ?>">
+    <?php if ($searchFiltersHtml !== '') : ?>
+        <aside class="gcc-search-results__sidebar" aria-label="<?= $block->escapeHtmlAttr(__('Search filters')) ?>">
+            <?= /* @noEscape */ $searchFiltersHtml ?>
+        </aside>
+    <?php endif; ?>
+
+    <section class="gcc-search-results__main">
+        <?php if (!empty($aggregations)) : ?>
+            <nav class="mst-search-in__wrapper" role="navigation" aria-labelledby="search-filter-title">
+                <h3 id="search-filter-title" class="mst-search-in__title"><?= $block->escapeHtml(__('Search In')) ?></h3>
+                <ul role="list">
+                <?php foreach ($block->getAggregationData() as $data) : ?>
+                    <li role="listitem">
+                        <a class="mst-search-in__item" href="<?= $block->escapeUrl($data['url']) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Filter by %1 (%2 results)', $data['name'], $data['count'])) ?>">
+                            <span class="name"><?= $block->escapeHtml($data['name'], ['i']) ?></span>
+                            <span class="count"><?= $block->escapeHtml($data['count']) ?></span>
+                        </a>
+                    </li>
+                <?php endforeach ?>
+                </ul>
+            </nav>
+        <?php endif ?>
+
+        <ul class="mst-search__result-tabs" role="tablist" aria-label="<?= $block->escapeHtmlAttr(__('Search result categories')) ?>">
+            <?php foreach ($indexes as $index):
+                if ($index->getIdentifier() == 'catalogsearch_fulltext') {
+                    $productIndex = $index;
+                }
+
+                $collection                                 = $block->getSearchCollection($index);
+                $size                                       = $collection->getSize();
+                $indexData[$index->getIdentifier()]['size'] = $size;
+                $totalCnt                                   += $size;
+                //commented by vru
+                // //if ($size == 0) {
+                // if ($size == 0 && $index->getIdentifier() != 'catalogsearch_fulltext') {
+
+                //     continue;
+                // }
+
+                // if ($size < $tabsThreshold && $index->getIdentifier() != 'catalogsearch_fulltext') {
+                //     $lessThanMinIndexes[] = $index;
+                //     continue;
+                // }
+                  //commented by vru
+                if (empty($currentHtml)) {
+                    $currentHtml = $block->getContentBlock($index)->toHtml();
+                }
+
+                $tabsCnt++;
+                $showCountBadge = $size > 0;
+                if ($index->getTitle() == $block->getCurrentIndex()->getTitle()
+                    && $index->getStoreId() == $block->getCurrentIndex()->getStoreId()): ?>
+                    <li role="tab" aria-selected="true">
+                        <a class="active" href="#" aria-label="<?= $block->escapeHtmlAttr(__('Current tab: %1', $index->getTitle())) ?>">
+                            <span class="mst-search__tab-label"><?= $block->escapeHtml(__($index->getTitle())) ?></span>
+                            <?php if ($showCountBadge) : ?>
+                                <span class="mst-search__tab-count"><?= $block->escapeHtml($size) ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li role="tab" aria-selected="false">
+                        <a href="<?= $block->escapeUrl($block->getIndexUrl($index)) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Switch to %1 tab (%2 results)', $index->getTitle(), $size)) ?>">
+                            <span class="mst-search__tab-label"><?= $block->escapeHtml(__($index->getTitle())) ?></span>
+                            <?php if ($showCountBadge) : ?>
+                                <span class="mst-search__tab-count"><?= $block->escapeHtml($size) ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                <?php endif ?>
+            <?php endforeach ?>
+        </ul>
+        <!-- commented by vru  -->
+        <?php //if ($tabsCnt <= 1): ?>
+            <!-- <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+                .mst-search__result-tabs {
+                    display: none
+                }
+            </style> -->
+        <?php //endif ?>
+        <!-- commented by vru  -->
+        <?php if ($block->getCurrentIndex()->getIdentifier() == 'catalogsearch_fulltext' &&
+            ($indexData['catalogsearch_fulltext']['size'] > 0 || !empty($lessThanMinIndexes))): ?>
+            <?php if (!empty($lessThanMinIndexes) && $block->getSearchCollection($block->getCurrentIndex())->getCurPage() == 1): ?>
+                <div>
+                    <?php foreach ($lessThanMinIndexes as $index): ?>
+                        <section class="mst-search__result-index">
+                            <h3 class="mst-search__result-index-title">
+                                <?= $block->escapeHtml(__($index->getTitle())) ?>
+                            </h3>
+
+                            <?= $block->getContentBlock($index)->toHtml() ?>
+                        </section>
+                    <?php endforeach ?>
+                </div>
+            <?php endif ?>
+                        <!-- changes by vru -->
+            <?php if ($block->getCurrentIndexSize() > 0 || $totalCnt == 0): ?>
+                <?php //if ($block->getCurrentIndexSize() > 0): ?>
+                <?= /* @noEscape */ $currentHtml ?>
+            <?php endif ?>
+        <?php else : ?>
+             <?= /* @noEscape */ $currentHtml ?>
+        <?php endif ?>
+
+        <?php if ($totalCnt == 0): ?>
+            <?= $block->getContentBlock($productIndex)->toHtml(); ?>
+            <?= $block->getLayout()->getBlock("mst.search.no_results")->toHtml(); ?>
+        <?php endif ?>
+
+        <?php if ($block->getCurrentIndexSize() == 0 && $tabsCnt > 1): ?>
+            <div class="message notice">
+                <div><?= $block->escapeHtml(__('Please select other tab to see more results')) ?></div>
+            </div>
+        <?php endif ?>
+
+        <?php if ($block->isHighlightingEnabled()): ?>
+            <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
+                require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {
+                    let query = '<?= $escaper->escapeUrl($block->getRequest()->getParam('q'))?>';
+                    highlight($('.search.results .product-item-link, .mst-search__index a, .mst-search__index .mst-search__index-content'),
+                        query, 'mst-search__highlight');
+                });
+            </script>
+        <?php endif; ?>
+    </section>
+</div>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      layout="2columns-left"
+      layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
 
@@ -19,40 +19,15 @@
         <referenceBlock name="catalog.compare.sidebar" remove="true" />
         <referenceBlock name="wishlist_sidebar" remove="true" />
 
-        <!-- Left Sidebar -->
-          <referenceContainer name="sidebar.main">
-         <block class="Magento\LayeredNavigation\Block\Navigation"
-                   name="catalogsearch.leftnav"
-                   template="Magento_LayeredNavigation::layer/view.phtml"
-                   before="-">
+        <move element="breadcrumbs" destination="content" before="-" />
 
-                <block class="Magento\LayeredNavigation\Block\Navigation\State"
-                       name="catalogsearch.navigation.state"
-                       as="state" />
-
-                <block class="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"
-                       name="catalogsearch.navigation.renderer"
-                       as="renderer"
-                       template="Magento_LayeredNavigation::layer/filter.phtml">
-                    <arguments>
-                        <argument name="product_layer_view_model" xsi:type="object">
-                            Magento\LayeredNavigation\ViewModel\Layer\Filter
-                        </argument>
-                    </arguments>
-                </block>
-            </block>
-
-                <!-- Custom Vendor Sidebar -->
-            <container name="vendors.sidebar.wrapper"
-                       htmlTag="div"
-                       htmlId="vendor-sidebar"
-                       htmlClass="sidebar-wrapper"
-                       after="product.sidebar.wrapper">
-                <block class="Custom\SearchExtended\Block\Index\Vendors"
-                       name="custom.search.filters"
-                       template="Magento_CatalogSearch::custom-filters.phtml" />
-            </container>
-        </referenceContainer>
+        <referenceBlock name="mst.search.result">
+            <block class="Custom\SearchExtended\Block\Index\Vendors"
+                   name="search_filters"
+                   as="search_filters"
+                   template="Magento_CatalogSearch::custom-filters.phtml"
+                   cacheable="false" />
+        </referenceBlock>
 
         <!-- Main Content Area -->
         <referenceContainer name="content">
