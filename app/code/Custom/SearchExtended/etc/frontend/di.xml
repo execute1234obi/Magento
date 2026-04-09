@@ -13,4 +13,10 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Catalog\Helper\Product\ProductList">
+        <plugin name="custom_searchextended_search_pagination"
+                type="Custom\SearchExtended\Plugin\Catalog\ProductList"
+                sortOrder="10"/>
+    </type>
 </config>

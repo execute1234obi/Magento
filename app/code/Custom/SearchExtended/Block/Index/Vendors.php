@@ -185,12 +185,29 @@ class Vendors extends Template
     {
         $pager = $this->getChildBlock('pager');
 
+        if (!$pager) {
+            $pager = $this->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class);
+            if ($pager) {
+                $pager->setTemplate('Magento_Theme::html/pager.phtml');
+                $pager->setShowPerPage(true);
+            }
+        }
+
         if ($pager) {
             $pager->setCollection($this->getSearchCollection());
             return $pager->toHtml();
         }
 
         return '';
+    }
+
+    /**
+     * Backward compatible alias used by the vendor template.
+     * @return string
+     */
+    public function getPagerHtml()
+    {
+        return $this->getPager();
     }
 
     /**
