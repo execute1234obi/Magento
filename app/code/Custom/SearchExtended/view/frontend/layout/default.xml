@@ -6,7 +6,15 @@
             <!-- <block class="Custom\SearchExtended\Block\Vnecoms\Vendors" -->
             <block class="Custom\SearchExtended\Block\Index\Vendors"
                    name="vnecoms_vendors"
-                   template="Custom_SearchExtended::index/vnecoms/vendors/vendors.phtml"/>
+                   template="Custom_SearchExtended::index/vnecoms/vendors/vendors.phtml">
+                <block class="Magento\Theme\Block\Html\Pager"
+                       name="pager"
+                       as="pager">
+                    <arguments>
+                        <argument name="template" xsi:type="string">Magento_Theme::html/pager.phtml</argument>
+                    </arguments>
+                </block>
+            </block>
         </referenceBlock>
 
          <!-- This is the block for the autocomplete dropdown. -->

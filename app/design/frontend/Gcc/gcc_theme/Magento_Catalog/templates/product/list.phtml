@@ -2,10 +2,15 @@
 /** @var \Magento\Catalog\Block\Product\ListProduct $block */
 $_productCollection = $block->getLoadedProductCollection();
 $_imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+$request = $block->getRequest();
+$isSearchPage = $request && $request->getFullActionName() === 'catalogsearch_result_index';
 
 /* Toolbar (pagination/sort) */
-$toolbarBlock = $block->getLayout()->getBlock('product_list_toolbar');
-if ($toolbarBlock) { $toolbarBlock->setCollection($_productCollection); echo $toolbarBlock->toHtml(); }
+$toolbarBlock = $block->getToolbarBlock();
+$toolbarBlock->setCollection($_productCollection);
+if (!$isSearchPage) {
+    echo $toolbarBlock->toHtml();
+}
 
 /* Vendor/brand helpers */
 $om = \Magento\Framework\App\ObjectManager::getInstance();
@@ -20,6 +25,7 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
 <?php if (!$_productCollection->getSize()): ?>
     <div><?= $block->escapeHtml(__('No products found.')) ?></div>
 <?php else: ?>
+    <div class="products wrapper search-products-wrapper">
     <div class="u-grid">
     <?php foreach ($_productCollection as $_product): ?>
         
@@ -114,12 +120,13 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
         </article>
     <?php endforeach; ?>
     </div>
+    </div>
 
-    <?php if ($toolbarBlock) echo $toolbarBlock->toHtml(); ?>
+    <?= $block->getChildBlock('toolbar')->setIsBottom(true)->toHtml() ?>
 <?php endif; ?>
 
 <style>
-.u-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); }
+.u-grid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; max-width: 100%; min-width: 0; }
 .u-card { background:#fff; border:1px solid #e6edf7; border-radius:14px; padding:16px; position:relative; display:flex; flex-direction:column; box-shadow:0 1px 0 rgba(16,24,40,.02); transition: box-shadow .18s ease, transform .18s ease; }
 .u-card:hover { box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-2px); }
 .u-imgbox { position:relative; border-radius:12px; background:#f6f8ff; height:170px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:14px; }
@@ -145,6 +152,94 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 .price-from,
 .price-label {
     display: none !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .u-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .u-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .u-card {
+    min-width: 0;
+    padding: 14px;
+  }
+
+  .u-imgbox {
+    height: 150px;
+    margin-bottom: 12px;
+  }
+
+  .u-title {
+    font-size: 16px;
+    min-height: auto;
+  }
+
+  .u-price {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .u-cta {
+    height: 44px;
+    font-size: 15px;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 18px;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products .modes,
+  body.catalogsearch-result-index .toolbar.toolbar-products .toolbar-amount,
+  body.catalogsearch-result-index .toolbar.toolbar-products .sorter {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    float: none;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products .modes {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products .sorter {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products .sorter-options {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products .sorter-action {
+    align-self: flex-start;
+  }
 }
 </style>
 

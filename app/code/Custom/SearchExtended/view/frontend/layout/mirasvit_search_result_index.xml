@@ -6,9 +6,16 @@
             <block class="Custom\SearchExtended\Block\Index\Vendors" name="search.result.list.vendors" before="-" cacheable="false">
                 <arguments>
                     <argument name="title" xsi:type="string" translate="true">Vendors</argument>
-                    <argument name="template" xsi:type="string">Custom_SearchExtended::index/vendors.phtml</argument>
+                    <argument name="template" xsi:type="string">Custom_SearchExtended::index/vnecoms/vendors/vendors.phtml</argument>
                     <argument name="show_always" xsi:type="boolean">true</argument>
                 </arguments>
+                <block class="Magento\Theme\Block\Html\Pager"
+                       name="pager"
+                       as="pager">
+                    <arguments>
+                        <argument name="template" xsi:type="string">Magento_Theme::html/pager.phtml</argument>
+                    </arguments>
+                </block>
             </block>
 
             <block class="Custom\SearchExtended\Block\Index\Vendors"
