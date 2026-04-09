@@ -17,8 +17,9 @@ body * {
     /* font-weight: bold !important; */
 }
 
+body.customer-account-index .page-main,
 body.customer-account .page-main {
-    padding-top: 150px !important;
+    padding-top: 160px !important;
 }
 
 /* Headings */

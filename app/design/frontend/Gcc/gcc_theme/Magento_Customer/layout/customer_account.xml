@@ -3,8 +3,23 @@
     <head>
         <css src="css/customer-dashboard.css"/>
         <style>
-        .page-main {
-            padding-top: 150px !important;
+        body.customer-account-index .page-main,
+        body.customer-account .page-main {
+            padding-top: 160px !important;
+        }
+
+        @media (max-width: 768px) {
+            body.customer-account-index .page-main,
+            body.customer-account .page-main {
+                padding-top: 140px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body.customer-account-index .page-main,
+            body.customer-account .page-main {
+                padding-top: 120px !important;
+            }
         }
         </style>
     </head>
