@@ -12,6 +12,7 @@
         <link src="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap"
               src_type="url" />
               <css src="css/rtl.css"/>
+              <css src="css/search-pager.css"/>
 
               <!-- <css src="css/rtl.css" media="all" ifconfig="general/locale/code = ar_SA"/> -->
               <!-- <css src="css/rtl.css" media="all"/> -->

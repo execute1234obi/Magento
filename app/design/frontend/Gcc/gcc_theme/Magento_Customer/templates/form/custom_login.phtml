@@ -245,9 +245,11 @@ html[lang="ar"] .page-wrapper {
             <span class="eye-icon" id="toggle-password">👁️‍🗨️</span>
         </div>
 
-        <div class="forgot-password">
-            <a href="{{store url='customer/account/forgotpassword'}}"><?= __('Forgot Your Password?') ?></a>
-        </div>
+       <div class="forgot-password">
+    <a href="<?= $block->getForgotPasswordUrl() ?>">
+        <?= __('Forgot Your Password?') ?>
+    </a>
+</div>
 
         <br />
         <button type="submit" class="submit-btn"><?= __('Sign In') ?></button>

@@ -113,6 +113,30 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   [class*="__item"] + [class*="__item"] { border-top:1px solid #f1f3f7; margin-top:10px; padding-top:10px; }
 
   @media (max-width:768px){
+    .search-container{
+      width: calc(100% - 12px);
+      margin: 12px auto 8px;
+    }
+    .search-wrap{
+      margin-bottom: 8px;
+    }
+    .search-bar{
+      height: 48px;
+      border-radius: 12px;
+    }
+    .search-icon{
+      left: 14px;
+      width: 18px;
+      height: 18px;
+    }
+    .search-input{
+      font-size: 14px;
+      padding: 0 56px 0 42px !important;
+    }
+    .shortcut{
+      right: 14px;
+      font-size: 12px;
+    }
     .ms-grid{ grid-template-columns:1fr; gap:12px; }
     .ms-col, .ms-full{ max-height:unset; }
   }
@@ -153,82 +177,83 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   </div>
 </div>
 
+
 <script>
-  // Shortcut setup
-  (function(){
-    const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
-    document.getElementById('shortcutHint').textContent = isMac ? '⌘K' : 'Ctrl K';
+require(['jquery'], function ($) {
 
-    document.addEventListener('keydown', (e) => {
-      const key = e.key.toLowerCase();
-      if ((isMac && e.metaKey && key === 'k') || (!isMac && e.ctrlKey && key === 'k')) {
-        e.preventDefault();
-        document.getElementById('search').focus();
-      }
-    });
-  })();
+  const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+  $('#shortcutHint').text(isMac ? '⌘K' : 'Ctrl K');
 
-  // Mirasvit autocomplete layout enhancement
-  (function () {
-    const txt = el => (el && (el.innerText || el.textContent) || '').trim().toLowerCase();
+  // ✅ THE "FORCE SUBMIT" FIX (Delegated Event)
+  // Hum document par event sun rahe hain taaki Mirasvit ise ignore na kar sake
+  $(document).on('keydown', '#search', function (e) {
+    if (e.key === 'Enter') {
+        const value = $(this).val().trim();
+        
+        // 1. Agar list khuli hai aur arrow keys se kuch select kiya hai, toh plugin ko kaam karne dein
+        const isAutocompleteOpen = $('.mst-search-autocomplete__wrapper:visible').length > 0;
+        const hasSelection = $('.mst-search-autocomplete__item.-active').length > 0;
 
-    function findHost(wrapper){
-      return wrapper.querySelector('[class*="__blocks"]')
-          || wrapper.querySelector('[class*="__content"]')
-          || wrapper;
+        if (isAutocompleteOpen && hasSelection) {
+            return true; 
+        }
+
+        // 2. FORCE REDIRECT (Bypass everything)
+        if (value) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            // Magento ka search URL base
+            const baseUrl = window.location.origin + '/catalogsearch/result/';
+            window.location.href = baseUrl + '?q=' + encodeURIComponent(value);
+            
+            return false;
+        }
     }
-
-    function findBlocks(host){
-      let blocks = Array.from(host.children).filter(n => n.className && String(n.className).includes('__block'));
-      if (!blocks.length) blocks = Array.from(host.querySelectorAll('[class*="__block"]'));
-      return blocks;
-    }
-
-    function buildTwoColumns(wrapper){
-      if (!wrapper) return;
-      const host = findHost(wrapper);
-      const blocks = findBlocks(host);
-      if (!blocks.length || host.querySelector('.ms-grid')) return;
-
-      const grid  = document.createElement('div'); grid.className = 'ms-grid';
-      const left  = document.createElement('div'); left.className = 'ms-col';
-      const right = document.createElement('div'); right.className = 'ms-col';
-      const full  = document.createElement('div'); full.className = 'ms-full';
-
-      blocks.forEach(block => {
-        const title = block.querySelector('[class*="__title"]');
-        const t = txt(title);
-        if (t.includes('vendor')) left.appendChild(block);
-        else if (t.includes('product')) right.appendChild(block);
-        else full.appendChild(block);
-      });
-
-      grid.append(left, right, full);
-      host.innerHTML = ''; host.appendChild(grid);
-    }
-
-    function enhanceAll(){
-      document.querySelectorAll('.mst-search-autocomplete__wrapper').forEach(buildTwoColumns);
-    }
-
-    const input = document.getElementById('search');
-    if (input) ['focus','input','keyup'].forEach(ev => input.addEventListener(ev, () => setTimeout(enhanceAll, 50)));
-
-    const mo = new MutationObserver(() => enhanceAll());
-    mo.observe(document.body, { childList:true, subtree:true });
-
-    enhanceAll();
-  })();
-
-  // Hide duplicate Mirasvit overlays
-  require(['jquery'], function($) {
-    $(document).ready(function() {
-      function hideAutocomplete() {
-        $('.mst-search-autocomplete__typeahead-overlay').hide();
-      }
-      hideAutocomplete();
-      const observer = new MutationObserver(hideAutocomplete);
-      observer.observe(document.body, { childList: true, subtree: true });
-    });
   });
+
+  // Shortcut key (Ctrl+K / Cmd+K)
+  $(document).on('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          $('#search').focus();
+      }
+  });
+
+  // --- AAPKA EXISTING COLUMN LOGIC (UNCHANGED) ---
+  function txt(el) { return (el && (el.innerText || el.textContent) || '').trim().toLowerCase(); }
+  function findHost(wrapper){ return wrapper.querySelector('[class*="__blocks"]') || wrapper.querySelector('[class*="__content"]') || wrapper; }
+  function findBlocks(host){
+    let blocks = Array.from(host.children).filter(n => n.className && String(n.className).includes('__block'));
+    if (!blocks.length) blocks = Array.from(host.querySelectorAll('[class*="__block"]'));
+    return blocks;
+  }
+  function buildTwoColumns(wrapper){
+    if (!wrapper || wrapper.querySelector('.ms-grid')) return;
+    const host = findHost(wrapper);
+    const blocks = findBlocks(host);
+    if (!blocks.length) return;
+    const grid = document.createElement('div'); grid.className = 'ms-grid';
+    const left = document.createElement('div'); left.className = 'ms-col';
+    const right = document.createElement('div'); right.className = 'ms-col';
+    const full = document.createElement('div'); full.className = 'ms-full';
+    blocks.forEach(block => {
+      const t = txt(block.querySelector('[class*="__title"]'));
+      if (t.includes('vendor')) left.appendChild(block);
+      else if (t.includes('product')) right.appendChild(block);
+      else full.appendChild(block);
+    });
+    grid.append(left, right, full);
+    host.innerHTML = ''; host.appendChild(grid);
+  }
+
+  const enhanceAll = () => { $('.mst-search-autocomplete__wrapper').each(function(){ buildTwoColumns(this); }); };
+  $('#search').on('focus input keyup', () => setTimeout(enhanceAll, 50));
+  new MutationObserver(enhanceAll).observe(document.body, { childList: true, subtree: true });
+
+  // Hide Overlay
+  const hideAuto = () => $('.mst-search-autocomplete__typeahead-overlay').hide();
+  new MutationObserver(hideAuto).observe(document.body, { childList: true, subtree: true });
+  hideAuto();
+});
 </script>

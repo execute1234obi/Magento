@@ -8,6 +8,8 @@ use Magento\Framework\App\RequestInterface;
 use Vnecoms\Vendors\Model\ResourceModel\Vendor\CollectionFactory as VendorCollectionFactory;
 use Vnecoms\VendorsPage\Helper\Data as VendorsPageHelper;
 use Business\VendorsVerification\Helper\Data as VendorsVerificationHelper;
+use Magento\Directory\Model\CountryFactory;
+use Magento\Eav\Model\Config as EavConfig;
 
 class Vendors extends Template
 {
@@ -31,19 +33,26 @@ class Vendors extends Template
      */
     private $vendorsVerificationHelper;
 
+    private $countryFactory;
+    private $eavConfig;
+
     public function __construct(
         Context $context,
         VendorCollectionFactory $vendorCollectionFactory,
         RequestInterface $request,
         VendorsPageHelper $vendorsPageHelper,
         VendorsVerificationHelper $vendorsVerificationHelper,
+        CountryFactory $countryFactory,
+        EavConfig $eavConfig,
         array $data = []
     ) {
         $this->vendorCollectionFactory = $vendorCollectionFactory;
         $this->request = $request;
         $this->vendorsPageHelper = $vendorsPageHelper;
         $this->vendorsVerificationHelper = $vendorsVerificationHelper;
-        
+        $this->countryFactory = $countryFactory;
+        $this->eavConfig = $eavConfig;
+
         parent::__construct($context, $data);
     }
 
@@ -176,12 +185,29 @@ class Vendors extends Template
     {
         $pager = $this->getChildBlock('pager');
 
+        if (!$pager) {
+            $pager = $this->getLayout()->createBlock(\Magento\Theme\Block\Html\Pager::class);
+            if ($pager) {
+                $pager->setTemplate('Magento_Theme::html/pager.phtml');
+                $pager->setShowPerPage(true);
+            }
+        }
+
         if ($pager) {
             $pager->setCollection($this->getSearchCollection());
             return $pager->toHtml();
         }
 
         return '';
+    }
+
+    /**
+     * Backward compatible alias used by the vendor template.
+     * @return string
+     */
+    public function getPagerHtml()
+    {
+        return $this->getPager();
     }
 
     /**
@@ -234,12 +260,40 @@ public function getFilterData()
         $businessTypes = [];
 
         foreach ($collection as $vendor) {
-            $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
+           // $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
+           if ($vendor->getCountryId()) {
+    $countryCode = $vendor->getCountryId();
+
+    if (!isset($vendorCountries[$countryCode])) {
+        try {
+            $country = $this->countryFactory->create()->loadByCode($countryCode);
+            $countryName = $country->getName();
+        } catch (\Exception $e) {
+            $countryName = $countryCode;
+        }
+
+        $vendorCountries[$countryCode] = $countryName;
+    }
+}
             $isVerified = $this->isVerifiedVendor($vendor->getId());
             $vendorVerifieds[$isVerified ? 1 : 0] = $isVerified ? 'Verified' : 'Unverified';
-            if ($vendor->getBusinessType()) {
-                $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
-            }
+            // if ($vendor->getBusinessType()) {
+            //     $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
+            // }
+         if ($vendor->getBusinessType()) {
+    $value = $vendor->getBusinessType();
+
+    if (!isset($businessTypes[$value])) {
+
+        $attribute = $this->eavConfig->getAttribute('vendor', 'business_type');
+
+        $label = $attribute && $attribute->usesSource()
+            ? $attribute->getSource()->getOptionText($value)
+            : $value;
+
+        $businessTypes[$value] = $label;
+    }
+}
         }
 
         return [

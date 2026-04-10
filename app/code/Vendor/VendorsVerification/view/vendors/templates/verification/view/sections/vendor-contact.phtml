@@ -1,154 +1,135 @@
 <?php
-//echo "vru";
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification */
+
 $vendorVerification = $block->getVendorVerification();
 
 if (!$vendorVerification || !$vendorVerification->getId()) {
     return;
 }
 
-$verificationId = $vendorVerification->getId();
-
-/** Section Data */
+$verificationId = (int)$vendorVerification->getId();
 $verificationData = $block->getVerificationSectionData(
     $verificationId,
     \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT
 );
-//echo '<pre>';
-//print_r($verificationData->getData());
-/** SAFE defaults */
-$detail_id     = 0;
-$arrData       = [];
-$contact_name  = '';
-$contact_phone = '';
-$contact_email = '';
-$status        = null;
 
-if ($verificationData) {
-    $detail_id = (int)$verificationData->getDetailId();
-    $status    = $verificationData->getStatus();
+if (!$verificationData || !$verificationData->getId()) {
+    return;
+}
 
-    $vendorData = $verificationData->getData('vendor_data');
-    if ($vendorData) {
-      $arrData = $block->convertVerificationData(
-            $verificationData->getData('vendor_data')
-        );
+$detail_id = (int)$verificationData->getDetailId();
+$arrData = $block->convertVerificationData($verificationData->getData('vendor_data'));
 
-        // $contact_name  = $arrData['contact_name']  ?? '';
-        // $contact_phone = $arrData['phone'] ?? '';
-        // $contact_email = $arrData['email'] ?? '';
-        $contact_name  = $arrData['contact_name'] ?? '';
+$contact_name  = $arrData['contact_name'] ?? '';
 $contact_phone = $arrData['contact_phone'] ?? '';
 $contact_email = $arrData['contact_email'] ?? '';
+$status        = $verificationData->getStatus();
 
-    }
-}
+$commentsCount = $detail_id
+    ? (int)$block->getCommentsCounts(
+        $verificationId,
+        $detail_id,
+        \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT
+    )
+    : 0;
 ?>
 
-<div class="header">
-    <h2><?php echo __('Business Contact') ?></h2>
+<section class="verification-card verification-card--section verification-card--contact">
+    <div class="verification-card__head">
+        <h3><?= __('Business Contact') ?></h3>
 
-    <?php if ($status == \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
-        <div class="verificaiton-edit">
+        <div class="verification-card__actions">
+            <?php if ($status == \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__RESUBMIT): ?>
+                <button type="button"
+                        class="verification-edit verification-action-button verification-action-button--edit"
+                        data-modal-id="verification-contact-modal">
+                    <i class="fa fa-pencil"></i>
+                    <span><?= __('Edit') ?></span>
+                </button>
+            <?php endif; ?>
+
             <button type="button"
-                    class="btn btn-default btn-flat pull-right fa fa-pencil verification-edit"
-                    data-modal-id="verification-contact-modal">
-                <span><?php echo __('Edit') ?></span>
+                    class="verification-showcomment verification-comments-link"
+                    data-verificationid="<?= $verificationId ?>"
+                    data-verifidtlid="<?= $detail_id ?>"
+                    data-verifigroupid="<?= \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT ?>">
+                <i class="fa fa-comment"></i>
+                <span><?= __('%1 Comments', $commentsCount) ?></span>
             </button>
         </div>
-    <?php endif; ?>
+    </div>
 
-    <?php
-    $commentsCount = 0;
-    if ($detail_id) {
-        $commentsCount = $block->getCommentsCounts(
-            $verificationId,
-            $detail_id,
-            \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT
-        );
-    }
-    ?>
+    <div class="verification-card__body">
+        <table class="verification-table">
+            <tbody>
+                <tr>
+                    <td><?= __('Status') ?></td>
+                    <td><?= $status ? $block->getStatusLabel($status) : __('Not Submitted'); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Contact Name') ?></td>
+                    <td><?= $contact_name; ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Phone') ?></td>
+                    <td><?= $contact_phone; ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Email') ?></td>
+                    <td><?= $contact_email; ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
 
-    <button type="button"
-            class="btn btn-link pull-right verification-showcomment"
-            data-verificationid="<?php echo $verificationId; ?>"
-            data-verifidtlid="<?php echo $detail_id; ?>"
-            data-verifigroupid="<?php echo \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT; ?>">
-        <i class="fa fa-comment"></i>
-        <span><?php echo __('%1 Comments', $commentsCount); ?></span>
-    </button>
-</div>
-
-<div class="verification-tbl">
-<table class="table table-striped">
-<tbody>
-<tr>
-    <td><?php echo __('Status') ?></td>
-    <td><?php echo $status ? $block->getStatusLabel($status) : __('Not Submitted'); ?></td>
-</tr>
-<tr>
-    <td><?php echo __('Contact Name') ?></td>
-    <td><?php echo $contact_name; ?></td>
-</tr>
-<tr>
-    <td><?php echo __('Phone') ?></td>
-    <td><?php echo $contact_phone; ?></td>
-</tr>
-<tr>
-    <td><?php echo __('Email') ?></td>
-    <td><?php echo $contact_email; ?></td>
-</tr>
-</tbody>
-</table>
-</div>
-
-<!-- EDIT FORM -->
 <div id="verification-contact-modal" style="display:none;">
-<form class="form verification"
-      action="<?php echo $block->getEditActionUrl(
-          $verificationId,
-          $detail_id,
-          \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT
-      ); ?>"
-      method="post"
-      data-mage-init='{"validation":{}}'>
- <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" />
-    <legend class="legend"><span><?php echo __('Business Contact') ?></span></legend><br/>
+    <form class="form verification"
+          action="<?php echo $block->getEditActionUrl(
+              $verificationId,
+              $detail_id,
+              \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT
+          ); ?>"
+          method="post"
+          data-mage-init='{"validation":{}}'>
+        <input type="hidden" name="form_key" value="<?= $block->getFormKey() ?>" />
+        <legend class="legend"><span><?php echo __('Business Contact') ?></span></legend><br/>
 
-    <div class="row g-3">
-        <div class="col-md-6">
-            <label for="contact-name"><?php echo __('Contact Name') ?></label>
-            <input name="contact_name" id="contact-name"
-                   value="<?php echo $contact_name; ?>"
-                   class="input-text"
-                   type="text"
-                   data-validate="{required:true}" />
-        </div>
-    </div>
-
-    <div class="row g-3">
-        <div class="col-md-6">
-            <label for="contact-phone"><?php echo __('Phone') ?></label>
-            <input name="contact_phone" id="contact-phone"
-                   value="<?php echo $contact_phone; ?>"
-                   class="input-text"
-                   type="text"
-                   data-validate="{required:true}" />
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="contact-name"><?php echo __('Contact Name') ?></label>
+                <input name="contact_name" id="contact-name"
+                       value="<?php echo $contact_name; ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true}" />
+            </div>
         </div>
 
-        <div class="col-md-6">
-            <label for="contact-email"><?php echo __('Email') ?></label>
-            <input name="contact_email" id="contact-email"
-                   value="<?php echo $block->escapeHtml($contact_email); ?>"
-                   class="input-text"
-                   type="text"
-                   data-validate="{required:true,'validate-email':true}" />
-        </div>
-    </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label for="contact-phone"><?php echo __('Phone') ?></label>
+                <input name="contact_phone" id="contact-phone"
+                       value="<?php echo $contact_phone; ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true}" />
+            </div>
 
-    <div class="page-main-actions">
-        <button type="submit" class="btn btn-primary">
-            <?php echo __('Update'); ?>
-        </button>
-    </div>
-</form>
+            <div class="col-md-6">
+                <label for="contact-email"><?php echo __('Email') ?></label>
+                <input name="contact_email" id="contact-email"
+                       value="<?php echo $block->escapeHtml($contact_email); ?>"
+                       class="input-text"
+                       type="text"
+                       data-validate="{required:true,'validate-email':true}" />
+            </div>
+        </div>
+
+        <div class="page-main-actions">
+            <button type="submit" class="btn btn-primary">
+                <?php echo __('Update'); ?>
+            </button>
+        </div>
+    </form>
 </div>

@@ -71,8 +71,8 @@
        template="Magento_Catalog::product/list/related.phtml"
        after="custom.product.detail"/> -->
 
-       <block class="Magento\Catalog\Block\Product\ProductList\Related"
-       name="catalog.product.related"
+       <block class="Gcc\VendorProductOverride\Block\Product\SameVendorProducts"
+       name="catalog.product.samevendor"
        template="Magento_Catalog::product/list/related.phtml"
        after="custom.product.detail">
 
@@ -80,6 +80,23 @@
         <argument name="view_model" xsi:type="object">
             Gcc\VendorProductOverride\ViewModel\ProductData
         </argument>
+        <argument name="carousel_id" xsi:type="string">samevendor-carousel</argument>
+        <argument name="block_title" xsi:type="string">Other Products from the Same Vendor</argument>
+    </arguments>
+
+</block>
+
+       <block class="Magento\Catalog\Block\Product\ProductList\Related"
+       name="catalog.product.related"
+       template="Magento_Catalog::product/list/related.phtml"
+       after="catalog.product.samevendor">
+
+    <arguments>
+        <argument name="view_model" xsi:type="object">
+            Gcc\VendorProductOverride\ViewModel\ProductData
+        </argument>
+        <argument name="carousel_id" xsi:type="string">related-carousel</argument>
+        <argument name="block_title" xsi:type="string">Similar Products</argument>
     </arguments>
 
 </block>

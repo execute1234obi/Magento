@@ -16,117 +16,901 @@ $productIndex       = false;
 $indexData          = [];
 $aggregations       = $block->getAggregationData();
 $nonce              = CspService::getNonce();
+$searchFiltersHtml  = trim((string) $block->getChildHtml('search_filters'));
+$searchQuery        = trim((string) $block->getRequest()->getParam('q'));
 ?>
-
-<?php if (!empty($aggregations)) : ?>
-    <nav class="mst-search-in__wrapper" role="navigation" aria-labelledby="search-filter-title">
-        <h3 id="search-filter-title" class="mst-search-in__title"><?= $block->escapeHtml(__('Search In')) ?></h3>
-        <ul role="list">
-        <?php foreach ($block->getAggregationData() as $data) : ?>
-            <li role="listitem">
-                <a class="mst-search-in__item" href="<?= $block->escapeUrl($data['url']) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Filter by %1 (%2 results)', $data['name'], $data['count'])) ?>">
-                    <span class="name"><?= $block->escapeHtml($data['name'], ['i']) ?></span>
-                    <span class="count"><?= $block->escapeHtml($data['count']) ?></span>
-                </a>
-            </li>
-        <?php endforeach ?>
-        </ul>
-    </nav>
-<?php endif ?>
-
-<ul class="mst-search__result-tabs" role="tablist" aria-label="<?= $block->escapeHtmlAttr(__('Search result categories')) ?>">
-    <?php foreach ($indexes as $index):
-        if ($index->getIdentifier() == 'catalogsearch_fulltext') {
-            $productIndex = $index;
+<?php if ($searchFiltersHtml !== '') : ?>
+    <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        body.catalogsearch-result-index {
+            width: 100% !important;
+            max-width: 100% !important;
+            overflow-x: hidden !important;
         }
 
-        $collection                                 = $block->getSearchCollection($index);
-        $size                                       = $collection->getSize();
-        $indexData[$index->getIdentifier()]['size'] = $size;
-        $totalCnt                                   += $size;
-        //commented by vru          
-        // //if ($size == 0) {
-        // if ($size == 0 && $index->getIdentifier() != 'catalogsearch_fulltext') {
-
-        //     continue;
-        // }
-
-        // if ($size < $tabsThreshold && $index->getIdentifier() != 'catalogsearch_fulltext') {
-        //     $lessThanMinIndexes[] = $index;
-        //     continue;
-        // }
-          //commented by vru   
-        if (empty($currentHtml)) {
-            $currentHtml = $block->getContentBlock($index)->toHtml();
+        body.catalogsearch-result-index .page-wrapper,
+        body.catalogsearch-result-index .page-main,
+        body.catalogsearch-result-index .columns,
+        body.catalogsearch-result-index .column.main {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box !important;
         }
 
-        $tabsCnt++;
-        if ($index->getTitle() == $block->getCurrentIndex()->getTitle()
-            && $index->getStoreId() == $block->getCurrentIndex()->getStoreId()): ?>
-            <li role="tab" aria-selected="true">
-                <a class="active" href="#" aria-label="<?= $block->escapeHtmlAttr(__('Current tab: %1', $index->getTitle())) ?>">
-                    <?= $block->escapeHtml(__($index->getTitle())) ?>
-                </a>
-            </li>
-        <?php else: ?>
-            <li role="tab" aria-selected="false">
-                <a href="<?= $block->escapeUrl($block->getIndexUrl($index)) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Switch to %1 tab (%2 results)', $index->getTitle(), $size)) ?>">
-                    <?= $block->escapeHtml(__($index->getTitle())) ?> (<?= $block->escapeHtml($size) ?>)
-                </a>
-            </li>
-        <?php endif ?>
-    <?php endforeach ?>
-</ul>
-<!-- commented by vru  -->
-<?php //if ($tabsCnt <= 1): ?>
-    <!-- <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
-        .mst-search__result-tabs {
-            display: none
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
+            display: grid !important;
+            grid-template-columns: minmax(300px, 30%) minmax(0, 1fr) !important;
+            gap: clamp(24px, 3vw, 40px) !important;
+            align-items: start !important;
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 0 auto !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
+            min-width: 0 !important;
         }
-    </style> -->
-<?php //endif ?>
-<!-- commented by vru  -->
-<?php if ($block->getCurrentIndex()->getIdentifier() == 'catalogsearch_fulltext' &&
-    ($indexData['catalogsearch_fulltext']['size'] > 0 || !empty($lessThanMinIndexes))): ?>
-    <?php if (!empty($lessThanMinIndexes) && $block->getSearchCollection($block->getCurrentIndex())->getCurPage() == 1): ?>
-        <div>
-            <?php foreach ($lessThanMinIndexes as $index): ?>
-                <section class="mst-search__result-index">
-                    <h3 class="mst-search__result-index-title">
-                        <?= $block->escapeHtml(__($index->getTitle())) ?>
-                    </h3>
 
-                    <?= $block->getContentBlock($index)->toHtml() ?>
-                </section>
-            <?php endforeach ?>
-        </div>
-    <?php endif ?>
-                <!-- changes by vru -->
-    <?php if ($block->getCurrentIndexSize() > 0 || $totalCnt == 0): ?>
-        <?php //if ($block->getCurrentIndexSize() > 0): ?>
-        <?= /* @noEscape */ $currentHtml ?>
-    <?php endif ?>
-<?php else : ?>
-     <?= /* @noEscape */ $currentHtml ?>
-<?php endif ?>
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__header {
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 16px auto 28px !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
+            min-width: 0 !important;
+        }
 
-<?php if ($totalCnt == 0): ?>
-    <?= $block->getContentBlock($productIndex)->toHtml(); ?>
-    <?= $block->getLayout()->getBlock("mst.search.no_results")->toHtml(); ?>
-<?php endif ?>
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__title {
+            margin: 0 !important;
+            color: #111827 !important;
+            font-size: clamp(40px, 4.5vw, 58px) !important;
+            line-height: 1.02 !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.05em !important;
+        }
 
-<?php if ($block->getCurrentIndexSize() == 0 && $tabsCnt > 1): ?>
-    <div class="message notice">
-        <div><?= $block->escapeHtml(__('Please select other tab to see more results')) ?></div>
-    </div>
-<?php endif ?>
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__title-term {
+            display: inline-block !important;
+            color: #111827 !important;
+            font-size: 30px;
+        }
 
-<?php if ($block->isHighlightingEnabled()): ?>
-    <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
-        require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {
-            let query = '<?= $escaper->escapeUrl($block->getRequest()->getParam('q'))?>';
-            highlight($('.search.results .product-item-link, .mst-search__index a, .mst-search__index .mst-search__index-content'),
-                query, 'mst-search__highlight');
-        });
-    </script>
+        body.catalogsearch-result-index .breadcrumbs {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 0 auto 12px !important;
+            padding: 0 16px !important;
+            position: relative !important;
+            z-index: 1 !important;
+            box-sizing: border-box !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs .items {
+            margin: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs .item {
+            display: inline-flex !important;
+            align-items: center !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs a,
+        body.catalogsearch-result-index .breadcrumbs strong {
+            color: #9ca3af !important;
+            font-size: 16px !important;
+            line-height: 1.4 !important;
+            font-weight: 400 !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs a:hover {
+            color: #6b7280 !important;
+        }
+
+        body.catalogsearch-result-index .breadcrumbs .item:not(:last-child):after {
+            content: "/" !important;
+            color: #d1d5db !important;
+            margin: 0 18px !important;
+            font-size: 16px !important;
+            line-height: 1 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar,
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__main {
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar {
+            position: relative;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar .sidebar {
+            width: 100%;
+            max-width: 100%;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs {
+            display: flex !important;
+            align-items: flex-end !important;
+            gap: 28px !important;
+            list-style: none !important;
+            width: 100% !important;
+            margin: 0 0 28px !important;
+            padding: 0 !important;
+            float: none !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            overflow: visible !important;
+            min-width: 0 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs li {
+            float: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a {
+            position: relative !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 14px !important;
+            padding: 0 6px 16px !important;
+            background: transparent !important;
+            border: 0 !important;
+            border-bottom: 3px solid transparent !important;
+            border-radius: 0 !important;
+            color: #6b7280 !important;
+            font-size: 20px !important;
+            line-height: 1.2 !important;
+            font-weight: 700 !important;
+            text-decoration: none !important;
+            box-shadow: none !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a:hover,
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a:focus {
+            color: #1f3f75 !important;
+            background: transparent !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a.active {
+            color: #1f3f75 !important;
+            border-bottom-color: #1f3f75 !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__tab-label {
+            display: inline-block !important;
+        }
+
+        html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__tab-count {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            min-width: 25px !important;
+            height: 25px !important;
+            padding: 0 9px !important;
+            border-radius: 999px !important;
+            background: #b8dcee !important;
+            color: #17386b !important;
+            font-size: 12px !important;
+            line-height: 1 !important;
+            font-weight: 700 !important;
+            flex: 0 0 auto !important;
+            box-sizing: border-box !important;
+        }
+
+        @media (max-width: 767px) {
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
+                display: grid !important;
+                grid-template-columns: minmax(0, 1fr) !important;
+                gap: 22px !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                padding: 0 16px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__sidebar {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__main {
+                width: 100% !important;
+                min-width: 0 !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__header {
+                margin: 12px auto 22px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results__title {
+                font-size: clamp(32px, 9vw, 44px) !important;
+            }
+
+            body.catalogsearch-result-index .breadcrumbs {
+                margin-bottom: 10px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs {
+                gap: 18px !important;
+                margin-bottom: 22px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__result-tabs a {
+                font-size: 17px !important;
+                padding: 0 4px 12px !important;
+            }
+
+            html:not([lang="ar"]) body.catalogsearch-result-index .mst-search__tab-count {
+                min-width: 25px !important;
+                height: 25px !important;
+                font-size: 12px !important;
+            }
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] {
+            display: grid !important;
+            grid-template-columns: minmax(0, 1fr) auto !important;
+            align-items: center !important;
+            gap: 24px !important;
+            width: 100% !important;
+            margin: 40px 0 0 !important;
+            padding-top: 24px !important;
+            border-top: 1px solid #e5e7eb !important;
+            box-sizing: border-box !important;
+            clear: both !important;
+            min-width: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter {
+            grid-column: 1 !important;
+            justify-self: start !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            margin: 0 !important;
+            min-width: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter .limiter-label {
+            color: #1f2937 !important;
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            line-height: 1.2 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter .limiter-options {
+            appearance: auto !important;
+            -webkit-appearance: auto !important;
+            -moz-appearance: auto !important;
+            min-width: 94px !important;
+            height: 56px !important;
+            padding: 0 18px !important;
+            border: 1px solid #dbe3f0 !important;
+            border-radius: 14px !important;
+            background: #fff !important;
+            color: #1f2937 !important;
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            outline: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner {
+            grid-column: 2 !important;
+            justify-self: end !important;
+            display: flex !important;
+            align-items: center !important;
+            width: auto !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .toolbar-amount,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-label {
+            display: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages {
+            float: none !important;
+            width: auto !important;
+            margin: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-items {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 8px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+            flex-wrap: nowrap !important;
+            white-space: nowrap !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .item {
+            margin: 0 !important;
+            padding: 0 !important;
+            flex: 0 0 auto !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .page,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .action,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .disabled {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+            min-height: 56px !important;
+            border: 1px solid #dbe3f0 !important;
+            border-radius: 12px !important;
+            background: #fff !important;
+            color: #6b7280 !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .page {
+            width: 56px !important;
+            min-width: 56px !important;
+            padding: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .action,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .disabled {
+            min-width: 132px !important;
+            padding: 0 18px !important;
+            gap: 10px !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled {
+            min-width: 152px !important;
+            padding: 0 20px !important;
+            gap: 10px !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .item.current .page {
+            background: #1f3f75 !important;
+            border-color: #1f3f75 !important;
+            color: #fff !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .page .label,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .action .label,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .disabled .label {
+            display: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a::before,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled::before {
+            content: "\2039" !important;
+            font-size: 24px !important;
+            line-height: 1 !important;
+            font-weight: 400 !important;
+            color: inherit !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a::after,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled::after {
+            content: "\203A" !important;
+            font-size: 24px !important;
+            line-height: 1 !important;
+            font-weight: 400 !important;
+            color: inherit !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled,
+        body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled {
+            opacity: 1 !important;
+            color: #8b93a5 !important;
+            border-color: #dbe3f0 !important;
+            background: #f8fafc !important;
+        }
+
+        @media (max-width: 767px) {
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] {
+                grid-template-columns: minmax(0, 1fr) !important;
+                gap: 16px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter,
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner {
+                grid-column: 1 !important;
+                justify-self: stretch !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter {
+                justify-content: space-between !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter .limiter-label {
+                font-size: 16px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .limiter .limiter-options {
+                min-width: 84px !important;
+                height: 44px !important;
+                font-size: 15px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner {
+                justify-content: flex-end !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .pages-items {
+                flex-wrap: wrap !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .action,
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .disabled {
+                min-width: 112px !important;
+                height: 44px !important;
+                padding: 0 14px !important;
+                font-size: 14px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main [data-search-toolbar="bottom"] > .pager--search-inner .page {
+                width: 44px !important;
+                min-width: 44px !important;
+                height: 44px !important;
+                font-size: 14px !important;
+            }
+        }
+    </style>
+    <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] {
+            display: grid !important;
+            grid-template-columns: minmax(0, auto) minmax(0, 1fr) !important;
+            align-items: center !important;
+            gap: 24px !important;
+            width: 100% !important;
+            margin: 40px 0 0 !important;
+            padding-top: 24px !important;
+            border-top: 1px solid #e5e7eb !important;
+            box-sizing: border-box !important;
+            clear: both !important;
+            min-width: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter {
+            grid-column: 1 !important;
+            justify-self: start !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 16px !important;
+            margin: 0 !important;
+            min-width: 0 !important;
+            white-space: nowrap !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .limiter-label {
+            color: #1f2937 !important;
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            line-height: 1.2 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .limiter-options {
+            appearance: auto !important;
+            -webkit-appearance: auto !important;
+            -moz-appearance: auto !important;
+            min-width: 94px !important;
+            height: 56px !important;
+            padding: 0 18px !important;
+            border: 1px solid #dbe3f0 !important;
+            border-radius: 14px !important;
+            background: #fff !important;
+            color: #1f2937 !important;
+            font-size: 18px !important;
+            font-weight: 500 !important;
+            outline: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+            grid-column: 2 !important;
+            justify-self: end !important;
+            display: flex !important;
+            align-items: center !important;
+            width: auto !important;
+            min-width: 0 !important;
+            margin: 0 !important;
+            float: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-label,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .toolbar-amount {
+            display: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-items {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-end !important;
+            gap: 8px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .item {
+            margin: 0 !important;
+            padding: 0 !important;
+            flex: 0 0 auto !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled {
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            box-sizing: border-box !important;
+            min-height: 56px !important;
+            border: 1px solid #dbe3f0 !important;
+            border-radius: 12px !important;
+            background: #fff !important;
+            color: #6b7280 !important;
+            font-size: 16px !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+            white-space: nowrap !important;
+            line-height: 1 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page {
+            width: 56px !important;
+            min-width: 56px !important;
+            padding: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled {
+            min-width: 148px !important;
+            padding: 0 18px !important;
+            gap: 10px !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .item.current .page {
+            background: #1f3f75 !important;
+            border-color: #1f3f75 !important;
+            color: #fff !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page .label,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action .label,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled .label {
+            display: none !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a::before,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled::before {
+            content: "\2039" !important;
+            font-size: 24px !important;
+            line-height: 1 !important;
+            font-weight: 400 !important;
+            color: inherit !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a::after,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled::after {
+            content: "\203A" !important;
+            font-size: 24px !important;
+            line-height: 1 !important;
+            font-weight: 400 !important;
+            color: inherit !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+            min-width: 148px !important;
+            padding: 0 18px !important;
+            gap: 10px !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+            opacity: 1 !important;
+            color: #8b93a5 !important;
+            border-color: #dbe3f0 !important;
+            background: #f8fafc !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+            background: #fff !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled {
+            color: #9aa3b2 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+            color: #1f2937 !important;
+        }
+
+        @media (max-width: 767px) {
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] {
+                grid-template-columns: minmax(0, 1fr) !important;
+                gap: 16px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter,
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                grid-column: 1 !important;
+                justify-self: stretch !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter {
+                justify-content: space-between !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .limiter-label {
+                font-size: 16px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .limiter-options {
+                min-width: 84px !important;
+                height: 44px !important;
+                font-size: 15px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                justify-content: flex-end !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-items {
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action,
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled {
+                min-width: 112px !important;
+                height: 44px !important;
+                padding: 0 14px !important;
+                font-size: 14px !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page {
+                width: 44px !important;
+                min-width: 44px !important;
+                height: 44px !important;
+                font-size: 14px !important;
+            }
+        }
+    </style>
+    <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            gap: 24px !important;
+            flex-wrap: nowrap !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter {
+            order: 1 !important;
+            flex: 0 0 auto !important;
+            margin: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+            order: 2 !important;
+            flex: 0 0 auto !important;
+            margin: 0 0 0 auto !important;
+            float: none !important;
+            width: auto !important;
+            max-width: none !important;
+            min-width: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-items {
+            justify-content: flex-end !important;
+            flex-wrap: nowrap !important;
+            width: auto !important;
+            max-width: none !important;
+        }
+
+        @media (max-width: 767px) {
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] {
+                flex-wrap: wrap !important;
+                justify-content: flex-start !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter,
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                width: 100% !important;
+            }
+
+            body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                margin-left: 0 !important;
+                justify-content: flex-end !important;
+            }
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter {
+            width: auto !important;
+            max-width: none !important;
+            min-width: 0 !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a,
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+            overflow: visible !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a > span:not(.label),
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled > span:not(.label),
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a > span:not(.label),
+        body.catalogsearch-result-index .gcc-search-results__main .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled > span:not(.label) {
+            display: inline-block !important;
+            position: static !important;
+            font-size: 16px !important;
+            line-height: 1 !important;
+            font-weight: 500 !important;
+            white-space: nowrap !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+    </style>
 <?php endif; ?>
+<?php if ($searchQuery !== '') : ?>
+    <header class="gcc-search-results__header">
+        <h1 class="gcc-search-results__title">
+            <span class="gcc-search-results__title-term"><?= $block->escapeHtml($searchQuery) ?></span>
+        </h1>
+    </header>
+<?php endif; ?>
+<div class="gcc-search-results<?= $searchFiltersHtml !== '' ? ' gcc-search-results--with-sidebar' : '' ?>">
+    <?php if ($searchFiltersHtml !== '') : ?>
+        <aside class="gcc-search-results__sidebar" aria-label="<?= $block->escapeHtmlAttr(__('Search filters')) ?>">
+            <?= /* @noEscape */ $searchFiltersHtml ?>
+        </aside>
+    <?php endif; ?>
+
+    <section class="gcc-search-results__main">
+        <?php if (!empty($aggregations)) : ?>
+            <nav class="mst-search-in__wrapper" role="navigation" aria-labelledby="search-filter-title">
+                <h3 id="search-filter-title" class="mst-search-in__title"><?= $block->escapeHtml(__('Search In')) ?></h3>
+                <ul role="list">
+                <?php foreach ($block->getAggregationData() as $data) : ?>
+                    <li role="listitem">
+                        <a class="mst-search-in__item" href="<?= $block->escapeUrl($data['url']) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Filter by %1 (%2 results)', $data['name'], $data['count'])) ?>">
+                            <span class="name"><?= $block->escapeHtml($data['name'], ['i']) ?></span>
+                            <span class="count"><?= $block->escapeHtml($data['count']) ?></span>
+                        </a>
+                    </li>
+                <?php endforeach ?>
+                </ul>
+            </nav>
+        <?php endif ?>
+
+        <ul class="mst-search__result-tabs" role="tablist" aria-label="<?= $block->escapeHtmlAttr(__('Search result categories')) ?>">
+            <?php foreach ($indexes as $index):
+                if ($index->getIdentifier() == 'catalogsearch_fulltext') {
+                    $productIndex = $index;
+                }
+
+                $collection                                 = $block->getSearchCollection($index);
+                $size                                       = $collection->getSize();
+                $indexData[$index->getIdentifier()]['size'] = $size;
+                $totalCnt                                   += $size;
+                //commented by vru
+                // //if ($size == 0) {
+                // if ($size == 0 && $index->getIdentifier() != 'catalogsearch_fulltext') {
+
+                //     continue;
+                // }
+
+                // if ($size < $tabsThreshold && $index->getIdentifier() != 'catalogsearch_fulltext') {
+                //     $lessThanMinIndexes[] = $index;
+                //     continue;
+                // }
+                  //commented by vru
+                if (empty($currentHtml)) {
+                    $currentHtml = $block->getContentBlock($index)->toHtml();
+                }
+
+                $tabsCnt++;
+                $showCountBadge = $size > 0;
+                if ($index->getTitle() == $block->getCurrentIndex()->getTitle()
+                    && $index->getStoreId() == $block->getCurrentIndex()->getStoreId()): ?>
+                    <li role="tab" aria-selected="true">
+                        <a class="active" href="#" aria-label="<?= $block->escapeHtmlAttr(__('Current tab: %1', $index->getTitle())) ?>">
+                            <span class="mst-search__tab-label"><?= $block->escapeHtml(__($index->getTitle())) ?></span>
+                            <?php if ($showCountBadge) : ?>
+                                <span class="mst-search__tab-count"><?= $block->escapeHtml($size) ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li role="tab" aria-selected="false">
+                        <a href="<?= $block->escapeUrl($block->getIndexUrl($index)) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Switch to %1 tab (%2 results)', $index->getTitle(), $size)) ?>">
+                            <span class="mst-search__tab-label"><?= $block->escapeHtml(__($index->getTitle())) ?></span>
+                            <?php if ($showCountBadge) : ?>
+                                <span class="mst-search__tab-count"><?= $block->escapeHtml($size) ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </li>
+                <?php endif ?>
+            <?php endforeach ?>
+        </ul>
+        <!-- commented by vru  -->
+        <?php //if ($tabsCnt <= 1): ?>
+            <!-- <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+                .mst-search__result-tabs {
+                    display: none
+                }
+            </style> -->
+        <?php //endif ?>
+        <!-- commented by vru  -->
+        <?php if ($block->getCurrentIndex()->getIdentifier() == 'catalogsearch_fulltext' &&
+            ($indexData['catalogsearch_fulltext']['size'] > 0 || !empty($lessThanMinIndexes))): ?>
+            <?php if (!empty($lessThanMinIndexes) && $block->getSearchCollection($block->getCurrentIndex())->getCurPage() == 1): ?>
+                <div>
+                    <?php foreach ($lessThanMinIndexes as $index): ?>
+                        <section class="mst-search__result-index">
+                            <h3 class="mst-search__result-index-title">
+                                <?= $block->escapeHtml(__($index->getTitle())) ?>
+                            </h3>
+
+                            <?= $block->getContentBlock($index)->toHtml() ?>
+                        </section>
+                    <?php endforeach ?>
+                </div>
+            <?php endif ?>
+                        <!-- changes by vru -->
+            <?php if ($block->getCurrentIndexSize() > 0 || $totalCnt == 0): ?>
+                <?php //if ($block->getCurrentIndexSize() > 0): ?>
+                <?= /* @noEscape */ $currentHtml ?>
+            <?php endif ?>
+        <?php else : ?>
+             <?= /* @noEscape */ $currentHtml ?>
+        <?php endif ?>
+
+        <?php if ($totalCnt == 0): ?>
+            <?= $block->getContentBlock($productIndex)->toHtml(); ?>
+            <?= $block->getLayout()->getBlock("mst.search.no_results")->toHtml(); ?>
+        <?php endif ?>
+
+        <?php if ($block->getCurrentIndexSize() == 0 && $tabsCnt > 1): ?>
+            <div class="message notice">
+                <div><?= $block->escapeHtml(__('Please select other tab to see more results')) ?></div>
+            </div>
+        <?php endif ?>
+
+        <?php if ($block->isHighlightingEnabled()): ?>
+            <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
+                require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {
+                    let query = '<?= $escaper->escapeUrl($block->getRequest()->getParam('q'))?>';
+                    highlight($('.search.results .product-item-link, .mst-search__index a, .mst-search__index .mst-search__index-content'),
+                        query, 'mst-search__highlight');
+                });
+            </script>
+        <?php endif; ?>
+    </section>
+</div>

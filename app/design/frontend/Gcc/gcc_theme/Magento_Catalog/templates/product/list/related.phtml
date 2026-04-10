@@ -1,354 +1,705 @@
 <?php
 /** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
 $items = $block->getItems();
-
-/** ViewModel */
 $viewModel = $block->getData('view_model');
+$carouselId = $block->getData('carousel_id') ?: 'related-carousel';
+$blockTitle = $block->getData('block_title') ?: __('Similar Products');
+$itemCount = is_countable($items) ? count($items) : 0;
+$wrapperClass = $carouselId === 'related-carousel'
+    ? 'gcc-carousel-shell gcc-carousel-shell--related'
+    : 'gcc-carousel-shell';
 ?>
 
-<?php if (!empty($items)): ?>
-  <div class="top-28">
-<div id="related-carousel" class="block related">
-  <div class="block-title">
-    <strong><?= __('Similar Products'); ?></strong>
-    <div class="rp-arrows">
-      <button class="rp-nav rp-prev" type="button" aria-label="<?= $block->escapeHtml(__('Previous')) ?>">‹</button>
-      <button class="rp-nav rp-next" type="button" aria-label="<?= $block->escapeHtml(__('Next')) ?>">›</button>
-    </div>
-  </div>
-
-  <div class="block-content">
-    <div class="rp-viewport">
-      <div class="rp-track">
-        <?php foreach ($items as $_item): ?>
-          <?php
-            $imgUrl = $block->getImage($_item, 'category_page_list')->getImageUrl();
-            $brand  = $_item->getAttributeText('manufacturer');
-
-            /** ViewModel se data */
-            $vendorData = $viewModel ? $viewModel->getVendorData($_item) : [];
-            $vendorName = $vendorData['name'] ?? '';
-            $country    = $vendorData['country'] ?? '';
-            $countryCode = $vendorData['country_code'] ?? '';
-            $priceHtml = $block->getProductPrice($_item);
-          ?>
-          <div class="rp-slide">
-            <article class="rp-card">
-              <a class="rp-thumb" href="<?= $_item->getProductUrl(); ?>">
-                <img src="<?= $imgUrl; ?>" alt="<?= $block->escapeHtml($_item->getName()); ?>">
-                <button class="rp-like" type="button" aria-label="<?= $block->escapeHtml(__('Save')) ?>">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
-                  </svg>
+<?php if ($itemCount): ?>
+<section class="<?= $block->escapeHtmlAttr($wrapperClass) ?>">
+    <div id="<?= $block->escapeHtmlAttr($carouselId) ?>" class="gcc-carousel">
+        <div class="gcc-carousel__header">
+            <h2 class="gcc-carousel__title"><?= $block->escapeHtml($blockTitle); ?></h2>
+            <div class="gcc-carousel__controls" aria-label="<?= $block->escapeHtmlAttr(__('Carousel controls')); ?>">
+                <button class="gcc-carousel__nav gcc-carousel__prev" type="button" aria-label="<?= $block->escapeHtmlAttr(__('Previous')); ?>">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M15 19l-7-7 7-7" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
                 </button>
-              </a>
+                <button class="gcc-carousel__nav gcc-carousel__next" type="button" aria-label="<?= $block->escapeHtmlAttr(__('Next')); ?>">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
 
-              <div class="rp-body">
-                <h3 class="rp-name">
-                  <a href="<?= $_item->getProductUrl(); ?>">
-                    <?= $block->escapeHtml($_item->getName()); ?>
-                  </a>
-                </h3>
+        <div class="gcc-carousel__viewport">
+            <div class="gcc-carousel__track">
+                <?php foreach ($items as $_item): ?>
+                    <?php
+                        $imgUrl = $block->getImage($_item, 'product_page_image_large')->getImageUrl();
 
-                <div class="rp-price-line">
-                  <span class="rp-price"><?= $priceHtml; ?></span>
-                  <!-- <span class="rp-per">/ 1 <?= __("pcs") ?></span> -->
-                </div>
+                        $brandValue = $_item->getAttributeText('manufacturer');
+                        if (is_array($brandValue)) {
+                            $brandValue = implode(', ', $brandValue);
+                        }
+                        $brand = trim((string) $brandValue);
 
-                <hr class="rp-divider">
+                        $vendorData = $viewModel ? $viewModel->getVendorData($_item) : [];
+                        $vendorName = trim((string) ($vendorData['name'] ?? ''));
+                        $country = trim((string) ($vendorData['country'] ?? ''));
+                        $countryCode = trim((string) ($vendorData['country_code'] ?? ''));
+                        $displayName = $vendorName ?: $brand;
+                        $priceHtml = $block->getProductPrice($_item);
+                    ?>
 
-                <?php if ($brand || $vendorName): ?>
-                  <div class="rp-meta">
-                    <span class="rp-brand">
-                      <?= $block->escapeHtml($vendorName ?: $brand); ?>
-                    </span>
-                    <span class="rp-verified" aria-label="verified">
-                      <svg viewBox="0 0 24 24" width="16" height="16">
-                        <path fill="#2A6FE3" d="M12 2l2.4 2 3-.7 1 2.9 2.9 1-1 2.9 2 2.4-2 2.4 1 2.9-2.9 1-1 2.9-3-.7L12 22l-2.4-2-3 .7-1-2.9-2.9-1 1-2.9L2 12l2-2.4-1-2.9 2.9-1 1-2.9 3 .7L12 2zm-1.2 12.7l5-5-1.4-1.4-3.6 3.6-1.6-1.6-1.4 1.4 3 3z"/>
-                      </svg>
-                    </span>
-                  </div>
-                <?php endif; ?>
+                    <div class="gcc-carousel__slide">
+                        <article class="gcc-card">
+                            <div class="gcc-card__media">
+                                <a class="gcc-card__image-link"
+                                   href="<?= $block->escapeUrl($_item->getProductUrl()); ?>"
+                                   aria-label="<?= $block->escapeHtmlAttr($_item->getName()); ?>">
+                                    <img src="<?= $block->escapeUrl($imgUrl); ?>"
+                                         alt="<?= $block->escapeHtmlAttr($_item->getName()); ?>"
+                                         loading="lazy"
+                                         decoding="async">
+                                </a>
 
-                <?php if ($country): 
-                 ?>
-                  <div class="rp-meta">
-                    <span class="rp-country-chip">
-                     
-                      <span class="rp-flag" data-code="<?= $countryCode ?>" aria-hidden="true"></span>
-                      <span class="rp-country"><?= $block->escapeHtml($country); ?></span>
-                    </span>
-                  </div>
-                <?php endif; ?>
+                                <button class="gcc-card__wish" type="button" aria-label="<?= $block->escapeHtmlAttr(__('Save')); ?>">
+                                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                                    </svg>
+                                </button>
+                            </div>
 
-              </div>
+                            <div class="gcc-card__body">
+                                <h3 class="gcc-card__name">
+                                    <a href="<?= $block->escapeUrl($_item->getProductUrl()); ?>">
+                                        <?= $block->escapeHtml($_item->getName()); ?>
+                                    </a>
+                                </h3>
+                                 <?php $price = (float)$_item->getFinalPrice(); ?>
+                                
+                                <div class="gcc-card__price">
+                                   <?php if ($price > 0): ?>
+                                        <span class="gcc-card__price-amount"><?= /* @noEscape */ $priceHtml; ?></span>
+                                    <?php else: ?>
+                                        <span class="gcc-card__price-amount" style="visibility:hidden;">0</span>
+                                    <?php endif; ?>
+                                </div>
+                                
+                                <hr class="gcc-card__divider">
 
-              <div class="rp-foot">
-                 <!-- request quote functionality -->
-                
-            <button class="rp-btn add-to-quote"
-                data-product-id="<?= $_item->getId(); ?>"
-                type="button">
-                <?= __('Add to Quote') ?>
-            </button>
-              </div>
-            </article>
-          </div>
-        <?php endforeach; ?>
-      </div>
+                                <?php if ($displayName !== ''): ?>
+                                    <div class="gcc-card__brand-line">
+                                        <span class="gcc-card__brand-name"><?= $block->escapeHtml($displayName); ?></span>
+                                        <span class="gcc-card__verified" title="<?= $block->escapeHtmlAttr(__('Verified vendor')); ?>">
+                                            <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                                                <circle cx="10" cy="10" r="10" fill="#2A6FE3"></circle>
+                                                <path d="M8.2 12.9 5.9 10.6l-1.1 1.1 3.4 3.4 6-6-1.1-1.1z" fill="#fff"></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                <?php endif; ?>
+
+                                <?php if ($country): ?>
+                                    <div class="gcc-card__country-line">
+                                        <?php if ($countryCode): ?>
+                                            <span class="gcc-card__flag"
+                                                  data-code="<?= $block->escapeHtmlAttr($countryCode); ?>"
+                                                  aria-hidden="true"></span>
+                                        <?php endif; ?>
+                                        <span class="gcc-card__country-name"><?= $block->escapeHtml($country); ?></span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="gcc-card__footer">
+                                <button class="gcc-card__quote add-to-quote"
+                                        data-product-id="<?= (int) $_item->getId(); ?>"
+                                        type="button">
+                                    <?= $block->escapeHtml(__('Add to Quote')); ?>
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-</div>
+</section>
 <?php endif; ?>
 
-</br></br>
-
 <style>
-  .top-28{
-    background: white;
-    border-radius: 12px;
+.gcc-carousel-shell {
+    --gcc-carousel-blue: #2A6FE3;
+    --gcc-carousel-blue-soft: #CFE0FF;
+    --gcc-carousel-surface: #F4F6FA;
+    --gcc-carousel-card: #E3EBFF;
+    --gcc-carousel-divider: #EDF2F7;
+    --gcc-carousel-text: #0F172A;
+    --gcc-carousel-muted: #64748B;
+}
+
+.gcc-carousel-shell {
     margin-top: 28px;
-    padding-top: 14px;
-    padding-left: 21px;
-    padding-right: 21px;
-  }
-:root{
-  --rp-blue-600:#2A6FE3;
-  --rp-blue-500:#4585F0;
-  --rp-blue-200:#CFE0FF;
-  --rp-blue-150:#E6EEFF;
-  --rp-slab:#F4F6FA;           /* image background */
-  --rp-card-border:#E3EBFF;    /* card border like ref */
-  --rp-divider:#EDF2F7;
-  --rp-text:#0F172A;
-  --rp-muted:#64748B;
-  --rp-card-radius:14px;
 }
 
-/* Title + chevrons (right-aligned) */
-#related-carousel .block-title{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:12px
-}
-#related-carousel .rp-arrows{display:flex;gap:10px}
-#related-carousel .rp-nav{
-  width:32px;height:32px;border-radius:10px;background:#fff;
-  border:1.5px solid var(--rp-blue-150); color:var(--rp-blue-600);
-  display:grid;place-items:center;font-size:18px;line-height:0;cursor:pointer;
-  box-shadow:0 2px 6px rgba(16,24,40,.06); transition:transform .12s, box-shadow .12s
-}
-#related-carousel .rp-nav:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(16,24,40,.08)}
-#related-carousel .rp-nav[disabled]{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
-
-/* Carousel layout (unchanged behavior) */
-#related-carousel .rp-viewport{position:relative;overflow:hidden}
-#related-carousel .rp-track{
-  display:flex;gap:16px; padding:4px 2px 8px;
-  overflow:auto; scroll-behavior:smooth; scroll-snap-type:x mandatory;
-}
-#related-carousel .rp-track::-webkit-scrollbar{height:8px}
-#related-carousel .rp-track::-webkit-scrollbar-thumb{background:#e9eef9;border-radius:8px}
-#related-carousel .rp-slide{ flex:0 0 340px; max-width:340px; scroll-snap-align:start }
-
-/* Card shell — lighter border and round corners like the ref */
-#related-carousel .rp-card{
-  display:flex;flex-direction:column;background:#fff;width:100%;
-  border:1.5px solid var(--rp-card-border);
-  border-radius:12px; overflow:hidden;
-  transition:border-color .15s, box-shadow .15s
-}
-#related-carousel .rp-card:hover{
-  border-color:var(--rp-blue-200);
-  box-shadow:0 10px 28px rgba(16,24,40,.10)
+.gcc-carousel-shell--related {
+    margin-bottom: 56px;
 }
 
-/* Image slab */
-#related-carousel .rp-thumb{
-  position:relative; display:block; margin:16px 16px 0;
-  border-radius:12px; background:var(--rp-slab); padding:16px; aspect-ratio:4/3
-}
-#related-carousel .rp-thumb img{ width:100%; height:100%; object-fit:contain }
-
-/* Heart like the design: white fill, blue outline, blue icon */
-#related-carousel .rp-like{
-  position:absolute; top:10px; right:10px;
-  width:34px;height:34px;border-radius:10px;background:#fff;
-  border:1.6px solid var(--rp-blue-200); color:var(--rp-blue-600);
-  display:grid;place-items:center; box-shadow:0 2px 8px rgba(16,24,40,.05);
-  cursor:pointer; transition:background .12s,border-color .12s
-}
-#related-carousel .rp-like:hover{ background:#F7FAFF; border-color:var(--rp-blue-500) }
-#related-carousel .rp-like svg{ stroke:currentColor }
-
-/* Body */
-#related-carousel .rp-body{ padding:14px 18px 0 }
-#related-carousel .rp-name{
-  margin:0 0 10px;
-  font:800 16px/1.35 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-}
-#related-carousel .rp-name a{ color:var(--rp-text); text-decoration:none }
-#related-carousel .rp-name a:hover{ text-decoration:underline }
-
-/* Price row like the ref (amount regular weight; muted “/ 1 pcs”) */
-#related-carousel .rp-price-line{ display:flex; align-items:baseline; gap:6px; margin-bottom:12px }
-#related-carousel .rp-price .price{ font-size:16px !important; font-weight:600 !important; color:#1F2937 !important }
-#related-carousel .rp-per{ font-size:13px; color:var(--rp-muted) }
-
-/* Divider thinner and lighter */
-#related-carousel .rp-divider{ border:0; border-top:1px solid var(--rp-divider); margin:6px 0 10px }
-
-/* Brand + verified */
-#related-carousel .rp-meta{ display:flex; align-items:center; gap:8px; margin:6px 0 }
-#related-carousel .rp-brand{ font-weight:800; color:#111827; font-size:14px }
-
-/* Country chip (green badge like the reference) */
-#related-carousel .rp-country-chip{
-  display:inline-flex; align-items:center; gap:8px;
-  padding:6px 10px; border-radius:10px;
-  background:#F3FBF3; border:1px solid #DCEFE0; color:#14532D;
-  font-weight:700; font-size:14px;
-}
-#related-carousel .rp-flag{
-  width: 26px;
-  height: 18px;
-  min-width: 26px;
-  min-height: 18px;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
-  border-radius: 3px;
-}
-/* Footer button (outlined blue) */
-#related-carousel .rp-foot{ padding:12px 16px 16px; margin-top:auto }
-#related-carousel .rp-btn{
-  width:100%; height:42px; border-radius:12px;
-  background:#fff; color:var(--rp-blue-600);
-  border:1.6px solid var(--rp-blue-200); font-weight:800; font-size:14px; cursor:pointer;
-  transition:background .12s, border-color .12s, box-shadow .12s
-}
-#related-carousel .rp-btn:hover{
-  background:#EEF5FF; border-color:#BCD4FF; box-shadow:0 4px 12px rgba(37,99,235,.12)
+.gcc-carousel {
+    width: 100%;
 }
 
-/* Small screens: one card per view */
-@media (max-width:420px){
-  #related-carousel .rp-slide{ flex-basis:100%; max-width:100% }
+.gcc-carousel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
 }
 
+.gcc-carousel__title {
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--gcc-carousel-text);
+}
+
+.gcc-carousel__controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.gcc-carousel__nav {
+    width: 26px;
+    height: 26px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: var(--gcc-carousel-blue);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: none;
+    padding: 0;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+}
+
+.gcc-carousel__nav svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+}
+
+.gcc-carousel__nav:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.gcc-carousel__nav:disabled {
+    opacity: 0.42;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.gcc-carousel__viewport {
+    overflow: hidden;
+}
+
+.gcc-carousel__track {
+    display: flex;
+    gap: 16px;
+    padding: 4px 2px 8px;
+    overflow: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.gcc-carousel__track::-webkit-scrollbar {
+    height: 0;
+}
+
+.gcc-carousel__slide {
+    flex: 0 0 calc((100% - 32px) / 3);
+    max-width: calc((100% - 32px) / 3);
+    min-width: 0;
+    scroll-snap-align: start;
+    display: flex;
+}
+
+.gcc-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border: 1px solid #DCE7FF;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(16, 24, 40, 0.03);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.gcc-card:hover {
+    border-color: #CFE0FF;
+    box-shadow: 0 10px 28px rgba(16, 24, 40, 0.08);
+    transform: translateY(-1px);
+}
+
+.gcc-card__media {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 14px 14px 0;
+    border-radius: 12px;
+    background: #F4F5F8;
+    padding: 14px;
+    height: 220px;
+    min-height: 220px;
+    overflow: hidden;
+}
+
+.gcc-card__image-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.gcc-card__image-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+.gcc-card__wish {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    border: 1px solid #D8E4FF;
+    background: #fff;
+    color: var(--gcc-carousel-blue);
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.gcc-card__wish svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.gcc-card__wish:hover {
+    background: #F7FAFF;
+    border-color: #BFD4FF;
+    transform: translateY(-1px);
+}
+
+.gcc-card__body {
+    padding: 12px 16px 0;
+    min-width: 0;
+}
+
+.gcc-card__name {
+    margin: 0 0 8px;
+    font-size: 19px;
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--gcc-carousel-text);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: calc(1.28em * 2);
+}
+
+.gcc-card__name a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.gcc-card__name a:hover {
+    text-decoration: underline;
+}
+
+.gcc-card__price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 12px;
+    white-space: nowrap;
+}
+
+.gcc-card__price-amount .price {
+    font-size: 17px !important;
+    font-weight: 600 !important;
+    color: #1F2937 !important;
+}
+
+.gcc-card__price-unit {
+    font-size: 14px;
+    color: var(--gcc-carousel-muted);
+    flex-shrink: 0;
+}
+
+.gcc-card__divider {
+    border: 0;
+    border-top: 1px solid var(--gcc-carousel-divider);
+    margin: 12px 0 12px;
+}
+
+.gcc-card__brand-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    min-width: 0;
+}
+
+.gcc-card__brand-name {
+    font-size: 17px;
+    line-height: 1.25;
+    font-weight: 700;
+    color: #111827;
+}
+
+.gcc-card__verified {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
+}
+
+.gcc-card__verified svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.gcc-card__country-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 2px;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.gcc-card__flag {
+    width: 24px;
+    height: 16px;
+    flex: 0 0 24px;
+    border-radius: 3px;
+    background: #E2E8F0;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.gcc-card__footer {
+    padding: 14px 16px 16px;
+    margin-top: auto;
+}
+
+.gcc-card__quote {
+    width: 100%;
+    height: 46px;
+    border-radius: 12px;
+    border: 1px solid var(--gcc-carousel-blue);
+    background: #fff;
+    color: var(--gcc-carousel-blue);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.gcc-card__quote:hover:not(:disabled) {
+    background: #F4F8FF;
+    border-color: #1F5FE0;
+    box-shadow: 0 4px 12px rgba(42, 111, 227, 0.12);
+    transform: translateY(-1px);
+}
+
+.gcc-card__quote:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+@media (max-width: 1199px) {
+    .gcc-carousel__slide {
+        flex-basis: clamp(280px, calc((100% - 16px) / 2), 360px);
+        max-width: clamp(280px, calc((100% - 16px) / 2), 360px);
+    }
+}
+
+@media (max-width: 767px) {
+    .gcc-carousel-shell {
+        margin-top: 20px;
+    }
+
+    .gcc-carousel-shell--related {
+        margin-bottom: 40px;
+    }
+
+    .gcc-carousel__header {
+        margin-bottom: 14px;
+        gap: 10px;
+    }
+
+    .gcc-carousel__title {
+        font-size: 18px;
+    }
+
+    .gcc-carousel__controls {
+        gap: 8px;
+    }
+
+    .gcc-carousel__nav {
+        width: 32px;
+        height: 32px;
+        border-radius: 10px;
+    }
+
+    .gcc-carousel__track {
+        gap: 12px;
+        padding: 2px 0 6px;
+    }
+
+    .gcc-carousel__slide {
+        flex-basis: calc((100% - 12px) / 2);
+        max-width: calc((100% - 12px) / 2);
+    }
+
+    .gcc-card__media {
+        margin: 12px 12px 0;
+        padding: 14px;
+        height: 180px;
+        min-height: 180px;
+    }
+
+    .gcc-card__body {
+        padding: 10px 12px 0;
+    }
+
+    .gcc-card__name {
+        font-size: 16px;
+    }
+
+    .gcc-card__price-amount .price {
+        font-size: 15px !important;
+    }
+
+    .gcc-card__price-unit {
+        font-size: 12px;
+    }
+
+    .gcc-card__brand-name {
+        font-size: 13px;
+    }
+
+    .gcc-card__country-line {
+        font-size: 13px;
+    }
+
+    .gcc-card__footer {
+        padding: 12px 12px 12px;
+    }
+
+    .gcc-card__quote {
+        height: 42px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gcc-carousel__title {
+        font-size: 16px;
+    }
+
+    .gcc-carousel__track {
+        gap: 10px;
+    }
+
+    .gcc-carousel__slide {
+        flex-basis: calc((100% - 10px) / 2);
+        max-width: calc((100% - 10px) / 2);
+    }
+
+    .gcc-card__media {
+        margin: 10px 10px 0;
+        padding: 12px;
+        height: 160px;
+        min-height: 160px;
+    }
+
+    .gcc-card__body {
+        padding: 10px 10px 0;
+    }
+
+    .gcc-card__quote {
+        height: 40px;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+}
 </style>
-<script type="text/x-magento-init">
-{
-  "#related-carousel": {
-    "Magento_Ui/js/core/app": {}
-  }
-}
-</script>
 
 <script>
-require(['jquery'], function($){
-  $(function(){
-    var $root    = $('#related-carousel');
-    var $viewport= $root.find('.rp-viewport');
-    var $track   = $root.find('.rp-track');
-    var $prev    = $root.find('.rp-prev');
-    var $next    = $root.find('.rp-next');
+require(['jquery'], function ($) {
+    $(function () {
+        var carouselId = '<?= $block->escapeHtmlAttr($carouselId) ?>';
+        var $root = $('#' + carouselId);
+        var $viewport = $root.find('.gcc-carousel__viewport');
+        var $track = $root.find('.gcc-carousel__track');
+        var $prev = $root.find('.gcc-carousel__prev');
+        var $next = $root.find('.gcc-carousel__next');
 
-    if (!$root.length) return;
-
-    function gap() {
-      // Read computed gap (fallback 16)
-      var g = parseInt(window.getComputedStyle($track[0]).columnGap || window.getComputedStyle($track[0]).gap || '16', 10);
-      return isNaN(g) ? 16 : g;
-    }
-    function cardWidth() {
-      var $first = $root.find('.rp-slide').first();
-      return $first.length ? $first.outerWidth(true) : 340;
-    }
-    function step() {
-      // Scroll by one full “page” of visible cards
-      var cw = cardWidth(), g = gap();
-      var per = Math.max(1, Math.floor($viewport.innerWidth() / (cw + g)));
-      return per * (cw + g);
-    }
-    function updateDisabled() {
-      var maxScroll = $track[0].scrollWidth - $viewport.innerWidth() - 1;
-      $prev.prop('disabled', $track[0].scrollLeft <= 0);
-      $next.prop('disabled', $track[0].scrollLeft >= maxScroll);
-    }
-
-    $prev.on('click', function(){ $track[0].scrollBy({left: -step(), behavior: 'smooth'}); setTimeout(updateDisabled, 300); });
-    $next.on('click', function(){ $track[0].scrollBy({left:  step(), behavior: 'smooth'}); setTimeout(updateDisabled, 300); });
-
-    $track.on('scroll', updateDisabled);
-    $(window).on('resize', updateDisabled);
-    updateDisabled();
-  });
-});
-</script>
-<script>
-require(['jquery'], function($) {
-
-  // FLAG FIX
- require(['jquery'], function($){
-  $(document).ready(function(){
-
-    $('#related-carousel .rp-flag').each(function(){
-      var code = $(this).data('code');
-
-      if (code) {
-        code = code.toLowerCase().trim();
-
-        var flagUrl = 'https://flagcdn.com/w40/' + code + '.png';
-
-        $(this).css({
-          'background-image': 'url(' + flagUrl + ')',
-          'background-size': 'cover',
-          'background-position': 'center',
-          'display': 'inline-block'
-        });
-      }
-    });
-
-  });
-});
-
-  // ADD TO QUOTE FIX
-  $(document).on('click', '.add-to-quote', function () {
-
-    var button = $(this);
-    var productId = button.data('product-id');
-
-    if (!productId) {
-      console.log('Product ID missing');
-      return;
-    }
-
-    $.ajax({
-      url: '<?= $block->getUrl("quoterequest/index/create") ?>',
-      type: 'POST',
-      data: {
-        product_id: productId
-      },
-      showLoader: true,
-
-      success: function (response) {
-        button.text('Added');
-        button.prop('disabled', true);
-
-        if (response.count !== undefined) {
-          $('#quote-counter').text(response.count).show();
+        if (!$root.length) {
+            return;
         }
-      },
 
-      error: function (xhr) {
-        console.log(xhr);
-        alert('Error while adding to quote');
-      }
+        $root.find('.gcc-card__flag').each(function () {
+            var code = String($(this).data('code') || '').trim().toLowerCase();
+
+            if (code) {
+                $(this).css({
+                    'background-image': 'url(https://flagcdn.com/w40/' + code + '.png)'
+                });
+            }
+        });
+
+        function getGap() {
+            var track = $track[0];
+
+            if (!track) {
+                return 16;
+            }
+
+            var styles = window.getComputedStyle(track);
+            var gap = parseInt(styles.columnGap || styles.gap || '16', 10);
+
+            return isNaN(gap) ? 16 : gap;
+        }
+
+        function getSlideWidth() {
+            var $first = $root.find('.gcc-carousel__slide').first();
+
+            return $first.length ? $first.outerWidth(true) : 330;
+        }
+
+        function getStep() {
+            var viewportWidth = $viewport.innerWidth();
+            var slideWidth = getSlideWidth();
+            var gap = getGap();
+            var perPage = Math.max(1, Math.floor(viewportWidth / (slideWidth + gap)));
+
+            return perPage * (slideWidth + gap);
+        }
+
+        function updateNavState() {
+            var track = $track[0];
+
+            if (!track) {
+                return;
+            }
+
+            var viewportWidth = $viewport.innerWidth();
+            var maxScrollLeft = track.scrollWidth - viewportWidth - 1;
+            var canScroll = track.scrollWidth > viewportWidth + 1;
+
+            $prev.prop('disabled', !canScroll || track.scrollLeft <= 0);
+            $next.prop('disabled', !canScroll || track.scrollLeft >= maxScrollLeft);
+        }
+
+        $prev.on('click', function () {
+            var track = $track[0];
+
+            if (!track) {
+                return;
+            }
+
+            track.scrollBy({
+                left: -getStep(),
+                behavior: 'smooth'
+            });
+
+            window.setTimeout(updateNavState, 250);
+        });
+
+        $next.on('click', function () {
+            var track = $track[0];
+
+            if (!track) {
+                return;
+            }
+
+            track.scrollBy({
+                left: getStep(),
+                behavior: 'smooth'
+            });
+
+            window.setTimeout(updateNavState, 250);
+        });
+
+        $track.on('scroll', updateNavState);
+        $(window).on('resize', updateNavState);
+        updateNavState();
     });
-
-  });
-
 });
 
+if (!window.__gccQuoteHandlerBound) {
+    window.__gccQuoteHandlerBound = true;
+
+    require(['jquery'], function ($) {
+        var quoteUrl = <?= /* @noEscape */ json_encode($block->getUrl('quoterequest/index/create')); ?>;
+
+        $(document).on('click', '.add-to-quote', function () {
+            var button = $(this);
+            var productId = button.data('product-id');
+
+            if (!productId) {
+                return;
+            }
+
+            $.ajax({
+                url: quoteUrl,
+                type: 'POST',
+                data: {
+                    product_id: productId
+                },
+                showLoader: true,
+                success: function (response) {
+                    button.text(<?= /* @noEscape */ json_encode((string) __('Added')); ?>);
+                    button.prop('disabled', true);
+
+                    if (response && response.count !== undefined) {
+                        $('#quote-counter').text(response.count).show();
+                    }
+                },
+                error: function (xhr) {
+                    window.console && console.log(xhr);
+                    alert(<?= /* @noEscape */ json_encode((string) __('Error while adding to quote')); ?>);
+                }
+            });
+        });
+    });
+}
 </script>

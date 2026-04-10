@@ -1,73 +1,75 @@
-<?php 
-//$vendorVerification = $block->getVendorVerification();
-//$verificationId =  $vendorVerification->getId();
-?>
 <?php
-// Block se naya data fetch karein safe tarike se
+/** @var $block \Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification */
+
 $vendorVerification = $block->getVendorVerification();
-// echo "<pre>";
-// if ($vendorVerification) {
-//     // Agar data aa raha hai toh ye uski saari details print karega
-//     print_r($vendorVerification->getData()); 
-// } else {
-//     echo "Variable Is NULL";
-// }
-//echo "</pre>";
-//exit; //
-// Check karein ki null toh nahi hai
-if ($vendorVerification && $vendorVerification->getId()) : 
-    $status = $vendorVerification->getStatus();
-endif;
+
+if (!$vendorVerification || !$vendorVerification->getId()) {
+    return;
+}
+
+$verificationId = (int)$vendorVerification->getId();
+$summaryData = $block->getVerificationSectionData(
+    $verificationId,
+    \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+);
+
+$summaryDetailId = ($summaryData && $summaryData->getId())
+    ? (int)$summaryData->getDetailId()
+    : 0;
+
+$summaryComments = $summaryDetailId
+    ? (int)$block->getCommentsCounts(
+        $verificationId,
+        $summaryDetailId,
+        \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
+    )
+    : 0;
 ?>
-<div class="col-md-12">
-	<div class="verification-info">
-		 <div class="header">
-			 <h2><?php echo __('Verification Details') ?></h2>
-		 </div>
-  <div class="verification-tbl">		 
-  <table class="table">
-  <tbody>
-	<tr>      
-      <td><?php echo __('Verification Status') ?></td>
-      <td>
-		  : <?php echo $block->getvendorVerificationStatusLabel($vendorVerification->getIsVerified());?>
-		  
-      </td>      
-    </tr>
-    <tr>
-    <td><?php echo __('Verification Payment Status') ?></td>
-      <td>
-		  : <?php echo $block->getPaymentStatusLabel($vendorVerification->getIsPaid());?>		  
-      </td>      
-    </tr>
-    <tr>
-    <td><?php echo __('Verification Fees') ?></td>
-      <td>
-		  : <?php echo $block->getFormatedPrice($vendorVerification->getAmount());?>		  
-      </td>      
-    </tr>
-    <tr>
-    <td><?php echo __('Verification Duration') ?></td>
-      <td>
-		  : <?php echo $vendorVerification->getMonthsBooked().__(' Months');?>		  
-      </td>      
-    </tr>
-    <tr>
-    <td><?php echo __('Verification Start Date') ?></td>
-      <td>
-		  : <?php echo ($vendorVerification->getFromDate()) ? $block->getFormatedDate($vendorVerification->getFromDate()):"N/A";?>		  
-      </td>      
-    </tr>
-    <tr>
-    <td><?php echo __('Verification Expire Date') ?></td>
-      <td>		  
-		  : <?php echo ($vendorVerification->getToDate()) ? $block->getFormatedDate($vendorVerification->getToDate()):"N/A";?>		  
-      </td>      
-    </tr>
-   </tbody> 
-  </table>
-  </div>
- </div>
-</div>
 
+<section class="verification-card verification-card--summary">
+    <div class="verification-card__head">
+        <h3><?= __('Verification Details') ?></h3>
 
+        <?php if ($summaryDetailId): ?>
+            <button type="button"
+                    class="verification-showcomment verification-comments-link"
+                    data-verificationid="<?= $verificationId ?>"
+                    data-verifidtlid="<?= $summaryDetailId ?>"
+                    data-verifigroupid="<?= \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION ?>">
+                <i class="fa fa-comment"></i>
+                <span><?= __('%1 Comments', $summaryComments) ?></span>
+            </button>
+        <?php endif; ?>
+    </div>
+
+    <div class="verification-card__body">
+        <table class="verification-table">
+            <tbody>
+                <tr>
+                    <td><?= __('Verification Status') ?></td>
+                    <td><?= $block->getvendorVerificationStatusLabel($vendorVerification->getIsVerified()); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Verification Payment Status') ?></td>
+                    <td><?= $block->getPaymentStatusLabel($vendorVerification->getIsPaid()); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Verification Fees') ?></td>
+                    <td><?= $block->getFormatedPrice($vendorVerification->getAmount()); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Verification Duration') ?></td>
+                    <td><?= $vendorVerification->getMonthsBooked() . __(' Months'); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Verification Start Date') ?></td>
+                    <td><?= $vendorVerification->getFromDate() ? $block->getFormatedDate($vendorVerification->getFromDate()) : __('N/A'); ?></td>
+                </tr>
+                <tr>
+                    <td><?= __('Verification Expire Date') ?></td>
+                    <td><?= $vendorVerification->getToDate() ? $block->getFormatedDate($vendorVerification->getToDate()) : __('N/A'); ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
