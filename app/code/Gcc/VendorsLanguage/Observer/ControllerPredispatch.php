@@ -60,8 +60,8 @@ class ControllerPredispatch implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        //$vendorLocaleCode = $this->vendorConfig->getVendorConfig('general/locale/code', $this->vendorSession->getVendor()->getId());
-        $vendorLocaleCode = $this->vendorConfig->getVendorConfig('language/locale/code', $this->vendorSession->getVendor()->getId());       
+        $vendorLocaleCode = $this->vendorConfig->getVendorConfig('general/locale/code', $this->vendorSession->getVendor()->getId());
+        //$vendorLocaleCode = $this->vendorConfig->getVendorConfig('language/locale/code', $this->vendorSession->getVendor()->getId());       
         $adminLocaleCode = $this->adminConfig->getDefaultLanguageVendor();       
 
         if (!$vendorLocaleCode && $adminLocaleCode) {

@@ -100,7 +100,9 @@ if ($homepageBlock && method_exists($homepageBlock, 'getHomePageUrl')) {
                             <?php foreach ($stores as $store): ?>
                                 <?php if (!$store->isActive() || strtolower($store->getName()) == 'vendor panel') continue; ?>
                                 <li>
-                                    <a href="<?= $block->escapeUrl($currentUrl . 'config/index/switchlanguage/locale/' . $store->getCode()); ?>">
+                                   <a href="<?= $block->getUrl('dashboard/config/switchlanguage', [
+                                    'locale' => $store->getCode()
+                                ]) ?>">
                                         <?= $block->escapeHtml($store->getName()); ?>
                                     </a>
                                 </li>
