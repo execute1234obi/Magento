@@ -1,0 +1,560 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Create account form template
+ *
+ * @var $block \Magento\Customer\Block\Form\Register
+ */
+
+$startStep = 1;
+if ($block->isLoggedIn()) {
+    $startStep = 2;
+}
+?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.min.css"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+<!-- //for map latitude and langitute  flieds are hide -->
+<style>
+    #vendor_vendor_lat,
+    #vendor_vendor_lng,
+    label[for="vendor_vendor_lat"],
+    label[for="vendor_vendor_lng"] {
+        display: none !important;
+    }
+    /* for map text box */
+    #vendor_map {
+  height: 300px;
+  margin-top: 15px;
+  border-radius: 6px;
+    }
+
+     html[lang="ar"] .cr-step-content-col1 {
+        float: right !important;
+        text-align: right;
+    }
+
+       html[lang="ar"] .cr-step-title {
+        text-align: right;
+    }
+
+</style>
+<div class="cr-nav-container" id="cr-nav-container">
+
+</div>
+<?php $step = 0;?>
+<div class="cr-container">
+    <?php echo $block->getChildHtml('form_fields_before')?>
+    <?php /* Extensions placeholder */ ?>
+    <?php echo $block->getChildHtml('vendor.form.register.extra')?>
+    <form class="form" action="<?php /* @escapeNotVerified */ echo $block->getPostActionUrl() ?>" method="post" id="form-validate" enctype="multipart/form-data" autocomplete="off">
+        <?php /* @noEscape */ echo $block->getBlockHtml('formkey'); ?>
+        <?php if($blockId = $block->getStaticBlockId()):?>
+            <div class="vendor-static-container">
+                <?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId($blockId)->toHtml();?>
+            </div>
+        <?php endif;?>
+
+        <?php echo $block->getChildHtml('vendor_register_form_before')?>
+        <div class="cr-steps-container">
+            <?php $step++;?>
+            <?php if(!$block->isLoggedIn()):?>
+                <div class="cr-step cr-step-<?php echo $step?>" data-step="<?php echo $step?>">
+                    <div class="cr-step-title"><?php echo __("Personal Information")?></div>
+                    <div class="cr-step-content">
+                        <div class="cr-step-content-col1">
+                            <fieldset class="fieldset create info">
+                                <input type="hidden" name="success_url" value="<?php /* @escapeNotVerified */ echo $block->getSuccessUrl() ?>">
+                                <input type="hidden" name="error_url" value="<?php /* @escapeNotVerified */ echo $block->getErrorUrl() ?>">
+                                <input type="hidden" name="is_seller" value="1">
+                                <?php echo $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Name')->setObject($block->getFormData())->setForceUseCustomerAttributes(true)->toHtml() ?>
+
+                                <?php $_dob = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Dob') ?>
+                                <?php if ($_dob->isEnabled()): ?>
+                                    <?php echo $_dob->setDate($block->getFormData()->getDob())->toHtml() ?>
+                                <?php endif ?>
+
+                                <?php $_taxvat = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Taxvat') ?>
+                                <?php if ($_taxvat->isEnabled()): ?>
+                                    <?php echo $_taxvat->setTaxvat($block->getFormData()->getTaxvat())->toHtml() ?>
+                                <?php endif ?>
+
+                                <?php $_gender = $block->getLayout()->createBlock('Magento\Customer\Block\Widget\Gender') ?>
+                                <?php if ($_gender->isEnabled()): ?>
+                                    <?php echo $_gender->setGender($block->getFormData()->getGender())->toHtml() ?>
+                                <?php endif ?>
+
+                            </fieldset>
+                        </div>
+                        <div class="cr-step-content-col2">
+                            <?php
+                           // $html = $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('cr_step_content_'.$step)->toHtml();
+                            //echo $html?$html:__("You can add the content here by adding a Static block with id %1", '<strong>cr_step_content_'.$step.'</strong>');
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php else: ?>
+                <div class="cr-step cr-step-<?php echo $step?> cr-step-no-display" data-step="<?php echo $step?>" style="display: none">
+                </div>
+            <?php endif;?>
+
+            <?php $step++?>
+            <?php $createForm = $block->getChildBlock('new_vendor_create_form')->setStep($step)?>
+            <?php echo $createForm->toHtml()?>
+            
+            <?php $step = $createForm->getStep();?>
+
+            <?php if(!$block->isLoggedIn()):?>
+                <div class="cr-step cr-step-<?php echo $step?>" data-step="<?php echo $step?>">
+                    <div class="cr-step-title"><?php echo __("Login Information")?></div>
+                    <div class="cr-step-content">
+                        <div class="cr-step-content-col1">
+                            <fieldset class="fieldset create account" data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>">
+                                <div class="field required">
+                                    <label for="email_address" class="label"><span><?php /* @escapeNotVerified */ echo __('Email') ?></span></label>
+                                    <div class="control">
+                                        <input type="email" name="email" autocomplete="email" id="email_address" value="<?php echo $block->escapeHtml($block->getFormData()->getEmail()) ?>" title="<?php /* @escapeNotVerified */ echo __('Email') ?>" class="input-text" data-validate="{required:true, 'validate-email':true}">
+                                    </div>
+                                </div>
+
+                                <?php echo $block->getChildHtml('register_form_addition_field_before')?>
+
+                                <div class="field password required" data-mage-init='{"passwordStrengthIndicator": {}}'>
+                                    <label for="password" class="label"><span><?php /* @escapeNotVerified */ echo __('Password') ?></span></label>
+                                    <div class="control">
+                                        <input type="password" name="password" id="password"
+                                               title="<?php /* @escapeNotVerified */ echo __('Password') ?>"
+                                               class="input-text"
+                                               data-password-min-length="<?php echo $block->escapeHtml($block->getMinimumPasswordLength()) ?>"
+                                               data-password-min-character-sets="<?php echo $block->escapeHtml($block->getRequiredCharacterClassesNumber()) ?>"
+                                               data-validate="{required:true, 'validate-customer-password':true}"
+                                               autocomplete="off">
+                                        <div id="password-strength-meter-container" data-role="password-strength-meter" >
+                                            <div id="password-strength-meter" class="password-strength-meter">
+                                                <?php /* @escapeNotVerified */ echo __('Password Strength'); ?>:
+                                                <span id="password-strength-meter-label" data-role="password-strength-meter-label" >
+                                            <?php /* @escapeNotVerified */ echo __('No Password'); ?>
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="field confirmation required">
+                                    <label for="password-confirmation" class="label"><span><?php /* @escapeNotVerified */ echo __('Confirm Password') ?></span></label>
+                                    <div class="control">
+                                        <input type="password" name="password_confirmation" title="<?php /* @escapeNotVerified */ echo __('Confirm Password') ?>" id="password-confirmation" class="input-text" data-validate="{required:true, equalTo:'#password'}" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <?php echo $block->getChildHtml('register_form_addition_field_after')?>
+                            </fieldset>
+                        </div>
+                        <div class="cr-step-content-col2">
+                            <?php
+                            //$html = $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('cr_step_content_'.$step)->toHtml();
+                            //echo $html?$html:__("You can add the content here by adding a Static block with id %1", '<strong>cr_step_content_'.$step.'</strong>');
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif;?>
+        </div>
+        <?php echo $block->getChildHtml('vendor_register_form_after')?>
+
+        <div class="cr-confirm">
+            <?php if($block->isEnableAgreement()):?>
+                <div class="field field-vendor-registration">
+                    <input type="checkbox" id="vendor-registration-agreement" name="vendor_data[vendor_registration_agreement]" value="1" class="input-text vendor-agreement" data-validate="{'validate-one-required-by-name':true}"/><label for="vendor-registration-agreement"><?php echo $block->getAgreementLabel()?></label>
+                </div>
+            <?php endif;?>
+
+            <?php echo $block->getChildHtml('vendor_register_form_additional_info'); ?>
+
+        </div>
+
+        <?php echo $block->getChildHtml('vendor_register_form_actions_before')?>
+        <div class="actions-toolbar">
+            <button id="cr-previous-btn" type="button" class="action cr-previous-btn" title="<?php /* @escapeNotVerified */ echo __('Previous Step') ?>"><span><?php /* @escapeNotVerified */ echo __('Previous Step') ?></span></button>
+            <button id="cr-next-btn" type="button" class="action primary cr-next-btn" title="<?php /* @escapeNotVerified */ echo __('Next Step') ?>"><span><?php /* @escapeNotVerified */ echo __('Next Step') ?></span></button>
+            <button id="cr-submit-btn" type="submit" class="action primary submit cr-submit-btn" title="<?php /* @escapeNotVerified */ echo __('Create Seller Account') ?>"><span><?php /* @escapeNotVerified */ echo __('Create Seller Account') ?></span></button>
+        </div>
+
+    </form>
+    <script>
+         //hide the static content block 2 by VM
+                require(['jquery'], function ($) {
+            $(document).ready(function () {
+                $('.cr-step-content-col2').hide();
+            });
+        });
+        var CURRENT_STEP = <?= $startStep ?>;
+        var START_STEP = <?= $startStep ?>;
+        require([
+            'jquery',
+            'mage/template',
+            'mage/mage'
+        ], function($, mageTemplate){
+
+            var dataForm = $('#form-validate');
+            var ignore = false;
+
+            dataForm.mage('validation', {
+                validationUrl: '<?php echo $this->getValidationUrl()?>',
+                ignore: ignore ? ':hidden:not(' + ignore + ')' : ':hidden'
+            }).find('input:text').attr('autocomplete', 'off');
+
+            dataForm.on('submit', function () {
+                if (window.CURRENT_STEP < $('.cr-step').length) {
+                    if ($(this).valid()) {
+                        setCurrentStep(window.CURRENT_STEP + 1);
+                    }
+                    return false;
+                }
+                return true;
+            });
+
+            /**
+             * Build Steps Navigation
+             */
+            // function buildStepNav() {
+            //     $step_custom=1;
+            //     var stepsNav = $('#cr-nav-container');
+            //     var template = '<li class="cr-nav-step cr-nav-step-<%- stepNo %>"><div class="cr-nav-step-number"><%-  $step_custom %>/div><div class="cr-nav-step-title"><%- title %></div><div class="cr-nav-bar"></div></li>';
+            //     var html = '<ul class="cr-nav cr-nav-' + $('.cr-step').length + 'cols">';
+            //     $('.cr-step').each(function () {
+            //         if (!$(this).hasClass("cr-step-no-display")) {
+            //             var stepTitle = $(this).children('.cr-step-title').first().html();
+            //             var navStepTemplate = mageTemplate(template);
+            //             html += navStepTemplate({title: stepTitle, stepNo: $(this).data('step')});
+            //         }
+            //     });
+            //     html += '</ul>';
+            //      $step_custom++;
+            //     stepsNav.html(html);
+            // }
+            function buildStepNav() {
+    var stepsNav = $('#cr-nav-container');
+
+    // Step numbers should always start from 1 (even for logged in user)
+    var displayStep = 1;
+
+    // Template for each step in navigation
+    var template =
+        '<li class="cr-nav-step cr-nav-step-<%- realStep %>">' +
+            '<div class="cr-nav-step-number"><%- displayStep %></div>' +
+            '<div class="cr-nav-step-title"><%- title %></div>' +
+            '<div class="cr-nav-bar"></div>' +
+        '</li>';
+
+    var html = '<ul class="cr-nav cr-nav-' + $('.cr-step').length + 'cols">';
+
+    $('.cr-step').each(function () {
+
+        // Ignore steps hidden for logged-in users
+        if ($(this).hasClass("cr-step-no-display")) {
+            return true; // continue
+        }
+
+        var stepTitle = $(this).children('.cr-step-title').first().html();
+        var realStep = $(this).data('step');
+
+        var navStepTemplate = mageTemplate(template);
+
+        html += navStepTemplate({
+            title: stepTitle,
+            realStep: realStep,      // actual step
+            displayStep: displayStep // shown step numbering
+        });
+
+        displayStep++; // increase numbering only for visible steps
+    });
+
+    html += '</ul>';
+
+    stepsNav.html(html);
+}
+
+            /**
+             * Set current step
+             */
+            function setCurrentStep(step) {
+                window.CURRENT_STEP = step;
+                $('.cr-nav-step.current').removeClass('current');
+                $('.cr-nav-step.complete').removeClass('complete');
+                $('.cr-step.cr-step-active').removeClass('cr-step-active');
+
+                $('.cr-nav-step-' + step).addClass('current');
+                $('.cr-step-' + step).addClass('cr-step-active');
+
+
+                for (var i = 1; i < step; i++) {
+                    $('.cr-nav-step-' + i).addClass('complete');
+                }
+
+                var size = $('.cr-step').length;
+
+
+                if (step == size) {
+                    $('#cr-next-btn').hide();
+                    $('.cr-confirm').addClass('complete');
+                    $('#cr-submit-btn').css('display', 'inline-block');
+                    $('#cr-submit-btn').removeAttr("type").attr("type", "submit");
+                } else {
+                    $('#cr-next-btn').css('display', 'inline-block');
+                    $('.cr-confirm').removeClass('complete');
+                    $('#cr-submit-btn').hide();
+                    $('#cr-submit-btn').removeAttr("type").attr("type", "button");
+                }
+                 // ...existing code...
+    if (step == 3) {
+        addMapFieldsToStep3();
+    }
+    // ...existing code...
+                if (step == window.START_STEP) {
+                    $('#cr-previous-btn').hide();
+                } else {
+                    $('#cr-previous-btn').css('display', 'inline-block');
+                }
+            }
+
+            /**
+             * Next step
+             */
+            function nextStep() {
+                var step = window.CURRENT_STEP + 1;
+                if (step > $('.cr-step').length) return;
+                var isValid = true;
+                $('.cr-step-' + (step - 1)).find('input,textarea,select').each(function () {
+                    if (!$(this).is(":visible")) return true;
+                    $(this).validation();
+                    isValid = isValid && $(this).validation('isValid');
+                });
+                if (!isValid) return;
+                 // Add custom check only when moving from step 4 to 5 for country code By VM
+                if (window.CURRENT_STEP === 4) {
+                    // Replace these selectors with actual names or IDs
+                    var country1 = $('[name="vendor_data[country_code]"]').val();
+                        var country3 = $('[name="vendor_data[c_code]"]').val();
+
+
+                    if (country1 !== country3) {
+                        alert('Country Code in Business Information and Business Contact must be the same.');
+                        return; // stop going to next step
+                    }
+                }
+                setCurrentStep(step);
+            }
+
+            /**
+             * Previous step
+             */
+            function prevousStep() {
+                var step = window.CURRENT_STEP - 1;
+                if (step <= 0) return;
+
+                setCurrentStep(step);
+            }
+
+            buildStepNav();
+
+            setCurrentStep(window.START_STEP);
+
+            $('#cr-next-btn').click(function () {
+                nextStep();
+            });
+
+            $('#cr-previous-btn').click(function () {
+                prevousStep();
+            });
+
+            $('.cr-nav-step-number').click(function () {
+                if (!$(this).parent().hasClass('complete')) return;
+                setCurrentStep(parseInt($(this).html()));
+            });
+        });
+        //for testing map locally 
+        function addMapFieldsToStep3() {
+    var step3 = document.querySelector('.cr-step[data-step="3"] .cr-step-content-col1 fieldset');
+    if (!step3 || document.getElementById('vendor_map')) return; // Prevent duplicate fields
+
+    // Create address field
+    var addressDiv = document.createElement('div');
+    addressDiv.className = 'field required';
+    addressDiv.innerHTML = `
+        <label for="vendor_address" class="label"><span>Business Location</span></label>
+        <div class="control">
+            <input type="text" name="vendor_address" id="vendor_address" class="input-text" placeholder="Enter address or location" />
+        </div>
+    `;
+
+    // Create map field
+    var mapDiv = document.createElement('div');
+    mapDiv.className = 'field';
+    mapDiv.innerHTML = `
+        <label for="vendor_map" class="label"><span>Map</span></label>
+        <div id="vendor_map"></div>
+    `;
+
+    // Create hidden latitude and longitude fields
+    var latInput = document.createElement('input');
+    latInput.type = 'hidden';
+    latInput.name = 'vendor_vendor_lat';
+    latInput.id = 'vendor_vendor_lat';
+
+    var lngInput = document.createElement('input');
+    lngInput.type = 'hidden';
+    lngInput.name = 'vendor_vendor_lng';
+    lngInput.id = 'vendor_vendor_lng';
+
+    // Append fields to step 3
+    step3.appendChild(addressDiv);
+    step3.appendChild(mapDiv);
+    step3.appendChild(latInput);
+    step3.appendChild(lngInput);
+}
+
+    </script>
+    <!-- script for google map  -->
+
+   <script>
+  let googleMapLoaded = false;
+
+  function initGoogleMapForVendor() {
+    const mapDiv = document.getElementById("vendor_map");
+    const input = document.getElementById("vendor_address");
+    const latField = document.getElementById("vendor_vendor_lat");
+    const lngField = document.getElementById("vendor_vendor_lng");
+
+    if (!mapDiv || !input || !latField || !lngField || typeof google === "undefined") return;
+    if (!mapDiv) {
+      console.error("Map container not found.");
+      return;
+    }
+
+    const defaultLocation = { lat: 18.5204, lng: 73.8567 };
+    const map = new google.maps.Map(mapDiv, {
+      center: defaultLocation,
+      zoom: 13,
+    });
+
+    const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo("bounds", map);
+
+    const marker = new google.maps.Marker({
+      map: map,
+      draggable: true,
+    });
+
+    autocomplete.addListener("place_changed", () => {
+      const place = autocomplete.getPlace();
+      if (!place.geometry) return;
+
+      map.setCenter(place.geometry.location);
+      map.setZoom(15);
+      marker.setPosition(place.geometry.location);
+
+      latField.value = place.geometry.location.lat();
+      lngField.value = place.geometry.location.lng();
+    });
+
+    google.maps.event.addListener(marker, 'dragend', function () {
+      const pos = marker.getPosition();
+      latField.value = pos.lat();
+      lngField.value = pos.lng();
+    });
+
+    console.log("Map initialized");
+    googleMapLoaded = true;
+  }
+
+  // Periodically check if DOM and Google Maps are ready
+  const mapCheckInterval = setInterval(() => {
+    try {
+      if (!googleMapLoaded) initGoogleMapForVendor();
+      else clearInterval(mapCheckInterval);
+    } catch (e) {
+      console.error("Map error:", e);
+    }
+  }, 500);
+</script>
+<!-- Google Maps API script -->
+
+<script
+async
+  defer
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7bZLyKWtBsOkproitJljFehxdkik3A60&libraries=places"
+  
+></script> 
+
+<script>
+require(['jquery'], function ($) {
+    $(document).ready(function () {
+        var dropdown = $('#vendor_country_id');
+
+        if (dropdown.find('option[value=""]').length === 0) {
+            dropdown.prepend('<option value="">Please Select</option>');
+        }
+
+        dropdown.val('');
+    });
+});
+</script>
+<script>
+require(['jquery'], function ($) {
+    $(document).ready(function () {
+
+        // 🌍 intlTelInput ka internal data
+        var countryData = window.intlTelInputGlobals.getCountryData();
+
+        function getDialCode(countryIso) {
+            var result = countryData.find(function (item) {
+                return item.iso2.toUpperCase() === countryIso;
+            });
+
+            return result ? + result.dialCode : '';
+        }
+
+        $('#vendor_country_id').on('change', function () {
+            var country = $(this).val(); // IN, AE, US
+
+            var code = getDialCode(country);
+
+            // ✅ auto fill
+            $('#vendor_c_code').val(code);
+            $('[name="vendor_data[country_code]"]').val(code);
+
+            console.log("✅ Country:", country, "Code:", code);
+        });
+
+        // ✅ page load pe bhi
+        $('#vendor_country_id').trigger('change');
+
+    });
+});
+</script>
+<script>
+require(['jquery'], function ($) {
+    $('#vendor_country_id').on('change', function () {
+        var input = document.querySelector("#vendor_phone");
+        if (!input) return;
+
+        var iti = window.intlTelInputGlobals.getInstance(input);
+        if (!iti) return;
+
+        var country = $(this).val().toLowerCase(); // IN → in
+        iti.setCountry(country);
+    });
+});
+</script>
+</div>
