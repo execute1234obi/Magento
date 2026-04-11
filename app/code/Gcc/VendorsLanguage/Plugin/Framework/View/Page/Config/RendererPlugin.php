@@ -72,30 +72,22 @@ class RendererPlugin
      * @return string
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function aroundRenderElementAttributes(
-        \Magento\Framework\View\Page\Config\Renderer $subject,
-        \Closure $proceed,
-        $elementType
-    ) {
-        $areaCode = $this->appState->getAreaCode();
-		$vendorLocaleCode = $this->vendorConfig->getVendorConfig('general/locale/code', $this->vendorsSession->getVendor()->getId());
-        if (!$this->moduleManager->isEnabled('Vnecoms_Vendors')
-			|| !$this->vendorsSession->getVendor()->getId()
-			|| !$this->moduleManager->isEnabled('Gcc_VendorsLanguage')
-			|| $areaCode !== FrontNameResolver::AREA_CODE
-			|| empty($vendorLocaleCode)
-        ) {
-            return $proceed($elementType);
-        }
+   public function aroundRenderAttributesHtml(
+    \Magento\Framework\View\Page\Config\Renderer $subject,
+    \Closure $proceed
+) {
+    $result = $proceed();
 
-        $resultAttributes = [];
-        foreach ($this->pageConfig->getElementAttributes($elementType) as $name => $value) {
-            if ($elementType == PageConfig::ELEMENT_TYPE_HTML && $name == PageConfig::HTML_ATTRIBUTE_LANG) {
-                $value = strstr($vendorLocaleCode, '_', true);
-                $name == PageConfig::HTML_ATTRIBUTE_LANG;
-            }
-            $resultAttributes[] = sprintf('%s="%s"', $name, $value);
-        }
-        return implode(' ', $resultAttributes);
+    // 👉 URL se locale uthao
+    $locale = $_GET['locale'] ?? null;
+
+    if ($locale) {
+        $lang = strstr($locale, '_', true) ?: $locale;
+
+        // lang="en" replace karo
+        $result = preg_replace('/lang="(.*?)"/', 'lang="'.$lang.'"', $result);
     }
+
+    return $result;
+}
 }

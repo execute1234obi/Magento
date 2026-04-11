@@ -225,7 +225,8 @@ html[lang="ar"] .sign-in-text {
     <div class="form-container">
         <p class="sign-in-text"><?= __('If you have an account, sign in with your email address.') ?></p>
         
-       <form class="form-create-account" action="<?= $block->getUrl('customer/account/createpost') ?>" method="post" id="form-validate" autocomplete="off">
+       <form class="form-create-account" action="<?= $block->getUrl('customer/account/createpost') ?>" method="post" id="form-validate"  data-mage-init='{"validation":{}}'
+      autocomplete="off">
     <?= $block->getBlockHtml('formkey') ?>
             <div class="form-group">
                 <label for="first-name"><?= __('First Name') ?> <span class="required text-[#d02d4e]">*</span></label>
@@ -264,25 +265,28 @@ html[lang="ar"] .sign-in-text {
  <div class="form-group password-container">
     <label for="password"><?= __('Password') ?> <span class="required">*</span></label>
 
-    <input type="password"
-           id="password"
-           name="password"
-           data-password-strength-meter="password-strength-meter"
-           data-password-strength-meter-label="password-strength-meter-label"
-           required />
+   <input type="password"
+       id="password"
+       name="password"
+        class="input-text"
+       required
+       data-password-min-length="8"
+       data-password-min-character-sets="3"
+        data-validate="{required:true, 'validate-password':true}"
+/>
 
     <span class="eye-icon" id="toggle-password">👁️‍🗨️</span>
 
-    <div id="password-strength-meter" class="password-strength-meter">
-        <span id="password-strength-meter-label">
-            <?= __('No Password') ?>
-        </span>
-    </div>
+   <div class="password-strength-meter" data-role="password-strength-meter">
+    <span data-role="password-strength-meter-label">
+        <?= __('No Password') ?>
+    </span>
+</div>
 </div>
             
             <div class="form-group">
                 <label for="confirm-password"><?= __('Confirm Password') ?> <span class="required text-[#d02d4e]">*</span></label>
-                <input type="password"  id="password-confirmation" name="password_confirmation" required>
+                <input type="password"  id="password-confirmation" name="password_confirmation" required data-validate="{required:true, equalTo:'#password'}">
                  <!-- Eye icon with slashed eye for hidden -->
                  <!-- <span class="eye-icon" id="toggle-password2">👁️‍🗨️</span> -->
             </div>
@@ -318,14 +322,7 @@ html[lang="ar"] .sign-in-text {
             confirmPasswordField.type = type;
         });
     </script> -->
-    <script>
-    require([
-        'jquery',
-        'mage/mage'
-    ], function($) {
-        $('#form-validate').mage('validation', {});
-    });
-</script>
+   
 
 <script>
     const togglePassword = document.getElementById('toggle-password');
@@ -338,11 +335,13 @@ html[lang="ar"] .sign-in-text {
     });
     
 </script>
-<script>
-require([
-    'jquery',
-    'Magento_Customer/js/password-strength-indicator'
-], function ($) {
-    $('#form-validate').passwordStrengthIndicator();
-});
+<!-- Password strength indicator script -->
+<script type="text/x-magento-init">
+{
+    ".password-container": {
+        "passwordStrengthIndicator": {
+            "formSelector": "#form-validate"
+        }
+    }
+}
 </script>
