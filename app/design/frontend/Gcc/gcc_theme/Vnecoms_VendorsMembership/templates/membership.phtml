@@ -216,8 +216,8 @@ SVG;
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
+    width: 100%;
+    margin: 0;
     padding: 82px 24px 96px;
     background: linear-gradient(180deg, var(--page-bg) 0%, var(--page-bg-end) 100%);
     box-sizing: border-box;
@@ -267,6 +267,10 @@ SVG;
     line-height: 1.05;
     font-weight: 800;
     letter-spacing: -0.05em;
+}
+
+.gcc-membership-page__mobile-title {
+    display: none;
 }
 
 .gcc-membership-page__grid {
@@ -509,11 +513,27 @@ SVG;
 
 @media (max-width: 767px) {
     .gcc-membership-page {
-        padding: 56px 14px 64px;
+        padding: 52px 14px 60px;
     }
 
     .gcc-membership-page__title {
-        font-size: clamp(30px, 8vw, 38px);
+        display: none !important;
+    }
+
+    .gcc-membership-page__mobile-title {
+        display: block !important;
+        margin: 0 0 22px;
+        text-align: center;
+        color: #111827;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        font-size: clamp(24px, 7vw, 34px);
+        line-height: 1.12;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        overflow-wrap: anywhere;
+        text-wrap: balance;
     }
 
     .gcc-membership-card {
@@ -543,12 +563,13 @@ SVG;
 
 @media (max-width: 480px) {
     .gcc-membership-page {
-        padding: 48px 12px 56px;
+        padding: 46px 12px 54px;
     }
 
-    .gcc-membership-page__title {
-        font-size: 28px;
-        letter-spacing: -0.04em;
+    .gcc-membership-page__mobile-title {
+        margin-bottom: 18px;
+        font-size: clamp(22px, 8vw, 28px);
+        line-height: 1.15;
     }
 
     .gcc-membership-card {
@@ -590,6 +611,10 @@ SVG;
         <h1 id="gcc-membership-title" class="gcc-membership-page__title">
             <?php echo $block->escapeHtml($title); ?>
         </h1>
+
+        <div class="gcc-membership-page__mobile-title" role="heading" aria-level="1">
+            <?php echo $block->escapeHtml($title); ?>
+        </div>
 
         <div class="gcc-membership-page__grid">
             <?php foreach ($planRows as $index => $row): ?>
