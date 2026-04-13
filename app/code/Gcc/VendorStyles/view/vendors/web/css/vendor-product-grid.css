@@ -646,6 +646,44 @@ body[class*="catalog-product-index"] table.data-grid thead th {
     min-width: 120px;
 }
 
+body.catalog-product-index table.data-grid thead th._sortable:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell),
+body.vendors-catalog-product-index table.data-grid thead th._sortable:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell),
+body[class*="catalog-product-index"] table.data-grid thead th._sortable:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell) {
+    position: relative;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+body.catalog-product-index table.data-grid thead th._sortable:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body.vendors-catalog-product-index table.data-grid thead th._sortable:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body[class*="catalog-product-index"] table.data-grid thead th._sortable:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 14px;
+    width: 10px;
+    height: 14px;
+    transform: translateY(-50%);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 10px 14px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none'%3E%3Cpath d='M5 1.25L8.25 4.5H1.75L5 1.25Z' fill='%237d93be'/%3E%3Cpath d='M5 12.75L1.75 9.5H8.25L5 12.75Z' fill='%237d93be'/%3E%3C/svg%3E");
+    opacity: 0.95;
+    pointer-events: none;
+}
+
+body.catalog-product-index table.data-grid thead th._sortable._ascend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body.vendors-catalog-product-index table.data-grid thead th._sortable._ascend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body[class*="catalog-product-index"] table.data-grid thead th._sortable._ascend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none'%3E%3Cpath d='M5 1.25L8.25 4.5H1.75L5 1.25Z' fill='%232e5ea8'/%3E%3Cpath d='M5 12.75L1.75 9.5H8.25L5 12.75Z' fill='%23a9b9d8'/%3E%3C/svg%3E");
+}
+
+body.catalog-product-index table.data-grid thead th._sortable._descend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body.vendors-catalog-product-index table.data-grid thead th._sortable._descend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after,
+body[class*="catalog-product-index"] table.data-grid thead th._sortable._descend:not(.data-grid-checkbox-cell):not(.data-grid-multicheck-cell)::after {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 14' fill='none'%3E%3Cpath d='M5 1.25L8.25 4.5H1.75L5 1.25Z' fill='%23a9b9d8'/%3E%3Cpath d='M5 12.75L1.75 9.5H8.25L5 12.75Z' fill='%232e5ea8'/%3E%3C/svg%3E");
+}
+
 body.catalog-product-index table.data-grid thead th:last-child,
 body.vendors-catalog-product-index table.data-grid thead th:last-child,
 body[class*="catalog-product-index"] table.data-grid thead th:last-child {
@@ -767,47 +805,82 @@ body[class*="catalog-product-index"] table.data-grid .action-menu-item {
 }
 
 body.catalog-product-index table.data-grid .label,
+body.catalog-product-index table.data-grid .badge,
 body.vendors-catalog-product-index table.data-grid .label,
-body[class*="catalog-product-index"] table.data-grid .label {
+body.vendors-catalog-product-index table.data-grid .badge,
+body[class*="catalog-product-index"] table.data-grid .label,
+body[class*="catalog-product-index"] table.data-grid .badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 78px;
-    padding: 4px 10px;
+    min-width: 0;
+    padding: 4px 12px;
     border: 0;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: 700;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1.2;
     box-shadow: none;
 }
 
 body.catalog-product-index table.data-grid .product-approval-notsubmited,
+body.catalog-product-index table.data-grid .label-default,
+body.catalog-product-index table.data-grid .badge.bg-black,
 body.vendors-catalog-product-index table.data-grid .product-approval-notsubmited,
-body[class*="catalog-product-index"] table.data-grid .product-approval-notsubmited {
-    background: #edf2f8;
-    color: #536b94;
+body.vendors-catalog-product-index table.data-grid .label-default,
+body.vendors-catalog-product-index table.data-grid .badge.bg-black,
+    body[class*="catalog-product-index"] table.data-grid .product-approval-notsubmited,
+    body[class*="catalog-product-index"] table.data-grid .label-default,
+    body[class*="catalog-product-index"] table.data-grid .badge.bg-black {
+    background-color: #eef3f8 !important;
+    background-image: none !important;
+    color: #64748b !important;
+    box-shadow: none !important;
 }
 
 body.catalog-product-index table.data-grid .product-approval-pending,
+body.catalog-product-index table.data-grid .label-warning,
+body.catalog-product-index table.data-grid .badge.bg-orange,
 body.vendors-catalog-product-index table.data-grid .product-approval-pending,
-body[class*="catalog-product-index"] table.data-grid .product-approval-pending {
-    background: #fff3d6;
-    color: #9a6500;
+body.vendors-catalog-product-index table.data-grid .label-warning,
+body.vendors-catalog-product-index table.data-grid .badge.bg-orange,
+    body[class*="catalog-product-index"] table.data-grid .product-approval-pending,
+    body[class*="catalog-product-index"] table.data-grid .label-warning,
+    body[class*="catalog-product-index"] table.data-grid .badge.bg-orange {
+    background-color: #fff2e8 !important;
+    background-image: none !important;
+    color: #ff8a3d !important;
+    box-shadow: none !important;
 }
 
 body.catalog-product-index table.data-grid .product-approval-completed,
+body.catalog-product-index table.data-grid .label-success,
+body.catalog-product-index table.data-grid .badge.bg-green,
 body.vendors-catalog-product-index table.data-grid .product-approval-completed,
-body[class*="catalog-product-index"] table.data-grid .product-approval-completed {
-    background: #0faa54;
-    color: #ffffff;
+body.vendors-catalog-product-index table.data-grid .label-success,
+body.vendors-catalog-product-index table.data-grid .badge.bg-green,
+    body[class*="catalog-product-index"] table.data-grid .product-approval-completed,
+    body[class*="catalog-product-index"] table.data-grid .label-success,
+    body[class*="catalog-product-index"] table.data-grid .badge.bg-green {
+    background-color: #e8f9ef !important;
+    background-image: none !important;
+    color: #11b85a !important;
+    box-shadow: none !important;
 }
 
 body.catalog-product-index table.data-grid .product-approval-unapproved,
+body.catalog-product-index table.data-grid .label-danger,
+body.catalog-product-index table.data-grid .badge.bg-red,
 body.vendors-catalog-product-index table.data-grid .product-approval-unapproved,
-body[class*="catalog-product-index"] table.data-grid .product-approval-unapproved {
-    background: #fde7e7;
-    color: #bd1f1f;
+body.vendors-catalog-product-index table.data-grid .label-danger,
+body.vendors-catalog-product-index table.data-grid .badge.bg-red,
+body[class*="catalog-product-index"] table.data-grid .product-approval-unapproved,
+body[class*="catalog-product-index"] table.data-grid .label-danger,
+body[class*="catalog-product-index"] table.data-grid .badge.bg-red {
+    background-color: #fdecec !important;
+    background-image: none !important;
+    color: #d14343 !important;
+    box-shadow: none !important;
 }
 
 body.catalog-product-index .admin__data-grid-filters-wrap,

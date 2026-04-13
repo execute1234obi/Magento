@@ -5,6 +5,7 @@
     <body>
         <!-- <referenceBlock name="vendor.toplinks" template="Gcc_VendorStyles::page/toplinks.phtml"/> -->
         <referenceBlock name="menu" template="Gcc_VendorStyles::menu.phtml"/>
+        <referenceBlock name="breadcrumbs" template="Gcc_VendorStyles::page/breadcrumbs.phtml"/>
         <referenceBlock name="user.info.panel" remove="true"/>
         <referenceBlock name="avatar.user.info.default" remove="true"/>
         <referenceBlock name="vendor.mobile.sidebar.toggle" remove="true"/>
