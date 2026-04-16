@@ -1,25 +1,54 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-layout="vendor-1column"
-xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-
+      layout="vendor-1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <referenceBlock name="vendor.myaccount">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account.phtml</argument>
+            </action>
+        </referenceBlock>
 
         <referenceBlock name="vendor.myaccount.left.profile.logo">
             <action method="setTemplate">
-                <argument name="template" xsi:type="string">
-                    Gcc_VendorDashboardOverride::account/profile/logo.phtml
-                </argument>
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/logo.phtml</argument>
             </action>
         </referenceBlock>
-         <!-- Sales override -->
+
+        <referenceBlock name="vendor.myaccount.left.profile.title">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Vnecoms_Vendors::account/profile/title.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="vendor.myaccount.left.profile.description">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/description.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="vendor.myaccount.left.profile.joinedtime">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/joined-time.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="vendor.myaccount.left.profile.phone">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/phone.phtml</argument>
+            </action>
+        </referenceBlock>
+
         <referenceBlock name="vendor.myaccount.left.profile.salescount">
             <action method="setTemplate">
-                <argument name="template" xsi:type="string">
-                    Gcc_VendorDashboardOverride::account/profile/sales.phtml
-                </argument>
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/sales.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceBlock name="vendor.myaccount.left.profile.address">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/address.phtml</argument>
             </action>
         </referenceBlock>
     </body>
-
 </page>

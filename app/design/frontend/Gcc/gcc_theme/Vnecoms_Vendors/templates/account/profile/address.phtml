@@ -1,0 +1,13 @@
+<?php
+$address = trim((string) $block->getAddress());
+?>
+
+<?php if ($address): ?>
+    <div class="vendor-profile-meta vendor-profile-meta--location">
+        <strong>
+            <i class="fa fa-map-marker margin-r-5" aria-hidden="true"></i>
+            <?= $block->escapeHtml(__('Location')) ?>
+        </strong>
+        <span class="text-muted"><?= $block->escapeHtml($address) ?></span>
+    </div>
+<?php endif; ?>

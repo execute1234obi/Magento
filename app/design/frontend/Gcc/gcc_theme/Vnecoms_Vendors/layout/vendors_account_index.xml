@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation=" स्कीमा_path ">
-    <body>
-        <referenceBlock name="vendor.account.dashboard"> <action method="setTemplate">
-                <argument name="template" xsi:type="string">Vnecoms_Vendors::account.phtml</argument>
-            </action>
-        </referenceBlock>
-    </body>
-</page>
