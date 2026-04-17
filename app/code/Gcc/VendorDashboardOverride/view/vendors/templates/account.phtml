@@ -40,25 +40,25 @@ if ($tabsRenderer) {
 .vendor-account-page {
   --vendor-accent: #2f5cab;
   --vendor-accent-soft: #edf3ff;
-  --vendor-border: #dfe7f3;
+  --vendor-border: #d7e3f4;
   --vendor-card: #ffffff;
   --vendor-text: #1f3563;
-  --vendor-muted: #5c6c8d;
-  background: linear-gradient(180deg, #f8fbff 0%, #f4f7fc 100%);
-  padding: 18px 0 28px;
+  --vendor-muted: #58709a;
+  background: #ffffff;
+  padding: 16px 0 28px;
 }
 
 .vendor-account-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 320px) minmax(0, 1fr);
-  gap: 18px;
+  grid-template-columns: minmax(376px, 398px) minmax(0, 1fr);
+  gap: 16px;
   align-items: start;
 }
 
 .vendor-account-sidebar {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   min-width: 0;
 }
 
@@ -69,16 +69,16 @@ if ($tabsRenderer) {
 .vendor-account-card {
   background: var(--vendor-card);
   border: 1px solid var(--vendor-border);
-  border-radius: 12px;
-  box-shadow: 0 1px 2px rgba(20, 37, 74, 0.04);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(20, 37, 74, 0.05);
   overflow: hidden;
 }
 
 .vendor-account-card__heading {
-  padding: 14px 16px 12px;
+  padding: 16px 18px 14px;
   border-bottom: 1px solid #edf2fa;
   color: var(--vendor-text);
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
 }
 
@@ -91,12 +91,23 @@ if ($tabsRenderer) {
 }
 
 .vendor-account-summary .box-body.box-profile {
-  padding: 16px;
+  position: relative;
+  padding: 18px 18px 16px;
   display: grid;
-  grid-template-columns: 88px minmax(0, 1fr);
-  gap: 10px 16px;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px 14px;
   align-items: start;
   text-align: left;
+}
+
+.vendor-account-summary .box-body.box-profile::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 120px;
+  width: 1px;
+  background: #e4edf8;
 }
 
 .vendor-account-summary .profile-user-img {
@@ -104,32 +115,39 @@ if ($tabsRenderer) {
   height: 72px;
   object-fit: cover;
   grid-column: 1;
-  grid-row: 1 / span 2;
+  grid-row: 1;
   justify-self: center;
-  margin: 0;
-  border: 3px solid #edf3ff;
-  box-shadow: 0 8px 20px rgba(17, 38, 77, 0.08);
+  margin: 0 auto 6px;
+  border: 2px solid #eef4fd;
+  box-shadow: none;
 }
 
 .vendor-account-summary .profile-username {
   grid-column: 1;
   grid-row: 2;
+  justify-self: center;
   margin: 0;
   color: var(--vendor-text);
-  font-size: 18px;
-  line-height: 1.3;
+  font-size: 16px;
+  line-height: 1.25;
   font-weight: 700;
   text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 .vendor-account-summary .vendor-profile-meta {
   color: var(--vendor-muted);
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.45;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-top: 3px;
+  gap: 8px;
+  padding-top: 2px;
+  min-width: 0;
+  position: relative;
 }
 
 .vendor-account-summary .vendor-profile-meta--joined {
@@ -145,15 +163,56 @@ if ($tabsRenderer) {
 .vendor-account-summary .vendor-profile-meta strong {
   color: var(--vendor-text);
   font-weight: 600;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .vendor-account-summary .vendor-profile-meta i {
   color: var(--vendor-accent);
-  margin-right: 6px;
+  margin-top: 2px;
+  flex: 0 0 auto;
 }
 
 .vendor-account-summary .vendor-profile-meta .text-muted {
   color: var(--vendor-muted);
+  display: block;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.vendor-account-summary .text-muted.text-center {
+  display: none;
+}
+
+.vendor-account-summary .vendor-profile-meta__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.vendor-account-summary .vendor-profile-meta--joined .vendor-profile-meta__line {
+  color: var(--vendor-text);
+  white-space: nowrap;
+}
+
+.vendor-account-summary .vendor-profile-meta--location {
+  gap: 0;
+}
+
+.vendor-account-summary .vendor-profile-meta--location .vendor-profile-meta__line {
+  align-items: center;
+  gap: 8px;
+}
+
+.vendor-account-summary .vendor-profile-meta--location .text-muted {
+  display: inline;
+  margin-top: 0;
+  line-height: 1.45;
+}
+
+.vendor-account-summary .vendor-profile-meta--location i {
+  margin-top: 0;
 }
 
 .vendor-account-summary .box-body.box-profile hr,
@@ -174,7 +233,7 @@ if ($tabsRenderer) {
 
 .vendor-account-menu .nav.nav-tabs > li {
   margin: 0;
-  border-bottom: 1px solid #eef2f8;
+  border-bottom: 1px solid #edf3fb;
 }
 
 .vendor-account-menu .nav.nav-tabs > li:last-child {
@@ -183,12 +242,12 @@ if ($tabsRenderer) {
 
 .vendor-account-menu .nav.nav-tabs > li > a {
   display: block;
-  padding: 12px 16px;
+  padding: 16px 18px;
   color: var(--vendor-text);
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
-  border-left: 3px solid transparent;
-  background: #fafcff;
+  border-left: 4px solid transparent;
+  background: #ffffff;
   text-decoration: none;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -217,7 +276,7 @@ if ($tabsRenderer) {
 }
 
 .vendor-account-main .vendor-account-form {
-  padding: 18px;
+  padding: 20px;
 }
 
 .vendor-account-main .entry-edit {
@@ -345,33 +404,70 @@ if ($tabsRenderer) {
   }
 
   .vendor-account-summary .box-body.box-profile {
-    grid-template-columns: 1fr;
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 10px 14px;
   }
 
-  .vendor-account-summary .profile-user-img,
-  .vendor-account-summary .profile-username,
-  .vendor-account-summary .vendor-profile-meta--joined,
-  .vendor-account-summary .vendor-profile-meta--location {
-    grid-column: auto;
-    grid-row: auto;
+  .vendor-account-summary .box-body.box-profile::after {
+    left: 84px;
   }
 
   .vendor-account-summary .profile-user-img {
     justify-self: start;
   }
+
+  .vendor-account-summary .vendor-profile-meta {
+    padding-top: 2px;
+  }
 }
 
 @media (max-width: 640px) {
   .vendor-account-page {
-    padding-top: 12px;
+    padding: 12px 0 20px;
+  }
+
+  .vendor-account-layout {
+    gap: 12px;
+  }
+
+  .vendor-account-sidebar {
+    gap: 12px;
+  }
+
+  .vendor-account-card {
+    border-radius: 10px;
   }
 
   .vendor-account-card__heading {
+    padding: 14px 16px 12px;
     font-size: 16px;
   }
 
   .vendor-account-main .vendor-account-form {
     padding: 14px;
+  }
+
+  .vendor-account-summary .box-body.box-profile {
+    padding: 14px 16px;
+  }
+
+  .vendor-account-summary .profile-user-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .vendor-account-summary .profile-username {
+    font-size: 16px;
+  }
+
+  .vendor-account-summary .vendor-profile-meta {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .vendor-account-menu .nav.nav-tabs > li > a {
+    padding: 14px 16px;
+    font-size: 15px;
   }
 }
 </style>
