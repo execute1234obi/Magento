@@ -1,0 +1,473 @@
+<?php
+$profileHtml = $block->getChildHtml('myaccount_left');
+$formHtml = $block->getChildHtml('myaccount_content');
+
+$tabsHtml = '';
+$tabsRenderer = $block->getLayout()->getBlock('tabs_field');
+if ($tabsRenderer) {
+    $tabsHtml = $tabsRenderer->getChildHtml();
+}
+?>
+
+<div class="vendor-account-page">
+    <div class="vendor-account-layout">
+        <aside class="vendor-account-sidebar">
+            <div class="vendor-account-card vendor-account-summary">
+                <?= /* @noEscape */ $profileHtml ?>
+            </div>
+
+            <?php if ($tabsHtml): ?>
+                <div class="vendor-account-card vendor-account-menu">
+                    <div class="vendor-account-card__heading">
+                        <?= $block->escapeHtml(__('User Information')) ?>
+                    </div>
+                    <div class="vendor-account-menu__body">
+                        <?= /* @noEscape */ $tabsHtml ?>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </aside>
+
+        <section class="vendor-account-main">
+            <div class="vendor-account-card vendor-account-form">
+                <?= /* @noEscape */ $formHtml ?>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.vendor-account-page {
+  --vendor-accent: #2f5cab;
+  --vendor-accent-soft: #edf3ff;
+  --vendor-border: #d7e3f4;
+  --vendor-card: #ffffff;
+  --vendor-text: #1f3563;
+  --vendor-muted: #58709a;
+  background: #ffffff;
+  padding: 16px 0 28px;
+}
+
+.vendor-account-layout {
+  display: grid;
+  grid-template-columns: minmax(376px, 398px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.vendor-account-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.vendor-account-main {
+  min-width: 0;
+}
+
+.vendor-account-card {
+  background: var(--vendor-card);
+  border: 1px solid var(--vendor-border);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(20, 37, 74, 0.05);
+  overflow: hidden;
+}
+
+.vendor-account-card__heading {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid #edf2fa;
+  color: var(--vendor-text);
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.vendor-account-summary .box.box-primary {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.vendor-account-summary .box-body.box-profile {
+  position: relative;
+  padding: 18px 18px 16px;
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: 8px 14px;
+  align-items: start;
+  text-align: left;
+}
+
+.vendor-account-summary .box-body.box-profile::after {
+  content: "";
+  position: absolute;
+  top: 16px;
+  bottom: 16px;
+  left: 120px;
+  width: 1px;
+  background: #e4edf8;
+}
+
+.vendor-account-summary .profile-user-img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  grid-column: 1;
+  grid-row: 1;
+  justify-self: center;
+  margin: 0 auto 6px;
+  border: 2px solid #eef4fd;
+  box-shadow: none;
+}
+
+.vendor-account-summary .profile-username {
+  grid-column: 1;
+  grid-row: 2;
+  justify-self: center;
+  margin: 0;
+  color: var(--vendor-text);
+  font-size: 16px;
+  line-height: 1.25;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.vendor-account-summary .vendor-profile-meta {
+  color: var(--vendor-muted);
+  font-size: 14px;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 2px;
+  min-width: 0;
+  position: relative;
+}
+
+.vendor-account-summary .vendor-profile-meta--joined {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.vendor-account-summary .vendor-profile-meta--location {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.vendor-account-summary .vendor-profile-meta strong {
+  color: var(--vendor-text);
+  font-weight: 600;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.vendor-account-summary .vendor-profile-meta i {
+  color: var(--vendor-accent);
+  margin-top: 2px;
+  flex: 0 0 auto;
+}
+
+.vendor-account-summary .vendor-profile-meta .text-muted {
+  color: var(--vendor-muted);
+  display: block;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+
+.vendor-account-summary .text-muted.text-center {
+  display: none;
+}
+
+.vendor-account-summary .vendor-profile-meta__line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.vendor-account-summary .vendor-profile-meta--joined .vendor-profile-meta__line {
+  color: var(--vendor-text);
+  white-space: nowrap;
+}
+
+.vendor-account-summary .vendor-profile-meta--location {
+  gap: 0;
+}
+
+.vendor-account-summary .vendor-profile-meta--location .vendor-profile-meta__line {
+  align-items: center;
+  gap: 8px;
+}
+
+.vendor-account-summary .vendor-profile-meta--location .text-muted {
+  display: inline;
+  margin-top: 0;
+  line-height: 1.45;
+}
+
+.vendor-account-summary .vendor-profile-meta--location i {
+  margin-top: 0;
+}
+
+.vendor-account-summary .box-body.box-profile hr,
+.vendor-account-summary .box-body.box-profile br {
+  display: none;
+}
+
+.vendor-account-menu__body {
+  padding: 0;
+}
+
+.vendor-account-menu .nav.nav-tabs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.vendor-account-menu .nav.nav-tabs > li {
+  margin: 0;
+  border-bottom: 1px solid #edf3fb;
+}
+
+.vendor-account-menu .nav.nav-tabs > li:last-child {
+  border-bottom: 0;
+}
+
+.vendor-account-menu .nav.nav-tabs > li > a {
+  display: block;
+  padding: 16px 18px;
+  color: var(--vendor-text);
+  font-size: 16px;
+  font-weight: 600;
+  border-left: 4px solid transparent;
+  background: #ffffff;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.vendor-account-menu .nav.nav-tabs > li > a:hover {
+  background: var(--vendor-accent-soft);
+  color: var(--vendor-accent);
+}
+
+.vendor-account-menu .nav.nav-tabs > li.ui-state-active > a,
+.vendor-account-menu .nav.nav-tabs > li.ui-tabs-active > a,
+.vendor-account-menu .nav.nav-tabs > li.active > a {
+  background: var(--vendor-accent-soft);
+  border-left-color: var(--vendor-accent);
+  color: var(--vendor-accent);
+}
+
+.vendor-account-menu .tab-content {
+  display: none !important;
+}
+
+.vendor-account-menu .changed,
+.vendor-account-menu .error,
+.vendor-account-menu .loader {
+  display: none;
+}
+
+.vendor-account-main .vendor-account-form {
+  padding: 20px;
+}
+
+.vendor-account-main .entry-edit {
+  margin: 0;
+}
+
+.vendor-account-main #vendor_info_tab_content {
+  margin-bottom: 18px;
+}
+
+.vendor-account-main .fieldset,
+.vendor-account-main .panel,
+.vendor-account-main .block {
+  border-color: var(--vendor-border);
+  box-shadow: none;
+}
+
+.vendor-account-main .legend,
+.vendor-account-main .section-title,
+.vendor-account-main .panel-heading {
+  background: transparent;
+  border-bottom: 1px solid #edf2fa;
+  color: var(--vendor-text);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 16px;
+  padding: 12px 0 14px;
+}
+
+.vendor-account-main .form-group {
+  margin-bottom: 14px;
+}
+
+.vendor-account-main .row {
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.vendor-account-main .row > [class*="col-"] {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.vendor-account-main .form-control,
+.vendor-account-main input[type="text"],
+.vendor-account-main input[type="email"],
+.vendor-account-main input[type="tel"],
+.vendor-account-main input[type="number"],
+.vendor-account-main input[type="url"],
+.vendor-account-main select,
+.vendor-account-main textarea {
+  width: 100%;
+  height: 42px;
+  padding: 10px 12px;
+  border: 1px solid #d9e2f1;
+  border-radius: 6px;
+  background: #fff;
+  color: #2c3e5d;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.vendor-account-main textarea {
+  height: auto;
+  min-height: 130px;
+  resize: vertical;
+}
+
+.vendor-account-main .form-control:focus,
+.vendor-account-main input:focus,
+.vendor-account-main select:focus,
+.vendor-account-main textarea:focus {
+  border-color: var(--vendor-accent);
+  box-shadow: 0 0 0 3px rgba(47, 92, 171, 0.12);
+  outline: none;
+}
+
+.vendor-account-main .note-editor,
+.vendor-account-main .tox-tinymce {
+  border: 1px solid #d9e2f1 !important;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.vendor-account-main .page-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.vendor-account-main .page-form-actions .btn,
+.vendor-account-main .page-form-actions button,
+.vendor-account-main .action.save,
+.vendor-account-main .save.button {
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.vendor-account-main .action.save,
+.vendor-account-main .btn-primary,
+.vendor-account-main button[type="submit"] {
+  background: var(--vendor-accent);
+  border-color: var(--vendor-accent);
+  color: #fff;
+}
+
+.vendor-account-main .action.save:hover,
+.vendor-account-main .btn-primary:hover,
+.vendor-account-main button[type="submit"]:hover {
+  background: #244b92;
+  border-color: #244b92;
+  color: #fff;
+}
+
+.vendor-account-main .btn-warning,
+.vendor-account-main .btn-github {
+  display: none !important;
+}
+
+@media (max-width: 991px) {
+  .vendor-account-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .vendor-account-summary .box-body.box-profile {
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 10px 14px;
+  }
+
+  .vendor-account-summary .box-body.box-profile::after {
+    left: 84px;
+  }
+
+  .vendor-account-summary .profile-user-img {
+    justify-self: start;
+  }
+
+  .vendor-account-summary .vendor-profile-meta {
+    padding-top: 2px;
+  }
+}
+
+@media (max-width: 640px) {
+  .vendor-account-page {
+    padding: 12px 0 20px;
+  }
+
+  .vendor-account-layout {
+    gap: 12px;
+  }
+
+  .vendor-account-sidebar {
+    gap: 12px;
+  }
+
+  .vendor-account-card {
+    border-radius: 10px;
+  }
+
+  .vendor-account-card__heading {
+    padding: 14px 16px 12px;
+    font-size: 16px;
+  }
+
+  .vendor-account-main .vendor-account-form {
+    padding: 14px;
+  }
+
+  .vendor-account-summary .box-body.box-profile {
+    padding: 14px 16px;
+  }
+
+  .vendor-account-summary .profile-user-img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .vendor-account-summary .profile-username {
+    font-size: 16px;
+  }
+
+  .vendor-account-summary .vendor-profile-meta {
+    font-size: 14px;
+    gap: 8px;
+  }
+
+  .vendor-account-menu .nav.nav-tabs > li > a {
+    padding: 14px 16px;
+    font-size: 15px;
+  }
+}
+</style>

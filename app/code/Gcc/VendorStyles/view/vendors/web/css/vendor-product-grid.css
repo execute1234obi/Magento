@@ -635,7 +635,7 @@ body.catalog-product-index table.data-grid thead th,
 body.vendors-catalog-product-index table.data-grid thead th,
 body[class*="catalog-product-index"] table.data-grid thead th {
     padding: 16px 18px;
-    border-right: 1px solid #edf3fb;
+    border: 0;
     border-bottom: 1px solid #edf3fb !important;
     background: #f7faff;
     color: #163a7a;
@@ -694,11 +694,11 @@ body.catalog-product-index table.data-grid tbody td,
 body.vendors-catalog-product-index table.data-grid tbody td,
 body[class*="catalog-product-index"] table.data-grid tbody td {
     padding: 16px 18px;
-    border-right: 1px solid #edf3fb;
+    border: 0;
     border-bottom: 1px solid #edf3fb !important;
     color: #314b7b;
     font-size: 14px;
-    vertical-align: top;
+    vertical-align: middle;
     background: #ffffff;
     white-space: nowrap;
 }

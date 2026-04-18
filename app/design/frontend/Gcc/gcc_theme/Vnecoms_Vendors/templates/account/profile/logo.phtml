@@ -1,0 +1,12 @@
+<?php
+$vendor = $block->getVendor();
+$logo = $vendor ? trim((string) $vendor->getData('upload_logo')) : '';
+$logoUrl = $logo
+    ? $block->getBaseUrl() . 'media/' . ltrim($logo, '/')
+    : $block->getLogoUrl();
+?>
+
+<img class="profile-user-img img-responsive img-circle"
+     title="<?= $block->escapeHtmlAttr($block->getStoreName()) ?>"
+     alt="<?= $block->escapeHtmlAttr($block->getStoreName()) ?>"
+     src="<?= $block->escapeUrl($logoUrl) ?>" />
