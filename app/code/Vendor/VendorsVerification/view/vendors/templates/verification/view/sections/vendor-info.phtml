@@ -45,10 +45,13 @@ $commentsCount = $block->getCommentsCounts(
     $detail_id,
     \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
 );
+
+$sectionRowStyle = 'style="border:0 !important;box-shadow:none !important;background:#ffffff !important;"';
+$sectionCellStyle = 'style="border:0 !important;border-top:0 !important;border-bottom:0 !important;box-shadow:none !important;background:#ffffff !important;"';
 ?>
 
-<section class="verification-card verification-card--section verification-card--business">
-    <div class="verification-card__head">
+<section class="verification-card verification-card--section verification-card--business" style="background-color:#ffffff !important;background-image:none !important;border-color:#d8e2ef !important;">
+    <div class="verification-card__head" style="background-color:#ffffff !important;background-image:none !important;border-bottom-color:#dfe8f2 !important;">
         <h3><?= __('Business Information') ?></h3>
 
         <div class="verification-card__actions">
@@ -72,44 +75,44 @@ $commentsCount = $block->getCommentsCounts(
         </div>
     </div>
 
-    <div class="verification-card__body">
-        <table class="verification-table">
+    <div class="verification-card__body" style="background-color:#ffffff !important;background-image:none !important;">
+        <table class="verification-table" style="border-collapse:separate;border-spacing:0;background:#ffffff !important;border:0 !important;box-shadow:none !important;">
             <tbody>
-                <tr>
-                    <td><?= __('Status'); ?></td>
-                    <td><?= $block->getStatusLabel($verificationData->getStatus()); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Status'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->getStatusLabel($verificationData->getStatus()); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Country'); ?></td>
-                    <td><?= $block->escapeHtml($block->getCountryByCode($business_country) ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Country'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($block->getCountryByCode($business_country) ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Name'); ?></td>
-                    <td><?= $block->escapeHtml($business_name ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Name'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($business_name ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Type'); ?></td>
-                    <td><?= $block->escapeHtml($businessTypeLabel ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Type'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($businessTypeLabel ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Category'); ?></td>
-                    <td><?= $block->escapeHtml($businessCategoryLabel ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Category'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($businessCategoryLabel ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Description'); ?></td>
-                    <td><?= $business_description !== '' ? nl2br($block->escapeHtml($business_description)) : __('N/A'); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Description'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $business_description !== '' ? nl2br($block->escapeHtml($business_description)) : __('N/A'); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Website'); ?></td>
-                    <td><?= $block->escapeHtml($business_website ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Website'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($business_website ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Phone'); ?></td>
-                    <td><?= $block->escapeHtml($business_phone ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Phone'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($business_phone ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Business Email'); ?></td>
-                    <td><?= $block->escapeHtml($business_email ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Business Email'); ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($business_email ?: __('N/A')); ?></td>
                 </tr>
             </tbody>
         </table>

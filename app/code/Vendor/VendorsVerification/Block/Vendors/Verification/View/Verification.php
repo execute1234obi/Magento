@@ -301,11 +301,11 @@ public function getvendorVerificationStatusLabel($status){
 			    break;
 			    
 			case 9;
-			    $label = '<label class="label-danger" style="padding:5px;">'.(string) __('Experied').'</label>';
+			    $label = '<label class="label-danger" style="padding:5px;">'.(string) __('Expired').'</label>';
 			    break;    
 			    
 			 default:
-			    $label = '<label>undefine</label>';
+			    $label = '<label>Undefined</label>';
 			    break;              
 		}
 		return $label;
@@ -325,18 +325,39 @@ public function getvendorVerificationStatusLabel($status){
 			    break;
 			    
 			 default:
-			    $label = '<label>undefine</label>';
+			    $label = '<label>Undefined</label>';
 			    break;              
 		}
 		return $label;
 	}
 	
 	public function getFormatedPrice($price){
-		return $this->priceHelper->currency($price);
+        if ($price === null || $price === '') {
+            return (string) __('N/A');
+        }
+
+		return $this->priceHelper->currency((float) $price);
 	}  
 	
 	public function getFormatedDate($date){		
-		return  $this->timezone->date(new \DateTime($date))->format('F j, Y'); 
+        if (!$date) {
+            return (string) __('N/A');
+        }
+
+        try {
+		    return $this->timezone->date(new \DateTime($date))->format('F j, Y');
+        } catch (\Exception $e) {
+            return (string) __('N/A');
+        }
+	}
+
+	public function getVerificationMonthsLabel($months)
+	{
+	    if ($months === null || $months === '') {
+	        return (string) __('N/A');
+	    }
+
+	    return (string) __('%1 Months', (int) $months);
 	}
 	
 	public function getCommentsCounts($verificationId, $verificationDataId,$dataGroupType){
@@ -425,12 +446,12 @@ public function getStatusLabel($status){
 			    $label = '<label class="label-danger" style="padding:5px;">'.(string) $arrStatus[$status].'</label>';
 			    break;
 			    
-			 case \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__VERIFIED;
+			case \Vendor\VendorsVerification\Model\Source\Status::VENDOR_VERIFICATION_STATUS__VERIFIED;
 			    $label = '<label class="label-success" style="padding:5px;">'.(string) $arrStatus[$status].'</label>';
 			    break;
 			    
 			 default:
-			    $label = '<label>undefine</label>';
+			    $label = '<label>Undefined</label>';
 			    break;              
 		}
 		return $label;

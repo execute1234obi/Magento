@@ -5,7 +5,21 @@ $formHtml = $block->getChildHtml('myaccount_content');
 $tabsHtml = '';
 $tabsRenderer = $block->getLayout()->getBlock('tabs_field');
 if ($tabsRenderer) {
-    $tabsHtml = $tabsRenderer->getChildHtml();
+    $tabsBlock = $tabsRenderer->getChildBlock('tabs');
+    if ($tabsBlock) {
+        $tabsBlock->setTemplate('Vnecoms_Vendors::widget/tabshoriz.phtml');
+        $tabsHtml = $tabsBlock->toHtml();
+    } else {
+        $tabsHtml = $tabsRenderer->getChildHtml();
+    }
+}
+
+if ($tabsHtml === '') {
+    $tabsBlock = $block->getLayout()->getBlock('tabs');
+    if ($tabsBlock) {
+        $tabsBlock->setTemplate('Vnecoms_Vendors::widget/tabshoriz.phtml');
+        $tabsHtml = $tabsBlock->toHtml();
+    }
 }
 ?>
 
@@ -224,55 +238,60 @@ if ($tabsRenderer) {
   padding: 0;
 }
 
-.vendor-account-menu .nav.nav-tabs {
+.vendor-account-tabs {
+  margin: 0;
+}
+
+.vendor-account-tabs__list {
   list-style: none;
   margin: 0;
   padding: 0;
-  border: 0;
 }
 
-.vendor-account-menu .nav.nav-tabs > li {
+.vendor-account-tabs__item {
   margin: 0;
-  border-bottom: 1px solid #edf3fb;
+  border-bottom: 1px solid #eef2f8;
 }
 
-.vendor-account-menu .nav.nav-tabs > li:last-child {
+.vendor-account-tabs__item.is-hidden {
+  display: none;
+}
+
+.vendor-account-tabs__item:last-child {
   border-bottom: 0;
 }
 
-.vendor-account-menu .nav.nav-tabs > li > a {
+.vendor-account-tabs__link {
   display: block;
-  padding: 16px 18px;
+  padding: 12px 16px;
+  background: #fafcff;
   color: var(--vendor-text);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
-  border-left: 4px solid transparent;
-  background: #ffffff;
+  border-left: 3px solid transparent;
   text-decoration: none;
   transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.vendor-account-menu .nav.nav-tabs > li > a:hover {
+.vendor-account-tabs__link:hover {
   background: var(--vendor-accent-soft);
   color: var(--vendor-accent);
 }
 
-.vendor-account-menu .nav.nav-tabs > li.ui-state-active > a,
-.vendor-account-menu .nav.nav-tabs > li.ui-tabs-active > a,
-.vendor-account-menu .nav.nav-tabs > li.active > a {
+.vendor-account-tabs__item.ui-state-active > .vendor-account-tabs__link,
+.vendor-account-tabs__item.ui-tabs-active > .vendor-account-tabs__link,
+.vendor-account-tabs__item.active > .vendor-account-tabs__link {
   background: var(--vendor-accent-soft);
   border-left-color: var(--vendor-accent);
   color: var(--vendor-accent);
 }
 
-.vendor-account-menu .tab-content {
-  display: none !important;
+.vendor-account-tabs [data-role="item-messages"] {
+  display: none;
 }
 
-.vendor-account-menu .changed,
-.vendor-account-menu .error,
-.vendor-account-menu .loader {
-  display: none;
+.vendor-account-tabs__item > div {
+  display: none !important;
 }
 
 .vendor-account-main .vendor-account-form {
@@ -465,7 +484,7 @@ if ($tabsRenderer) {
     gap: 8px;
   }
 
-  .vendor-account-menu .nav.nav-tabs > li > a {
+  .vendor-account-tabs__link {
     padding: 14px 16px;
     font-size: 15px;
   }
