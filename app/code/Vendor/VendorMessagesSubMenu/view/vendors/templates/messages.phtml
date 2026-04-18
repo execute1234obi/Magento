@@ -207,10 +207,6 @@
     padding: 40px;
     text-align: center;
   }
-  /* extra fix */
-.vendor-msg__threadList {
-  overflow: hidden;
-}
 
 .vendor-msg__threadList .admin__data-grid-wrap {
   width: 100% !important;
@@ -255,8 +251,8 @@
 
     <!-- ✅ Recommended: render inbox grid here via layout as="message_list" -->
     <div class="vendor-msg__threadList" id="vendorThreadList">
-      <?php echo $block->getChildHtml('message_list') ?>
-    </div>
+    <?php echo $block->getChildHtml('vendor_messages_grid1'); ?>
+</div>
   </aside>
 
   <!-- RIGHT: Conversation (your existing view/communication output) -->
@@ -274,7 +270,9 @@
   </section>
 
 </div>
-
+<script>
+    window.BASE_URL = "<?php echo $block->getUrl(''); ?>";
+</script>
 <script>
 (function () {
   const threadList = document.getElementById('vendorThreadList');
@@ -368,4 +366,64 @@
   // 4) On view page: auto-scroll conversation to bottom
   if (rightBody) rightBody.scrollTop = rightBody.scrollHeight;
 })();
+</script>
+<script>
+require(['jquery'], function ($) {
+
+    function loadMessage(url) {
+        $('#vendorMsgContentBody').html('<p>Loading...</p>');
+
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (res) {
+
+                // sirf content part extract karo (full page nahi)
+                const html = $(res).find('.page-content, #maincontent, .vendor-message-view').html();
+
+                if (html) {
+                    $('#vendorMsgContentBody').html(html);
+                    // ✅ STOP LOADER
+                     $('body').trigger('processStop');
+                } else {
+                    $('#vendorMsgContentBody').html('<p>Unable to load message</p>');
+                }
+
+                // scroll bottom after load
+                const container = $('#vendorMsgContentBody');
+                container.scrollTop(container[0].scrollHeight);
+            },
+            error: function () {
+                $('#vendorMsgContentBody').html('<p>Error loading message</p>');
+                 // ✅ STOP LOADER (important)
+            $('body').trigger('processStop');
+            }
+        });
+    }
+
+    // ✅ click event (LEFT panel)
+    $(document).on('click', '.inbox-row-container', function () {
+
+        const url = $(this).data('url');
+
+        if (url) {
+            loadMessage(url);
+        }
+
+        // active highlight
+        $('.inbox-row-container').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    // ✅ default first message auto open
+    $(window).on('load', function () {
+        setTimeout(function () {
+            const first = $('.inbox-row-container').first();
+            if (first.length) {
+                first.trigger('click');
+            }
+        }, 300);
+    });
+
+});
 </script>

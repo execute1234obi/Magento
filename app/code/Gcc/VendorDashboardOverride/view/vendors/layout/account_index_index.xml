@@ -50,5 +50,13 @@
                 <argument name="template" xsi:type="string">Gcc_VendorDashboardOverride::account/profile/address.phtml</argument>
             </action>
         </referenceBlock>
+          <!-- title override -->
+        <referenceBlock name="vendor.myaccount.left.profile.title">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">
+                    Gcc_VendorDashboardOverride::account/profile/title.phtml
+                </argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>

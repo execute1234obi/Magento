@@ -14,9 +14,11 @@
         </referenceBlock>
 
         <!-- ✅ ADD UI COMPONENT DIRECTLY -->
-        <referenceContainer name="content">
+        <!-- <referenceContainer name="content">
             <uiComponent name="vendor_messages_grid1"/>
-        </referenceContainer>
-
+        </referenceContainer> -->
+    <referenceBlock name="seller.messages">
+    <uiComponent name="vendor_messages_grid1" />
+</referenceBlock>
     </body>
 </page>
