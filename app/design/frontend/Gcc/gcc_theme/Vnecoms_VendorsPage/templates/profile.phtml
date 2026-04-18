@@ -492,13 +492,17 @@ $certificatePath = $vendor->getData('certificate');
 // Vendor Config fetch (banner)
 $configCollection = $objectManager->create(\Vnecoms\VendorsConfig\Model\ResourceModel\Config\Collection::class)
     ->addFieldToFilter('vendor_id', $vendorId)
-    ->addFieldToFilter('path', 'page/general/banner')
+    ->addFieldToFilter('path', 'vendor_general/general_info/upload_banner')
     ->setPageSize(1);
 
 $bannerUrl = '';
+//echo $configCollection->getSelect();
+//echo $configCollection->getSize();
+//print_r($configCollection->getData());exit;
 if ($configCollection->getSize()) {
     $config = $configCollection->getFirstItem();
     $bannerValue = $config->getValue();
+    //echo "ban".$bannerValue;exit;
     if ($bannerValue) {
         // adjust folder path if needed (check your media/ves_vendors folder)
         $bannerUrl = $mediaUrl . 'ves_vendors/banner/' . $bannerValue;
@@ -509,6 +513,7 @@ if ($configCollection->getSize()) {
  
    <div class="banner">
     <?php
+    //echo $bannerUrl; exit;
 $finalBannerUrl = (!empty($bannerUrl)) ? $bannerUrl : "https://placehold.co/1200x220/cccccc/000000?text=No+Banner+Available";
 //echo $finalBannerUrl;
 ?>
