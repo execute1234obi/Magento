@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="ves_vendors_vendor_tab_info_prepare_after">
+        <observer name="gcc_vendor_dashboard_override_apply_upload_renderer"
+                  instance="Gcc\VendorDashboardOverride\Observer\ApplyUploadRenderer"/>
+    </event>
+</config>
