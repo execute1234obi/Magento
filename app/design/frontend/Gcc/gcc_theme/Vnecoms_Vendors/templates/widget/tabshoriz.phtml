@@ -10,6 +10,8 @@
                 continue;
             }
 
+            $_tabId = $block->getTabId($_tab);
+            $_isActive = $block->getActiveTabId() === $_tabId;
             $_tabClass = 'tab-item-link ' . $block->getTabClass($_tab);
             if ($_tab->getClass()) {
                 $_tabClass .= ' ' . (preg_match('/\s?ajax\s?/', $_tab->getClass()) ? 'notloaded' : '');
@@ -20,12 +22,14 @@
                 ? '#' . $block->getTabId($_tab) . '_content'
                 : $block->getTabUrl($_tab);
             ?>
-            <li class="vendor-account-tabs__item<?php if ($block->getTabIsHidden($_tab)): ?> is-hidden<?php endif; ?>">
+            <li class="vendor-account-tabs__item<?php if ($_isActive): ?> ui-state-active ui-tabs-active active<?php endif; ?><?php if ($block->getTabIsHidden($_tab)): ?> is-hidden<?php endif; ?>"
+                <?php if ($_isActive): ?>aria-selected="true"<?php endif; ?>>
                 <a href="<?= $block->escapeUrl($_tabHref) ?>"
-                   id="<?= $block->escapeHtmlAttr($block->getTabId($_tab)) ?>"
+                   id="<?= $block->escapeHtmlAttr($_tabId) ?>"
                    name="<?= $block->escapeHtmlAttr($block->getTabId($_tab, false)) ?>"
                    title="<?= $block->escapeHtmlAttr($block->getTabTitle($_tab)) ?>"
-                   class="vendor-account-tabs__link <?= $block->escapeHtmlAttr($_tabClass) ?>"
+                   class="vendor-account-tabs__link <?= $block->escapeHtmlAttr($_tabClass) ?><?php if ($_isActive): ?> ui-state-active ui-tabs-active active<?php endif; ?>"
+                   <?php if ($_isActive): ?>aria-selected="true"<?php endif; ?>
                    data-tab-type="<?= $block->escapeHtmlAttr($_tabType) ?>">
                     <span><?= $block->escapeHtml($block->getTabLabel($_tab)) ?></span>
                 </a>

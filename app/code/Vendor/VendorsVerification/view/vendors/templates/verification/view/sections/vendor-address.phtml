@@ -43,10 +43,13 @@ $commentsCount = $detail_id
         \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_ADDRESS
     )
     : 0;
+
+$sectionRowStyle = 'style="border:0 !important;box-shadow:none !important;background:#ffffff !important;"';
+$sectionCellStyle = 'style="border:0 !important;border-top:0 !important;border-bottom:0 !important;box-shadow:none !important;background:#ffffff !important;"';
 ?>
 
-<section class="verification-card verification-card--section verification-card--address">
-    <div class="verification-card__head">
+<section class="verification-card verification-card--section verification-card--address" style="background-color:#ffffff !important;background-image:none !important;border-color:#d8e2ef !important;">
+    <div class="verification-card__head" style="background-color:#ffffff !important;background-image:none !important;border-bottom-color:#dfe8f2 !important;">
         <h3><?= __('Business Address') ?></h3>
 
         <div class="verification-card__actions">
@@ -70,34 +73,34 @@ $commentsCount = $detail_id
         </div>
     </div>
 
-    <div class="verification-card__body">
-        <table class="verification-table">
+    <div class="verification-card__body" style="background-color:#ffffff !important;background-image:none !important;">
+        <table class="verification-table" style="border-collapse:separate;border-spacing:0;background:#ffffff !important;border:0 !important;box-shadow:none !important;">
             <tbody>
-                <tr>
-                    <td><?= __('Status') ?></td>
-                    <td><?= $block->getStatusLabel($status); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Status') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->getStatusLabel($status); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Address Line 1') ?></td>
-                    <td><?= $block->escapeHtml($addressLine1 ?: $streetRaw ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Address Line 1') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($addressLine1 ?: $streetRaw ?: __('N/A')); ?></td>
                 </tr>
                 <?php if ($addressLine2 !== ''): ?>
-                    <tr>
-                        <td><?= __('Address Line 2') ?></td>
-                        <td><?= $block->escapeHtml($addressLine2); ?></td>
+                    <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                        <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Address Line 2') ?></td>
+                        <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($addressLine2); ?></td>
                     </tr>
                 <?php endif; ?>
-                <tr>
-                    <td><?= __('City') ?></td>
-                    <td><?= $block->escapeHtml($city ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('City') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($city ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('State') ?></td>
-                    <td><?= $block->escapeHtml($state ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('State') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($state ?: __('N/A')); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Post Code') ?></td>
-                    <td><?= $block->escapeHtml($postcode ?: __('N/A')); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Post Code') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $block->escapeHtml($postcode ?: __('N/A')); ?></td>
                 </tr>
             </tbody>
         </table>

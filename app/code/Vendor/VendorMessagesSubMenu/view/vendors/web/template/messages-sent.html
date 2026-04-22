@@ -1,0 +1,85 @@
+<!-- Use for the sent conversation panel -->
+<div class="vendor-message-sent__conversation" data-bind="css: { 'is-empty': !messages().length }">
+    <!-- ko if: messages().length -->
+    <div class="vendor-message-sent__messages">
+        <!-- ko foreach: getMessages() -->
+        <div class="vendor-message-sent__message"
+             data-bind="css: ($data.owner_id == $data.sender_id) ? 'vendor-message-sent__message--out' : 'vendor-message-sent__message--in'">
+            <div class="vendor-message-sent__message-bubble">
+                <div class="vendor-message-sent__message-text" data-bind="html: $data.content"></div>
+
+                <!-- ko if: $data.attachments_count > 0 -->
+                <div class="vendor-message-sent__attachments">
+                    <!-- ko foreach: $data.attachments -->
+                    <div class="vendor-message-sent__attachment"
+                         data-bind="click: function(data, event) {$parents[1].previewImage(data, event)}, css: {'is-image': $data.is_image, 'is-file': !$data.is_image}">
+                        <div class="vendor-message-sent__attachment-thumb" aria-hidden="true">
+                            <!-- ko if: $data.is_image -->
+                            <a data-bind="attr:{href: $data.url, title: $data.name}" class="vendor-message-sent__attachment-media">
+                                <img data-bind="attr:{src: $data.url, alt: $data.name}" class="vendor-message-sent__attachment-image">
+                            </a>
+                            <!-- /ko -->
+                            <!-- ko ifnot: $data.is_image -->
+                            <a href="javascript:void(0);" class="vendor-message-sent__attachment-media">
+                                <i class="attachment-icon" data-bind="css: $data.icon"></i>
+                            </a>
+                            <!-- /ko -->
+                        </div>
+                        <div class="vendor-message-sent__attachment-info">
+                            <span class="vendor-message-sent__attachment-name" data-bind="text: $data.name"></span>
+                        </div>
+                        <div class="vendor-message-sent__attachment-actions">
+                            <a class="vendor-message-sent__attachment-download"
+                               data-tooltip="Download"
+                               data-bind="attr:{href: $data.download_url}">
+                                <i class="message-icon-cloud-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="vendor-message-sent__message-time" data-bind="text: $data.createdAtTime"></div>
+        </div>
+        <!-- /ko -->
+    </div>
+
+    <div class="vendor-message-sent__composer">
+        <div class="vendor-message-sent__composer-input">
+            <textarea name="reply"
+                      id="reply_msg_box"
+                      class="vendor-message-sent__textarea"
+                      rows="5"
+                      cols="10"
+                      placeholder="Write message..."
+                      data-bind="value: messageInput, valueUpdate: 'input'"></textarea>
+            <button type="button" class="vendor-message-sent__clip" aria-label="Attach">
+                <i class="fa fa-paperclip" aria-hidden="true"></i>
+            </button>
+        </div>
+
+        <div class="vendor-message-sent__composer-footer">
+            <div class="vendor-message-sent__formatting" aria-hidden="true">
+                <button type="button">B</button>
+                <button type="button"><i>I</i></button>
+                <button type="button"><u>U</u></button>
+                <button type="button"><i class="fa fa-align-left"></i></button>
+                <button type="button"><i class="fa fa-align-center"></i></button>
+                <button type="button"><i class="fa fa-align-right"></i></button>
+            </div>
+
+            <button type="button" class="vendor-message-sent__send" data-bind="click: sendMessage">
+                <span data-bind="i18n: 'Send'"></span>
+            </button>
+        </div>
+    </div>
+    <!-- /ko -->
+
+    <!-- ko ifnot: messages().length -->
+    <div class="vendor-message-sent__empty-conversation">
+        No conversation selected.
+    </div>
+    <!-- /ko -->
+</div>

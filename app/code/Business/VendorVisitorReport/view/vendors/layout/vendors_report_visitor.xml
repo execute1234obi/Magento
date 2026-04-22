@@ -1,9 +1,14 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Business_VendorVisitorReport::css/profilevisitor.css"/>
+    </head>
     <body>
         <referenceContainer name="content">
-            <uiComponent name="report_profilevisitor_listing"/>
+            <container name="profile.visitors.wrapper" htmlTag="div" htmlClass="profile-visitors-page">
+                <uiComponent name="report_profilevisitor_listing"/>
+            </container>
         </referenceContainer>
     </body>
 </page>
