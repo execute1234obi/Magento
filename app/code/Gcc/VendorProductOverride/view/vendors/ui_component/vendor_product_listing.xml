@@ -4,6 +4,15 @@
 
     <columns name="vendor_product_columns" resizeEnabled="true">
 
+        <selectionsColumn name="ids">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="indexField" xsi:type="string">entity_id</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
+                </item>
+            </argument>
+        </selectionsColumn>
+
         <!-- ID -->
         <column name="entity_id" sortOrder="10">
             <settings>

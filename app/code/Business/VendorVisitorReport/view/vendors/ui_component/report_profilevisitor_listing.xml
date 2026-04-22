@@ -23,7 +23,7 @@
                 <item name="config" xsi:type="array">
                     <item name="update_url" xsi:type="url" path="mui/index/render"/>
                      <item name="storageConfig" xsi:type="array">
-                        <item name="indexField" xsi:type="string">views_num</item>
+                        <item name="indexField" xsi:type="string">id</item>
                     </item>
                 </item>
             </argument>
@@ -34,36 +34,30 @@
             </item>
         </argument>
     </dataSource>
-    <container name="listing_top">
+    <listingToolbar name="listing_top" template="Business_VendorVisitorReport/grid/toolbar">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
-                <item name="sticky" xsi:type="boolean">true</item>
+                <item name="sticky" xsi:type="boolean">false</item>
             </item>
         </argument>
-        <!--<filterSearch name="fulltext"/>-->
-        <filters name="listing_filters">
+        <filterSearch name="fulltext" template="Business_VendorVisitorReport/grid/search/search">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="columnsProvider" xsi:type="string">report_profilevisitor_listing.report_profilevisitor_listing.vendorprofilevisitor_columns</item>
-                    <item name="storageConfig" xsi:type="array">
-                        <item name="provider" xsi:type="string">report_profilevisitor_listing.report_profilevisitor_listing.listing_top.bookmarks</item>
-                        <item name="namespace" xsi:type="string">current.filters</item>
-                    </item>
-                </item>
-            </argument>            
-        </filters>
-        <paging name="listing_paging">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="selectProvider" xsi:type="string">report_profilevisitor_listing.report_profilevisitor_listing.vendorprofilevisitor_columns.ids</item>
-                    <item name="storageConfig" xsi:type="array">
-                        <item name="provider" xsi:type="string">report_profilevisitor_listing.report_profilevisitor_listing.listing_top.bookmarks</item>
-                        <item name="namespace" xsi:type="string">current.paging</item>
-                    </item>
+                    <item name="placeholder" translate="true" xsi:type="string">Search Product</item>
                 </item>
             </argument>
+        </filterSearch>
+        <filters name="listing_filters">
+        </filters>
+        <paging name="listing_paging">
+            <settings>
+                <showTotalRecords>true</showTotalRecords>
+                <component>Business_VendorVisitorReport/js/grid/paging</component>
+                <template>Business_VendorVisitorReport/grid/paging/paging</template>
+                <totalTmpl>Business_VendorVisitorReport/grid/paging-total</totalTmpl>
+            </settings>
         </paging>
-    </container>
+    </listingToolbar>
     <columns name="vendorprofilevisitor_columns">
         <argument name="data" xsi:type="array">
             <item name="config" xsi:type="array">
@@ -88,25 +82,14 @@
                 </item>
             </item>
         </argument>       
-        <!--<column name="vendor_id">
+        <selectionsColumn name="ids">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="sorting" xsi:type="string">desc</item>
-                    <item name="label" xsi:type="string" translate="true">ID</item>
-                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="indexField" xsi:type="string">id</item>
+                    <item name="sortOrder" xsi:type="number">0</item>
                 </item>
             </argument>
-        </column>-->
-        <!--<column name="country_name">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="sorting" xsi:type="string">country_name</item>
-                    <item name="label" xsi:type="string" translate="true">Country</item>
-                </item>
-            </argument>
-        </column>-->
+        </selectionsColumn>
         <column name="period" class="Magento\Ui\Component\Listing\Columns\Date">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -116,6 +99,8 @@
                     <item name="dateFormat" xsi:type="string">dd/MM/y</item>                    
                     <item name="showsTime" xsi:type="boolean">false</item>                    
                     <item name="label" xsi:type="string" translate="true">Date</item>
+                    <item name="sortable" xsi:type="boolean">true</item>
+                    <item name="sorting" xsi:type="string">desc</item>
                     <item name="sortOrder" xsi:type="number">10</item>
                 </item>
             </argument>
@@ -127,42 +112,22 @@
                     <item name="filter" xsi:type="string">select</item>
                     <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/select</item>
                     <item name="dataType" xsi:type="string">select</item>
-                    <!--<item name="sorting" xsi:type="string">mastercountry_id</item>-->                    
                     <item name="label" xsi:type="string" translate="true">Country</item>
+                    <item name="sortable" xsi:type="boolean">true</item>
                     <item name="sortOrder" xsi:type="number">20</item>
                 </item>
             </argument>
         </column>
-        <!--<column name="vendor_code">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">text</item>
-                    <item name="sorting" xsi:type="string">desc</item>
-                    <item name="label" xsi:type="string" translate="true">Vendor Code</item>
-                    <item name="sortOrder" xsi:type="number">30</item>
-                </item>
-            </argument>
-        </column>-->
         <column name="views_num">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
                     <item name="filter" xsi:type="string">text</item>
                     <item name="sorting" xsi:type="string">desc</item>
-                    <item name="sortable" xsi:type="boolean">false</item>                    
+                    <item name="sortable" xsi:type="boolean">true</item>                    
                     <item name="label" xsi:type="string" translate="true">Views Num</item>
                     <item name="sortOrder" xsi:type="number">40</item>
                 </item>
             </argument>
         </column>                
-        <!--<column name="period" class="Magento\Ui\Component\Listing\Columns\Date">
-            <argument name="data" xsi:type="array">
-                <item name="config" xsi:type="array">
-                    <item name="filter" xsi:type="string">dateRange</item>
-                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
-                    <item name="dataType" xsi:type="string">date</item>
-                    <item name="label" xsi:type="string" translate="true">End Date</item>
-                </item>
-            </argument>
-        </column>-->
     </columns>
 </listing>

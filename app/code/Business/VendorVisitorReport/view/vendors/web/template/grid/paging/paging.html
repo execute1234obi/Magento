@@ -1,0 +1,38 @@
+<div class="admin__data-grid-pager-wrap profile-visitors-pager-wrap">
+    <div class="profile-visitors-pager">
+        <div class="profile-visitors-pager__left">
+            <span class="profile-visitors-pager__label" translate="'Show'"></span>
+            <scope args="sizes" render=""></scope>
+        </div>
+
+        <div class="profile-visitors-pager__right">
+            <button class="profile-visitors-pager__nav profile-visitors-pager__nav--prev"
+                    type="button"
+                    attr="title: $t('Previous Page'), 'aria-label': $t('Previous Page')"
+                    click="prev"
+                    disable="isFirst()"></button>
+
+            <div class="profile-visitors-pager__pages" aria-label="Pagination">
+                <div class="profile-visitors-pager__page-wrap" repeat="foreach: visiblePages, item: '$page'">
+                    <button if="$page().type === 'page'"
+                            type="button"
+                            class="profile-visitors-pager__page"
+                            css="_active: $page().active"
+                            disable="$page().active"
+                            click="$parent.goToPage.bind($parent, $page().value)"
+                            attr="aria-current: $page().active ? 'page' : null">
+                        <span text="$page().label"></span>
+                    </button>
+
+                    <span if="$page().type === 'ellipsis'" class="profile-visitors-pager__ellipsis" text="$page().label"></span>
+                </div>
+            </div>
+
+            <button class="profile-visitors-pager__nav profile-visitors-pager__nav--next"
+                    type="button"
+                    attr="title: $t('Next Page'), 'aria-label': $t('Next Page')"
+                    click="next"
+                    disable="isLast()"></button>
+        </div>
+    </div>
+</div>

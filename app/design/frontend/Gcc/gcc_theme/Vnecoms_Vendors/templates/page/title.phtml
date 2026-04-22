@@ -1,0 +1,17 @@
+<?php
+/** @var $block \Vnecoms\Vendors\Block\Vendors\Page\Title */
+
+$fullActionName = (string) $block->getRequest()->getFullActionName();
+$requestPath = strtolower(trim((string) $block->getRequest()->getPathInfo(), '/'));
+$isAccountPage = in_array(
+    $fullActionName,
+    ['account_index_index', 'vendors_account_index', 'default_vendors_account'],
+    true
+) || strpos($requestPath, 'vendors/account') !== false;
+
+if ($isAccountPage) {
+    return;
+}
+?>
+
+<h1><?php echo $block->escapeHtml($block->getTitle()); ?></h1>

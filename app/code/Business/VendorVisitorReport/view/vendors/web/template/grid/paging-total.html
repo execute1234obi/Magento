@@ -1,0 +1,18 @@
+<div class="profile-visitors-page__results admin__control-support-text">
+    <!-- ko if: showTotalRecords -->
+    <span class="profile-visitors-page__results-count">
+        <text args="totalRecords"></text>
+    </span>
+    <span class="profile-visitors-page__results-label" translate="'Results'"></span>
+    <!-- /ko -->
+    <!-- ko if: totalSelected && showTotalRecords -->
+    <span class="profile-visitors-page__results-selected">
+        (
+        <span class="profile-visitors-page__results-selected-count">
+            <text args="totalSelected"></text>
+        </span>
+        <span translate="'selected'"></span>
+        )
+    </span>
+    <!-- /ko -->
+</div>

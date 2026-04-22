@@ -88,12 +88,20 @@ public function execute()
     }
 
     try {
-
+        $selectedProducts = $post['selected_products'] ?? [];
         $quantities = $post['qty'] ?? [];
         $vendorWiseProducts = [];
 
-        foreach ($quantities as $productId => $qty) {
 
+        if (empty($selectedProducts)) {
+            $this->messageManager->addErrorMessage(__('Please select at least one product.'));
+            return $this->resultRedirectFactory->create()->setRefererUrl();
+        }
+
+        foreach ($selectedProducts as $productId) {
+
+        //foreach ($quantities as $productId => $qty) {
+              $qty = $quantities[$productId] ?? 1; // ✅ FIX
             $product = $this->productRepository->getById($productId);
             $productVendorId = $product->getVendorId();
 

@@ -410,15 +410,23 @@ require(['jquery'], function($){
             e.preventDefault();
             var country = $('#country').val();
             var note    = $('.quote-textarea').val().trim();
+            var selectedProducts = $('.product-item-checkbox:checked').length;
+            // console.log('Selected:', selectedProducts);
+
             if (!country) { alert('<?= __('Please select a country.') ?>'); return; }
             if (!note)    { alert('<?= __('Please write a message.') ?>');   return; }
+             // 🔥 NEW VALIDATION
+            if (selectedProducts === 0) {
+                alert('Please select at least one product.');
+                return;
+            }
             $('#form-validate').submit();
         });
 
         /* select all */
-        $(document).on('change','#select-all-products',function(){
-            $('.product-item-checkbox').prop('checked', $(this).is(':checked'));
-        });
+        // $(document).on('change','#select-all-products',function(){
+        //     $('.product-item-checkbox').prop('checked', $(this).is(':checked'));
+        // });
 
         /* qty */
         $(document).on('click','.qty-btn.plus',function(){
@@ -447,7 +455,41 @@ require(['jquery'], function($){
     });
 });
 </script>
+<script>
+// 🔥 INDIVIDUAL CHECKBOX CHANGE
+require(['jquery'], function($){
 
+    function updateCount() {
+        var count = $('.product-item-checkbox:checked').length;
+        $('.product-count').text(count + ' Products');
+        $('.quote-card-title span').text('(' + count + ' products selected)');
+    }
+
+    $(document).ready(function(){
+
+        updateCount(); // page load pe call
+
+        // SELECT ALL
+        $(document).on('change', '#select-all-products', function () {
+            var isChecked = $(this).is(':checked');
+            $('.product-item-checkbox').prop('checked', isChecked);
+            updateCount();
+        });
+
+        // INDIVIDUAL
+        $(document).on('change', '.product-item-checkbox', function () {
+            var total   = $('.product-item-checkbox').length;
+            var checked = $('.product-item-checkbox:checked').length;
+
+            $('#select-all-products').prop('checked', total === checked);
+            updateCount();
+        });
+
+    });
+
+});
+
+</script>
 
 <!-- ═══════════════════════════════════════
      STYLES

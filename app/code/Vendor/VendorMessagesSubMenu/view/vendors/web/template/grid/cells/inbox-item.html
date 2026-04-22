@@ -1,16 +1,13 @@
-<div data-bind="text: JSON.stringify($row())"></div>
 <div class="inbox-row-container" data-bind="attr: {'data-id': $row().message_id}">
     <div class="inbox-main-content">
-        <div class="inbox-subject" 
-     data-bind="text: $row().subject || 'No Subject'">
-</div>
+        <div class="inbox-subject" data-bind="text: $row().subject || 'No Subject'"></div>
         <div class="inbox-sender">
             <span data-bind="text: $row().sender_name"></span>
-            <small style="color: #ccc;">(#<text args="$row().message_id"/></small>
         </div>
     </div>
-    
+
     <div class="inbox-date-wrapper">
-        <span class="inbox-date" data-bind="text: $row().created_at"></span>
+        <span class="inbox-date"
+              data-bind="text: $row().created_at"></span>
     </div>
 </div>

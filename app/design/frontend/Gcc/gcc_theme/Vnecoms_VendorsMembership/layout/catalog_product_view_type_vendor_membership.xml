@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="custom.product.detail" remove="true"/>
+        <referenceBlock name="custom.pdp.view" remove="true"/>
+        <referenceBlock name="product.info.main" remove="true"/>
+        <referenceBlock name="product.info.media" remove="true"/>
+        <referenceBlock name="product.info.type" remove="true"/>
+        <referenceBlock name="product.info.details" remove="true"/>
+        <referenceBlock name="product.info.overview" remove="true"/>
+        <referenceBlock name="product.info.addtocart" remove="true"/>
+        <referenceBlock name="product.info.review" remove="true"/>
+        <referenceBlock name="reviews.tab" remove="true"/>
+        <referenceBlock name="product.info.membership" remove="true"/>
+        <referenceBlock name="product.info.membership.extra" remove="true"/>
+        <referenceBlock name="product.info.options.wrapper" remove="true"/>
+        <referenceBlock name="product.info.options.configurable" remove="true"/>
+        <referenceBlock name="catalog.product.samevendor" remove="true"/>
+        <referenceBlock name="catalog.product.related" remove="true"/>
+        <referenceContainer name="product.info.description.wrapper" remove="true"/>
+        <referenceContainer name="product.attributes.pagebuilder.wrapper" remove="true"/>
+        <referenceContainer name="product.info.details.after.wrapper" remove="true"/>
+        <referenceContainer name="product.info.details.wrapper" remove="true"/>
+        <referenceContainer name="product.reviews.wrapper" remove="true"/>
+        <referenceContainer name="content.aside" remove="true"/>
+
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="gcc.membership.product.detail"
+                   template="Vnecoms_VendorsMembership::product/view/membership-detail.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

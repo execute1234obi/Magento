@@ -1,0 +1,57 @@
+<?php
+/** @var $block \Magento\Backend\Block\Widget\Tabs */
+?>
+<?php if (!empty($tabs)): ?>
+<div id="<?= $block->escapeHtmlAttr($block->getId()) ?>" class="vendor-account-tabs">
+    <ul class="vendor-account-tabs__list">
+        <?php foreach ($tabs as $_tab): ?>
+            <?php
+            if (!$block->canShowTab($_tab)) {
+                continue;
+            }
+
+            $_tabId = $block->getTabId($_tab);
+            $_isActive = $block->getActiveTabId() === $_tabId;
+            $_tabClass = 'tab-item-link ' . $block->getTabClass($_tab);
+            if ($_tab->getClass()) {
+                $_tabClass .= ' ' . (preg_match('/\s?ajax\s?/', $_tab->getClass()) ? 'notloaded' : '');
+            }
+
+            $_tabType = (!preg_match('/\s?ajax\s?/', $_tabClass) && $block->getTabUrl($_tab) != '#') ? 'link' : '';
+            $_tabHref = $block->getTabUrl($_tab) == '#'
+                ? '#' . $block->getTabId($_tab) . '_content'
+                : $block->getTabUrl($_tab);
+            ?>
+            <li class="vendor-account-tabs__item<?php if ($_isActive): ?> ui-state-active ui-tabs-active active<?php endif; ?><?php if ($block->getTabIsHidden($_tab)): ?> is-hidden<?php endif; ?>"
+                <?php if ($_isActive): ?>aria-selected="true"<?php endif; ?>>
+                <a href="<?= $block->escapeUrl($_tabHref) ?>"
+                   id="<?= $block->escapeHtmlAttr($_tabId) ?>"
+                   name="<?= $block->escapeHtmlAttr($block->getTabId($_tab, false)) ?>"
+                   title="<?= $block->escapeHtmlAttr($block->getTabTitle($_tab)) ?>"
+                   class="vendor-account-tabs__link <?= $block->escapeHtmlAttr($_tabClass) ?><?php if ($_isActive): ?> ui-state-active ui-tabs-active active<?php endif; ?>"
+                   <?php if ($_isActive): ?>aria-selected="true"<?php endif; ?>
+                   data-tab-type="<?= $block->escapeHtmlAttr($_tabType) ?>">
+                    <span><?= $block->escapeHtml($block->getTabLabel($_tab)) ?></span>
+                </a>
+                <div id="<?= $block->escapeHtmlAttr($block->getTabId($_tab)) ?>_content" style="display:none;">
+                    <?= /* @noEscape */ $block->getTabContent($_tab) ?>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+
+<script>
+require(['jquery', 'mage/backend/tabs'], function ($) {
+    $(function () {
+        $('#<?= $block->escapeJs($block->getId()) ?>').tabs({
+            active: '<?= $block->escapeJs($block->getActiveTabId()) ?>',
+            destination: '#<?= $block->escapeJs($block->getDestElementId()) ?>',
+            shadowTabs: <?= /* @noEscape */ $block->getAllShadowTabs() ?>,
+            tabsBlockPrefix: '<?= $block->escapeJs($block->getId()) ?>_',
+            tabIdArgument: 'active_tab'
+        });
+    });
+});
+</script>
+<?php endif; ?>

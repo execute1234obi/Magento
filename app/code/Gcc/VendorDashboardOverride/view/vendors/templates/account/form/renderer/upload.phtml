@@ -1,0 +1,68 @@
+<?php
+/* @var $block \Gcc\VendorDashboardOverride\Block\Vendors\Account\Edit\Form\Renderer\Upload */
+$element = $block->getElement();
+$htmlId = $element->getHtmlId();
+$name = $element->getName();
+$label = trim((string) $element->getLabel());
+$rawValue = trim((string) $element->getValue());
+$hasValue = $rawValue !== '';
+$fileUrl = $block->getUploadedFileUrl();
+$fileName = $block->getUploadedFileName();
+$isImage = $block->isUploadedImage();
+$accept = $block->getAcceptAttribute();
+$classes = trim('vendor-upload-field field-' . $element->getId() . ($element->getRequired() ? ' required _required' : '') . ($hasValue ? ' has-value' : ''));
+$inputClasses = trim('vendor-upload-field__input ' . $element->getClass());
+$elementAttributes = array_diff($element->getHtmlAttributes(), ['type', 'class', 'checked', 'title', 'disabled']);
+?>
+
+<div class="<?= $block->escapeHtmlAttr($classes) ?>">
+    <?= /* @noEscape */ $element->getLabelHtml(); ?>
+
+    <label class="vendor-upload-field__dropzone" for="<?= $block->escapeHtmlAttr($htmlId) ?>" data-upload-dropzone>
+        <span class="vendor-upload-field__content">
+            <?php if ($hasValue && $fileUrl): ?>
+                <span class="vendor-upload-field__current">
+                    <?php if ($isImage): ?>
+                        <img class="vendor-upload-field__current-image"
+                             src="<?= $block->escapeUrl($fileUrl) ?>"
+                             alt="<?= $block->escapeHtmlAttr($fileName ?: $label) ?>" />
+                    <?php else: ?>
+                        <span class="vendor-upload-field__current-file">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                            <span><?= $block->escapeHtml($fileName ?: __('Current File')) ?></span>
+                        </span>
+                    <?php endif; ?>
+                </span>
+            <?php endif; ?>
+
+            <span class="vendor-upload-field__prompt">
+                <i class="fa fa-cloud-upload vendor-upload-field__icon" aria-hidden="true"></i>
+                <span><?= $block->escapeHtml(__('Drag & Drop or Browser')) ?></span>
+            </span>
+
+            <span class="vendor-upload-field__button">
+                <?= $block->escapeHtml(__('Choose File')) ?>
+            </span>
+
+            <span class="vendor-upload-field__selected" data-upload-selected>
+                <?= $hasValue ? $block->escapeHtml($fileName) : '' ?>
+            </span>
+        </span>
+
+        <input type="file"
+               id="<?= $block->escapeHtmlAttr($htmlId) ?>"
+               name="<?= $block->escapeHtmlAttr($name) ?>"
+               class="<?= $block->escapeHtmlAttr($inputClasses) ?>"
+               title="<?= $block->escapeHtmlAttr($label ?: $htmlId) ?>"
+               <?= $accept ? 'accept="' . $block->escapeHtmlAttr($accept) . '"' : '' ?>
+               <?= $element->getDisabled() ? 'disabled="disabled"' : '' ?>
+               <?= /* @noEscape */ $element->serialize($elementAttributes) ?> />
+    </label>
+
+    <input type="hidden"
+           name="<?= $block->escapeHtmlAttr($name) ?>[value]"
+           id="<?= $block->escapeHtmlAttr($htmlId) ?>_value"
+           value="<?= $block->escapeHtmlAttr($rawValue) ?>" />
+
+    <?= /* @noEscape */ $element->getAfterElementHtml(); ?>
+</div>

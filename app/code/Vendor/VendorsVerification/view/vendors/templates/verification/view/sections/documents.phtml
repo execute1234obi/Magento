@@ -43,10 +43,13 @@ if (!empty($arrCertDocsData['documents'])) {
         ? $arrCertDocsData['documents']
         : explode(',', $arrCertDocsData['documents']);
 }
+
+$sectionRowStyle = 'style="border:0 !important;box-shadow:none !important;background:#ffffff !important;"';
+$sectionCellStyle = 'style="border:0 !important;border-top:0 !important;border-bottom:0 !important;box-shadow:none !important;background:#ffffff !important;"';
 ?>
 
-<section class="verification-card verification-card--section verification-card--documents">
-    <div class="verification-card__head">
+<section class="verification-card verification-card--section verification-card--documents" style="background-color:#ffffff !important;background-image:none !important;border-color:#d8e2ef !important;">
+    <div class="verification-card__head" style="background-color:#ffffff !important;background-image:none !important;border-bottom-color:#dfe8f2 !important;">
         <h3><?= __('Certificates and Documents') ?></h3>
 
         <div class="verification-card__actions">
@@ -72,20 +75,20 @@ if (!empty($arrCertDocsData['documents'])) {
         </div>
     </div>
 
-    <div class="verification-card__body">
-        <table class="verification-table">
+    <div class="verification-card__body" style="background-color:#ffffff !important;background-image:none !important;">
+        <table class="verification-table" style="border-collapse:separate;border-spacing:0;background:#ffffff !important;border:0 !important;box-shadow:none !important;">
             <tbody>
-                <tr>
-                    <td><?= __('Status') ?></td>
-                    <td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Status') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>>
                         <?= $certVerificationData && $certVerificationData->getId()
                             ? $block->getStatusLabel($certVerificationData->getStatus())
                             : __('Pending'); ?>
                     </td>
                 </tr>
-                <tr>
-                    <td><?= __('Commercial Registration Certificate') ?></td>
-                    <td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Commercial Registration Certificate') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>>
                         <?php if (!empty($arrCertDocsData['certificate'])): ?>
                             <a target="_blank"
                                rel="noopener"
@@ -99,9 +102,9 @@ if (!empty($arrCertDocsData['documents'])) {
                         <?php endif; ?>
                     </td>
                 </tr>
-                <tr>
-                    <td><?= __('Other Documents') ?></td>
-                    <td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Other Documents') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>>
                         <?php if (!empty($docs)): ?>
                             <ul class="doc-list">
                                 <?php foreach ($docs as $doc): ?>

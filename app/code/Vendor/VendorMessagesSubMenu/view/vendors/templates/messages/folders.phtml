@@ -26,10 +26,7 @@ $messages = $defaultBlock->getMessageCollection();
 //echo '<h2 style="color:red">CUSTOM FOLDERS TEMPLATE EXECUTED1</h2>';
 ?>
 <div class="vendor-message-grid">
-    <?= $block->getLayout()
-        ->createBlock(\Magento\Framework\View\Element\UiComponentInterface::class)
-        ->setData('component_name', 'vendor_messages_grid')
-        ->toHtml(); ?>
+    
 </div>
 <div class="vendor-messages-sidebar-folders">
     <?php /* Folders list logic */ ?>
@@ -39,6 +36,6 @@ $messages = $defaultBlock->getMessageCollection();
             <div class="box-header with-border">
                 <h3 class="box-title"><?php echo $block->getTitle();?></h3>
             </div>
-            <?php echo $block->getChildHtml('message_content')?>
+            <?php //echo $block->getChildHtml('message_content')?>
         </div>
     </div>

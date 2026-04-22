@@ -1,0 +1,242 @@
+<?php
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
+$filters = $block->getFilterData() ?: [];
+$selected = $block->getSelectedFilters() ?: [];
+
+$filters['countries'] = $filters['countries'] ?? [];
+$filters['verified'] = $filters['verified'] ?? [];
+$filters['business_types'] = $filters['business_types'] ?? [];
+
+$selected['country'] = $selected['country'] ?? '';
+$selected['verified'] = $selected['verified'] ?? '';
+$selected['business_type'] = $selected['business_type'] ?? '';
+
+// Remove empty values (fix blank dropdown option issue)
+$filters['countries'] = array_filter($filters['countries']);
+$filters['verified'] = array_filter($filters['verified']);
+$filters['business_types'] = array_filter($filters['business_types']);
+?>
+<style>
+  .layout {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .filter-title1 {
+    display: block;
+    margin: 0 0 28px;
+    color: #1d3f7a;
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    padding: 22px 22px 24px;
+    background: #fff;
+    border-radius: 9px;
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+  }
+
+  .filter-group {
+    margin-bottom: 22px;
+  }
+
+  .filter-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .filter-group label {
+    display: block;
+    margin-bottom: 12px;
+    color: #374151;
+    font-size: 17px;
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  .filter-group select {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 56px 0 20px;
+    border: 1px solid #dbe3ef;
+    border-radius: 9px;
+    box-sizing: border-box;
+    background-color: #fff;
+    background-image: linear-gradient(45deg, transparent 50%, #1f2937 50%), linear-gradient(135deg, #1f2937 50%, transparent 50%);
+    background-position: calc(100% - 26px) 50%, calc(100% - 18px) 50%;
+    background-size: 8px 8px, 8px 8px;
+    background-repeat: no-repeat;
+    font-size: 17px;
+    line-height: 1.25;
+    color: #111827;
+    font-weight: 400 !important;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    white-space: nowrap;
+  }
+
+  .filter-group select.is-placeholder {
+    color: #9ca3af;
+    font-weight: 400 !important;
+  }
+
+  .filter-group select:not(.is-placeholder) {
+    color: #111827;
+    font-weight: 400 !important;
+  }
+
+  .page-main {
+    padding-top: 0 !important;
+  }
+
+  .page-title-wrapper {
+    display: none;
+  }
+
+  #vendor-sidebar.force-show {
+    display: block;
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar {
+      position: static;
+      top: auto;
+      padding: 16px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .layout {
+      margin-bottom: 16px;
+    }
+
+    .sidebar {
+      padding: 18px;
+      border-radius: 20px;
+    }
+
+    .filter-title1 {
+      margin-bottom: 18px;
+      font-size: 18px;
+    }
+
+    .filter-group {
+      margin-bottom: 16px;
+    }
+
+    .filter-group label {
+      font-size: 16px;
+    }
+
+    .filter-group select {
+      min-height: 60px;
+      padding-right: 52px;
+      font-size: 16px;
+      background-position: calc(100% - 24px) 50%, calc(100% - 16px) 50%;
+    }
+  }
+</style>
+
+<!-- Your vendor filters -->
+<div class="layout">
+  <div class="filter-title1"><?= __('Filter') ?></div>
+
+  <div class="sidebar">
+
+    <div class="filter-group">
+      <label for="country"><?= __('Country') ?></label>
+      <select id="country">
+        <option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['countries'] as $code => $name): ?>
+      <option value="<?= $block->escapeHtmlAttr($code) ?>"
+        <?= ($selected['country'] == $code) ? 'selected' : '' ?>>
+        <?= $block->escapeHtml($name) ?>
+      </option>
+    <?php endforeach; ?>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="verified-seller"><?= __('Verified Seller') ?></label>
+       <?php //print_r($filters['verified']); exit; ?>
+      <select id="verified-seller">
+        <option value=""><?= __('Please Select') ?></option>
+        <?php foreach ($filters['verified'] as $key => $label): ?>
+          <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['verified'] == $key) ? 'selected' : '' ?>>
+            <?= $block->escapeHtml($label) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="business-type"><?= __('Business Type') ?></label>
+      <select id="business-type">
+        <option value=""><?= __('Please Select') ?></option>
+        <?php foreach ($filters['business_types'] as $key => $label): ?>
+          <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['business_type'] == $key) ? 'selected' : '' ?>>
+            <?= $block->escapeHtml($label) ?>
+          </option>
+        <?php endforeach; ?>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript -->
+<script type="text/javascript">
+require(['jquery', 'domReady!'], function($){
+    function syncSelectState($select) {
+        $select.toggleClass('is-placeholder', !$select.val());
+    }
+
+    function reloadPage(){
+        var query = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
+        var country = $('#country').val();
+        var verified = $('#verified-seller').val();
+        var business = $('#business-type').val();
+        var url = window.location.origin + window.location.pathname + '?q=' + encodeURIComponent(query) +
+              '&svendor_country_id=' + encodeURIComponent(country) +
+              '&svendor_is_verified=' + encodeURIComponent(verified) +
+              '&svendor_business_type=' + encodeURIComponent(business);
+        window.location.href = url;
+    }
+
+    $('#country, #verified-seller, #business-type').each(function () {
+        syncSelectState($(this));
+    }).on('change', function () {
+        syncSelectState($(this));
+        reloadPage();
+    });
+});
+
+require(['jquery', 'domReady!'], function ($) {
+    function toggleSidebarByActiveTab() {
+        var activeTab = $('.mst-search__result-tabs li[aria-selected="true"] a');
+        var activeLabel = activeTab.length ? activeTab.text().trim() : '';
+
+        if (activeLabel.includes('Vendor')) {
+            $('#default-sidebar').hide();
+            $('#vendor-sidebar').addClass('force-show');
+        } else {
+            $('#default-sidebar').show();
+            $('#vendor-sidebar').removeClass('force-show').hide();
+        }
+    }
+
+    $('.mst-search-tabs .mst-tab').on('click', function() {
+        setTimeout(toggleSidebarByActiveTab, 50);
+    });
+
+    toggleSidebarByActiveTab();
+});
+</script>

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+
+        <referenceBlock name="customer.message.container">
+
+            <block class="Vendor\VendorMessagesSubMenu\Block\Customer\Account\Message\Sent"
+                   name="customer.message.sent"
+                   as="message_list"
+                   template="Vendor_VendorMessagesSubMenu::customer/account/message/list-sent.phtml" />
+
+        </referenceBlock>
+
+    </body>
+</page>

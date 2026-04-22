@@ -1,0 +1,152 @@
+<?php
+/** @var $block \Vnecoms\Vendors\Block\Vendors\Page\Breadcrumbs */
+
+if (empty($links) || !is_array($links)) {
+    return;
+}
+
+$breadcrumbCount = count($links);
+$pageTitle = isset($links[$breadcrumbCount - 1]['label']) ? (string) $links[$breadcrumbCount - 1]['label'] : '';
+$fullActionName = (string) $block->getRequest()->getFullActionName();
+$requestPath = strtolower(trim((string) $block->getRequest()->getPathInfo(), '/'));
+$isAccountPage = in_array(
+    $fullActionName,
+    ['account_index_index', 'vendors_account_index', 'default_vendors_account'],
+    true
+) || strpos($requestPath, 'vendors/account') !== false;
+$isCatalogProductIndex = in_array(
+    $fullActionName,
+    ['catalog_product_index', 'vendors_catalog_product_index'],
+    true
+);
+?>
+
+<style>
+  .vendor-pagehead {
+    margin: 0 0 18px;
+    padding-top: 4px;
+  }
+
+  .vendor-breadcrumb {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: #94A3B8;
+    font-weight: 500;
+  }
+
+  .vendor-breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .vendor-breadcrumb__sep {
+    color: #CBD5E1;
+    flex: 0 0 auto;
+  }
+
+  .vendor-breadcrumb__link {
+    color: #94A3B8;
+    text-decoration: none;
+    transition: color .15s ease;
+  }
+
+  .vendor-breadcrumb__plain {
+    color: #94A3B8;
+    font-weight: 500;
+  }
+
+  .vendor-breadcrumb__link:hover {
+    color: #1E56A0;
+    text-decoration: none;
+  }
+
+  .vendor-breadcrumb__current {
+    color: #1E56A0;
+    font-weight: 700;
+  }
+
+  .vendor-page-title {
+    margin: 10px 0 0;
+    font-size: 18px;
+    line-height: 1.25;
+    font-weight: 700;
+    color: #163172;
+  }
+
+  .vendor-page-title-gap {
+    padding-top: 10px;
+  }
+
+<?php if ($isCatalogProductIndex): ?>
+  .content-header > h1 {
+    display: none !important;
+  }
+<?php endif; ?>
+</style>
+
+<div class="vendor-pagehead">
+  <nav aria-label="<?= $block->escapeHtmlAttr(__('Breadcrumb')) ?>">
+    <ol class="vendor-breadcrumb">
+      <li class="vendor-breadcrumb__item">
+        <a class="vendor-breadcrumb__link" href="<?= $block->escapeUrl($this->getHomeLink()) ?>">
+          <?= $block->escapeHtml(__('Home')) ?>
+        </a>
+      </li>
+
+      <?php if ($isCatalogProductIndex): ?>
+        <li class="vendor-breadcrumb__item">
+          <span class="vendor-breadcrumb__sep" aria-hidden="true">/</span>
+          <span class="vendor-breadcrumb__plain">
+            <?= $block->escapeHtml(__('Catalog')) ?>
+          </span>
+        </li>
+        <li class="vendor-breadcrumb__item is-active">
+          <span class="vendor-breadcrumb__sep" aria-hidden="true">/</span>
+          <span class="vendor-breadcrumb__current" aria-current="page">
+            <?= $block->escapeHtml(__('Manage Product')) ?>
+          </span>
+        </li>
+      <?php else: ?>
+        <?php foreach ($links as $_index => $_link): ?>
+          <?php
+          $isLast = ($_index === $breadcrumbCount - 1);
+          $label = trim((string) ($_link['label'] ?? ''));
+          $title = trim((string) ($_link['title'] ?? $label));
+          ?>
+          <li class="vendor-breadcrumb__item<?php if ($isLast): ?> is-active<?php endif; ?>">
+            <span class="vendor-breadcrumb__sep" aria-hidden="true">/</span>
+
+            <?php if (!empty($_link['url']) && !$isLast): ?>
+              <a class="vendor-breadcrumb__link"
+                 href="<?= $block->escapeUrl($_link['url']) ?>"
+                 title="<?= $block->escapeHtmlAttr($title) ?>">
+                <?= $block->escapeHtml($label) ?>
+              </a>
+            <?php else: ?>
+              <span class="vendor-breadcrumb__current" aria-current="page">
+                <?= $block->escapeHtml($label) ?>
+              </span>
+            <?php endif; ?>
+          </li>
+        <?php endforeach; ?>
+      <?php endif; ?>
+    </ol>
+  </nav>
+
+  <?php if (!$isCatalogProductIndex && !$isAccountPage && $pageTitle !== ''): ?>
+    <div class="vendor-page-title-gap">
+      <div class="vendor-page-title">
+        <?= $block->escapeHtml($pageTitle) ?>
+      </div>
+    </div>
+  <?php endif; ?>
+</div>

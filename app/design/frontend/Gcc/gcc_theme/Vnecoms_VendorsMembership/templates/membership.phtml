@@ -1,0 +1,712 @@
+<?php
+/**
+ * Theme override for the live vendor membership route.
+ *
+ * @var $block \Vnecoms\VendorsMembership\Block\Membership
+ */
+
+use Magento\Framework\App\Action\Action;
+use Vnecoms\VendorsMembership\Model\Source\DurationUnit;
+
+$title = $block->getTitlePage() ? $block->getTitlePage() : __('Vendor Membership');
+
+$normalizeText = static function ($value) {
+    $value = html_entity_decode((string) $value, ENT_QUOTES, 'UTF-8');
+    $value = strip_tags($value);
+    $value = preg_replace('/\s+/u', ' ', $value);
+
+    return trim((string) $value);
+};
+
+$extractFeatureItems = static function ($value) use ($normalizeText) {
+    $decoded = html_entity_decode((string) $value, ENT_QUOTES, 'UTF-8');
+    $items = [];
+
+    if ($decoded !== '' && preg_match_all('/<li[^>]*>(.*?)<\/li>/si', $decoded, $matches)) {
+        foreach ($matches[1] as $itemHtml) {
+            $item = $normalizeText($itemHtml);
+            if ($item !== '') {
+                $items[] = $item;
+            }
+        }
+    }
+
+    if (!$items) {
+        $plain = $normalizeText($decoded);
+        if ($plain !== '') {
+            $parts = preg_split('/\R+/u', $plain);
+            if (is_array($parts)) {
+                foreach ($parts as $part) {
+                    $part = trim((string) $part, " \t\n\r\0\x0B-");
+                    if ($part !== '') {
+                        $items[] = $part;
+                    }
+                }
+            }
+        }
+    }
+
+    return $items;
+};
+
+$buildPlanTitle = static function (\Magento\Catalog\Model\Product $product) use ($normalizeText) {
+    $name = $normalizeText($product->getName());
+    $name = preg_replace('/\s*membership\s+plan$/i', '', $name);
+    $name = preg_replace('/\s+membership$/i', '', $name);
+    $name = preg_replace('/\s+plan$/i', '', $name);
+    $name = trim((string) $name);
+
+    if ($name === '') {
+        $name = $normalizeText($product->getData('meta_title'));
+    }
+
+    return $name !== '' ? $name . ' plan' : __('Plan');
+};
+
+$buildSubtitle = static function (\Magento\Catalog\Model\Product $product) use ($normalizeText) {
+    $subtitle = $normalizeText($product->getShortDescription());
+    if ($subtitle !== '') {
+        return rtrim($subtitle, ". \t\n\r\0\x0B");
+    }
+
+    $subtitle = $normalizeText($product->getData('meta_description'));
+    if ($subtitle !== '') {
+        return rtrim($subtitle, ". \t\n\r\0\x0B");
+    }
+
+    return __('Membership package');
+};
+
+$selectDurationOption = static function (array $durationOptions) {
+    $selected = null;
+
+    foreach ($durationOptions as $option) {
+        if (!is_array($option) || !isset($option['price'])) {
+            continue;
+        }
+
+        if ($selected === null) {
+            $selected = $option;
+            continue;
+        }
+
+        $currentPrice = (float) $option['price'];
+        $selectedPrice = (float) $selected['price'];
+
+        if ($currentPrice < $selectedPrice) {
+            $selected = $option;
+            continue;
+        }
+
+        if ($currentPrice === $selectedPrice) {
+            $currentSort = isset($option['sort_order']) ? (int) $option['sort_order'] : PHP_INT_MAX;
+            $selectedSort = isset($selected['sort_order']) ? (int) $selected['sort_order'] : PHP_INT_MAX;
+
+            if ($currentSort < $selectedSort) {
+                $selected = $option;
+                continue;
+            }
+
+            if ($currentSort === $selectedSort) {
+                $currentDuration = isset($option['duration']) ? (int) $option['duration'] : PHP_INT_MAX;
+                $selectedDuration = isset($selected['duration']) ? (int) $selected['duration'] : PHP_INT_MAX;
+
+                if ($currentDuration < $selectedDuration) {
+                    $selected = $option;
+                }
+            }
+        }
+    }
+
+    return $selected;
+};
+
+$buildBillingLabel = static function (array $durationOption) {
+    $duration = isset($durationOption['duration']) ? (int) $durationOption['duration'] : 0;
+    $unit = isset($durationOption['duration_unit']) ? (int) $durationOption['duration_unit'] : 0;
+    $unitLabel = '';
+
+    switch ($unit) {
+        case DurationUnit::DURATION_DAY:
+            $unitLabel = $duration === 1 ? 'day' : 'days';
+            break;
+        case DurationUnit::DURATION_WEEK:
+            $unitLabel = $duration === 1 ? 'week' : 'weeks';
+            break;
+        case DurationUnit::DURATION_MONTH:
+            $unitLabel = $duration === 1 ? 'month' : 'months';
+            break;
+        case DurationUnit::DURATION_YEAR:
+            $unitLabel = $duration === 1 ? 'year' : 'years';
+            break;
+    }
+
+    if ($unitLabel === '') {
+        return __('N/A');
+    }
+
+    return $duration === 1
+        ? __('per %1', $unitLabel)
+        : __('per %1 %2', $duration, $unitLabel);
+};
+
+$planRows = [];
+foreach ($block->getMembershipCollection() as $_package) {
+    $_package->load($_package->getId());
+    $planRows[] = [
+        'product' => $_package,
+        'price' => (float) $_package->getFinalPrice(),
+        'sort_order' => (int) $_package->getData('vendor_membership_sort_order'),
+        'name' => (string) $_package->getName(),
+    ];
+}
+
+usort($planRows, function (array $a, array $b) {
+    if ($a['price'] === $b['price']) {
+        if ($a['sort_order'] === $b['sort_order']) {
+            return strcmp($a['name'], $b['name']);
+        }
+
+        return $a['sort_order'] <=> $b['sort_order'];
+    }
+
+    return $a['price'] <=> $b['price'];
+});
+
+$iconMap = [
+    0 => <<<'SVG'
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M13.6 2L5 13h5.8l-1 9L19 10h-5.4L13.6 2z" fill="currentColor"></path>
+</svg>
+SVG
+    ,
+    1 => <<<'SVG'
+<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path d="M12 3L3 8l9 5 9-5-9-5z" fill="currentColor"></path>
+    <path d="M5 12l7 4 7-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+    <path d="M5 16l7 4 7-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+SVG
+    ,
+];
+
+$fallbackIcon = reset($iconMap);
+
+$checkIcon = <<<'SVG'
+<svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+    <circle cx="10" cy="10" r="9" fill="#EEF4FF"></circle>
+    <path d="M6 10.5L8.8 13.3L14.2 7.7" fill="none" stroke="#2456A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+SVG;
+?>
+
+<style>
+.gcc-membership-page {
+    --page-bg: #edf4ff;
+    --page-bg-end: #f8fbff;
+    --card-bg: #ffffff;
+    --card-border: #e2e8f0;
+    --heading: #111827;
+    --title: #2456a8;
+    --price: #1f2937;
+    --muted: #6b7280;
+    --feature: #505a6d;
+    --button: #2456a8;
+    --button-hover: #1f4b93;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    width: 100%;
+    margin: 0;
+    padding: 82px 24px 96px;
+    background: linear-gradient(180deg, var(--page-bg) 0%, var(--page-bg-end) 100%);
+    box-sizing: border-box;
+}
+
+.gcc-membership-page,
+.gcc-membership-page * {
+    box-sizing: border-box;
+}
+
+.gcc-membership-page::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 16% 0%, rgba(255, 255, 255, 0.7) 0, rgba(255, 255, 255, 0) 42%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 36%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.gcc-membership-page::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -18px;
+    width: min(38vw, 430px);
+    height: 74px;
+    background: linear-gradient(90deg, #2b5ea9 0%, #1f4f95 100%);
+    clip-path: polygon(16% 0, 100% 0, 100% 100%, 0 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.gcc-membership-page__inner {
+    position: relative;
+    z-index: 1;
+    width: min(1120px, 100%);
+    margin: 0 auto;
+}
+
+.gcc-membership-page__title {
+    margin: 0 0 34px;
+    text-align: center;
+    color: var(--heading);
+    font-size: clamp(42px, 5vw, 66px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+}
+
+.gcc-membership-page__mobile-title {
+    display: none;
+}
+
+.gcc-membership-page__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    align-items: stretch;
+}
+
+.gcc-membership-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 28px 26px 24px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: 0 12px 34px rgba(15, 23, 42, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gcc-membership-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 42px rgba(15, 23, 42, 0.1);
+}
+
+.gcc-membership-card__header {
+    text-align: center;
+}
+
+.gcc-membership-card__icon {
+    width: 36px;
+    height: 36px;
+    margin: 0 auto 18px;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: var(--title);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gcc-membership-card__icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
+.gcc-membership-card__name {
+    margin: 0;
+    color: var(--title);
+    font-size: clamp(18px, 1.65vw, 20px);
+    line-height: 1.3;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+.gcc-membership-card__subtitle {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+.gcc-membership-card__price {
+    margin-top: 16px;
+    color: var(--price);
+    font-size: clamp(42px, 4.2vw, 58px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+}
+
+.gcc-membership-card__billing {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 400;
+}
+
+.gcc-membership-card__divider {
+    height: 1px;
+    margin: 22px 0 0;
+    background: #e9eef6;
+}
+
+.gcc-membership-card__features {
+    list-style: none;
+    margin: 0;
+    padding: 18px 0 0;
+    display: grid;
+    gap: 12px;
+}
+
+.gcc-membership-card__feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    color: var(--feature);
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 400;
+}
+
+.gcc-membership-card__check {
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    margin-top: 1px;
+}
+
+.gcc-membership-card__check svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.gcc-membership-card__feature-text {
+    min-width: 0;
+}
+
+.gcc-membership-card__actions {
+    margin-top: auto;
+    padding-top: 28px;
+}
+
+.gcc-membership-card__form {
+    margin: 0;
+}
+
+.gcc-membership-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 42px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: var(--button);
+    color: #ffffff;
+    font-size: 15px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    border: 0;
+    box-shadow: 0 10px 20px rgba(36, 86, 168, 0.18);
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+.gcc-membership-card__button:hover {
+    background: var(--button-hover);
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(36, 86, 168, 0.22);
+}
+
+.gcc-membership-card__hidden {
+    display: none;
+}
+
+@media (max-width: 1024px) {
+    .gcc-membership-page {
+        padding: 72px 20px 84px;
+    }
+
+    .gcc-membership-page__grid {
+        gap: 18px;
+    }
+
+    .gcc-membership-card {
+        padding: 24px 22px 22px;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(38px, 5vw, 52px);
+    }
+}
+
+@media (max-width: 991px) {
+    .gcc-membership-page {
+        width: 100%;
+        margin-left: 0;
+        padding: 64px 16px 72px;
+    }
+
+    .gcc-membership-page::after {
+        display: none;
+    }
+
+    .gcc-membership-page__title {
+        margin-bottom: 24px;
+        font-size: clamp(32px, 5.8vw, 46px);
+    }
+
+    .gcc-membership-page__grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+
+    .gcc-membership-card {
+        padding: 24px 20px 20px;
+    }
+
+    .gcc-membership-card__icon {
+        margin-bottom: 14px;
+    }
+
+    .gcc-membership-card__subtitle {
+        font-size: 13px;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(34px, 10vw, 50px);
+        white-space: normal;
+    }
+
+    .gcc-membership-card__billing {
+        font-size: 14px;
+    }
+
+    .gcc-membership-card__features {
+        padding-top: 16px;
+        gap: 10px;
+    }
+
+    .gcc-membership-card__feature {
+        font-size: 14px;
+    }
+
+    .gcc-membership-card__actions {
+        padding-top: 22px;
+    }
+}
+
+@media (max-width: 767px) {
+    .gcc-membership-page {
+        padding: 52px 14px 60px;
+    }
+
+    .gcc-membership-page__title {
+        display: none !important;
+    }
+
+    .gcc-membership-page__mobile-title {
+        display: block !important;
+        margin: 0 0 22px;
+        text-align: center;
+        color: #111827;
+        position: relative;
+        z-index: 2;
+        width: 100%;
+        font-size: clamp(24px, 7vw, 34px);
+        line-height: 1.12;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        overflow-wrap: anywhere;
+        text-wrap: balance;
+    }
+
+    .gcc-membership-card {
+        padding: 22px 18px 18px;
+    }
+
+    .gcc-membership-card__icon {
+        margin-bottom: 16px;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(32px, 11vw, 44px);
+    }
+
+    .gcc-membership-card__billing {
+        font-size: 13px;
+    }
+
+    .gcc-membership-card__feature {
+        font-size: 13px;
+    }
+
+    .gcc-membership-card__actions {
+        padding-top: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gcc-membership-page {
+        padding: 46px 12px 54px;
+    }
+
+    .gcc-membership-page__mobile-title {
+        margin-bottom: 18px;
+        font-size: clamp(22px, 8vw, 28px);
+        line-height: 1.15;
+    }
+
+    .gcc-membership-card {
+        padding: 20px 16px 16px;
+        border-radius: 14px;
+    }
+
+    .gcc-membership-card__name {
+        font-size: 17px;
+    }
+
+    .gcc-membership-card__subtitle {
+        font-size: 12px;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(30px, 12vw, 38px);
+    }
+
+    .gcc-membership-card__feature {
+        gap: 8px;
+    }
+
+    .gcc-membership-card__check {
+        flex-basis: 20px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .gcc-membership-card__button {
+        min-height: 44px;
+        font-size: 14px;
+    }
+}
+</style>
+
+<section class="gcc-membership-page" aria-labelledby="gcc-membership-title">
+    <div class="gcc-membership-page__inner">
+        <h1 id="gcc-membership-title" class="gcc-membership-page__title">
+            <?php echo $block->escapeHtml($title); ?>
+        </h1>
+
+        <div class="gcc-membership-page__mobile-title" role="heading" aria-level="1">
+            <?php echo $block->escapeHtml($title); ?>
+        </div>
+
+        <div class="gcc-membership-page__grid">
+            <?php foreach ($planRows as $index => $row): ?>
+                <?php
+                /** @var \Magento\Catalog\Model\Product $_package */
+                $_package = $row['product'];
+                $planTitle = $buildPlanTitle($_package);
+                $subtitle = $buildSubtitle($_package);
+                $features = $extractFeatureItems($_package->getDescription());
+                $durationOptions = (array) $_package->getData('vendor_membership_duration');
+                $selectedDuration = $selectDurationOption($durationOptions);
+                $durationValue = '';
+                if ($selectedDuration && !empty($selectedDuration['duration']) && isset($selectedDuration['duration_unit'])) {
+                    $durationValue = $selectedDuration['duration'] . '|' . $selectedDuration['duration_unit'];
+                }
+                if ($durationValue === '') {
+                    $durationValue = '1|3';
+                }
+                $billingLabel = $selectedDuration ? $buildBillingLabel($selectedDuration) : __('N/A');
+                $postParams = $block->getAddToCartPostParams($_package);
+                $price = $block->formatPrice((float) $_package->getFinalPrice());
+                $cardIcon = $iconMap[$index] ?? $fallbackIcon;
+                ?>
+
+                <article class="gcc-membership-card gcc-membership-card--plan-<?php echo (int) ($index + 1); ?>">
+                    <div class="gcc-membership-card__header">
+                        <div class="gcc-membership-card__icon" aria-hidden="true">
+                            <?php echo $cardIcon; ?>
+                        </div>
+
+                        <h2 class="gcc-membership-card__name">
+                            <?php echo $block->escapeHtml($planTitle); ?>
+                        </h2>
+
+                        <p class="gcc-membership-card__subtitle">
+                            <?php echo $block->escapeHtml($subtitle); ?>
+                        </p>
+
+                        <div class="gcc-membership-card__price">
+                            <?php echo $block->escapeHtml($price); ?>
+                        </div>
+
+                        <p class="gcc-membership-card__billing">
+                            <?php echo $block->escapeHtml($billingLabel); ?>
+                        </p>
+                    </div>
+
+                    <div class="gcc-membership-card__divider" aria-hidden="true"></div>
+
+                    <?php if ($features): ?>
+                        <ul class="gcc-membership-card__features">
+                            <?php foreach ($features as $feature): ?>
+                                <li class="gcc-membership-card__feature">
+                                    <span class="gcc-membership-card__check" aria-hidden="true">
+                                        <?php echo $checkIcon; ?>
+                                    </span>
+                                    <span class="gcc-membership-card__feature-text">
+                                        <?php echo $block->escapeHtml($feature); ?>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+
+                    <div class="gcc-membership-card__actions">
+                        <form
+                            class="gcc-membership-card__form"
+                            data-role="tocart-form"
+                            action="<?php echo $block->escapeUrl($postParams['action']); ?>"
+                            method="post"
+                        >
+                            <input class="gcc-membership-card__hidden" type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($postParams['data']['product']); ?>">
+                            <input class="gcc-membership-card__hidden" type="hidden" name="<?php echo $block->escapeHtmlAttr(Action::PARAM_NAME_URL_ENCODED); ?>" value="<?php echo $block->escapeHtmlAttr($postParams['data'][Action::PARAM_NAME_URL_ENCODED]); ?>">
+                            <input class="gcc-membership-card__hidden" type="hidden" name="membership[duration]" value="<?php echo $block->escapeHtmlAttr($durationValue); ?>">
+                            <input class="gcc-membership-card__hidden" type="hidden" name="in_cart" value="1">
+                            <?php echo $block->getBlockHtml('formkey'); ?>
+
+                            <button type="submit" class="gcc-membership-card__button action tocart primary">
+                                <span><?php echo $block->escapeHtml(__('Get started')); ?></span>
+                            </button>
+                        </form>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>
+
+<script type="text/x-magento-init">
+{
+    "[data-role=tocart-form], .form.map.checkout": {
+        "catalogAddToCart": {}
+    }
+}
+</script>

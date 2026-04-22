@@ -2,10 +2,7 @@
 
 namespace Gcc\VendorsLanguage\Controller\Dashboard\Config;
 
-/**
- * IMPORTANT: Standard Magento Action ki jagah Vnecoms Action use karein
- */
-use Vnecoms\Vendors\App\Action\Action;
+use Vnecoms\Vendors\Controller\Vendors\Action;
 use Vnecoms\Vendors\App\Action\Context;
 
 class Switchlanguage extends Action
@@ -31,15 +28,12 @@ class Switchlanguage extends Action
 
     public function execute()
     {
-        die("Controller is working!");
         $locale = $this->getRequest()->getParam('locale');
         
-        // Vnecoms ki base class se session nikaalein
         $vendor = $this->_vendorSession->getVendor();
 
         if ($locale && $vendor && $vendor->getId()) {
             try {
-                // Save selected language in vendor config
                 $this->vendorConfig->setVendorConfig(
                     'general/locale/code',
                     $locale,
@@ -51,7 +45,6 @@ class Switchlanguage extends Action
             }
         }
 
-        // Dashboard par wapas redirect karein
         return $this->_redirect('dashboard/index/index');
     }
 }

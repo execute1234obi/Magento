@@ -1,0 +1,740 @@
+<?php
+/**
+ * Membership product detail template.
+ *
+ * @var \Magento\Catalog\Block\Product\View $block
+ */
+
+$product = $block->getProduct();
+$shortDescriptionHtml = trim((string) $product->getShortDescription());
+$descriptionHtml = trim((string) $product->getDescription());
+
+$featureItems = [];
+if ($descriptionHtml !== '' && preg_match_all('/<li\b[^>]*>(.*?)<\/li>/si', $descriptionHtml, $matches)) {
+    foreach ($matches[1] as $rawItem) {
+        $featureText = trim(preg_replace('/\s+/', ' ', strip_tags(html_entity_decode($rawItem, ENT_QUOTES, 'UTF-8'))));
+        if ($featureText !== '' && !in_array($featureText, $featureItems, true)) {
+            $featureItems[] = $featureText;
+        }
+    }
+}
+
+if (!$featureItems && $shortDescriptionHtml !== '') {
+    $featureItems[] = trim(preg_replace('/\s+/', ' ', strip_tags($shortDescriptionHtml)));
+}
+
+$detailHtml = $descriptionHtml;
+if ($detailHtml !== '') {
+    $detailHtml = preg_replace('/<ul\b[^>]*class="small-des-membership"[^>]*>.*?<\/ul>/si', '', $detailHtml);
+    $detailHtml = trim((string) $detailHtml);
+}
+
+if ($detailHtml === '' || trim(strip_tags($detailHtml)) === '') {
+    $detailHtml = $shortDescriptionHtml;
+}
+
+$overviewHtml = $shortDescriptionHtml !== '' ? $shortDescriptionHtml : $detailHtml;
+if ($overviewHtml === '') {
+    $overviewHtml = '<p>' . $block->escapeHtml(__('Choose a duration to continue with this membership plan.')) . '</p>';
+}
+
+$infoRows = [];
+$infoFields = [
+    'sku' => __('SKU'),
+    'manufacturer' => __('Manufacturer'),
+    'brand' => __('Brand'),
+    'size' => __('Size'),
+];
+
+foreach ($infoFields as $code => $label) {
+    $attributeValue = $product->getData($code);
+    if ($attributeValue === null || $attributeValue === '') {
+        continue;
+    }
+
+    $attribute = $product->getResource()->getAttribute($code);
+    $displayValue = $attribute ? $attribute->getFrontend()->getValue($product) : $attributeValue;
+
+    if (is_array($displayValue)) {
+        $displayValue = implode(', ', array_map(static function ($item) {
+            return is_scalar($item) ? (string) $item : '';
+        }, $displayValue));
+    } elseif (is_object($displayValue)) {
+        $displayValue = method_exists($displayValue, '__toString') ? (string) $displayValue : '';
+    }
+
+    $displayValue = trim((string) $displayValue);
+    if ($displayValue === '' || $displayValue === 'No') {
+        continue;
+    }
+
+    $infoRows[] = [
+        'label' => (string) $label,
+        'value' => $displayValue,
+    ];
+}
+
+$mainImage = $block->getImage($product, 'product_page_image_large');
+$mainImageUrl = $mainImage ? $mainImage->getImageUrl() : '';
+$mainImageLabel = $mainImage ? ($mainImage->getLabel() ?: $product->getName()) : $product->getName();
+
+$galleryImages = [];
+$seenUrls = [];
+foreach ($product->getMediaGalleryImages() as $image) {
+    $imageUrl = (string) $image->getUrl();
+    if ($imageUrl === '' || isset($seenUrls[$imageUrl])) {
+        continue;
+    }
+
+    $seenUrls[$imageUrl] = true;
+    $galleryImages[] = [
+        'url' => $imageUrl,
+        'label' => $image->getLabel() ?: $product->getName(),
+    ];
+}
+
+if ($mainImageUrl === '' && !empty($galleryImages)) {
+    $mainImageUrl = $galleryImages[0]['url'];
+    $mainImageLabel = $galleryImages[0]['label'];
+}
+
+$thumbnailImages = array_values(array_filter($galleryImages, static function (array $image) use ($mainImageUrl) {
+    return $image['url'] !== $mainImageUrl;
+}));
+
+$priceHtml = $block->getProductPriceHtml($product, 'final_price');
+$submitUrl = $block->getSubmitUrl($product);
+$isSaleable = (bool) $product->isSaleable();
+
+$membershipBlock = $block->getLayout()->createBlock(\Vnecoms\VendorsMembership\Block\Product\View\Type\Membership::class);
+$membershipBlock->setProduct($product);
+$membershipBlock->setTemplate('Vnecoms_VendorsMembership::product/view/type/options/membership.phtml');
+$durationOptionsHtml = $membershipBlock->toHtml();
+
+$breadcrumbsBlock = $block->getLayout()->getBlock('breadcrumbs');
+?>
+
+<!-- GCC MEMBERSHIP PDP TEMPLATE -->
+<style>
+.gcc-membership-page {
+    position: relative;
+    overflow: hidden;
+    padding: 28px 0 64px;
+    background: linear-gradient(180deg, #f6f8ff 0%, #ffffff 40%);
+    color: #0f172a;
+    font-family: "Inter", sans-serif;
+}
+
+.gcc-membership-page,
+.gcc-membership-page * {
+    box-sizing: border-box;
+}
+
+.gcc-membership-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: clamp(180px, 26vw, 360px);
+    height: 84px;
+    background: #2a5cb3;
+    clip-path: polygon(18% 0, 100% 0, 92% 100%, 0 100%);
+    border-radius: 0 0 0 18px;
+    opacity: 0.98;
+}
+
+.gcc-membership-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.gcc-membership-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 4px 0 18px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.gcc-membership-breadcrumb a {
+    color: #64748b;
+    text-decoration: none;
+}
+
+.gcc-membership-breadcrumb a:hover {
+    color: #2a5cb3;
+}
+
+.gcc-membership-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+    gap: 24px;
+    align-items: start;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #dfe7f7;
+    border-radius: 28px;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.07);
+}
+
+.gcc-membership-media {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+}
+
+.gcc-membership-image-shell {
+    min-height: 420px;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+    border: 1px solid #e5ecfb;
+    background: linear-gradient(180deg, #f6f9ff 0%, #eef4ff 100%);
+}
+
+.gcc-membership-main-image {
+    width: 100%;
+    max-height: 420px;
+    object-fit: contain;
+    display: block;
+}
+
+.gcc-membership-thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(72px, 72px));
+    gap: 12px;
+    justify-content: start;
+}
+
+.gcc-membership-thumb {
+    width: 72px;
+    height: 72px;
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid #d7e3fb;
+    background: #fff;
+    cursor: pointer;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gcc-membership-thumb img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.gcc-membership-thumb.is-active {
+    border-color: #2a5cb3;
+    box-shadow: 0 0 0 3px rgba(42, 92, 179, 0.12);
+    transform: translateY(-1px);
+}
+
+.gcc-membership-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    padding: 6px 4px 4px;
+}
+
+.gcc-membership-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    align-self: flex-start;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: #eaf1ff;
+    color: #2a5cb3;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.gcc-membership-title {
+    margin: 0;
+    font-size: clamp(32px, 4vw, 54px);
+    line-height: 1.05;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.gcc-membership-subtitle {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #475569;
+}
+
+.gcc-membership-price-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 22px;
+    border-top: 1px solid #e7edf8;
+}
+
+.gcc-membership-price-row .price-box {
+    margin: 0;
+}
+
+.gcc-membership-price-value .price {
+    font-size: clamp(38px, 5vw, 64px) !important;
+    font-weight: 800 !important;
+    line-height: 1 !important;
+    color: #234e9d !important;
+}
+
+.gcc-membership-price-note {
+    font-size: 15px;
+    color: #64748b;
+}
+
+.gcc-membership-duration {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #e7edf8;
+}
+
+.gcc-membership-duration-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.gcc-membership-duration .field.configurable.required {
+    margin: 0;
+}
+
+.gcc-membership-duration .field.configurable.required .label {
+    display: block;
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #334155;
+}
+
+.gcc-membership-duration .field.configurable.required .control {
+    width: 100%;
+}
+
+.gcc-membership-duration select.super-attribute-select,
+.gcc-membership-duration select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 14px;
+    background: #fff;
+    color: #0f172a;
+    font-size: 15px;
+    outline: none;
+    box-shadow: none;
+}
+
+.gcc-membership-duration select.super-attribute-select:focus,
+.gcc-membership-duration select:focus {
+    border-color: #2a5cb3;
+    box-shadow: 0 0 0 3px rgba(42, 92, 179, 0.12);
+}
+
+.gcc-membership-features {
+    display: grid;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+.gcc-membership-feature {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    color: #334155;
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+.gcc-membership-feature-bullet {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ecf3ff;
+    color: #2a5cb3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 22px;
+    margin-top: 1px;
+    font-weight: 700;
+}
+
+.gcc-membership-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 6px;
+}
+
+.gcc-membership-cta {
+    width: 100%;
+    min-height: 54px;
+    border: 0;
+    border-radius: 14px;
+    background: #2a5cb3;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    box-shadow: 0 12px 24px rgba(42, 92, 179, 0.22);
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.gcc-membership-cta:hover:not(:disabled) {
+    transform: translateY(-1px);
+    background: #224f9c;
+    box-shadow: 0 16px 28px rgba(42, 92, 179, 0.26);
+}
+
+.gcc-membership-cta:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.gcc-membership-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 22px;
+}
+
+.gcc-membership-card {
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e5ecfb;
+    border-radius: 24px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.05);
+}
+
+.gcc-membership-card-title {
+    margin: 0 0 14px;
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.gcc-membership-richtext {
+    color: #334155;
+    line-height: 1.75;
+    font-size: 15px;
+}
+
+.gcc-membership-richtext p {
+    margin: 0 0 12px;
+}
+
+.gcc-membership-richtext ul {
+    padding-left: 20px;
+    margin: 0;
+}
+
+.gcc-membership-richtext li + li {
+    margin-top: 8px;
+}
+
+.gcc-membership-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gcc-membership-info-table th,
+.gcc-membership-info-table td {
+    padding: 12px 0;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: top;
+    text-align: left;
+    font-size: 14px;
+}
+
+.gcc-membership-info-table th {
+    width: 36%;
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.gcc-membership-info-table td {
+    color: #475569;
+}
+
+@media (max-width: 991px) {
+    .gcc-membership-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .gcc-membership-image-shell {
+        min-height: 320px;
+    }
+
+    .gcc-membership-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 767px) {
+    .gcc-membership-page {
+        padding: 18px 0 48px;
+    }
+
+    .gcc-membership-shell {
+        padding: 0 14px;
+    }
+
+    .gcc-membership-page::before {
+        width: 170px;
+        height: 64px;
+    }
+
+    .gcc-membership-hero {
+        gap: 18px;
+        padding: 18px;
+        border-radius: 22px;
+    }
+
+    .gcc-membership-image-shell {
+        min-height: 260px;
+        padding: 16px;
+        border-radius: 20px;
+    }
+
+    .gcc-membership-title {
+        font-size: clamp(28px, 8vw, 38px);
+    }
+
+    .gcc-membership-subtitle,
+    .gcc-membership-richtext {
+        font-size: 14px;
+    }
+
+    .gcc-membership-card {
+        padding: 18px;
+        border-radius: 20px;
+    }
+
+    .gcc-membership-card-title {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gcc-membership-shell {
+        padding: 0 12px;
+    }
+
+    .gcc-membership-thumb {
+        width: 64px;
+        height: 64px;
+    }
+
+    .gcc-membership-cta {
+        min-height: 50px;
+        font-size: 15px;
+    }
+
+    .gcc-membership-info-table th,
+    .gcc-membership-info-table td {
+        display: block;
+        width: 100%;
+        padding: 8px 0;
+    }
+
+    .gcc-membership-info-table th {
+        border-bottom: 0;
+        padding-bottom: 2px;
+    }
+}
+</style>
+
+<div class="gcc-membership-page">
+    <div class="gcc-membership-shell">
+        <?php if ($breadcrumbsBlock): ?>
+            <nav class="gcc-membership-breadcrumb" aria-label="<?= $block->escapeHtmlAttr(__('Breadcrumb')) ?>">
+                <?= /* @noEscape */ $breadcrumbsBlock->toHtml(); ?>
+            </nav>
+        <?php endif; ?>
+
+        <section class="gcc-membership-hero">
+            <div class="gcc-membership-media">
+                <div class="gcc-membership-image-shell">
+                    <img
+                        class="gcc-membership-main-image"
+                        data-gcc-main-image="1"
+                        src="<?= $block->escapeUrl($mainImageUrl) ?>"
+                        alt="<?= $block->escapeHtmlAttr($mainImageLabel) ?>">
+                </div>
+
+                <?php if (!empty($thumbnailImages)): ?>
+                    <div class="gcc-membership-thumbs" aria-label="<?= $block->escapeHtmlAttr(__('Product images')) ?>">
+                        <?php foreach ($thumbnailImages as $index => $image): ?>
+                            <button
+                                type="button"
+                                class="gcc-membership-thumb<?= $index === 0 ? ' is-active' : '' ?>"
+                                data-gcc-thumb
+                                data-image-src="<?= $block->escapeUrl($image['url']) ?>"
+                                data-image-label="<?= $block->escapeHtmlAttr($image['label']) ?>">
+                                <img
+                                    src="<?= $block->escapeUrl($image['url']) ?>"
+                                    alt="<?= $block->escapeHtmlAttr($image['label']) ?>">
+                            </button>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <div class="gcc-membership-summary">
+                <span class="gcc-membership-eyebrow"><?= $block->escapeHtml(__('Vendor Membership')) ?></span>
+                <h1 class="gcc-membership-title">
+                    <?= $block->escapeHtml($product->getName()) ?>
+                </h1>
+
+                <?php if ($shortDescriptionHtml !== ''): ?>
+                    <div class="gcc-membership-subtitle">
+                        <?= /* @noEscape */ $shortDescriptionHtml ?>
+                    </div>
+                <?php endif; ?>
+
+                <div class="gcc-membership-price-row price-box price-final_price"
+                     data-role="priceBox"
+                     data-product-id="<?= (int) $product->getId() ?>"
+                     data-price-box="product-id-<?= (int) $product->getId() ?>">
+                    <div class="gcc-membership-price-value">
+                        <?= /* @noEscape */ $priceHtml ?>
+                    </div>
+                    <div class="gcc-membership-price-note">
+                        <?= $block->escapeHtml(__('Price updates with the selected duration.')) ?>
+                    </div>
+                </div>
+
+                <form
+                    id="product_addtocart_form"
+                    class="gcc-membership-form"
+                    data-product-sku="<?= $block->escapeHtmlAttr($product->getSku()) ?>"
+                    action="<?= $block->escapeUrl($submitUrl) ?>"
+                    method="post"
+                    data-mage-init='{"validation": {}}'>
+                    <input type="hidden" name="product" value="<?= (int) $product->getId() ?>">
+                    <input type="hidden" name="product_id" value="<?= (int) $product->getId() ?>">
+                    <input type="hidden" name="qty" value="1">
+                    <input type="hidden" name="in_cart" value="1">
+                    <?= $block->getBlockHtml('formkey'); ?>
+
+                    <div class="gcc-membership-duration">
+                        <div class="gcc-membership-duration-label">
+                            <?= $block->escapeHtml(__('Choose duration')) ?>
+                        </div>
+                        <?= /* @noEscape */ $durationOptionsHtml ?>
+                    </div>
+
+                    <?php if (!empty($featureItems)): ?>
+                        <div class="gcc-membership-features" aria-label="<?= $block->escapeHtmlAttr(__('Plan features')) ?>">
+                            <?php foreach (array_slice($featureItems, 0, 6) as $feature): ?>
+                                <div class="gcc-membership-feature">
+                                    <span class="gcc-membership-feature-bullet" aria-hidden="true">✓</span>
+                                    <span><?= $block->escapeHtml($feature) ?></span>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($isSaleable): ?>
+                        <button type="submit" class="gcc-membership-cta action primary tocart">
+                            <span><?= $block->escapeHtml(__('Get started')) ?></span>
+                        </button>
+                    <?php else: ?>
+                        <button type="button" class="gcc-membership-cta action primary tocart" disabled="disabled">
+                            <span><?= $block->escapeHtml(__('Unavailable')) ?></span>
+                        </button>
+                    <?php endif; ?>
+                </form>
+            </div>
+        </section>
+
+        <section class="gcc-membership-details">
+            <article class="gcc-membership-card">
+                <h2 class="gcc-membership-card-title"><?= $block->escapeHtml(__('Plan Overview')) ?></h2>
+                <div class="gcc-membership-richtext">
+                    <?= /* @noEscape */ $overviewHtml ?>
+                </div>
+            </article>
+
+            <article class="gcc-membership-card">
+                <h2 class="gcc-membership-card-title"><?= $block->escapeHtml(__('More Information')) ?></h2>
+
+                <?php if (!empty($infoRows)): ?>
+                    <table class="gcc-membership-info-table">
+                        <tbody>
+                            <?php foreach ($infoRows as $row): ?>
+                                <tr>
+                                    <th scope="row"><?= $block->escapeHtml($row['label']) ?></th>
+                                    <td><?= $block->escapeHtml($row['value']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <div class="gcc-membership-richtext">
+                        <?= $block->escapeHtml(__('No additional product information is available yet.')) ?>
+                    </div>
+                <?php endif; ?>
+            </article>
+        </section>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var root = document.querySelector('.gcc-membership-page');
+    if (!root) {
+        return;
+    }
+
+    var mainImage = root.querySelector('[data-gcc-main-image]');
+    var thumbs = Array.prototype.slice.call(root.querySelectorAll('[data-gcc-thumb]'));
+
+    if (!mainImage || thumbs.length === 0) {
+        return;
+    }
+
+    thumbs.forEach(function (thumb) {
+        thumb.addEventListener('click', function () {
+            var imageUrl = thumb.getAttribute('data-image-src');
+            var imageLabel = thumb.getAttribute('data-image-label') || mainImage.getAttribute('alt');
+
+            if (!imageUrl) {
+                return;
+            }
+
+            mainImage.src = imageUrl;
+            mainImage.alt = imageLabel;
+
+            thumbs.forEach(function (item) {
+                item.classList.remove('is-active');
+            });
+
+            thumb.classList.add('is-active');
+        });
+    });
+});
+</script>
