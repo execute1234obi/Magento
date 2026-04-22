@@ -15,4 +15,19 @@
                 sortOrder="10"
                 disabled="false"/>
     </type>
+
+   <type name="Vnecoms\VendorsConfig\Controller\Vendors\Index\Edit">
+        <plugin name="vendor_config_access_control"
+                type="Vendor\CustomConfig\Plugin\ConfigAccessPlugin" />
+    </type>
+    ... <!-- for vencom vendor information page  -->
+   <type name="Vnecoms\Vendors\Controller\Vendors\Account\Index">
+        <plugin name="vendor_account_expiry_check"
+                type="Vendor\CustomConfig\Plugin\GlobalAccessPlugin" />
+    </type>
+
+    <type name="Vnecoms\Vendors\Controller\Vendors\Account\Save">
+        <plugin name="vendor_account_save_expiry_check"
+                type="Vendor\CustomConfig\Plugin\GlobalAccessPlugin" />
+    </type>
 </config>
