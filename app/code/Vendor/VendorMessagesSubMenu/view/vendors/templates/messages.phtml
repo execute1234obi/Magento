@@ -395,7 +395,9 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
         <?php endif; ?>
     </section>
 </div>
-
+<script>
+    window.BASE_URL = "<?php echo $block->getUrl(''); ?>";
+</script>
 <script>
 require(['jquery', 'Magento_Ui/js/modal/alert', 'mage/translate'], function ($, alert, $t) {
     var searchBox = $('#vendorMessageSearch');

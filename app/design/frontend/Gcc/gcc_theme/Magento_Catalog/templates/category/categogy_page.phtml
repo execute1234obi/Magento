@@ -420,6 +420,13 @@ echo $this->getLayout()
 
         </section>
    <?php
+   $om = \Magento\Framework\App\ObjectManager::getInstance();
+
+$vendorFactory = $om->create(\Vnecoms\Vendors\Model\VendorFactory::class);
+
+$verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification::class);
+
+$countryFactory = $om->get(\Magento\Directory\Model\CountryFactory::class);
 /** Get Current Category **/
 $registry = \Magento\Framework\App\ObjectManager::getInstance()
     ->get(\Magento\Framework\Registry::class);
@@ -465,7 +472,31 @@ $productCollection = $category->getProductCollection()
         <?php else: ?>
             <div class="product-carousel-track">
                 <?php foreach ($productCollection as $product): ?>
+                    <?php
+                        $vendorId   = (int) $product->getVendorId();
+                        $vendorName = '';
+                        $countryCode = '';
+                        $isVerified = false;
 
+                        if ($vendorId) {
+                            try {
+                                $vendor = $vendorFactory->create()->load($vendorId);
+
+                                if ($vendor && $vendor->getId()) {
+                                    $vendorName  = $vendor->getData('b_name') ?: '';
+                                    $countryCode = $vendor->getCountryId() ?: '';
+                                    $isVerified  = (bool) $verificationBlock->isVendorVerified($vendorId);
+                                }
+                            } catch (\Exception $e) {}
+                        }
+
+                        /** Country Name */
+                        $countryName = '';
+                        if ($countryCode) {
+                            $countryModel = $countryFactory->create()->loadByCode($countryCode);
+                            $countryName = $countryModel->getName();
+                        }
+                        ?>
                     <div class="product-card">
 
                         <?php
@@ -480,15 +511,23 @@ $productCollection = $category->getProductCollection()
 
                             <h3 class="product-title"><?= $product->getName(); ?></h3>
 
-                            <p class="product-price"><?= $product->getFinalPrice(); ?> SAR</p>
-
+                           <?php if ((float)$product->getFinalPrice() > 0): ?>
+                                <p class="product-price">
+                                    <?= $product->getFinalPrice(); ?> SAR
+                                </p>
+                            <?php endif; ?>
                             <div class="product-vendor">
-                                <span class="product-vendor-name">Brand</span>
+                                <span class="product-vendor-name"><?= $vendorName ?></span>
                             </div>
 
-                            <p class="product-location">Saudi Arabia</p>
+                            <p class="product-location"><?= $countryName ?></p>
 
-                            <button class="add-to-quote-btn">Add to Quote</button>
+                            <!-- <button class="add-to-quote-btn">Add to Quote</button> -->
+                             <button class="add-to-quote-btn"
+                                data-product-id="<?= $product->getId(); ?>"
+                                type="button">
+                                Add to Quote
+                            </button>
                         </div>
                     </div>
 
@@ -554,6 +593,48 @@ echo $this->getLayout()
             });
         });
     </script>
+    <script>
+    require(['jquery'], function($) {
+    $(document).ready(function() {
+
+        // ADD TO QUOTE (GLOBAL - works everywhere)
+        $(document).on('click', '.add-to-quote-btn', function () {
+
+            var button = $(this);
+            var productId = button.data('product-id');
+
+            $.ajax({
+                url: '<?= $block->getUrl("quoterequest/index/create") ?>',
+                type: 'POST',
+                data: {
+                    product_id: productId
+                },
+                showLoader: true,
+
+                success: function (response) {
+
+                    button.text('Added');
+                    button.prop('disabled', true);
+
+                    if (response.count !== undefined) {
+                        $('#quote-counter')
+                            .text(response.count)
+                            .show();
+                    }
+
+                },
+
+                error: function () {
+                    alert('Error while adding to quote');
+                }
+
+            });
+
+        });
+
+    });
+});
+</script>
 </body>
 
 
