@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-     <head>
+    <head>
         <css src="Vendor_VendorsVerification::css/verification.css"/>
     </head>
     <body>
+        <referenceBlock name="vendor.page.title"
+                        template="Vendor_VendorsVerification::page/title_empty.phtml"/>
+        <referenceBlock name="breadcrumbs"
+                        template="Vendor_VendorsVerification::page/breadcrumbs_no_title.phtml"/>
         <referenceContainer name="content">
                   <!-- DEBUG -->
             <!-- <block class="Magento\Framework\View\Element\Text"

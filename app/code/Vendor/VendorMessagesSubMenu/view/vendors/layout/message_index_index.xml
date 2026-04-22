@@ -1,24 +1,22 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-
+    <head>
+        <css src="Vnecoms_VendorsMessage::css/icons.css"/>
+        <css src="Vnecoms_VendorsMessage::css/message.css"/>
+        <css src="Vnecoms_VendorsMessage::css/attachments.css"/>
+        <css src="Vnecoms_VendorsMessage::css/fileuploader.css"/>
+    </head>
     <body>
-
-        <!-- Override template -->
-        <referenceBlock name="seller.messages">
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">
-                    Vendor_VendorMessagesSubMenu::messages.phtml
-                </argument>
-            </action>
-        </referenceBlock>
-
-        <!-- ✅ ADD UI COMPONENT DIRECTLY -->
-        <!-- <referenceContainer name="content">
-            <uiComponent name="vendor_messages_grid1"/>
-        </referenceContainer> -->
-    <referenceBlock name="seller.messages">
-    <uiComponent name="vendor_messages_grid1" />
-</referenceBlock>
+        <referenceBlock name="seller.messages" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Vendor\VendorMessagesSubMenu\Block\Vendors\Messages\Inbox"
+                   name="vendor.messages.inbox"
+                   template="Vendor_VendorMessagesSubMenu::messages.phtml">
+                <arguments>
+                    <argument name="block_title" xsi:type="string">Inbox</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

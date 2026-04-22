@@ -24,10 +24,21 @@ $summaryComments = $summaryDetailId
         \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_INFORMATION
     )
     : 0;
+
+$verificationStatus  = (int) $vendorVerification->getIsVerified();
+$paymentStatus       = (int) $vendorVerification->getIsPaid();
+$verificationAmount  = $vendorVerification->getAmount();
+$verificationMonths  = $vendorVerification->getMonthsBooked();
+$verificationFromDate = $vendorVerification->getFromDate();
+$verificationToDate   = $vendorVerification->getToDate();
+
+$summaryRowStyle = 'style="border:0 !important;background-color:#f5f8fd !important;background-image:none !important;"';
+$summaryLabelCellStyle = 'style="border:0 !important;background-color:#f5f8fd !important;background-image:none !important;color:#7f8fb3;font-weight:500;"';
+$summaryValueCellStyle = 'style="border:0 !important;background-color:#f5f8fd !important;background-image:none !important;color:#17315f;font-size:14px;font-weight:700;"';
 ?>
 
-<section class="verification-card verification-card--summary">
-    <div class="verification-card__head">
+<section class="verification-card verification-card--summary" style="background-color:#f5f8fd !important;background-image:none !important;border-color:#d8e2ef;">
+    <div class="verification-card__head" style="background-color:#f5f8fd !important;background-image:none !important;border-bottom-color:#d8e2ef;">
         <h3><?= __('Verification Details') ?></h3>
 
         <?php if ($summaryDetailId): ?>
@@ -42,32 +53,32 @@ $summaryComments = $summaryDetailId
         <?php endif; ?>
     </div>
 
-    <div class="verification-card__body">
-        <table class="verification-table">
+    <div class="verification-card__body" style="background-color:#f5f8fd !important;background-image:none !important;">
+        <table class="verification-table verification-table--summary" style="border-collapse:separate;border-spacing:0;background-color:#f5f8fd !important;background-image:none !important;">
             <tbody>
-                <tr>
-                    <td><?= __('Verification Status') ?></td>
-                    <td><?= $block->getvendorVerificationStatusLabel($vendorVerification->getIsVerified()); ?></td>
+                <tr <?= /* @noEscape */ $summaryRowStyle; ?>>
+                    <td <?= /* @noEscape */ $summaryLabelCellStyle; ?>><?= __('Verification Status') ?></td>
+                    <td <?= /* @noEscape */ $summaryValueCellStyle; ?>><?= /* @noEscape */ $block->getvendorVerificationStatusLabel($verificationStatus); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Verification Payment Status') ?></td>
-                    <td><?= $block->getPaymentStatusLabel($vendorVerification->getIsPaid()); ?></td>
+                <tr <?= /* @noEscape */ $summaryRowStyle; ?>>
+                    <td <?= /* @noEscape */ $summaryLabelCellStyle; ?>><?= __('Verification Payment Status') ?></td>
+                    <td <?= /* @noEscape */ $summaryValueCellStyle; ?>><?= /* @noEscape */ $block->getPaymentStatusLabel($paymentStatus); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Verification Fees') ?></td>
-                    <td><?= $block->getFormatedPrice($vendorVerification->getAmount()); ?></td>
+                <tr <?= /* @noEscape */ $summaryRowStyle; ?>>
+                    <td <?= /* @noEscape */ $summaryLabelCellStyle; ?>><?= __('Verification Fees') ?></td>
+                    <td <?= /* @noEscape */ $summaryValueCellStyle; ?>><?= /* @noEscape */ $block->getFormatedPrice($verificationAmount); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Verification Duration') ?></td>
-                    <td><?= $vendorVerification->getMonthsBooked() . __(' Months'); ?></td>
+                <tr <?= /* @noEscape */ $summaryRowStyle; ?>>
+                    <td <?= /* @noEscape */ $summaryLabelCellStyle; ?>><?= __('Verification Duration') ?></td>
+                    <td <?= /* @noEscape */ $summaryValueCellStyle; ?>><?= $block->escapeHtml($block->getVerificationMonthsLabel($verificationMonths)); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Verification Start Date') ?></td>
-                    <td><?= $vendorVerification->getFromDate() ? $block->getFormatedDate($vendorVerification->getFromDate()) : __('N/A'); ?></td>
+                <tr <?= /* @noEscape */ $summaryRowStyle; ?>>
+                    <td <?= /* @noEscape */ $summaryLabelCellStyle; ?>><?= __('Verification Start Date') ?></td>
+                    <td <?= /* @noEscape */ $summaryValueCellStyle; ?>><?= $verificationFromDate ? $block->escapeHtml($block->getFormatedDate($verificationFromDate)) : __('N/A'); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Verification Expire Date') ?></td>
-                    <td><?= $vendorVerification->getToDate() ? $block->getFormatedDate($vendorVerification->getToDate()) : __('N/A'); ?></td>
+                <tr <?= /* @noEscape */ $summaryRowStyle; ?>>
+                    <td <?= /* @noEscape */ $summaryLabelCellStyle; ?>><?= __('Verification Expire Date') ?></td>
+                    <td <?= /* @noEscape */ $summaryValueCellStyle; ?>><?= $verificationToDate ? $block->escapeHtml($block->getFormatedDate($verificationToDate)) : __('N/A'); ?></td>
                 </tr>
             </tbody>
         </table>

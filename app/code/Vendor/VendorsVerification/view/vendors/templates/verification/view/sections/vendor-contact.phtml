@@ -32,10 +32,13 @@ $commentsCount = $detail_id
         \Vendor\VendorsVerification\Model\Source\InfoGroup::VENDOR_VERIFICATION_DATAGROUP_BUSINESS_CONTACT
     )
     : 0;
+
+$sectionRowStyle = 'style="border:0 !important;box-shadow:none !important;background:#ffffff !important;"';
+$sectionCellStyle = 'style="border:0 !important;border-top:0 !important;border-bottom:0 !important;box-shadow:none !important;background:#ffffff !important;"';
 ?>
 
-<section class="verification-card verification-card--section verification-card--contact">
-    <div class="verification-card__head">
+<section class="verification-card verification-card--section verification-card--contact" style="background-color:#ffffff !important;background-image:none !important;border-color:#d8e2ef !important;">
+    <div class="verification-card__head" style="background-color:#ffffff !important;background-image:none !important;border-bottom-color:#dfe8f2 !important;">
         <h3><?= __('Business Contact') ?></h3>
 
         <div class="verification-card__actions">
@@ -59,24 +62,24 @@ $commentsCount = $detail_id
         </div>
     </div>
 
-    <div class="verification-card__body">
-        <table class="verification-table">
+    <div class="verification-card__body" style="background-color:#ffffff !important;background-image:none !important;">
+        <table class="verification-table" style="border-collapse:separate;border-spacing:0;background:#ffffff !important;border:0 !important;box-shadow:none !important;">
             <tbody>
-                <tr>
-                    <td><?= __('Status') ?></td>
-                    <td><?= $status ? $block->getStatusLabel($status) : __('Not Submitted'); ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Status') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $status ? $block->getStatusLabel($status) : __('Not Submitted'); ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Contact Name') ?></td>
-                    <td><?= $contact_name; ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Contact Name') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $contact_name; ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Phone') ?></td>
-                    <td><?= $contact_phone; ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Phone') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $contact_phone; ?></td>
                 </tr>
-                <tr>
-                    <td><?= __('Email') ?></td>
-                    <td><?= $contact_email; ?></td>
+                <tr <?= /* @noEscape */ $sectionRowStyle; ?>>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= __('Email') ?></td>
+                    <td <?= /* @noEscape */ $sectionCellStyle; ?>><?= $contact_email; ?></td>
                 </tr>
             </tbody>
         </table>

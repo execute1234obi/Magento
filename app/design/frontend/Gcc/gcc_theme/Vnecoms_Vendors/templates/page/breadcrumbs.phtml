@@ -1,0 +1,114 @@
+<?php
+// @codingStandardsIgnoreFile
+/** @var $block \Vnecoms\Vendors\Block\Page\Breadcrumbs */
+?>
+
+<?php if (!empty($links)): ?>
+<?php
+    $_size = count($links);
+    $last = $links[$_size - 1];
+    $pageTitle = isset($last['label']) ? trim((string) $last['label']) : '';
+    $fullActionName = (string) $block->getRequest()->getFullActionName();
+    $requestPath = strtolower(trim((string) $block->getRequest()->getPathInfo(), '/'));
+    $isAccountPage = in_array($fullActionName, ['account_index_index', 'vendors_account_index', 'default_vendors_account'], true)
+        || strpos($requestPath, 'vendors/account') !== false;
+    $hidePageTitle = $isAccountPage && $pageTitle === 'Account';
+?>
+
+<style>
+  .vendor-pagehead {
+    margin: 0 0 16px;
+    padding-top: 6px;
+  }
+
+  .vendor-breadcrumb {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 18px;
+    color: #94A3B8;
+    font-weight: 400;
+  }
+
+  .vendor-breadcrumb__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .vendor-breadcrumb__sep {
+    color: #CBD5E1;
+  }
+
+  .vendor-breadcrumb__link {
+    color: #94A3B8;
+    text-decoration: none;
+    transition: color .15s ease;
+  }
+
+  .vendor-breadcrumb__link:hover {
+    color: #1E56A0;
+    text-decoration: none;
+  }
+
+  .vendor-breadcrumb__current {
+    color: #1E56A0;
+    font-weight: 600;
+  }
+
+  .vendor-page-title {
+    margin: 10px 0 0;
+    font-size: 13px;
+    line-height: 26px;
+    font-weight: 700;
+    color: #163172;
+  }
+
+  .vendor-page-title-gap {
+    padding-top: 10px;
+  }
+
+</style>
+
+<div class="vendor-pagehead">
+  <ol class="vendor-breadcrumb" aria-label="Breadcrumb">
+    <li class="vendor-breadcrumb__item">
+      <a class="vendor-breadcrumb__link" href="<?php echo $this->getHomeLink() ?>">
+        <?php echo __("Home") ?>
+      </a>
+    </li>
+
+    <?php foreach ($links as $_index => $_link): ?>
+      <?php $isLast = ($_index == $_size - 1); ?>
+      <li class="vendor-breadcrumb__item<?php if ($isLast): ?> is-active<?php endif; ?>">
+        <span class="vendor-breadcrumb__sep">/</span>
+        <?php if (!empty($_link['url']) && !$isLast): ?>
+          <a class="vendor-breadcrumb__link"
+             href="<?php /* @escapeNotVerified */ echo $_link['url'] ?>"
+             title="<?php echo $block->escapeHtml($_link['title']) ?>">
+            <?php echo $block->escapeHtml($_link['label']) ?>
+          </a>
+        <?php else: ?>
+          <span class="vendor-breadcrumb__current">
+            <?php echo $block->escapeHtml($_link['label']) ?>
+          </span>
+        <?php endif; ?>
+      </li>
+    <?php endforeach; ?>
+  </ol>
+
+  <?php if (!empty($pageTitle) && !$hidePageTitle): ?>
+    <div class="vendor-page-title-gap">
+      <div class="vendor-page-title">
+        <?php echo $block->escapeHtml($pageTitle) ?>
+      </div>
+    </div>
+  <?php endif; ?>
+</div>
+
+<?php endif; ?>

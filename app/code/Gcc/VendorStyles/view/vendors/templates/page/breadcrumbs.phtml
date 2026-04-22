@@ -8,6 +8,12 @@ if (empty($links) || !is_array($links)) {
 $breadcrumbCount = count($links);
 $pageTitle = isset($links[$breadcrumbCount - 1]['label']) ? (string) $links[$breadcrumbCount - 1]['label'] : '';
 $fullActionName = (string) $block->getRequest()->getFullActionName();
+$requestPath = strtolower(trim((string) $block->getRequest()->getPathInfo(), '/'));
+$isAccountPage = in_array(
+    $fullActionName,
+    ['account_index_index', 'vendors_account_index', 'default_vendors_account'],
+    true
+) || strpos($requestPath, 'vendors/account') !== false;
 $isCatalogProductIndex = in_array(
     $fullActionName,
     ['catalog_product_index', 'vendors_catalog_product_index'],
@@ -136,7 +142,7 @@ $isCatalogProductIndex = in_array(
     </ol>
   </nav>
 
-  <?php if (!$isCatalogProductIndex && $pageTitle !== ''): ?>
+  <?php if (!$isCatalogProductIndex && !$isAccountPage && $pageTitle !== ''): ?>
     <div class="vendor-page-title-gap">
       <div class="vendor-page-title">
         <?= $block->escapeHtml($pageTitle) ?>

@@ -5,9 +5,21 @@
   color: #17315f;
 }
 
+.content-header > h1 {
+  display: none !important;
+}
+
+.vendor-pagehead .vendor-page-title-gap {
+  display: none !important;
+}
+
+.vendor-topbar__title:empty {
+  display: none !important;
+}
+
 .vendor-verification-page--details .verification-title {
   margin: 0 0 12px;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   color: #0c2a63;
   line-height: 1.2;
@@ -26,11 +38,15 @@
 }
 
 .verification-grid--two {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
 }
 
 .verification-grid__item {
   min-width: 0;
+  display: flex;
+  flex: 1 1 0;
 }
 
 .verification-card {
@@ -39,6 +55,22 @@
   border-radius: 10px;
   overflow: hidden;
   box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+}
+
+.verification-card--summary {
+  background: #f5f8fd !important;
+  border-color: #d8e4f2 !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.verification-card--section {
+  background: #ffffff !important;
+  border-color: #d8e4f2 !important;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .verification-card__head {
@@ -133,6 +165,28 @@
 
 .verification-card__body {
   padding: 0;
+}
+
+.verification-card--summary .verification-card__head {
+  background: #f5f8fd !important;
+  border-bottom-color: #dfe8f2 !important;
+}
+
+.verification-card--section .verification-card__head {
+  background: #ffffff !important;
+  border-bottom-color: #dfe8f2 !important;
+}
+
+.verification-card--summary .verification-card__body {
+  background: #f5f8fd !important;
+}
+
+.verification-card--section .verification-card__body {
+  background: #ffffff !important;
+}
+
+.verification-card--section .verification-card__body {
+  flex: 1 1 auto;
 }
 
 .verification-table {
@@ -257,7 +311,65 @@
 }
 
 .verification-card--summary .verification-table td:first-child {
-  width: 38%;
+  width: 29%;
+  color: #7f8fb3;
+  font-weight: 500;
+}
+
+.verification-card--summary .verification-table tbody tr {
+  border-bottom: 0 !important;
+  background: #f5f8fd;
+}
+
+.verification-card--section .verification-table tbody tr {
+  border-bottom: 0 !important;
+  border-top: 0 !important;
+  background: #ffffff;
+}
+
+.verification-card--section .verification-table,
+.verification-card--section .verification-table tbody,
+.verification-card--section .verification-table tr,
+.verification-card--section .verification-table td {
+  border: 0 !important;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+.verification-card--summary .verification-table td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  background: #f5f8fd;
+}
+
+.verification-card--section .verification-table td {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-top: 0 !important;
+  border-bottom: 0 !important;
+  background: #ffffff;
+}
+
+.verification-card--summary .verification-table td:last-child,
+.verification-card--section .verification-table td:last-child {
+  color: #17315f;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.verification-card--summary .verification-table td:last-child .price,
+.verification-card--section .verification-table td:last-child .price {
+  color: inherit;
+  font: inherit;
+}
+
+.verification-card--summary .verification-table label,
+.verification-card--section .verification-table label {
+  padding: 4px 12px !important;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .verification-card--documents .verification-table td:first-child {
@@ -361,7 +473,8 @@
   }
 
   .verification-grid--two {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
   }
 
   .verification-card__head {

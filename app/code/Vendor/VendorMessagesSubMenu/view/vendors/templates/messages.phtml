@@ -1,464 +1,472 @@
-<!-- <h1>vru</h1> -->
+<?php
+/** @var \Vendor\VendorMessagesSubMenu\Block\Vendors\Messages\Inbox $block */
+$threads = $block->getThreadCollection();
+$selectedId = (int)$block->getSelectedMessage()->getId();
+$threadCount = (int)$block->getThreadCount();
+$threadPosition = (int)$block->getThreadPosition();
+$prevThreadUrl = $block->getPrevThreadUrl();
+$nextThreadUrl = $block->getNextThreadUrl();
+$conversationMessages = $block->getMessages();
+$cssFile = __DIR__ . '/../web/css/message-sent.css';
+?>
+
+<?php if (is_file($cssFile)): ?>
 <style>
-  /* ===== Vendor Messages: Gmail-like split UI ===== */
-  .vendor-msg {
-    display: flex;
-    gap: 16px;
-    align-items: stretch;
-    margin-top: 10px;
-  }
-
-  /* LEFT: Thread list panel */
-  .vendor-msg__sidebar {
-    width: 360px;
-    min-width: 320px;
-    background: #ffffff;
-    border: 1px solid #e9eef6;
-    border-radius: 14px;
-    overflow: hidden;
-    height: calc(100vh - 210px);
-    display: flex;
-    flex-direction: column;
-  }
-
-  .vendor-msg__sidebarHeader {
-    padding: 14px 16px;
-    border-bottom: 1px solid #eef2f7;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .vendor-msg__sidebarTitle {
-    margin: 0;
-    font-size: 16px;
-    font-weight: 800;
-    color: #0B1F44;
-  }
-
-  .vendor-msg__searchWrap {
-    padding: 12px 16px;
-    border-bottom: 1px solid #eef2f7;
-    background: #fff;
-  }
-
-  .vendor-msg__search {
-    width: 100%;
-    height: 40px;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 0 12px;
-    font-size: 13px;
-    outline: none;
-    background: #fbfdff;
-  }
-  .vendor-msg__search:focus {
-    border-color: #1E56A0;
-    box-shadow: 0 0 0 3px rgba(30, 86, 160, 0.10);
-    background: #fff;
-  }
-
-  /* folders (optional) */
-  .vendor-msg__folders {
-    padding: 10px 8px;
-    border-bottom: 1px solid #eef2f7;
-  }
-  .vendor-msg__folders a { text-decoration: none; }
-
-  /* THREAD LIST container */
-  .vendor-msg__threadList {
-    padding: 8px;
-    overflow: auto;
-    flex: 1;
-    background: #fff;
-  }
-
-  /* === Convert Magento inbox TABLE to thread list cards === */
-  .vendor-msg__threadList table {
-    width: 100%;
-    border: 0 !important;
-    border-collapse: separate !important;
-    border-spacing: 0 10px !important;
-    background: transparent !important;
-  }
-
-  .vendor-msg__threadList thead,
-  .vendor-msg__threadList .admin__data-grid-header,
-  .vendor-msg__threadList .admin__data-grid-pager,
-  .vendor-msg__threadList .data-grid-filters,
-  .vendor-msg__threadList .col-actions,
-  .vendor-msg__threadList .action-select,
-  .vendor-msg__threadList .action-menu,
-  .vendor-msg__threadList .action-multicheck-wrap,
-  .vendor-msg__threadList .data-grid-th,
-  .vendor-msg__threadList .data-grid-checkbox-cell {
-    display: none !important;
-  }
-
-  .vendor-msg__threadList tbody tr {
-    background: #ffffff;
-    border: 1px solid #eef2f7;
-    border-radius: 14px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: background .15s ease, transform .15s ease;
-  }
-
-  .vendor-msg__threadList tbody tr:hover {
-    background: #f4f8ff;
-    transform: translateY(-1px);
-  }
-
-  .vendor-msg__threadList tbody tr.is-active {
-    background: rgba(30, 86, 160, 0.10);
-    border-color: rgba(30, 86, 160, 0.20);
-    box-shadow: inset 3px 0 0 #1E56A0;
-  }
-
-  .vendor-msg__threadList td {
-    border: 0 !important;
-    padding: 0 !important;
-    vertical-align: top;
-  }
-
-  /* Thread row layout (subject + sender + date) */
-  .vendor-msg__threadCard {
-    padding: 14px 12px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 6px 10px;
-    align-items: start;
-  }
-
-  .vendor-msg__threadSubject {
-    font-size: 15px;
-    font-weight: 900;
-    color: #173A73;
-    line-height: 1.2;
-  }
-
-  .vendor-msg__threadSender {
-    grid-column: 1 / 2;
-    font-size: 13px;
-    color: #64748b;
-    margin-top: 2px;
-  }
-
-  .vendor-msg__threadDate {
-    grid-column: 2 / 3;
-    font-size: 13px;
-    color: #94A3B8;
-    white-space: nowrap;
-    margin-left: 10px;
-  }
-
-  /* RIGHT: Conversation area */
-  .vendor-msg__content {
-    flex: 1;
-    background: #ffffff;
-    border: 1px solid #e9eef6;
-    border-radius: 14px;
-    overflow: hidden;
-    height: calc(100vh - 210px);
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-
-  .vendor-msg__contentHeader {
-    padding: 12px 16px;
-    border-bottom: 1px solid #eef2f7;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-  }
-
-  .vendor-msg__contentTitle {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 900;
-    color: #0B1F44;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .vendor-msg__contentMeta {
-    font-size: 12px;
-    color: #94A3B8;
-    white-space: nowrap;
-  }
-
-  .vendor-msg__contentBody {
-    padding: 16px;
-    overflow: auto;
-    flex: 1;
-    background: #fbfdff;
-  }
-
-  /* Placeholder when no message selected */
-  .vendor-msg__empty {
-    height: 100%;
-    display: grid;
-    place-items: center;
-    color: #64748b;
-    font-size: 14px;
-    padding: 40px;
-    text-align: center;
-  }
-
-.vendor-msg__threadList .admin__data-grid-wrap {
-  width: 100% !important;
-  overflow-x: hidden !important;
-}
-
-.vendor-msg__threadList .data-grid {
-  width: 100% !important;
-  table-layout: fixed;
-}
-
-.vendor-msg__threadList table {
-  width: 100% !important;
-}
-  /* Responsive */
-  @media (max-width: 1024px) {
-    .vendor-msg { flex-direction: column; }
-    .vendor-msg__sidebar,
-    .vendor-msg__content {
-      width: 100%;
-      height: auto;
-      min-height: 420px;
-    }
-  }
+<?= /* @noEscape */ file_get_contents($cssFile); ?>
 </style>
-<div class="vendor-msg">
+<?php endif; ?>
 
-  <!-- LEFT: Thread list -->
-  <aside class="vendor-msg__sidebar">
-    <div class="vendor-msg__sidebarHeader">
-      <h3 class="vendor-msg__sidebarTitle"><?php echo $block->getTitle();?></h3>
-    </div>
+<style>
+.vendor-message-sent__sidebar-form {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    flex-direction: column;
+}
 
-    <div class="vendor-msg__searchWrap">
-      <input class="vendor-msg__search" id="vendorMsgSearch" type="text"
-             placeholder="<?php echo __("Search messages..."); ?>" />
-    </div>
+.vendor-message-sent__sidebar-header-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
 
-    <div class="vendor-msg__folders">
-      <?php //echo $block->getChildHtml('folders') ?>
-    </div>
+.vendor-message-sent__sidebar-action {
+    color: #f39a42;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+}
 
-    <!-- ✅ Recommended: render inbox grid here via layout as="message_list" -->
-    <div class="vendor-msg__threadList" id="vendorThreadList">
-    <?php echo $block->getChildHtml('vendor_messages_grid1'); ?>
-</div>
-  </aside>
+.vendor-message-sent__thread-list {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 0;
+}
 
-  <!-- RIGHT: Conversation (your existing view/communication output) -->
-  <section class="vendor-msg__content" id="vendorMsgRight">
-    <div class="vendor-msg__contentHeader">
-      <h3 class="vendor-msg__contentTitle">
-        <?php echo $block->escapeHtml($block->getTitle()); ?>
-      </h3>
-      <div class="vendor-msg__contentMeta"></div>
-    </div>
+.vendor-message-sent__thread {
+    align-items: flex-start;
+    gap: 12px;
+}
 
-    <div class="vendor-msg__contentBody" id="vendorMsgContentBody">
-      <?php //echo $block->getChildHtml('message_content') ?>
-    </div>
-  </section>
+.vendor-message-sent__thread-indicator {
+    position: relative;
+    flex: 0 0 12px;
+    width: 12px;
+    height: 12px;
+    margin-top: 4px;
+    border-radius: 50%;
+    border: 1.5px solid #f39a42;
+    background: #ffffff;
+}
 
+.vendor-message-sent__thread-indicator.is-unread {
+    background: #f39a42;
+    box-shadow: 0 0 0 3px rgba(243, 154, 66, 0.14);
+}
+
+.vendor-message-sent__thread-indicator.is-read {
+    background: #ffffff;
+}
+
+.vendor-message-sent__thread-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.vendor-message-sent__thread-subject {
+    margin-bottom: 4px;
+}
+
+.vendor-message-sent__sidebar-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-top: 1px solid #edf2f8;
+    background: #ffffff;
+}
+
+.vendor-message-sent__sidebar-footer-link {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.vendor-message-sent__sidebar-footer-link--read {
+    color: #183a76;
+}
+
+.vendor-message-sent__sidebar-footer-link--delete {
+    color: #f26722;
+}
+
+.vendor-message-sent__sidebar-footer-link:hover,
+.vendor-message-sent__sidebar-action:hover {
+    opacity: 0.86;
+}
+
+.vendor-message-sent__empty-thread {
+    padding: 24px 16px;
+}
+
+.vendor-message-sent__message-checks {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    color: #2cb24a;
+    font-size: 9px;
+    line-height: 1;
+}
+
+@media (max-width: 767px) {
+    .vendor-message-sent__sidebar-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+</style>
+
+<div class="vendor-message-sent">
+    <aside class="vendor-message-sent__sidebar">
+        <div class="vendor-message-sent__sidebar-head">
+            <div class="vendor-message-sent__sidebar-header-line">
+                <h2 class="vendor-message-sent__sidebar-title">
+                    <?= $block->escapeHtml($block->getTitle()); ?>
+                </h2>
+                <a class="vendor-message-sent__sidebar-action" href="<?= $block->escapeUrl($block->getBackUrl()); ?>">
+                    <?= $block->escapeHtml(__('Done')); ?>
+                </a>
+            </div>
+            <div class="vendor-message-sent__search-wrap">
+                <span class="vendor-message-sent__search-icon">
+                    <i class="fa fa-search" aria-hidden="true"></i>
+                </span>
+                <input type="text"
+                       id="vendorMessageSearch"
+                       class="vendor-message-sent__search"
+                       placeholder="<?= $block->escapeHtmlAttr(__('What are you looking for...')); ?>">
+            </div>
+        </div>
+
+        <form class="vendor-message-sent__sidebar-form"
+              id="vendorMessageReadAllForm"
+              action="<?= $block->escapeUrl($block->getReadAllUrl()); ?>"
+              method="post">
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()); ?>">
+
+            <div class="vendor-message-sent__thread-list" id="vendorMessageThreadList">
+                <?php if ($threads && $threads->getSize()): ?>
+                    <?php foreach ($threads as $thread): ?>
+                        <?php
+                        $threadId = (int)$thread->getId();
+                        $isActive = $threadId === $selectedId;
+                        $searchText = $block->getThreadSearchText($thread);
+                        ?>
+                        <input type="hidden" name="selected[]" value="<?= (int)$threadId; ?>">
+                        <a class="vendor-message-sent__thread<?= $isActive ? ' is-active' : ''; ?>"
+                           href="<?= $block->escapeUrl($block->getThreadUrl($threadId)); ?>"
+                           data-search="<?= $block->escapeHtmlAttr($searchText); ?>">
+                            <span class="vendor-message-sent__thread-indicator<?= $block->isUnreadThread($thread) ? ' is-unread' : ' is-read'; ?>"></span>
+                            <div class="vendor-message-sent__thread-main">
+                                <div class="vendor-message-sent__thread-subject">
+                                    <?= $block->escapeHtml($block->getThreadSubject($thread)); ?>
+                                </div>
+                                <div class="vendor-message-sent__thread-name">
+                                    <?= $block->escapeHtml($block->getThreadContactName($thread)); ?>
+                                </div>
+                            </div>
+                            <div class="vendor-message-sent__thread-date">
+                                <?= $block->escapeHtml($block->getThreadDateLabel($thread)); ?>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="vendor-message-sent__empty-thread">
+                        <?= $block->escapeHtml(__('No inbox messages found.')); ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($threads && $threads->getSize()): ?>
+                <div class="vendor-message-sent__sidebar-footer">
+                    <button type="submit"
+                            class="vendor-message-sent__sidebar-footer-link vendor-message-sent__sidebar-footer-link--read">
+                        <?= $block->escapeHtml(__('Read All')); ?>
+                    </button>
+                    <?php if ($selectedId): ?>
+                        <a class="vendor-message-sent__sidebar-footer-link vendor-message-sent__sidebar-footer-link--delete"
+                           href="<?= $block->escapeUrl($block->getDeleteUrl()); ?>"
+                           data-confirm="<?= $block->escapeHtmlAttr(__('Delete this message?')); ?>">
+                            <?= $block->escapeHtml(__('Delete')); ?>
+                        </a>
+                    <?php else: ?>
+                        <span class="vendor-message-sent__sidebar-footer-link vendor-message-sent__sidebar-footer-link--delete">
+                            <?= $block->escapeHtml(__('Delete')); ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            <?php endif; ?>
+        </form>
+    </aside>
+
+    <section class="vendor-message-sent__content">
+        <div class="vendor-message-sent__content-head">
+            <a class="vendor-message-sent__back" href="<?= $block->escapeUrl($block->getBackUrl()); ?>">
+                <i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+                <span><?= $block->escapeHtml(__('Back')); ?></span>
+            </a>
+
+            <div class="vendor-message-sent__pager">
+                <?php if ($prevThreadUrl): ?>
+                    <a class="vendor-message-sent__pager-arrow" href="<?= $block->escapeUrl($prevThreadUrl); ?>" aria-label="<?= $block->escapeHtmlAttr(__('Previous message')); ?>">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    </a>
+                <?php else: ?>
+                    <span class="vendor-message-sent__pager-arrow is-disabled" aria-hidden="true">
+                        <i class="fa fa-angle-left" aria-hidden="true"></i>
+                    </span>
+                <?php endif; ?>
+
+                <span class="vendor-message-sent__pager-count">
+                    <?= $block->escapeHtml($threadPosition ?: 0); ?>
+                    <?= $block->escapeHtml(__('of')); ?>
+                    <?= $block->escapeHtml($threadCount ?: 0); ?>
+                </span>
+
+                <?php if ($nextThreadUrl): ?>
+                    <a class="vendor-message-sent__pager-arrow" href="<?= $block->escapeUrl($nextThreadUrl); ?>" aria-label="<?= $block->escapeHtmlAttr(__('Next message')); ?>">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </a>
+                <?php else: ?>
+                    <span class="vendor-message-sent__pager-arrow is-disabled" aria-hidden="true">
+                        <i class="fa fa-angle-right" aria-hidden="true"></i>
+                    </span>
+                <?php endif; ?>
+            </div>
+
+            <a class="vendor-message-sent__delete" href="<?= $block->escapeUrl($block->getDeleteUrl()); ?>" aria-label="<?= $block->escapeHtmlAttr(__('Delete')); ?>">
+                <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        <?php if ($block->hasSelectedMessage()): ?>
+            <div class="vendor-message-sent__meta">
+                <div class="vendor-message-sent__meta-name">
+                    <?= $block->escapeHtml($block->getConversationPartnerName()); ?>
+                </div>
+                <div class="vendor-message-sent__meta-time">
+                    <?php if ($block->getConversationDateLabel()): ?>
+                        <span><?= $block->escapeHtml($block->getConversationDateLabel()); ?></span>
+                    <?php endif; ?>
+                    <?php if ($block->getConversationTimeLabel()): ?>
+                        <span class="vendor-message-sent__meta-dot">&bull;</span>
+                        <span><?= $block->escapeHtml($block->getConversationTimeLabel()); ?></span>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="vendor-message-sent__subject-strip">
+                <?= $block->escapeHtml($block->getConversationSubject()); ?>
+            </div>
+
+            <div class="vendor-message-sent__conversation-shell">
+                <div class="vendor-message-sent__conversation">
+                    <div class="vendor-message-sent__messages" id="vendorMessageMessages">
+                        <?php if ($conversationMessages && count($conversationMessages)): ?>
+                            <?php foreach ($conversationMessages as $message): ?>
+                                <?php
+                                $isOutgoing = (int)($message['owner_id'] ?? 0) === (int)($message['sender_id'] ?? 0);
+                                $isRead = !empty($message['is_read']);
+                                ?>
+                                <div class="vendor-message-sent__message<?= $isOutgoing ? ' vendor-message-sent__message--out' : ' vendor-message-sent__message--in'; ?>">
+                                    <div class="vendor-message-sent__message-bubble">
+                                        <div class="vendor-message-sent__message-text">
+                                            <?= /* @noEscape */ $message['content']; ?>
+                                        </div>
+
+                                        <?php if (!empty($message['attachments_count'])): ?>
+                                            <div class="vendor-message-sent__attachments">
+                                                <?php foreach ($message['attachments'] as $attachment): ?>
+                                                    <div class="vendor-message-sent__attachment<?= !empty($attachment['is_image']) ? ' is-image' : ' is-file'; ?>">
+                                                        <div class="vendor-message-sent__attachment-thumb" aria-hidden="true">
+                                                            <?php if (!empty($attachment['is_image'])): ?>
+                                                                <a href="<?= $block->escapeUrl($attachment['url']); ?>"
+                                                                   class="vendor-message-sent__attachment-media"
+                                                                   target="_blank"
+                                                                   rel="noopener">
+                                                                    <img src="<?= $block->escapeUrl($attachment['url']); ?>"
+                                                                         alt="<?= $block->escapeHtmlAttr($attachment['name']); ?>"
+                                                                         class="vendor-message-sent__attachment-image">
+                                                                </a>
+                                                            <?php else: ?>
+                                                                <a href="<?= $block->escapeUrl($attachment['download_url']); ?>"
+                                                                   class="vendor-message-sent__attachment-media"
+                                                                   target="_blank"
+                                                                   rel="noopener">
+                                                                    <i class="attachment-icon <?= $block->escapeHtmlAttr($attachment['icon']); ?>"></i>
+                                                                </a>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <div class="vendor-message-sent__attachment-info">
+                                                            <span class="vendor-message-sent__attachment-name">
+                                                                <?= $block->escapeHtml($attachment['name']); ?>
+                                                            </span>
+                                                        </div>
+                                                        <div class="vendor-message-sent__attachment-actions">
+                                                            <a class="vendor-message-sent__attachment-download"
+                                                               data-tooltip="<?= $block->escapeHtmlAttr(__('Download')); ?>"
+                                                               href="<?= $block->escapeUrl($attachment['download_url']); ?>"
+                                                               target="_blank"
+                                                               rel="noopener">
+                                                                <i class="message-icon-cloud-download"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="vendor-message-sent__message-time">
+                                        <?php if ($isOutgoing && $isRead): ?>
+                                            <span><?= $block->escapeHtml(__('Seen')); ?></span>
+                                            <span class="vendor-message-sent__meta-dot">&bull;</span>
+                                        <?php endif; ?>
+                                        <span><?= $block->escapeHtml($message['createdAtTime'] ?? ''); ?></span>
+                                        <?php if ($isOutgoing && $isRead): ?>
+                                            <span class="vendor-message-sent__message-checks" aria-hidden="true">
+                                                <i class="fa fa-check"></i>
+                                                <i class="fa fa-check"></i>
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <div class="vendor-message-sent__empty-conversation">
+                                <?= $block->escapeHtml(__('No messages found for this conversation.')); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <form class="vendor-message-sent__composer" id="vendorMessageReplyForm" action="<?= $block->escapeUrl($block->getSendUrl()); ?>" method="post">
+                        <input type="hidden" name="id" value="<?= (int)$selectedId; ?>">
+                        <div class="vendor-message-sent__composer-input">
+                            <textarea name="message"
+                                      id="reply_msg_box"
+                                      class="vendor-message-sent__textarea"
+                                      rows="5"
+                                      cols="10"
+                                      placeholder="<?= $block->escapeHtmlAttr(__('Write message...')); ?>"></textarea>
+                            <button type="button" class="vendor-message-sent__clip" aria-label="<?= $block->escapeHtmlAttr(__('Attach')); ?>">
+                                <i class="fa fa-paperclip" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <div class="vendor-message-sent__composer-footer">
+                            <div class="vendor-message-sent__formatting" aria-hidden="true">
+                                <button type="button">B</button>
+                                <button type="button"><i>i</i></button>
+                                <button type="button"><u>U</u></button>
+                                <button type="button"><i class="fa fa-align-left"></i></button>
+                                <button type="button"><i class="fa fa-align-center"></i></button>
+                                <button type="button"><i class="fa fa-align-right"></i></button>
+                            </div>
+
+                            <button type="submit" class="vendor-message-sent__send">
+                                <?= $block->escapeHtml(__('Send')); ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="vendor-message-sent__empty-conversation">
+                <?= $block->escapeHtml(__('Select a message from the left to view the conversation.')); ?>
+            </div>
+        <?php endif; ?>
+    </section>
 </div>
 <script>
     window.BASE_URL = "<?php echo $block->getUrl(''); ?>";
 </script>
 <script>
-(function () {
-  const threadList = document.getElementById('vendorThreadList');
-  const rightBody  = document.getElementById('vendorMsgContentBody');
-  const rightWrap  = document.getElementById('vendorMsgRight');
-  const searchBox  = document.getElementById('vendorMsgSearch');
+require(['jquery', 'Magento_Ui/js/modal/alert', 'mage/translate'], function ($, alert, $t) {
+    var searchBox = $('#vendorMessageSearch');
+    var threadsWrap = $('#vendorMessageThreadList');
+    var replyForm = $('#vendorMessageReplyForm');
+    var replyBox = $('#reply_msg_box');
+    var messagesWrap = $('#vendorMessageMessages');
 
-  // 1) If you did NOT render message_list, but message_content contains the inbox grid,
-  //    auto-move it from RIGHT to LEFT (Inbox page).
-  const hasLeftList = threadList && threadList.innerText.trim().length > 0;
-  const rightHasGrid = rightBody && rightBody.querySelector('table');
+    if (searchBox.length && threadsWrap.length) {
+        searchBox.on('input', function () {
+            var query = String($(this).val() || '').toLowerCase().trim();
 
-  if (!hasLeftList && rightHasGrid) {
-    // Move the table/grid to the left
-    const table = rightBody.querySelector('table');
-    threadList.innerHTML = '';
-    threadList.appendChild(table);
-
-    // Show empty placeholder on the right (Inbox page should not show the grid anymore)
-    rightBody.innerHTML = '<div class="vendor-msg__empty">Select a message from the left to view full communication.</div>';
-  }
-
-  // 2) Convert grid rows into "thread cards" UI + click row => existing View link
-  const table = threadList ? threadList.querySelector('table') : null;
-  if (table) {
-    const rows = Array.from(table.querySelectorAll('tbody tr'));
-
-    rows.forEach(tr => {
-      const tds = tr.querySelectorAll('td');
-      if (!tds || tds.length < 3) return;
-
-      // Try to find a "View" link inside the row (existing functionality)
-      const viewA = tr.querySelector('a[href]');
-      const href  = viewA ? viewA.getAttribute('href') : null;
-
-      // Your grid order (from screenshot): checkbox | Sender | Subject | Created at | Action(View)
-      // We'll attempt based on indexes:
-      const sender  = (tds[1] ? tds[1].innerText : '').trim();
-      const subject = (tds[2] ? tds[2].innerText : '').trim();
-      const dateTxt = (tds[3] ? tds[3].innerText : '').trim();
-
-      // Build card UI in the Subject column
-      const card = document.createElement('div');
-      card.className = 'vendor-msg__threadCard';
-      card.innerHTML = `
-        <div class="vendor-msg__threadSubject"></div>
-        <div class="vendor-msg__threadDate"></div>
-        <div class="vendor-msg__threadSender"></div>
-      `;
-      card.querySelector('.vendor-msg__threadSubject').textContent = subject || '(No subject)';
-      card.querySelector('.vendor-msg__threadSender').textContent  = sender || '';
-      card.querySelector('.vendor-msg__threadDate').textContent    = dateTxt || '';
-
-      if (tds[2]) {
-        tds[2].innerHTML = '';
-        tds[2].appendChild(card);
-      }
-
-      // Make row clickable to open the existing view page
-      if (href) {
-        tr.addEventListener('click', (e) => {
-          const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-          if (tag === 'a' || tag === 'button' || tag === 'input' || tag === 'select' || tag === 'textarea') return;
-          window.location.href = href;
+            threadsWrap.find('.vendor-message-sent__thread').each(function () {
+                var searchText = String($(this).attr('data-search') || '').toLowerCase();
+                $(this).toggle(!query || searchText.indexOf(query) !== -1);
+            });
         });
+    }
 
-        // Highlight active thread if current URL matches
-        const current = window.location.href;
-        if (current && current.indexOf(href) !== -1) {
-          tr.classList.add('is-active');
+    if (messagesWrap.length) {
+        messagesWrap.scrollTop(messagesWrap[0].scrollHeight);
+    }
+
+    $('.vendor-message-sent__sidebar-footer-link--delete').on('click', function (event) {
+        var confirmText = $(this).attr('data-confirm');
+        if (confirmText && !window.confirm(confirmText)) {
+            event.preventDefault();
         }
-      }
-
-      // Store search text
-      tr.setAttribute('data-search', (sender + ' ' + subject + ' ' + dateTxt).toLowerCase());
     });
 
-    // 3) Search filter
-    if (searchBox) {
-      searchBox.addEventListener('input', function () {
-        const q = (this.value || '').toLowerCase().trim();
-        const rows = Array.from(table.querySelectorAll('tbody tr'));
-        rows.forEach(tr => {
-          const hay = tr.getAttribute('data-search') || '';
-          tr.style.display = (!q || hay.includes(q)) ? '' : 'none';
-        });
-      });
-    }
-  }
+    if (replyForm.length && replyBox.length) {
+        replyForm.on('submit', function (event) {
+            event.preventDefault();
 
-  // 4) On view page: auto-scroll conversation to bottom
-  if (rightBody) rightBody.scrollTop = rightBody.scrollHeight;
-})();
-</script>
-<script>
-require(['jquery'], function ($) {
-    $(document).on('click', '.inbox-row-container', function (e) {
-        e.preventDefault();
-        
-        const url = $(this).attr('data-url');
-        const $panel = $('#vendorMsgContentBody');
-
-        $('.inbox-row-container').removeClass('active');
-        $(this).addClass('active');
-        $panel.html('<div class="vendor-msg__empty">Fetching message...</div>');
-        $('body').trigger('processStart');
-
-        $.ajax({
-            url: url,
-            type: 'GET',
-success: function (res) {
-
-    console.log(res);
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(res, 'text/html');
-    const $panel = $('#vendorMsgContentBody');
-    let messages = null;
-
-    // 1. SCAN FOR JSON (Thread Data + Verification Data)
-    const scripts = doc.querySelectorAll('script[type="text/x-magento-init"]');
-    scripts.forEach(script => {
-        try {
-            const config = JSON.parse(script.textContent);
-            const findData = (obj) => {
-                for (let key in obj) {
-                    // Normal messages OR Verification messages check
-                    if ((key === 'messages' || key === 'details' || key === 'verification_info') && Array.isArray(obj[key])) {
-                        messages = obj[key];
-                        return;
-                    }
-                    if (typeof obj[key] === 'object' && obj[key] !== null) {
-                        findData(obj[key]);
-                    }
-                }
-            };
-            if (!messages) findData(config);
-        } catch (e) {}
-    });
-
-    // 2. RENDER PROCESS
-    if (messages && messages.length > 0) {
-        let html = '<div class="direct-view-container" style="padding:20px;">';
-        messages.forEach(msg => {
-            // Verification module mein 'comment' ya 'description' bhi ho sakta hai
-            const actualMessage = msg.message || msg.content || msg.comment || msg.body || 'No detail available';
-            const sender = msg.sender_name || msg.admin_name || 'System / Admin';
-
-            html += `
-                <div style="background:#fff; border:1px solid #eef2f7; border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #f8fafc; padding-bottom:10px;">
-                        <span style="font-weight:800; color:#1e56a0; font-size:14px;">${sender}</span>
-                        <span style="color:#94a3b8; font-size:12px;">${msg.created_at || ''}</span>
-                    </div>
-                    <div style="color:#334155; line-height:1.7; font-size:14px; white-space: pre-line;">${actualMessage}</div>
-                </div>`;
-        });
-        $panel.html(html + '</div>');
-    } 
-  else {
-    console.warn("Using HTML extraction FINAL FIX");
-
-    let $htmlContent = $(doc)
-        .find('.page-wrapper .column.main')
-        .first()
-        .clone();
-
-    // Clean unnecessary UI
-    $htmlContent.find(
-        'header, footer, .breadcrumbs, .page-title-wrapper, .nav-sections, .sidebar, .admin__page-nav'
-    ).remove();
-
-    if ($htmlContent.length && $htmlContent.text().trim().length > 20) {
-        $panel.html('<div style="padding:20px;">' + $htmlContent.html() + '</div>');
-    } else {
-        $panel.html('<div class="vendor-msg__empty">Still no content found.</div>');
-    }
-}
-    $panel.trigger('contentUpdated');
-    $('body').trigger('processStop');
-},
-            error: function () {
-                $panel.html('<p class="vendor-msg__empty">Connection error.</p>');
-                $('body').trigger('processStop');
+            var message = String(replyBox.val() || '').trim();
+            if (!message) {
+                alert({
+                    title: $t('Error'),
+                    content: $t('Please enter the message.')
+                });
+                return;
             }
+
+            $.ajax({
+                url: replyForm.attr('action'),
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    id: replyForm.find('input[name="id"]').val(),
+                    message: message
+                },
+                showLoader: true
+            }).done(function (response) {
+                if (response && !response.error) {
+                    window.location.reload();
+                    return;
+                }
+
+                alert({
+                    title: $t('Error'),
+                    content: response && (response.msg || response.message) ? (response.msg || response.message) : $t('Something wrong. Please try to refresh the page.')
+                });
+            }).fail(function () {
+                alert({
+                    title: $t('Error'),
+                    content: $t('Something wrong. Please try to refresh the page.')
+                });
+            });
         });
-    });
+    }
 });
 </script>
-

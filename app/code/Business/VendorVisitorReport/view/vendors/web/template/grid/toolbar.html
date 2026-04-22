@@ -1,0 +1,16 @@
+<div class="admin__data-grid-header profile-visitors-toolbar-shell profile-visitors-toolbar" afterRender="$data.setToolbarNode">
+    <div class="profile-visitors-toolbar__results">
+        <scope args="requestChild('listing_paging')" render="totalTmpl"></scope>
+    </div>
+
+    <div class="profile-visitors-toolbar__controls">
+        <div class="admin__data-grid-actions-wrap" each="getRegion('dataGridActions')" render=""></div>
+        <each args="getRegion('dataGridFilters')" render=""></each>
+    </div>
+</div>
+
+<div class="profile-visitors-toolbar__paging" ko-scope="requestChild('listing_paging')">
+    <div class="profile-visitors-toolbar__paging-content" render=""></div>
+</div>
+
+<render args="stickyTmpl" if="$data.sticky"></render>

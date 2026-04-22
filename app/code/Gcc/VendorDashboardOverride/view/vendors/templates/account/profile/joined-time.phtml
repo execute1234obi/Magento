@@ -4,7 +4,7 @@ $joinedDate = $block->getJoinedDate();
 
 <?php if ($joinedDate): ?>
     <div class="vendor-profile-meta vendor-profile-meta--joined">
-        <span class="vendor-profile-meta__line">
+        <span class="vendor-profile-meta__line vendor-profile-meta__line--joined">
             <i class="fa fa-calendar margin-r-5" aria-hidden="true"></i>
             <span><?= $block->escapeHtml(__('Joined since %1', $joinedDate)) ?></span>
         </span>
