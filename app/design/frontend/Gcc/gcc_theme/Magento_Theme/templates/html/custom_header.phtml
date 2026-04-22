@@ -104,7 +104,7 @@ else
             </button>
           </a>
           <div id="customerMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
-            <a href="#" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
+            <a href="<?= $block->getUrl('quoterequest/view/index') ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="Customer Menu" style="width:60px;">
               <div>
                 <p class="text-gray-900" style="font-weight:600; font-size:12px; font-family:Inter;"><?= __('Request for Quotes (RFQ)') ?></p>
@@ -452,7 +452,7 @@ if ($storeCode === 'default') {
           </button>
 
           <div id="mobileCustomerMenu" class="mobile-menu-panel hidden">
-            <a href="javascript:void(0)" class="mobile-menu-card">
+            <a href="<?= $block->getUrl('quoterequest/view/index') ?>" class="mobile-menu-card">
               <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="<?= __('Request for Quotes (RFQ)') ?>" class="mobile-menu-card-icon">
               <span class="mobile-menu-card-copy">
                 <strong><?= __('Request for Quotes (RFQ)') ?></strong>

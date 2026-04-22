@@ -58,4 +58,8 @@
             </settings>
         </column>
     </columns>
+    <column name="msg_count">
+            <settings>
+                <visible>false</visible> </settings>
+        </column>
 </listing>

@@ -369,61 +369,96 @@
 </script>
 <script>
 require(['jquery'], function ($) {
+    $(document).on('click', '.inbox-row-container', function (e) {
+        e.preventDefault();
+        
+        const url = $(this).attr('data-url');
+        const $panel = $('#vendorMsgContentBody');
 
-    function loadMessage(url) {
-        $('#vendorMsgContentBody').html('<p>Loading...</p>');
+        $('.inbox-row-container').removeClass('active');
+        $(this).addClass('active');
+        $panel.html('<div class="vendor-msg__empty">Fetching message...</div>');
+        $('body').trigger('processStart');
 
         $.ajax({
             url: url,
             type: 'GET',
-            success: function (res) {
+success: function (res) {
 
-                // sirf content part extract karo (full page nahi)
-                const html = $(res).find('.page-content, #maincontent, .vendor-message-view').html();
+    console.log(res);
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(res, 'text/html');
+    const $panel = $('#vendorMsgContentBody');
+    let messages = null;
 
-                if (html) {
-                    $('#vendorMsgContentBody').html(html);
-                    // ✅ STOP LOADER
-                     $('body').trigger('processStop');
-                } else {
-                    $('#vendorMsgContentBody').html('<p>Unable to load message</p>');
+    // 1. SCAN FOR JSON (Thread Data + Verification Data)
+    const scripts = doc.querySelectorAll('script[type="text/x-magento-init"]');
+    scripts.forEach(script => {
+        try {
+            const config = JSON.parse(script.textContent);
+            const findData = (obj) => {
+                for (let key in obj) {
+                    // Normal messages OR Verification messages check
+                    if ((key === 'messages' || key === 'details' || key === 'verification_info') && Array.isArray(obj[key])) {
+                        messages = obj[key];
+                        return;
+                    }
+                    if (typeof obj[key] === 'object' && obj[key] !== null) {
+                        findData(obj[key]);
+                    }
                 }
+            };
+            if (!messages) findData(config);
+        } catch (e) {}
+    });
 
-                // scroll bottom after load
-                const container = $('#vendorMsgContentBody');
-                container.scrollTop(container[0].scrollHeight);
-            },
+    // 2. RENDER PROCESS
+    if (messages && messages.length > 0) {
+        let html = '<div class="direct-view-container" style="padding:20px;">';
+        messages.forEach(msg => {
+            // Verification module mein 'comment' ya 'description' bhi ho sakta hai
+            const actualMessage = msg.message || msg.content || msg.comment || msg.body || 'No detail available';
+            const sender = msg.sender_name || msg.admin_name || 'System / Admin';
+
+            html += `
+                <div style="background:#fff; border:1px solid #eef2f7; border-radius:14px; padding:20px; margin-bottom:20px; box-shadow:0 4px 6px -1px rgba(0,0,0,0.05);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #f8fafc; padding-bottom:10px;">
+                        <span style="font-weight:800; color:#1e56a0; font-size:14px;">${sender}</span>
+                        <span style="color:#94a3b8; font-size:12px;">${msg.created_at || ''}</span>
+                    </div>
+                    <div style="color:#334155; line-height:1.7; font-size:14px; white-space: pre-line;">${actualMessage}</div>
+                </div>`;
+        });
+        $panel.html(html + '</div>');
+    } 
+  else {
+    console.warn("Using HTML extraction FINAL FIX");
+
+    let $htmlContent = $(doc)
+        .find('.page-wrapper .column.main')
+        .first()
+        .clone();
+
+    // Clean unnecessary UI
+    $htmlContent.find(
+        'header, footer, .breadcrumbs, .page-title-wrapper, .nav-sections, .sidebar, .admin__page-nav'
+    ).remove();
+
+    if ($htmlContent.length && $htmlContent.text().trim().length > 20) {
+        $panel.html('<div style="padding:20px;">' + $htmlContent.html() + '</div>');
+    } else {
+        $panel.html('<div class="vendor-msg__empty">Still no content found.</div>');
+    }
+}
+    $panel.trigger('contentUpdated');
+    $('body').trigger('processStop');
+},
             error: function () {
-                $('#vendorMsgContentBody').html('<p>Error loading message</p>');
-                 // ✅ STOP LOADER (important)
-            $('body').trigger('processStop');
+                $panel.html('<p class="vendor-msg__empty">Connection error.</p>');
+                $('body').trigger('processStop');
             }
         });
-    }
-
-    // ✅ click event (LEFT panel)
-    $(document).on('click', '.inbox-row-container', function () {
-
-        const url = $(this).data('url');
-
-        if (url) {
-            loadMessage(url);
-        }
-
-        // active highlight
-        $('.inbox-row-container').removeClass('active');
-        $(this).addClass('active');
     });
-
-    // ✅ default first message auto open
-    $(window).on('load', function () {
-        setTimeout(function () {
-            const first = $('.inbox-row-container').first();
-            if (first.length) {
-                first.trigger('click');
-            }
-        }, 300);
-    });
-
 });
 </script>
+

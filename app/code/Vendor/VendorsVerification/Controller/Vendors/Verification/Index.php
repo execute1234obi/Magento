@@ -32,7 +32,6 @@ class Index  extends \Vnecoms\Vendors\Controller\Vendors\Action
         $title->prepend(__("Seller"));        
         $title->prepend(__("Seller Verification"));        
         //$this->_addBreadcrumb(__("Verification"), __("Verification"))->_addBreadcrumb(__("Manage Verification"), __("verify Seller Account"));        
-        //echo "vrushali";
          $this->_view->renderLayout();        
     }
 }

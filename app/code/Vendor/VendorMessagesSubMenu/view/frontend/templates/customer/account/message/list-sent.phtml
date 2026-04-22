@@ -1,0 +1,84 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php //echo get_class($block); ?>
+<?php $_messages = $block->getMessageCollection(); ?>
+<?php if ($_messages && count($_messages)): 
+    ?>
+<form id="message-list-form" action="<?php echo $block->getDeleteMessagesURL()?>" method="post">
+    <div class="table-wrapper message-list-wrapper">
+        <div class="message-action">
+            <button class="button message-icon-trash" type="submit"><span><?php echo __("Delete");?></span></button>
+        </div>
+        <table class="data table table-message-items" id="message-list">
+            <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Messages') ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col control"><input type="checkbox" id="vnecoms-msg-checkall" /></th>
+                    <th scope="col" class="col sender"><?php /* @escapeNotVerified */ echo __('Receiver') ?></th>
+                    <th scope="col" class="col message"><?php /* @escapeNotVerified */ echo __('Subject') ?></th>
+                    <th scope="col" class="col last-update"><?php /* @escapeNotVerified */ echo __('Creation Date') ?></th>
+                    <th scope="col" class="col action"><?php /* @escapeNotVerified */ echo __('Actions') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($_messages as $_message): ?>
+                    <?php $lastMsgDetail = $_message->getLastMessageDetail();?>
+                    <?php $firstMsgDetail = $_message->getFirstMessageDetail();?>
+                                      
+                    <tr<?php if($_message->getStatus() == \Vnecoms\VendorsMessage\Model\Message::STATUS_UNDREAD):?> class="unread"<?php endif;?>>
+                        <td data-th="<?php echo $block->escapeHtml(__('Checkbox control')) ?>" class="col control"><input type="checkbox" name="selected[]" class="message-ctrl" value="<?php echo $_message->getId()?>"/></td>
+                       <td class="col sender">
+                            <?php echo $block->getDisplayName($firstMsgDetail, 'receiver'); ?>
+
+                            <?php if($_message->getMsgCount() > 1): ?>
+                                (<?php echo $_message->getMsgCount(); ?>)
+                            <?php endif; ?>
+                        </td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Subject')) ?>" class="col message"><?php /* @escapeNotVerified */ echo  $firstMsgDetail->getSubject()?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Creation Date')) ?>" class="col last-update"><?php echo $block->getMessageTime($lastMsgDetail->getCreatedAt()) ?></td>
+                        <td data-th="<?php echo $block->escapeHtml(__('Action')) ?>" class="col action"><a href="<?php echo $block->getViewMessageUrl($_message)?>"><?php echo __('View')?></a></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</form>
+    <?php if ($block->getPagerHtml()): ?>
+        <div class="order-products-toolbar toolbar bottom"><?php echo $block->getPagerHtml(); ?></div>
+    <?php endif ?>
+<?php else: ?>
+    <div class="message info empty"><span><?php /* @escapeNotVerified */ echo __('There is no message.'); ?></span></div>
+<?php endif ?>
+<script type="text/javascript">
+    require([
+    "jquery",
+    "Magento_Ui/js/modal/alert",
+    "mage/translate"
+    ], function($,alert){
+        $("#vnecoms-msg-checkall").click(function(){
+            if(this.checked){
+            	jQuery("#message-list .message-ctrl").each(function(index, elm){elm.checked = true});
+            }else{
+            	jQuery("#message-list .message-ctrl").each(function(index, elm){elm.checked = false});
+            }
+        });
+
+        $('#message-list-form').submit(function(event){
+            if($("#message-list .message-ctrl:checked").length <1){
+            	alert({
+        			modalClass: 'alert ves-error',
+                    title: '<?php echo __("Error");?>',
+                    content: '<?php echo __("You haven\'t selected any items!");?>'
+                });
+                event.preventDefault();
+            }
+        });
+    });
+</script>
