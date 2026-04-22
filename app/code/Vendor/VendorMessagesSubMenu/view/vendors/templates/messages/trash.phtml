@@ -1,13 +1,14 @@
 <?php
-/** @var \Vendor\VendorMessagesSubMenu\Block\Vendors\Messages\Inbox $block */
+/** @var \Vendor\VendorMessagesSubMenu\Block\Vendors\Messages\Trash $block */
 $threads = $block->getThreadCollection();
-$selectedId = (int)$block->getSelectedMessage()->getId();
+$selectedMessage = $block->getSelectedMessage();
+$selectedId = (int)$selectedMessage->getId();
 $threadCount = (int)$block->getThreadCount();
 $threadPosition = (int)$block->getThreadPosition();
 $prevThreadUrl = $block->getPrevThreadUrl();
 $nextThreadUrl = $block->getNextThreadUrl();
 $conversationMessages = $block->getMessages();
-$cssFile = __DIR__ . '/../web/css/message-sent.css';
+$cssFile = __DIR__ . '/../../web/css/message-sent.css';
 ?>
 
 <?php if (is_file($cssFile)): ?>
@@ -24,7 +25,7 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
     flex-direction: column;
 }
 
-.vendor-message-sent__sidebar-header-line {
+.vendor-message-sent__sidebar-title-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -32,22 +33,24 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
     margin-bottom: 12px;
 }
 
-.vendor-message-sent__sidebar-action {
-    color: #f39a42;
-    font-size: 14px;
-    font-weight: 700;
-    text-decoration: none;
+.vendor-message-sent__action-form {
+    display: inline-flex;
+    align-items: center;
+    margin: 0;
 }
 
-.vendor-message-sent__thread-list {
-    flex: 1;
-    min-height: 0;
-    overflow: auto;
+.vendor-message-sent__action-button {
+    border: 0;
     padding: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    line-height: 1;
 }
 
 .vendor-message-sent__thread {
     align-items: flex-start;
+    justify-content: flex-start;
     gap: 12px;
 }
 
@@ -80,69 +83,26 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
     margin-bottom: 4px;
 }
 
-.vendor-message-sent__sidebar-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 16px;
-    border-top: 1px solid #edf2f8;
-    background: #ffffff;
+.vendor-message-sent__thread-date {
+    flex-shrink: 0;
 }
 
-.vendor-message-sent__sidebar-footer-link {
-    border: 0;
-    background: transparent;
-    padding: 0;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.vendor-message-sent__sidebar-footer-link--read {
-    color: #183a76;
-}
-
-.vendor-message-sent__sidebar-footer-link--delete {
-    color: #f26722;
-}
-
-.vendor-message-sent__sidebar-footer-link:hover,
-.vendor-message-sent__sidebar-action:hover {
+.vendor-message-sent__sidebar-action:hover,
+.vendor-message-sent__edit-link:hover,
+.vendor-message-sent__action-button:hover {
     opacity: 0.86;
-}
-
-.vendor-message-sent__empty-thread {
-    padding: 24px 16px;
-}
-
-.vendor-message-sent__message-checks {
-    display: inline-flex;
-    align-items: center;
-    gap: 1px;
-    color: #2cb24a;
-    font-size: 9px;
-    line-height: 1;
-}
-
-@media (max-width: 767px) {
-    .vendor-message-sent__sidebar-footer {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 }
 </style>
 
 <div class="vendor-message-sent">
     <aside class="vendor-message-sent__sidebar">
         <div class="vendor-message-sent__sidebar-head">
-            <div class="vendor-message-sent__sidebar-header-line">
+            <div class="vendor-message-sent__sidebar-title-row">
                 <h2 class="vendor-message-sent__sidebar-title">
                     <?= $block->escapeHtml($block->getTitle()); ?>
                 </h2>
-                <a class="vendor-message-sent__sidebar-action" href="<?= $block->escapeUrl($block->getBackUrl()); ?>">
-                    <?= $block->escapeHtml(__('Done')); ?>
+                <a class="vendor-message-sent__edit-link" href="<?= $block->escapeUrl($block->getUrl('message/send')); ?>">
+                    <?= $block->escapeHtml(__('Edit')); ?>
                 </a>
             </div>
             <div class="vendor-message-sent__search-wrap">
@@ -156,65 +116,37 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
             </div>
         </div>
 
-        <form class="vendor-message-sent__sidebar-form"
-              id="vendorMessageReadAllForm"
-              action="<?= $block->escapeUrl($block->getReadAllUrl()); ?>"
-              method="post">
-            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()); ?>">
-
-            <div class="vendor-message-sent__thread-list" id="vendorMessageThreadList">
-                <?php if ($threads && $threads->getSize()): ?>
-                    <?php foreach ($threads as $thread): ?>
-                        <?php
-                        $threadId = (int)$thread->getId();
-                        $isActive = $threadId === $selectedId;
-                        $searchText = $block->getThreadSearchText($thread);
-                        ?>
-                        <input type="hidden" name="selected[]" value="<?= (int)$threadId; ?>">
-                        <a class="vendor-message-sent__thread<?= $isActive ? ' is-active' : ''; ?>"
-                           href="<?= $block->escapeUrl($block->getThreadUrl($threadId)); ?>"
-                           data-search="<?= $block->escapeHtmlAttr($searchText); ?>">
-                            <span class="vendor-message-sent__thread-indicator<?= $block->isUnreadThread($thread) ? ' is-unread' : ' is-read'; ?>"></span>
-                            <div class="vendor-message-sent__thread-main">
-                                <div class="vendor-message-sent__thread-subject">
-                                    <?= $block->escapeHtml($block->getThreadSubject($thread)); ?>
-                                </div>
-                                <div class="vendor-message-sent__thread-name">
-                                    <?= $block->escapeHtml($block->getThreadContactName($thread)); ?>
-                                </div>
-                            </div>
-                            <div class="vendor-message-sent__thread-date">
-                                <?= $block->escapeHtml($block->getThreadDateLabel($thread)); ?>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="vendor-message-sent__empty-thread">
-                        <?= $block->escapeHtml(__('No inbox messages found.')); ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-
+        <div class="vendor-message-sent__thread-list" id="vendorMessageThreadList">
             <?php if ($threads && $threads->getSize()): ?>
-                <div class="vendor-message-sent__sidebar-footer">
-                    <button type="submit"
-                            class="vendor-message-sent__sidebar-footer-link vendor-message-sent__sidebar-footer-link--read">
-                        <?= $block->escapeHtml(__('Read All')); ?>
-                    </button>
-                    <?php if ($selectedId): ?>
-                        <a class="vendor-message-sent__sidebar-footer-link vendor-message-sent__sidebar-footer-link--delete"
-                           href="<?= $block->escapeUrl($block->getDeleteUrl()); ?>"
-                           data-confirm="<?= $block->escapeHtmlAttr(__('Delete this message?')); ?>">
-                            <?= $block->escapeHtml(__('Delete')); ?>
-                        </a>
-                    <?php else: ?>
-                        <span class="vendor-message-sent__sidebar-footer-link vendor-message-sent__sidebar-footer-link--delete">
-                            <?= $block->escapeHtml(__('Delete')); ?>
-                        </span>
-                    <?php endif; ?>
+                <?php foreach ($threads as $thread): ?>
+                    <?php
+                    $threadId = (int)$thread->getId();
+                    $isActive = $threadId === $selectedId;
+                    $searchText = $block->getThreadSearchText($thread);
+                    ?>
+                    <a class="vendor-message-sent__thread<?= $isActive ? ' is-active' : ''; ?>"
+                       href="<?= $block->escapeUrl($block->getThreadUrl($threadId)); ?>"
+                       data-search="<?= $block->escapeHtmlAttr($searchText); ?>">
+                        <span class="vendor-message-sent__thread-indicator<?= $block->isUnreadThread($thread) ? ' is-unread' : ' is-read'; ?>"></span>
+                        <div class="vendor-message-sent__thread-main">
+                            <div class="vendor-message-sent__thread-subject">
+                                <?= $block->escapeHtml($block->getThreadSubject($thread)); ?>
+                            </div>
+                            <div class="vendor-message-sent__thread-name">
+                                <?= $block->escapeHtml($block->getThreadContactName($thread)); ?>
+                            </div>
+                        </div>
+                        <div class="vendor-message-sent__thread-date">
+                            <?= $block->escapeHtml($block->getThreadDateLabel($thread)); ?>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="vendor-message-sent__empty-thread">
+                    <?= $block->escapeHtml(__('No trash messages found.')); ?>
                 </div>
             <?php endif; ?>
-        </form>
+        </div>
     </aside>
 
     <section class="vendor-message-sent__content">
@@ -252,9 +184,19 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
                 <?php endif; ?>
             </div>
 
-            <a class="vendor-message-sent__delete" href="<?= $block->escapeUrl($block->getDeleteUrl()); ?>" aria-label="<?= $block->escapeHtmlAttr(__('Delete')); ?>">
-                <i class="fa fa-trash-o" aria-hidden="true"></i>
-            </a>
+            <?php if ($selectedId): ?>
+                <form class="vendor-message-sent__action-form"
+                      action="<?= $block->escapeUrl($block->getRestoreUrl()); ?>"
+                      method="post">
+                    <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()); ?>">
+                    <input type="hidden" name="selected[]" value="<?= (int)$selectedId; ?>">
+                    <button type="submit"
+                            class="vendor-message-sent__delete vendor-message-sent__action-button"
+                            aria-label="<?= $block->escapeHtmlAttr(__('Restore')); ?>">
+                        <i class="fa fa-folder-o" aria-hidden="true"></i>
+                    </button>
+                </form>
+            <?php endif; ?>
         </div>
 
         <?php if ($block->hasSelectedMessage()): ?>
@@ -356,36 +298,6 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
                             </div>
                         <?php endif; ?>
                     </div>
-
-                    <form class="vendor-message-sent__composer" id="vendorMessageReplyForm" action="<?= $block->escapeUrl($block->getSendUrl()); ?>" method="post">
-                        <input type="hidden" name="id" value="<?= (int)$selectedId; ?>">
-                        <div class="vendor-message-sent__composer-input">
-                            <textarea name="message"
-                                      id="reply_msg_box"
-                                      class="vendor-message-sent__textarea"
-                                      rows="5"
-                                      cols="10"
-                                      placeholder="<?= $block->escapeHtmlAttr(__('Write message...')); ?>"></textarea>
-                            <button type="button" class="vendor-message-sent__clip" aria-label="<?= $block->escapeHtmlAttr(__('Attach')); ?>">
-                                <i class="fa fa-paperclip" aria-hidden="true"></i>
-                            </button>
-                        </div>
-
-                        <div class="vendor-message-sent__composer-footer">
-                            <div class="vendor-message-sent__formatting" aria-hidden="true">
-                                <button type="button">B</button>
-                                <button type="button"><i>i</i></button>
-                                <button type="button"><u>U</u></button>
-                                <button type="button"><i class="fa fa-align-left"></i></button>
-                                <button type="button"><i class="fa fa-align-center"></i></button>
-                                <button type="button"><i class="fa fa-align-right"></i></button>
-                            </div>
-
-                            <button type="submit" class="vendor-message-sent__send">
-                                <?= $block->escapeHtml(__('Send')); ?>
-                            </button>
-                        </div>
-                    </form>
                 </div>
             </div>
         <?php else: ?>
@@ -397,11 +309,9 @@ $cssFile = __DIR__ . '/../web/css/message-sent.css';
 </div>
 
 <script>
-require(['jquery', 'Magento_Ui/js/modal/alert', 'mage/translate'], function ($, alert, $t) {
+require(['jquery'], function ($) {
     var searchBox = $('#vendorMessageSearch');
     var threadsWrap = $('#vendorMessageThreadList');
-    var replyForm = $('#vendorMessageReplyForm');
-    var replyBox = $('#reply_msg_box');
     var messagesWrap = $('#vendorMessageMessages');
 
     if (searchBox.length && threadsWrap.length) {
@@ -417,54 +327,6 @@ require(['jquery', 'Magento_Ui/js/modal/alert', 'mage/translate'], function ($, 
 
     if (messagesWrap.length) {
         messagesWrap.scrollTop(messagesWrap[0].scrollHeight);
-    }
-
-    $('.vendor-message-sent__sidebar-footer-link--delete').on('click', function (event) {
-        var confirmText = $(this).attr('data-confirm');
-        if (confirmText && !window.confirm(confirmText)) {
-            event.preventDefault();
-        }
-    });
-
-    if (replyForm.length && replyBox.length) {
-        replyForm.on('submit', function (event) {
-            event.preventDefault();
-
-            var message = String(replyBox.val() || '').trim();
-            if (!message) {
-                alert({
-                    title: $t('Error'),
-                    content: $t('Please enter the message.')
-                });
-                return;
-            }
-
-            $.ajax({
-                url: replyForm.attr('action'),
-                method: 'POST',
-                dataType: 'json',
-                data: {
-                    id: replyForm.find('input[name="id"]').val(),
-                    message: message
-                },
-                showLoader: true
-            }).done(function (response) {
-                if (response && !response.error) {
-                    window.location.reload();
-                    return;
-                }
-
-                alert({
-                    title: $t('Error'),
-                    content: response && (response.msg || response.message) ? (response.msg || response.message) : $t('Something wrong. Please try to refresh the page.')
-                });
-            }).fail(function () {
-                alert({
-                    title: $t('Error'),
-                    content: $t('Something wrong. Please try to refresh the page.')
-                });
-            });
-        });
     }
 });
 </script>

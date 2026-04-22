@@ -22,7 +22,7 @@ if ($tabsHtml === '') {
     }
 }
 
-$sectionTitle = __('Business Contact');
+$sectionTitle = __('Business Information');
 ?>
 
 <div class="vendor-account-page">
@@ -68,6 +68,29 @@ $sectionTitle = __('Business Contact');
                     </span>
                 </div>
                 <?= /* @noEscape */ $formHtml ?>
+                <div class="vendor-account-business-map" data-business-address-map aria-hidden="true">
+                    <div class="vendor-account-business-map__head">
+                        <span class="vendor-account-business-map__label">
+                            <?= $block->escapeHtml(__('Map')) ?>
+                        </span>
+                        <a class="vendor-account-business-map__link"
+                           data-business-address-map-link
+                           href="https://www.google.com/maps"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <span><?= $block->escapeHtml(__('Show Map')) ?></span>
+                            <i class="fa fa-eye" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    <div class="vendor-account-business-map__frame"
+                         data-business-address-map-frame
+                         title="<?= $block->escapeHtmlAttr(__('Business Address Map')) ?>">
+                        <span class="vendor-account-business-map__pin" aria-hidden="true">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        </span>
+                        <span class="vendor-account-business-map__watermark">Google Maps</span>
+                    </div>
+                </div>
             </div>
         </section>
     </div>
@@ -76,12 +99,12 @@ $sectionTitle = __('Business Contact');
 <style>
 .vendor-account-page {
   --vendor-accent: #2f5cab;
-  --vendor-accent-soft: #edf3ff;
-  --vendor-border: #d9e4f1;
+  --vendor-accent-soft: #eef4fd;
+  --vendor-border: #d9e3f0;
   --vendor-card: #ffffff;
-  --vendor-panel: #f8fbff;
-  --vendor-text: #1f3563;
-  --vendor-muted: #5b6f92;
+  --vendor-panel: #f7faff;
+  --vendor-text: #1e3564;
+  --vendor-muted: #6d7d98;
   background: #ffffff;
   padding: 12px 0 24px;
 }
@@ -112,19 +135,20 @@ $sectionTitle = __('Business Contact');
   border: 1px solid var(--vendor-accent);
   background: var(--vendor-accent);
   color: #ffffff;
-  border-radius: 8px;
-  padding: 11px 18px;
-  font-size: 15px;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 16px;
   font-weight: 700;
   line-height: 1;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgba(20, 37, 74, 0.12);
-  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 8px 16px rgba(47, 92, 171, 0.12);
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .vendor-account-page__save:hover {
-  background: #244b92;
-  border-color: #244b92;
+  background: #245092;
+  border-color: #245092;
+  transform: translateY(-1px);
 }
 
 .vendor-account-layout {
@@ -148,14 +172,14 @@ $sectionTitle = __('Business Contact');
 .vendor-account-card {
   background: var(--vendor-card);
   border: 1px solid var(--vendor-border);
-  border-radius: 8px;
-  box-shadow: 0 1px 2px rgba(20, 37, 74, 0.04);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, 0.035);
   overflow: hidden;
 }
 
 .vendor-account-card__heading {
-  padding: 16px 18px 12px;
-  border-bottom: 1px solid #e6edf7;
+  padding: 14px 16px 12px;
+  border-bottom: 1px solid var(--vendor-border);
   background: #ffffff;
   color: var(--vendor-text);
   font-size: 18px;
@@ -187,7 +211,7 @@ $sectionTitle = __('Business Contact');
   bottom: 14px;
   left: 108px;
   width: 1px;
-  background: #e1e8f1;
+  background: var(--vendor-border);
 }
 
 .vendor-account-summary .profile-user-img {
@@ -326,8 +350,8 @@ $sectionTitle = __('Business Contact');
 }
 
 .vendor-account-menu__body {
-  padding: 12px 16px 18px;
-  background: #f8fbff;
+  padding: 12px 16px 16px;
+  background: #ffffff;
 }
 
 .vendor-account-tabs {
@@ -443,7 +467,9 @@ $sectionTitle = __('Business Contact');
 }
 
 .vendor-account-main .vendor-account-form {
-  padding: 20px;
+  padding: 0;
+  width: 100%;
+  max-width: none;
 }
 
 .vendor-account-main .vendor-account-form__heading {
@@ -451,11 +477,11 @@ $sectionTitle = __('Business Contact');
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding: 0 0 14px;
-  margin-bottom: 18px;
-  border-bottom: 1px solid #edf2fa;
+  padding: 16px 18px 14px;
+  margin-bottom: 0;
+  border-bottom: 1px solid var(--vendor-border);
   color: var(--vendor-text);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.2;
 }
@@ -479,10 +505,113 @@ $sectionTitle = __('Business Contact');
 
 .vendor-account-main .entry-edit {
   margin: 0;
+  width: 100%;
+  max-width: none;
+  padding: 16px 18px 18px;
+}
+
+.vendor-account-main .vendor-account-business-map {
+  display: none;
+  width: 100%;
+  margin: 0 18px 18px;
+}
+
+.vendor-account-main .vendor-account-business-map.is-visible {
+  display: block;
+}
+
+.vendor-account-main .vendor-account-business-map__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.vendor-account-main .vendor-account-business-map__label {
+  color: var(--vendor-text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.vendor-account-main .vendor-account-business-map__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f28a3d;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.vendor-account-main .vendor-account-business-map__link:hover,
+.vendor-account-main .vendor-account-business-map__link:focus {
+  color: #e5751c;
+  text-decoration: none;
+}
+
+.vendor-account-main .vendor-account-business-map__frame {
+  position: relative;
+  overflow: hidden;
+  min-height: 230px;
+  border: 1px solid var(--vendor-border);
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.92) 0 10%, transparent 11%),
+    radial-gradient(circle at 65% 45%, rgba(255, 255, 255, 0.86) 0 8%, transparent 9%),
+    radial-gradient(circle at 84% 68%, rgba(255, 255, 255, 0.78) 0 7%, transparent 8%),
+    linear-gradient(15deg, transparent 0 18%, rgba(255, 255, 255, 0.7) 18% 19%, transparent 19% 100%),
+    linear-gradient(108deg, transparent 0 20%, rgba(255, 255, 255, 0.78) 20% 21%, transparent 21% 100%),
+    repeating-linear-gradient(0deg, rgba(210, 218, 228, 0.45) 0 1px, transparent 1px 26px),
+    repeating-linear-gradient(90deg, rgba(210, 218, 228, 0.42) 0 1px, transparent 1px 26px),
+    linear-gradient(135deg, #f9fafb, #edf1f6 45%, #e7ecf2);
+}
+
+.vendor-account-main .vendor-account-business-map__pin {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -56%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.92);
+  color: #f27d20;
+  box-shadow: 0 8px 18px rgba(16, 24, 40, 0.16);
+}
+
+.vendor-account-main .vendor-account-business-map__pin i {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.vendor-account-main .vendor-account-business-map__watermark {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  color: rgba(84, 96, 116, 0.68);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.vendor-account-main .vendor-account-business-map__frame[data-business-address-map-frame] {
+  display: block;
+  width: 100%;
+  height: 230px;
+  border: 0;
 }
 
 .vendor-account-main #vendor_info_tab_content {
-  margin-bottom: 18px;
+  width: 100%;
+  max-width: none;
+  margin-bottom: 0;
 }
 
 .vendor-account-main .fieldset,
@@ -492,16 +621,198 @@ $sectionTitle = __('Business Contact');
   box-shadow: none;
 }
 
+.vendor-account-main .box.box-primary {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .vendor-account-main .legend,
 .vendor-account-main .section-title,
 .vendor-account-main .panel-heading {
   background: transparent;
-  border-bottom: 1px solid #edf2fa;
+  border-bottom: 1px solid var(--vendor-border);
   color: var(--vendor-text);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   margin: 0 0 16px;
-  padding: 12px 0 14px;
+  padding: 10px 0 12px;
+}
+
+.vendor-account-main .box-body.form-horizontal {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 16px;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  align-items: start;
+  justify-items: stretch;
+}
+
+.vendor-account-main .box-body.form-horizontal > * {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  order: 99;
+}
+
+.vendor-account-main .box-body.form-horizontal > .messages,
+.vendor-account-main .box-body.form-horizontal > .fieldset,
+.vendor-account-main .box-body.form-horizontal > .form-group,
+.vendor-account-main .box-body.form-horizontal > .field,
+.vendor-account-main .box-body.form-horizontal > .row {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-business_type,
+.vendor-account-main .box-body.form-horizontal > .field-business_category,
+.vendor-account-main .box-body.form-horizontal > .field-website,
+.vendor-account-main .box-body.form-horizontal > .field-c_code,
+.vendor-account-main .box-body.form-horizontal > .field-b_ph,
+.vendor-account-main .box-body.form-horizontal > .field-b_email {
+  grid-column: span 1;
+  width: 100%;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-vendor_id,
+.vendor-account-main .box-body.form-horizontal > .field-b_name,
+.vendor-account-main .box-body.form-horizontal > .field-business_descriptions,
+.vendor-account-main .box-body.form-horizontal > .field-country_id {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(2),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(3),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(6),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(11) {
+  grid-column: 1 / -1 !important;
+  width: 100%;
+}
+
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(4),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(5),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(7),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(8),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(9),
+.vendor-account-main #vendor_info_tab_content .box-body.form-horizontal > :nth-child(10) {
+  grid-column: span 1 !important;
+  width: 100%;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-vendor_id {
+  order: 1;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-b_name {
+  order: 2;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-business_type {
+  order: 3;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-business_category {
+  order: 4;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-business_descriptions {
+  order: 5;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-website {
+  order: 6;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-c_code {
+  order: 7;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-b_ph {
+  order: 8;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-b_email {
+  order: 9;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-country_id {
+  order: 10;
+}
+
+.vendor-account-main .box-body.form-horizontal > .form-group,
+.vendor-account-main .box-body.form-horizontal > .field,
+.vendor-account-main .box-body.form-horizontal > .row {
+  margin: 0;
+}
+
+.vendor-account-main .box-body.form-horizontal label.col-sm-3.control-label,
+.vendor-account-main .box-body.form-horizontal .field > label,
+.vendor-account-main .box-body.form-horizontal .admin__field-label {
+  display: block;
+  float: none !important;
+  width: 100% !important;
+  padding: 0;
+  margin: 0 0 6px;
+  color: var(--vendor-text);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left !important;
+}
+
+.vendor-account-main .box-body.form-horizontal .col-sm-3,
+.vendor-account-main .box-body.form-horizontal .col-sm-9,
+.vendor-account-main .box-body.form-horizontal .admin__field-control,
+.vendor-account-main .box-body.form-horizontal .control {
+  float: none !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-vendor_id,
+.vendor-account-main .box-body.form-horizontal > .field-group_id,
+.vendor-account-main .box-body.form-horizontal > .field-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-vendor_id label.col-sm-3.control-label,
+.vendor-account-main .box-body.form-horizontal > .field-group_id label.col-sm-3.control-label,
+.vendor-account-main .box-body.form-horizontal > .field-status label.col-sm-3.control-label {
+  display: inline-flex;
+  align-items: center;
+  width: auto !important;
+  min-height: 36px;
+  margin: 0;
+  padding: 0;
+}
+
+.vendor-account-main .box-body.form-horizontal > .field-vendor_id .col-sm-9,
+.vendor-account-main .box-body.form-horizontal > .field-group_id .col-sm-9,
+.vendor-account-main .box-body.form-horizontal > .field-status .col-sm-9 {
+  display: inline-flex;
+  align-items: center;
+  width: auto !important;
+  min-height: 36px;
+}
+
+.vendor-account-main .box-body.form-horizontal .col-sm-9 .control-label,
+.vendor-account-main .box-body.form-horizontal .col-sm-9 .text-bold {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0;
+  color: #e24a3b;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .vendor-account-main .form-group {
@@ -527,19 +838,29 @@ $sectionTitle = __('Business Contact');
 .vendor-account-main select,
 .vendor-account-main textarea {
   width: 100%;
-  height: 42px;
-  padding: 10px 12px;
-  border: 1px solid #d9e2f1;
+  height: 60px;
+  padding: 15px 12px;
+  border: 1px solid #d9e3f2;
   border-radius: 6px;
-  background: #fff;
-  color: #2c3e5d;
+  background: #f8fbff;
+  color: var(--vendor-text);
+  font-size: 14px;
+  line-height: 1.3;
   box-shadow: none;
   box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.vendor-account-main .form-control::placeholder,
+.vendor-account-main input::placeholder,
+.vendor-account-main textarea::placeholder {
+  color: #b9c4d7;
+  opacity: 1;
 }
 
 .vendor-account-main textarea {
   height: auto;
-  min-height: 130px;
+  min-height: 210px;
   resize: vertical;
 }
 
@@ -548,14 +869,16 @@ $sectionTitle = __('Business Contact');
 .vendor-account-main select:focus,
 .vendor-account-main textarea:focus {
   border-color: var(--vendor-accent);
-  box-shadow: 0 0 0 3px rgba(47, 92, 171, 0.12);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(47, 92, 171, 0.10);
   outline: none;
 }
 
 .vendor-account-main .note-editor,
 .vendor-account-main .tox-tinymce {
-  border: 1px solid #d9e2f1 !important;
+  border: 1px solid #d9e3f2 !important;
   border-radius: 6px;
+  background: #f8fbff;
   overflow: hidden;
 }
 
@@ -587,8 +910,8 @@ $sectionTitle = __('Business Contact');
 .vendor-account-main .action.save:hover,
 .vendor-account-main .btn-primary:hover,
 .vendor-account-main button[type="submit"]:hover {
-  background: #244b92;
-  border-color: #244b92;
+  background: #245092;
+  border-color: #245092;
   color: #fff;
 }
 
@@ -629,11 +952,11 @@ $sectionTitle = __('Business Contact');
   align-items: center;
   justify-content: center;
   gap: 12px;
-  min-height: 180px;
-  padding: 28px 22px 26px;
-  border: 1px dashed #d8e4f3;
-  border-radius: 10px;
-  background: #f9fbff;
+  min-height: 200px;
+  padding: 32px 22px 28px;
+  border: 1px dashed #d9e3f2;
+  border-radius: 6px;
+  background: #f8fbff;
   color: var(--vendor-muted);
   text-align: center;
   cursor: pointer;
@@ -749,6 +1072,32 @@ $sectionTitle = __('Business Contact');
     grid-template-columns: 1fr;
   }
 
+  .vendor-account-main .box-body.form-horizontal {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .vendor-account-main .box-body.form-horizontal > .field-business_type,
+  .vendor-account-main .box-body.form-horizontal > .field-business_category,
+  .vendor-account-main .box-body.form-horizontal > .field-website,
+  .vendor-account-main .box-body.form-horizontal > .field-c_code,
+  .vendor-account-main .box-body.form-horizontal > .field-b_ph,
+  .vendor-account-main .box-body.form-horizontal > .field-b_email,
+  .vendor-account-main .box-body.form-horizontal > .field-vendor_id,
+  .vendor-account-main .box-body.form-horizontal > .field-b_name,
+  .vendor-account-main .box-body.form-horizontal > .field-business_descriptions,
+  .vendor-account-main .box-body.form-horizontal > .field-country_id {
+    grid-column: 1 / -1;
+  }
+
+  .vendor-account-main .entry-edit {
+    padding: 14px 16px 16px;
+  }
+
+  .vendor-account-main .vendor-account-form__heading {
+    padding: 14px 16px 12px;
+  }
+
   .vendor-account-summary .box-body.box-profile {
     grid-template-columns: 96px minmax(0, 1fr);
     gap: 10px 14px;
@@ -767,8 +1116,8 @@ $sectionTitle = __('Business Contact');
   }
 
   .vendor-account-main .vendor-upload-field__dropzone {
-    min-height: 164px;
-    padding: 22px 18px 20px;
+    min-height: 180px;
+    padding: 26px 18px 22px;
   }
 
   .vendor-account-main .vendor-upload-field__prompt {
@@ -810,7 +1159,7 @@ $sectionTitle = __('Business Contact');
   }
 
   .vendor-account-card {
-    border-radius: 8px;
+    border-radius: 6px;
   }
 
   .vendor-account-card__heading {
@@ -819,6 +1168,15 @@ $sectionTitle = __('Business Contact');
   }
 
   .vendor-account-main .vendor-account-form {
+    padding: 0;
+  }
+
+  .vendor-account-main .vendor-account-form__heading {
+    padding: 14px 14px 12px;
+    font-size: 17px;
+  }
+
+  .vendor-account-main .entry-edit {
     padding: 14px;
   }
 
@@ -853,6 +1211,10 @@ $sectionTitle = __('Business Contact');
     padding: 13px 14px 13px 15px;
     font-size: 15px;
   }
+
+  .vendor-account-main .box-body.form-horizontal {
+    gap: 14px;
+  }
 }
 </style>
 
@@ -868,6 +1230,90 @@ require(['jquery'], function ($) {
   function setDragState($dropzone, state) {
     $dropzone.toggleClass('is-dragover', !!state);
   }
+
+  function syncSectionTitle() {
+    var $active = $('.vendor-account-menu .nav.nav-tabs > li.active > a, .vendor-account-menu .nav.nav-tabs > li.ui-state-active > a, .vendor-account-menu .nav.nav-tabs > li.ui-tabs-active > a, .vendor-account-menu .nav.nav-tabs > li[aria-selected="true"] > a')
+      .first();
+
+    if (!$active.length) {
+      $active = $('.vendor-account-menu .nav.nav-tabs > li > a[aria-selected="true"]').first();
+    }
+
+    if ($active.length) {
+      var title = $.trim($active.text() || $active.attr('title') || '');
+      $('[data-section-title]').text(title);
+      syncBusinessAddressMap(title);
+    }
+  }
+
+  function getBusinessAddressMapQuery() {
+    var parts = [
+      $('#vendor_street').val(),
+      $('#vendor_city').val(),
+      $('#vendor_region').val(),
+      $('#vendor_postcode').val(),
+      $('#vendor_country_id option:selected').text()
+    ];
+    var query = [];
+
+    $.each(parts, function (_, value) {
+      value = $.trim(value || '');
+      if (value) {
+        query.push(value);
+      }
+    });
+
+    return query.length ? query.join(', ') : 'United Arab Emirates';
+  }
+
+  function updateBusinessAddressMap() {
+    var $map = $('[data-business-address-map].is-visible');
+
+    if (!$map.length) {
+      return;
+    }
+
+    var query = getBusinessAddressMapQuery();
+    var linkUrl = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(query);
+    var $frame = $map.find('[data-business-address-map-frame]');
+    var $link = $map.find('[data-business-address-map-link]');
+
+    if ($frame.length) {
+      $frame.attr('data-map-query', query);
+      $frame.attr('title', query ? query + ' - ' + <?= json_encode(__('Business Address Map')) ?> : <?= json_encode(__('Business Address Map')) ?>);
+    }
+
+    if ($link.length) {
+      $link.attr('href', linkUrl);
+    }
+  }
+
+  function syncBusinessAddressMap(title) {
+    var isAddressTab = /Business Address/i.test(title || '');
+    var $map = $('[data-business-address-map]');
+
+    if (!$map.length) {
+      return;
+    }
+
+    if (isAddressTab) {
+      $map.addClass('is-visible');
+      $map.attr('aria-hidden', 'false');
+      window.setTimeout(updateBusinessAddressMap, 50);
+    } else {
+      $map.removeClass('is-visible');
+      $map.attr('aria-hidden', 'true');
+    }
+  }
+
+  syncSectionTitle();
+
+  $(document).on('click', '.vendor-account-menu .nav.nav-tabs > li > a', function () {
+    window.setTimeout(syncSectionTitle, 50);
+  });
+
+  $(document).on('tabsactivate shown.bs.tab', syncSectionTitle);
+  $(document).on('input change', '#vendor_street, #vendor_city, #vendor_region, #vendor_postcode, #vendor_country_id', updateBusinessAddressMap);
 
   $(document)
     .on('change', '.vendor-upload-field__input', function () {

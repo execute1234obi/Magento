@@ -10,11 +10,11 @@
     <body>
         <referenceBlock name="seller.messages" remove="true"/>
         <referenceContainer name="content">
-            <block class="Vendor\VendorMessagesSubMenu\Block\Vendors\Messages\Inbox"
-                   name="vendor.messages.inbox"
-                   template="Vendor_VendorMessagesSubMenu::messages.phtml">
+            <block class="Vendor\VendorMessagesSubMenu\Block\Vendors\Messages\Trash"
+                   name="vendor.messages.trash"
+                   template="Vendor_VendorMessagesSubMenu::messages/trash.phtml">
                 <arguments>
-                    <argument name="block_title" xsi:type="string">Inbox</argument>
+                    <argument name="block_title" xsi:type="string">Trash</argument>
                 </arguments>
             </block>
         </referenceContainer>
