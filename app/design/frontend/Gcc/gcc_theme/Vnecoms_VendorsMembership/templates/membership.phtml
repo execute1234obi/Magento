@@ -9,6 +9,10 @@ use Magento\Framework\App\Action\Action;
 use Vnecoms\VendorsMembership\Model\Source\DurationUnit;
 
 $title = $block->getTitlePage() ? $block->getTitlePage() : __('Vendor Membership');
+$heroEyebrow = __('Pricing plans');
+$heroTitle = __('Plans for all sizes');
+$heroSubtitle = __('Simple, transparent pricing that grows with you. Try any plan free for 30 days.');
+$heroToggleLabel = __('Annual pricing (save 20%)');
 
 $normalizeText = static function ($value) {
     $value = html_entity_decode((string) $value, ENT_QUOTES, 'UTF-8');
@@ -143,6 +147,17 @@ $buildBillingLabel = static function (array $durationOption) {
 
     if ($unitLabel === '') {
         return __('N/A');
+    }
+
+    switch ($unit) {
+        case DurationUnit::DURATION_DAY:
+            return $duration === 1 ? __('Billed daily') : __('Billed every %1 days', $duration);
+        case DurationUnit::DURATION_WEEK:
+            return $duration === 1 ? __('Billed weekly') : __('Billed every %1 weeks', $duration);
+        case DurationUnit::DURATION_MONTH:
+            return $duration === 1 ? __('Billed monthly') : __('Billed every %1 months', $duration);
+        case DurationUnit::DURATION_YEAR:
+            return $duration === 1 ? __('Billed annually') : __('Billed every %1 years', $duration);
     }
 
     return $duration === 1
@@ -437,6 +452,346 @@ SVG;
     display: none;
 }
 
+/* ========================================================= */
+/* Pricing-plans hero redesign to match the reference image  */
+/* ========================================================= */
+.gcc-membership-page {
+    --page-bg: #f6f8fc;
+    --hero-bg: #c9d9e1;
+    --card-bg: #ffffff;
+    --card-border: #dde6f1;
+    --heading: #1a3764;
+    --title: #1a3764;
+    --price: #1f2937;
+    --muted: #667084;
+    --feature: #4f5b6d;
+    --button: #1a3764;
+    --button-hover: #13294d;
+    padding: 18px 24px 88px;
+    background: var(--page-bg);
+}
+
+.gcc-membership-page::before,
+.gcc-membership-page::after {
+    content: none;
+}
+
+.gcc-membership-page__inner {
+    width: min(1140px, 100%);
+}
+
+.gcc-membership-page__hero {
+    position: relative;
+    overflow: hidden;
+    margin: 0 0 34px;
+    padding: 54px 24px 68px;
+    text-align: center;
+    background: var(--hero-bg);
+}
+
+.gcc-membership-page__hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.26) 0, rgba(255, 255, 255, 0) 52%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 44%);
+    pointer-events: none;
+}
+
+.gcc-membership-page__eyebrow,
+.gcc-membership-page__title,
+.gcc-membership-page__subtitle,
+.gcc-membership-page__toggle {
+    position: relative;
+    z-index: 1;
+}
+
+.gcc-membership-page__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(26, 55, 100, 0.12);
+    color: #1a3764;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: 0.02em;
+}
+
+.gcc-membership-page__title {
+    margin: 18px auto 0;
+    color: #1a3764;
+    font-size: clamp(34px, 4.6vw, 58px);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    text-align: center;
+}
+
+.gcc-membership-page__subtitle {
+    max-width: 700px;
+    margin: 14px auto 0;
+    color: #274363;
+    font-size: clamp(15px, 1.7vw, 18px);
+    line-height: 1.55;
+    font-weight: 500;
+    text-align: center;
+}
+
+.gcc-membership-page__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 24px auto 0;
+    color: #1f3e66;
+}
+
+.gcc-membership-page__switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    width: 34px;
+    height: 18px;
+    padding: 2px;
+    border-radius: 999px;
+    background: #1a3764;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+
+.gcc-membership-page__switch-thumb {
+    width: 14px;
+    height: 14px;
+    margin-left: auto;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
+}
+
+.gcc-membership-page__toggle-label {
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 500;
+}
+
+.gcc-membership-page__grid {
+    gap: 24px;
+}
+
+.gcc-membership-card {
+    padding: 30px 28px 26px;
+    border-radius: 20px;
+    border-color: var(--card-border);
+    background: var(--card-bg);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+}
+
+.gcc-membership-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+}
+
+.gcc-membership-card__header {
+    text-align: center;
+}
+
+.gcc-membership-card__icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 14px;
+    background: #eef4ff;
+}
+
+.gcc-membership-card__icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.gcc-membership-card__name {
+    color: var(--title);
+    font-size: clamp(18px, 1.85vw, 22px);
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.gcc-membership-card__subtitle {
+    margin-top: 6px;
+    color: #7b8597;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.gcc-membership-card__price {
+    margin-top: 14px;
+    color: var(--price);
+    font-size: clamp(42px, 4.8vw, 58px);
+    line-height: 0.98;
+    font-weight: 800;
+    letter-spacing: -0.06em;
+}
+
+.gcc-membership-card__billing {
+    margin-top: 8px;
+    color: #667084;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+.gcc-membership-card__divider {
+    margin-top: 22px;
+    background: #edf2f7;
+}
+
+.gcc-membership-card__features {
+    padding-top: 18px;
+    gap: 11px;
+}
+
+.gcc-membership-card__feature {
+    color: var(--feature);
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.gcc-membership-card__check {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.gcc-membership-card__actions {
+    padding-top: 26px;
+}
+
+.gcc-membership-card__button {
+    min-height: 46px;
+    border-radius: 8px;
+    background: var(--button);
+    box-shadow: none;
+    font-size: 15px;
+}
+
+.gcc-membership-card__button:hover {
+    background: var(--button-hover);
+    box-shadow: 0 10px 20px rgba(26, 55, 100, 0.18);
+    transform: translateY(-1px);
+}
+
+@media (max-width: 1024px) {
+    .gcc-membership-page {
+        padding: 16px 20px 80px;
+    }
+
+    .gcc-membership-page__hero {
+        padding: 48px 20px 60px;
+    }
+
+    .gcc-membership-page__grid {
+        gap: 18px;
+    }
+
+    .gcc-membership-card {
+        padding: 26px 22px 22px;
+    }
+}
+
+@media (max-width: 991px) {
+    .gcc-membership-page {
+        padding: 14px 16px 72px;
+    }
+
+    .gcc-membership-page__grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(34px, 8.8vw, 48px);
+    }
+}
+
+@media (max-width: 767px) {
+    .gcc-membership-page__hero {
+        padding: 42px 16px 52px;
+    }
+
+    .gcc-membership-page__eyebrow {
+        padding: 5px 12px;
+        font-size: 11px;
+    }
+
+    .gcc-membership-page__title {
+        margin-top: 16px;
+        font-size: clamp(28px, 8vw, 38px);
+    }
+
+    .gcc-membership-page__subtitle {
+        margin-top: 12px;
+        font-size: 14px;
+    }
+
+    .gcc-membership-page__toggle {
+        margin-top: 20px;
+        gap: 8px;
+    }
+
+    .gcc-membership-page__toggle-label {
+        font-size: 13px;
+    }
+
+    .gcc-membership-card {
+        padding: 24px 18px 18px;
+        border-radius: 18px;
+    }
+
+    .gcc-membership-card__name {
+        font-size: 17px;
+    }
+
+    .gcc-membership-card__subtitle {
+        font-size: 13px;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(32px, 10vw, 42px);
+    }
+
+    .gcc-membership-card__actions {
+        padding-top: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .gcc-membership-page {
+        padding: 12px 12px 64px;
+    }
+
+    .gcc-membership-page__hero {
+        padding: 38px 14px 46px;
+    }
+
+    .gcc-membership-page__toggle {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .gcc-membership-page__toggle-label {
+        font-size: 12px;
+    }
+
+    .gcc-membership-card {
+        padding: 22px 16px 16px;
+    }
+
+    .gcc-membership-card__button {
+        min-height: 44px;
+        font-size: 14px;
+    }
+}
+
 @media (max-width: 1024px) {
     .gcc-membership-page {
         padding: 72px 20px 84px;
@@ -604,17 +959,285 @@ SVG;
         font-size: 14px;
     }
 }
+
+/* Final cascade override so the new pricing layout wins over legacy rules */
+body.vendorsmembership-index-index #maincontent,
+body.vendorsmembership-index-index .page-main,
+body.vendorsmembership-index-index .columns,
+body.vendorsmembership-index-index .column.main {
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+body.vendorsmembership-index-index .page-main {
+    padding-top: 0 !important;
+}
+
+body.vendorsmembership-index-index .page.messages {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+}
+
+.gcc-membership-page {
+    padding: 0 0 88px !important;
+    background: #f6f8fc !important;
+}
+
+.gcc-membership-page__inner {
+    width: min(1120px, 100%) !important;
+    max-width: none !important;
+    padding: 0 !important;
+}
+
+.gcc-membership-page::before,
+.gcc-membership-page::after {
+    content: none !important;
+}
+
+.gcc-membership-page__hero {
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 54px 24px 68px !important;
+    background: #c9d9e1 !important;
+}
+
+.gcc-membership-page__grid {
+    gap: 24px !important;
+    margin-top: 0 !important;
+}
+
+.gcc-membership-card {
+    padding: 30px 28px 26px !important;
+    border-radius: 20px !important;
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08) !important;
+}
+
+.gcc-membership-card__icon {
+    width: 42px !important;
+    height: 42px !important;
+    margin: 0 auto 14px !important;
+    background: #eef4ff !important;
+}
+
+.gcc-membership-card__name {
+    color: #1a3764 !important;
+    font-size: clamp(18px, 1.85vw, 22px) !important;
+    font-weight: 800 !important;
+}
+
+.gcc-membership-card__subtitle {
+    margin-top: 6px !important;
+    color: #7b8597 !important;
+    font-size: 14px !important;
+}
+
+.gcc-membership-card__price {
+    margin-top: 14px !important;
+    color: #1f2937 !important;
+    font-size: clamp(42px, 4.8vw, 58px) !important;
+}
+
+.gcc-membership-card__billing {
+    margin-top: 8px !important;
+    color: #667084 !important;
+    font-size: 14px !important;
+}
+
+.gcc-membership-card__divider {
+    margin-top: 22px !important;
+    background: #edf2f7 !important;
+}
+
+.gcc-membership-card__features {
+    padding-top: 18px !important;
+    gap: 11px !important;
+}
+
+.gcc-membership-card__feature {
+    color: #4f5b6d !important;
+    font-size: 14px !important;
+}
+
+.gcc-membership-card__check {
+    flex: 0 0 20px !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.gcc-membership-card__actions {
+    padding-top: 26px !important;
+}
+
+.gcc-membership-card__button {
+    min-height: 46px !important;
+    border-radius: 8px !important;
+    background: #1a3764 !important;
+    box-shadow: none !important;
+}
+
+.gcc-membership-card__button:hover {
+    background: #13294d !important;
+    box-shadow: 0 10px 20px rgba(26, 55, 100, 0.18) !important;
+}
+
+@media (max-width: 1024px) {
+    .gcc-membership-page {
+        padding: 0 0 80px !important;
+    }
+
+    .gcc-membership-page__inner {
+        padding: 0 20px !important;
+    }
+
+    .gcc-membership-page__hero {
+        padding: 48px 20px 60px !important;
+    }
+
+    .gcc-membership-page__grid {
+        gap: 18px !important;
+    }
+
+    .gcc-membership-card {
+        padding: 26px 22px 22px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .gcc-membership-page {
+        padding: 0 0 72px !important;
+    }
+
+    .gcc-membership-page__inner {
+        padding: 0 16px !important;
+    }
+
+    .gcc-membership-page__grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(34px, 8.8vw, 48px) !important;
+    }
+}
+
+@media (max-width: 767px) {
+    .gcc-membership-page__hero {
+        padding: 42px 16px 52px !important;
+    }
+
+    .gcc-membership-page__eyebrow {
+        padding: 5px 12px !important;
+        font-size: 11px !important;
+    }
+
+    .gcc-membership-page__title {
+        margin-top: 16px !important;
+        display: block !important;
+        font-size: clamp(28px, 8vw, 38px) !important;
+    }
+
+    .gcc-membership-page__subtitle {
+        margin-top: 12px !important;
+        font-size: 14px !important;
+    }
+
+    .gcc-membership-page__toggle {
+        margin-top: 20px !important;
+        gap: 8px !important;
+    }
+
+    .gcc-membership-page__toggle-label {
+        font-size: 13px !important;
+    }
+
+    .gcc-membership-card {
+        padding: 24px 18px 18px !important;
+        border-radius: 18px !important;
+    }
+
+    .gcc-membership-card__name {
+        font-size: 17px !important;
+    }
+
+    .gcc-membership-card__subtitle {
+        font-size: 13px !important;
+    }
+
+    .gcc-membership-card__price {
+        font-size: clamp(32px, 10vw, 42px) !important;
+    }
+
+    .gcc-membership-card__actions {
+        padding-top: 22px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .gcc-membership-page {
+        padding: 0 0 64px !important;
+    }
+
+    .gcc-membership-page__inner {
+        padding: 0 12px !important;
+    }
+
+    .gcc-membership-page__hero {
+        padding: 38px 14px 46px !important;
+    }
+
+    .gcc-membership-page__toggle {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .gcc-membership-page__toggle-label {
+        font-size: 12px !important;
+    }
+
+    .gcc-membership-card {
+        padding: 22px 16px 16px !important;
+    }
+
+    .gcc-membership-card__button {
+        min-height: 44px !important;
+        font-size: 14px !important;
+    }
+}
 </style>
 
 <section class="gcc-membership-page" aria-labelledby="gcc-membership-title">
     <div class="gcc-membership-page__inner">
-        <h1 id="gcc-membership-title" class="gcc-membership-page__title">
-            <?php echo $block->escapeHtml($title); ?>
-        </h1>
+        <header class="gcc-membership-page__hero">
+            <span class="gcc-membership-page__eyebrow">
+                <?php echo $block->escapeHtml($heroEyebrow); ?>
+            </span>
 
-        <div class="gcc-membership-page__mobile-title" role="heading" aria-level="1">
-            <?php echo $block->escapeHtml($title); ?>
-        </div>
+            <h1 id="gcc-membership-title" class="gcc-membership-page__title">
+                <?php echo $block->escapeHtml($heroTitle); ?>
+            </h1>
+
+            <div class="gcc-membership-page__mobile-title" role="heading" aria-level="1">
+                <?php echo $block->escapeHtml($heroTitle); ?>
+            </div>
+
+            <p class="gcc-membership-page__subtitle">
+                <?php echo $block->escapeHtml($heroSubtitle); ?>
+            </p>
+
+            <div class="gcc-membership-page__toggle" aria-hidden="true">
+                <span class="gcc-membership-page__switch">
+                    <span class="gcc-membership-page__switch-thumb"></span>
+                </span>
+                <span class="gcc-membership-page__toggle-label">
+                    <?php echo $block->escapeHtml($heroToggleLabel); ?>
+                </span>
+            </div>
+        </header>
 
         <div class="gcc-membership-page__grid">
             <?php foreach ($planRows as $index => $row): ?>

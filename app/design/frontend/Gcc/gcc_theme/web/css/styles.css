@@ -69,8 +69,24 @@ button {
         margin: 0;
         position: relative;
         transition: margin .3s ease-out 0s;
-        padding-top: 150px;
+        padding-top: 0;
     }
+}
+
+body.vendorsmembership-index-index {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+body.vendorsmembership-index-index .page-wrapper,
+body.vendorsmembership-index-index .page-main,
+body.vendorsmembership-index-index .columns,
+body.vendorsmembership-index-index .column.main {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .pricing-heading {
