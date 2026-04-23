@@ -100,6 +100,11 @@ $addToWishlistParams = $wishlistHelper->getAddParams($_product); // JSON for dat
   <?php if ($toolbarBlock) echo $toolbarBlock->toHtml(); ?>
 <?php endif; ?>
 <style>
+  body.catalogsearch-result-index .u-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
   /* Grid */
   .u-grid {
     display: grid;
@@ -179,9 +184,13 @@ $addToWishlistParams = $wishlistHelper->getAddParams($_product); // JSON for dat
   .u-cta{
     margin-top: 16px;
     width:100%; height:48px; border-radius:12px;
-    border:1px solid #2d62f0; background:#fff; color:#2d62f0;
+    border:1px solid #1A3764; background:#fff; color:#1A3764;
     font-weight:600; font-size:16px; cursor:pointer;
-    transition: background .15s ease, color .15s ease, box-shadow .15s ease;
+    transition: background .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease;
   }
-  .u-cta:hover{ background:#f2f6ff; box-shadow:0 2px 8px rgba(45,98,240,.15); }
+  .u-cta:hover{
+    background:rgba(26, 55, 100, 0.06);
+    border-color:#1A3764;
+    box-shadow:0 2px 8px rgba(26,55,100,.15);
+  }
 </style>

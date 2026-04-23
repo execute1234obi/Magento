@@ -446,8 +446,8 @@ body.catalogsearch-result-index .breadcrumbs {
     opacity: 1 !important;
     width: 100%;
     max-width: 1320px;
-    margin: 0 auto 18px;
-    padding: 0 16px;
+    margin: 0 auto 10px;
+    padding: 4px 16px 0;
     position: relative;
     z-index: 1;
 }
@@ -457,33 +457,83 @@ body.catalogsearch-result-index .breadcrumbs .items {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    gap: 0;
 }
 
 body.catalogsearch-result-index .breadcrumbs a,
 body.catalogsearch-result-index .breadcrumbs strong {
-    font-size: clamp(15px, 1.4vw, 18px);
-    line-height: 1.4;
+    font-size: 15px;
+    line-height: 1.25;
+    letter-spacing: 0;
+    text-decoration: none;
 }
 
 body.catalogsearch-result-index .breadcrumbs a {
-    color: #9ca3af;
-}
-
-body.catalogsearch-result-index .breadcrumbs a:hover {
     color: #6b7280;
 }
 
+body.catalogsearch-result-index .breadcrumbs a:hover {
+    color: #334155;
+}
+
 body.catalogsearch-result-index .breadcrumbs strong {
-    color: #9ca3af;
+    color: #1f2937;
     font-weight: 500;
 }
 
 body.catalogsearch-result-index .breadcrumbs .item:not(:last-child):after {
     content: "/";
     color: #cfd5df;
-    margin: 0 16px;
-    font-size: clamp(15px, 1.4vw, 18px);
-    line-height: 1.2;
+    margin: 0 14px;
+    font-size: 15px;
+    line-height: 1;
+    font-weight: 400;
+}
+
+body.catalogsearch-result-index .breadcrumbs {
+    display: none !important;
+}
+
+body.catalogsearch-result-index .gcc-search-breadcrumbs {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    max-width: 1320px;
+    margin: 0 auto 10px;
+    padding: 0 16px;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+body.catalogsearch-result-index .gcc-search-breadcrumbs__link {
+    color: #1f2937;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+body.catalogsearch-result-index .gcc-search-breadcrumbs__link:hover {
+    color: #1f3f75;
+}
+
+body.catalogsearch-result-index .gcc-search-breadcrumbs__separator {
+    color: #d1d5db;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 400;
+}
+
+body.catalogsearch-result-index .gcc-search-breadcrumbs__current {
+    color: #374151;
+}
+
+body.catalogsearch-result-index .gcc-search-breadcrumbs__query {
+    color: #111827;
+    font-weight: 600;
 }
 
 body.catalogsearch-result-index .gcc-search-results__header {

@@ -5,6 +5,230 @@
 .catalogsearch-result-index .actions-primary {
     display: none !important;
 }
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search {
+  display: grid !important;
+  grid-template-columns: minmax(240px, auto) minmax(0, 1fr) !important;
+  grid-template-areas: "limiter pages" !important;
+  align-items: center !important;
+  column-gap: 28px !important;
+  row-gap: 16px !important;
+  width: 100% !important;
+  margin: 38px 0 0 !important;
+  padding-top: 26px !important;
+  border-top: 1px solid #e7edf5 !important;
+  box-sizing: border-box !important;
+  clear: both !important;
+  min-width: 0 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter {
+  grid-area: limiter !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  margin: 0 !important;
+  min-width: 0 !important;
+  justify-self: start !important;
+  white-space: nowrap !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .label {
+  margin: 0 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .label span {
+  color: #1f2937 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  line-height: 1.2 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .control {
+  display: inline-flex !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .limiter-options {
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+  -moz-appearance: auto !important;
+  min-width: 88px !important;
+  height: 48px !important;
+  padding: 0 14px !important;
+  border: 1px solid #dbe3f0 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: #1f2937 !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  outline: none !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .limiter-text,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .toolbar-amount,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-label {
+  display: none !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages {
+  grid-area: pages !important;
+  justify-self: end !important;
+  width: auto !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  float: none !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-items {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  min-width: 0 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .item {
+  margin: 0 !important;
+  padding: 0 !important;
+  flex: 0 0 auto !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .page,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .action,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .disabled {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  min-height: 48px !important;
+  border: 1px solid #dbe3f0 !important;
+  border-radius: 12px !important;
+  background: #fff !important;
+  color: #5f6b7a !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .page {
+  width: 48px !important;
+  min-width: 48px !important;
+  padding: 0 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .action,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .disabled {
+  min-width: 126px !important;
+  padding: 0 16px !important;
+  gap: 8px !important;
+  background: #fff !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-previous a,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-previous .disabled {
+  min-width: 148px !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .item.current .page {
+  background: #1f3f75 !important;
+  border-color: #1f3f75 !important;
+  color: #fff !important;
+  box-shadow: 0 8px 16px rgba(31, 63, 117, 0.12) !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .page .label,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .action .label,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .disabled .label {
+  display: none !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-previous a::before,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-previous .disabled::before {
+  content: "‹" !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  color: inherit !important;
+  font-weight: 400 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-next a::after,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-next .disabled::after {
+  content: "›" !important;
+  font-size: 22px !important;
+  line-height: 1 !important;
+  color: inherit !important;
+  font-weight: 400 !important;
+}
+
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-previous .disabled,
+body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-item-next .disabled {
+  opacity: 1 !important;
+  color: #8b93a5 !important;
+  border-color: #dbe3f0 !important;
+  background: #f8fafc !important;
+}
+
+@media (max-width: 767px) {
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-areas:
+      "limiter"
+      "pages" !important;
+    gap: 16px !important;
+    margin-top: 28px !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .label span {
+    font-size: 15px !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .limiter .limiter-options {
+    min-width: 84px !important;
+    height: 44px !important;
+    font-size: 15px !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages {
+    width: 100% !important;
+    justify-self: stretch !important;
+    justify-content: flex-end !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .pages-items {
+    width: 100% !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-end !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .action,
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .disabled {
+    min-width: 112px !important;
+    height: 44px !important;
+    padding: 0 14px !important;
+    font-size: 14px !important;
+  }
+
+  body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages .page {
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+}
 .catalogsearch-result-index .columns {
     align-items: flex-start;
 }
@@ -86,7 +310,8 @@ body.catalogsearch-result-index .u-grid {
     width: 100%;
     max-width: 100%;
     min-width: 0;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
 }
 
 body.catalogsearch-result-index .search-products-wrapper {

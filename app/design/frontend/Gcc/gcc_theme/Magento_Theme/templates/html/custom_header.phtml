@@ -501,7 +501,8 @@ if ($storeCode === 'default') {
     $isCmsPage     = ($block->getRequest()->getModuleName() === 'cms');
     $isLoginPage   = ($fullActionName === 'customer_account_login');
     $isRegisterPage= ($fullActionName === 'customer_account_create');
-    $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage;
+    $isSearchResultPage = in_array($fullActionName, ['catalogsearch_result_index', 'mirasvit_search_result_index'], true);
+    $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage || $isSearchResultPage;
   ?>
   <?php if (!$hideSearchBar): ?>
     <?php

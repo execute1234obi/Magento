@@ -3,28 +3,15 @@
     <body>
         <referenceContainer name="content">
             <container name="gcc.search.wrapper" htmlTag="div" htmlClass="gcc-search-results gcc-search-results--with-sidebar" before="-">
-                
                 <container name="gcc.search.sidebar" htmlTag="aside" htmlClass="sidebar">
                     <container name="gcc.sidebar.inner.div" htmlTag="div">
-                        
-                        <block class="Magento\LayeredNavigation\Block\Navigation" name="catalogsearch.leftnav" template="Magento_LayeredNavigation::layer/view.phtml">
-                            <block class="Magento\LayeredNavigation\Block\Navigation\State" name="catalogsearch.navigation.state" as="state"/>
-                            <block class="Magento\LayeredNavigation\Block\Navigation\FilterRenderer" name="catalogsearch.navigation.renderer" as="renderer" template="Magento_LayeredNavigation::layer/filter.phtml">
-                                <arguments>
-                                    <argument name="product_layer_view_model" xsi:type="object">Magento\LayeredNavigation\ViewModel\Layer\Filter</argument>
-                                </arguments>
-                            </block>
-                        </block>
-
                         <container name="vendor.sidebar.container" htmlTag="div" htmlId="vendor-sidebar">
                             <block class="Custom\SearchExtended\Block\Index\Vendors" name="custom.search.filters" template="Magento_CatalogSearch::custom-filters.phtml" cacheable="false"/>
                         </container>
-
                     </container>
                 </container>
 
                 <move element="mst.search.result" destination="gcc.search.wrapper" after="gcc.search.sidebar" />
-
             </container>
         </referenceContainer>
     </body>
