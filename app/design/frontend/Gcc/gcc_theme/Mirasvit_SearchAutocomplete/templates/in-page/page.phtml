@@ -1,8 +1,32 @@
+<?php
+declare(strict_types=1);
+
+use Mirasvit\SearchAutocomplete\Block\Injection;
+
+/**
+ * @var Injection $block
+ */
+
+$placeholder = $block->escapeUrl(
+    $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg')
+);
+?>
+
 <script type="text/html" id="mstInPage__vnecoms_vendors">
-    <div class="vendor-inpage-item">
-        <a data-bind="attr: { href: url }">
-            <span data-bind="text: title"></span>
-            <div data-bind="text: detail"></div>
+    <div class="mstInPage__item vnecoms_vendors">
+        <a rel="noreferrer"
+           data-bind="attr: { href: url, 'aria-label': '<?= $block->escapeJs(__('View vendor details: ')) ?>' + title }, click: $parents[2].processClick"
+           style="display:flex;align-items:center;gap:10px;width:100%;min-width:0;text-decoration:none;color:inherit;">
+            <span style="width:44px;height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
+                <img data-bind="attr: {
+                    src: (logo ? logo : '<?= $placeholder ?>'),
+                    alt: title
+                }"
+                     style="width:100%;height:100%;object-fit:contain;display:block;" />
+            </span>
+
+            <span data-bind="text: title, highlight"
+                  style="min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#333333;font-size:15px;font-weight:600;line-height:1.4;"></span>
         </a>
     </div>
 </script>

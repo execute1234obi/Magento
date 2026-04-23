@@ -1,0 +1,30 @@
+<?php
+declare(strict_types=1);
+
+use Mirasvit\SearchAutocomplete\Block\Injection;
+
+/**
+ * @var Injection $block
+ */
+
+$placeholder = $block->escapeUrl(
+    $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg')
+);
+?>
+
+<div class="mstInPage__item magento_catalog_product">
+    <a rel="noreferrer"
+       data-bind="attr: { href: url, 'aria-label': '<?= $block->escapeJs(__('View product details: ')) ?>' + name }, click: $parents[2].processClick"
+       style="display:flex;align-items:center;gap:10px;width:100%;min-width:0;text-decoration:none;color:inherit;">
+        <!-- ko if: $parents[2].config.isShowImage -->
+        <span style="width:44px;height:44px;flex:0 0 44px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
+            <img data-bind="attr: { src: (imageUrl ? imageUrl : '<?= $placeholder ?>'), alt: '<?= $block->escapeJs(__('Product image: ')) ?>' + name }"
+                 style="width:100%;height:100%;object-fit:contain;display:block;" />
+        </span>
+        <!-- /ko -->
+
+        <span
+            data-bind="html: name, highlight"
+            style="min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#333333;font-size:15px;font-weight:600;line-height:1.4;"></span>
+    </a>
+</div>
