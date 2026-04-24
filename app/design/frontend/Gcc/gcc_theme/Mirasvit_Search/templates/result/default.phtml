@@ -1,20 +1,64 @@
+<div class="search-result-list">
 <?php foreach ($results as $result): ?>
-    <div class="flex items-start bg-white shadow rounded-lg p-4 mb-4">
-        <div class="w-16 h-16 flex-shrink-0">
-            <img src="<?= $result->getThumbnailUrl(); ?>" alt="<?= $result->getTitle(); ?>" class="rounded-full object-cover">
-        </div>
-        <div class="ml-4 flex-grow">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-lg font-semibold"><?= $result->getTitle(); ?></h2>
-                    <p class="text-sm text-gray-500"><?= $result->getCategory(); ?></p>
+    <?php
+    $title = trim((string) $result->getTitle());
+    $category = trim((string) $result->getCategory());
+    $country = trim((string) $result->getCountry());
+    $description = trim((string) $result->getShortDescription());
+    $resultUrl = trim((string) $result->getUrl());
+    $thumbnailUrl = trim((string) $result->getThumbnailUrl());
+    $flagUrl = preg_match('/^[a-z]{2}$/i', $country) ? 'https://flagcdn.com/w40/' . strtolower($country) . '.png' : '';
+    $initial = $title !== '' ? strtoupper(substr($title, 0, 1)) : 'S';
+    ?>
+
+    <article class="search-vendor-card search-result-card">
+        <div class="search-vendor-card__main">
+            <a class="search-vendor-card__logo search-result-card__logo" href="<?= htmlspecialchars($resultUrl, ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php if ($thumbnailUrl !== ''): ?>
+                    <img src="<?= htmlspecialchars($thumbnailUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>">
+                <?php else: ?>
+                    <span style="display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#93a4b7;font-size:20px;font-weight:800;background:linear-gradient(180deg,#fbfcfe 0%,#f4f7fb 100%);">
+                        <?= htmlspecialchars($initial, ENT_QUOTES, 'UTF-8'); ?>
+                    </span>
+                <?php endif; ?>
+            </a>
+
+            <div class="search-vendor-card__body">
+                <div class="search-vendor-card__title-row">
+                    <a class="search-vendor-card__title-link" href="<?= htmlspecialchars($resultUrl, ENT_QUOTES, 'UTF-8'); ?>">
+                        <?= htmlspecialchars($title, ENT_QUOTES, 'UTF-8'); ?>
+                    </a>
                 </div>
-                <div class="text-right">
-                    <span class="text-sm text-gray-400"><?= $result->getCountry(); ?></span>
-                    <a href="<?= $result->getUrl(); ?>" class="ml-2 inline-block px-3 py-1 bg-blue-100 text-blue-600 rounded text-sm">Visit Website</a>
-                </div>
+
+                <?php if ($category !== ''): ?>
+                    <div class="search-vendor-card__subtitle">
+                        <?= htmlspecialchars($category, ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($description !== ''): ?>
+                    <div class="search-vendor-card__description">
+                        <?= htmlspecialchars($description, ENT_QUOTES, 'UTF-8'); ?>
+                    </div>
+                <?php endif; ?>
             </div>
-            <p class="text-sm text-gray-600 mt-2"><?= $result->getShortDescription(); ?></p>
         </div>
-    </div>
+
+        <div class="search-vendor-card__aside">
+            <?php if ($country !== ''): ?>
+                <div class="search-vendor-card__country">
+                    <?php if ($flagUrl !== ''): ?>
+                        <img class="search-vendor-card__flag" src="<?= htmlspecialchars($flagUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="<?= htmlspecialchars($country, ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php endif; ?>
+                    <span><?= htmlspecialchars($country, ENT_QUOTES, 'UTF-8'); ?></span>
+                </div>
+            <?php endif; ?>
+
+            <a class="search-vendor-card__button" href="<?= htmlspecialchars($resultUrl, ENT_QUOTES, 'UTF-8'); ?>">
+                Visit Website
+                <span aria-hidden="true">&#8599;</span>
+            </a>
+        </div>
+    </article>
 <?php endforeach; ?>
+</div>

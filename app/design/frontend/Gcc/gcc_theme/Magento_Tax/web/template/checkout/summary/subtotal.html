@@ -1,0 +1,28 @@
+<!-- ko if: isBothPricesDisplayed() -->
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span>
+        <span data-bind="i18n: title"></span>
+        <span data-bind="i18n: excludingTaxMessage"></span>
+    </span>
+    <span data-bind="text: getValue()"></span>
+</div>
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span>
+        <span data-bind="i18n: title"></span>
+        <span data-bind="i18n: includingTaxMessage"></span>
+    </span>
+    <span data-bind="text: getValueInclTax()"></span>
+</div>
+<!-- /ko -->
+<!-- ko if: !isBothPricesDisplayed() && isIncludingTaxDisplayed() -->
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span data-bind="i18n: title"></span>
+    <span data-bind="text: getValueInclTax()"></span>
+</div>
+<!-- /ko -->
+<!-- ko if: !isBothPricesDisplayed() && !isIncludingTaxDisplayed() -->
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span data-bind="i18n: title"></span>
+    <span data-bind="text: getValue()"></span>
+</div>
+<!-- /ko -->

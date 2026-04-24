@@ -2,132 +2,535 @@
 /** @var \Custom\SearchExtended\Block\Index\Vendors $block */
 
 $vendors = $block->getSearchCollection();
-$placeholder = $block->escapeUrl(
-    $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg')
-);
 ?>
 
 <style>
   #vendors {
-    padding-top: 20px;
-  }
-
-  .vendor-results {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    padding-top: 6px;
+    min-width: 0;
   }
 
-  .vendor-card {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .search-vendor-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 22px;
     width: 100%;
-    padding: 12px 12px 12px 8px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    text-decoration: none !important;
-    color: inherit;
+    padding: 20px 22px;
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 20px;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
+    box-sizing: border-box;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
-  .vendor-card:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
-    text-decoration: none !important;
+  .search-vendor-card:hover {
+    transform: translateY(-2px);
+    border-color: #d8e4f1;
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
   }
 
-  .vendor-logo {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
+  .search-vendor-card__main {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .search-vendor-card__logo {
+    flex: 0 0 56px;
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    border: 1px solid #e5eaf2;
+    background: linear-gradient(180deg, #fbfcfe 0%, #f6f9fd 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    border: 1px solid #e5e7eb;
-    border-radius: 8px;
-    background: #fff;
+    text-decoration: none;
   }
 
-  .vendor-logo img {
+  .search-vendor-card__logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
     display: block;
   }
 
-  .vendor-name {
+  .search-vendor-card__body {
     min-width: 0;
-    flex: 1 1 auto;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    color: #111827;
-    font-size: 15px;
-    line-height: 1.4;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .search-vendor-card__title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .search-vendor-card__title-link {
+    color: #1e2b4a;
+    font-size: 20px;
+    line-height: 1.15;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .search-vendor-card__title-link:hover {
+    color: #1f4fbf;
+  }
+
+  .search-vendor-card__verified {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 999px;
+    background: #2f94f6;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(47, 148, 246, 0.22);
+  }
+
+  .search-vendor-card__subtitle {
+    color: #8b95a7;
+    font-size: 14px;
+    line-height: 1.35;
     font-weight: 600;
   }
 
-  .vendor-empty {
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
+  .search-vendor-card__description {
+    color: #3f4654;
+    font-size: 14px;
+    line-height: 1.75;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .search-vendor-card__aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    min-width: 180px;
+  }
+
+  .search-vendor-card__country {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     color: #6b7280;
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 600;
+    white-space: nowrap;
   }
 
-  .vendor-pager {
-    margin-top: 24px;
+  .search-vendor-card__flag {
+    width: 18px;
+    height: 12px;
+    border-radius: 2px;
+    object-fit: cover;
+    box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.18);
   }
 
-  @media (max-width: 768px) {
-    .vendor-results {
-      gap: 10px;
+  .search-vendor-card__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(31, 63, 117, 0.08);
+    background: #cfdde8;
+    color: #1f3f75;
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 600;
+    text-decoration: none !important;
+    white-space: nowrap;
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  }
+
+  .search-vendor-card__button:hover {
+    background: #bfd0dd;
+    transform: translateY(-1px);
+  }
+
+  .search-vendor-empty {
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #e7edf5;
+    border-radius: 18px;
+    color: #6b7280;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.04);
+  }
+
+  .search-vendor-pager {
+    width: 100%;
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e7edf5;
+    box-sizing: border-box;
+  }
+
+  .search-vendor-pager .pager--search-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px 28px;
+    margin: 0;
+    width: 100%;
+    min-width: 0;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+  }
+
+  .search-vendor-pager .pager--search-inner > .limiter {
+    order: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    margin: 0;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+
+  .search-vendor-pager .pager--search-inner > .limiter .limiter-label {
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .search-vendor-pager .pager--search-inner > .limiter .limiter-options {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    min-width: 96px;
+    height: 48px;
+    padding: 0 42px 0 16px;
+    border: 1px solid #dbe3f0;
+    border-radius: 12px;
+    background-color: #ffffff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23313a4b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.8' d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 14px 14px;
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 500;
+    outline: none;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6) inset;
+    cursor: pointer;
+  }
+
+  .search-vendor-pager .pager--search-inner > .pages {
+    order: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0 0 0 auto;
+    float: none;
+  }
+
+  .search-vendor-pager .pager--search-inner .pages-label {
+    display: none;
+  }
+
+  .search-vendor-pager .pager--search-inner .pages-items {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: 0;
+  }
+
+  .search-vendor-pager .pager--search-inner .item {
+    margin: 0;
+    padding: 0;
+    flex: 0 0 auto;
+  }
+
+  .search-vendor-pager .pager--search-inner .page,
+  .search-vendor-pager .pager--search-inner .action,
+  .search-vendor-pager .pager--search-inner .disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 16px;
+    border: 1px solid #dbe3f0;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #5f6b7a;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+
+  .search-vendor-pager .pager--search-inner .page {
+    min-width: 48px;
+    padding: 0;
+  }
+
+  .search-vendor-pager .pager--search-inner .action,
+  .search-vendor-pager .pager--search-inner .disabled {
+    min-width: 126px;
+    gap: 8px;
+  }
+
+  .search-vendor-pager .pager--search-inner .pages-item-previous a,
+  .search-vendor-pager .pager--search-inner .pages-item-previous .disabled {
+    min-width: 148px;
+  }
+
+  .search-vendor-pager .pager--search-inner .item.current .page {
+    background: #1f3f75;
+    border-color: #1f3f75;
+    color: #ffffff;
+    box-shadow: 0 8px 16px rgba(31, 63, 117, 0.12);
+  }
+
+  .search-vendor-pager .pager--search-inner .page .label,
+  .search-vendor-pager .pager--search-inner .action .label,
+  .search-vendor-pager .pager--search-inner .disabled .label {
+    display: none;
+  }
+
+  .search-vendor-pager .pager--search-inner .pages-item-previous a::before,
+  .search-vendor-pager .pager--search-inner .pages-item-previous .disabled::before {
+    content: "\2039";
+    font-size: 22px;
+    line-height: 1;
+    color: inherit;
+    font-weight: 400;
+  }
+
+  .search-vendor-pager .pager--search-inner .pages-item-next a::after,
+  .search-vendor-pager .pager--search-inner .pages-item-next .disabled::after {
+    content: "\203A";
+    font-size: 22px;
+    line-height: 1;
+    color: inherit;
+    font-weight: 400;
+  }
+
+  @media (max-width: 1024px) {
+    .search-vendor-card {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .vendor-card {
-      padding: 10px 12px;
+    .search-vendor-card__aside {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 0;
     }
 
-    .vendor-name {
+    .search-vendor-pager .pager--search-inner {
+      gap: 16px 20px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    #vendors {
+      gap: 12px;
+    }
+
+    .search-vendor-card {
+      padding: 16px;
+      border-radius: 18px;
+    }
+
+    .search-vendor-card__main {
+      gap: 12px;
+    }
+
+    .search-vendor-card__logo {
+      width: 48px;
+      height: 48px;
+      flex-basis: 48px;
+      border-radius: 14px;
+    }
+
+    .search-vendor-card__title-link {
+      font-size: 17px;
+    }
+
+    .search-vendor-card__description {
+      -webkit-line-clamp: 4;
+    }
+
+    .search-vendor-card__aside {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .search-vendor-card__button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .search-vendor-pager {
+      margin-top: 22px;
+      padding-top: 20px;
+    }
+
+    .search-vendor-pager .pager--search-inner > .limiter {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .search-vendor-pager .pager--search-inner > .limiter .limiter-label {
+      font-size: 15px;
+    }
+
+    .search-vendor-pager .pager--search-inner > .limiter .limiter-options {
+      min-width: 84px;
+      height: 44px;
+      padding-right: 38px;
+      font-size: 15px;
+    }
+
+    .search-vendor-pager .pager--search-inner > .pages {
+      width: 100%;
+      justify-content: flex-end;
+      margin-left: 0;
+    }
+
+    .search-vendor-pager .pager--search-inner .pages-items {
+      width: 100%;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .search-vendor-pager .pager--search-inner .action,
+    .search-vendor-pager .pager--search-inner .disabled {
+      min-width: 112px;
+      min-height: 44px;
+      padding: 0 14px;
       font-size: 14px;
     }
 
-    .vendor-pager {
-      margin-top: 18px;
+    .search-vendor-pager .pager--search-inner .page {
+      min-width: 44px;
+      min-height: 44px;
+      font-size: 14px;
     }
   }
 </style>
 
 <?php if ($vendors && $vendors->getSize() > 0): ?>
-    <div id="vendors" class="vendor-results">
+    <div id="vendors" class="search-vendor-list">
         <?php foreach ($vendors as $vendor): ?>
             <?php
-            $vendorUrl = $this->getBaseUrl() . 'shop/v' . $vendor->getId();
-            $vendorName = $block->getVendorName($vendor);
-            $logo = $vendor->getData('upload_logo');
-            $mediaUrl = $logo ? $block->getUrl('pub/media/') . $logo : $placeholder;
+            $vendorId = (int) $vendor->getId();
+            $vendorUrl = $this->getBaseUrl() . 'shop/v' . $vendorId;
+            $vendorName = trim((string) $block->getVendorName($vendor));
+            $countryCode = trim((string) $vendor->getData('country_id'));
+            $countryName = $block->getCountryName($countryCode);
+            $countryFlag = $block->getCountryFlagUrl($countryCode);
+            $businessType = trim((string) $block->getBusinessTypeLabel($vendor));
+            $description = trim((string) $block->getBusinessDescriptions($vendor));
+            $websiteUrl = $block->getWebsiteUrl($vendor) ?: $vendorUrl;
+            $logo = trim((string) $vendor->getData('upload_logo'));
+            $mediaUrl = $logo
+                ? $block->getUrl('pub/media/') . ltrim($logo, '/')
+                : $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg');
+            $isVerified = $block->isVerifiedVendor($vendorId);
+            $isExternalWebsite = $websiteUrl !== $vendorUrl;
             ?>
 
-            <a class="vendor-card" href="<?= $block->escapeUrl($vendorUrl) ?>">
-                <span class="vendor-logo">
-                    <img src="<?= $block->escapeUrl($mediaUrl) ?>"
-                         alt="<?= $block->escapeHtmlAttr($vendorName) ?>">
-                </span>
+            <article class="search-vendor-card">
+                <div class="search-vendor-card__main">
+                    <a class="search-vendor-card__logo" href="<?= $block->escapeUrl($vendorUrl) ?>" aria-label="<?= $block->escapeHtmlAttr($vendorName) ?>">
+                        <img src="<?= $block->escapeUrl($mediaUrl) ?>"
+                             alt="<?= $block->escapeHtmlAttr($vendorName) ?>">
+                    </a>
 
-                <span class="vendor-name"><?= $block->escapeHtml($vendorName) ?></span>
-            </a>
+                    <div class="search-vendor-card__body">
+                        <div class="search-vendor-card__title-row">
+                            <a class="search-vendor-card__title-link"
+                               href="<?= $block->escapeUrl($vendorUrl) ?>">
+                                <?= $block->escapeHtml($vendorName) ?>
+                            </a>
+
+                            <?php if ($isVerified): ?>
+                                <span class="search-vendor-card__verified"
+                                      title="<?= $block->escapeHtmlAttr(__('Verified vendor')) ?>"
+                                      aria-label="<?= $block->escapeHtmlAttr(__('Verified vendor')) ?>">&#10003;</span>
+                            <?php endif; ?>
+                        </div>
+
+                        <?php if ($businessType !== ''): ?>
+                            <div class="search-vendor-card__subtitle">
+                                <?= $block->escapeHtml($businessType) ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($description !== ''): ?>
+                            <div class="search-vendor-card__description">
+                                <?= $block->escapeHtml($description) ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+
+                <div class="search-vendor-card__aside">
+                    <?php if ($countryName !== ''): ?>
+                        <div class="search-vendor-card__country">
+                            <?php if ($countryFlag !== ''): ?>
+                                <img class="search-vendor-card__flag"
+                                     src="<?= $block->escapeUrl($countryFlag) ?>"
+                                     alt="<?= $block->escapeHtmlAttr($countryName) ?>">
+                            <?php endif; ?>
+                            <span><?= $block->escapeHtml($countryName) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <a class="search-vendor-card__button"
+                       href="<?= $block->escapeUrl($websiteUrl) ?>"
+                       <?php if ($isExternalWebsite): ?>target="_blank" rel="noopener noreferrer"<?php endif; ?>>
+                        <?= $block->escapeHtml(__('Visit Website')) ?>
+                        <span aria-hidden="true">&#8599;</span>
+                    </a>
+                </div>
+            </article>
         <?php endforeach; ?>
 
-        <div class="vendor-pager">
+        <div class="search-vendor-pager">
             <?= $block->getPagerHtml(); ?>
         </div>
     </div>
 <?php else: ?>
-    <div class="vendor-empty">
+    <div class="search-vendor-empty">
         <p><?= $block->escapeHtml(__("We can't find vendors matching the selection.")) ?></p>
     </div>
 <?php endif; ?>

@@ -15,14 +15,8 @@
                     <arguments>
                         <argument name="template" xsi:type="string">Magento_Theme::html/pager.phtml</argument>
                     </arguments>
+                    </block>
                 </block>
-            </block>
-
-            <block class="Custom\SearchExtended\Block\Index\Vendors"
-                   name="search_filters"
-                   as="search_filters"
-                   template="Magento_CatalogSearch::custom-filters.phtml"
-                   cacheable="false" />
         </referenceBlock>
 
         <!-- Use a different reference to ensure the product block is always configured. -->

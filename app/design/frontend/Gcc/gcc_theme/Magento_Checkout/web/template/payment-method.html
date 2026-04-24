@@ -1,7 +1,6 @@
 <div class="payment-method rounded-xl border border-gray-200 bg-white overflow-hidden"
      data-bind="css: {'ring-2 ring-blue-100 border-blue-400': (isChecked() == getCode())}">
 
-  <!-- Title / Radio -->
   <div class="payment-method-title p-4 flex items-center gap-3 cursor-pointer"
        data-bind="click: selectPaymentMethod">
 
@@ -29,26 +28,34 @@
     </span>
   </div>
 
-  <!-- ✅ Only render details for the selected method -->
   <!-- ko if: (isChecked() == getCode()) -->
   <div class="payment-method-content border-t border-gray-100 p-4 space-y-4">
-    <!-- keep your existing inner regions/templates here as-is -->
-    <!-- (messages, form fields, billing-address, agreements, place order, etc.) -->
-    <!-- ko foreach: getRegion('messages') -->
-      <!-- ko template: getTemplate() --><!-- /ko -->
-    <!-- /ko -->
+    <div class="payment-method-content__block">
+      <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+      <!-- /ko -->
+    </div>
 
-    <!-- ko foreach: getRegion('billing-address') -->
-      <!-- ko template: getTemplate() --><!-- /ko -->
-    <!-- /ko -->
-
-    <!-- ko foreach: getRegion('before-place-order') -->
-      <!-- ko template: getTemplate() --><!-- /ko -->
-    <!-- /ko -->
-
-    <!-- Place Order button is usually already inside your template.
-         If it exists, just keep it; it will now show only once. -->
+    <div class="payment-method-content__block">
+      <!-- ko foreach: getRegion('before-place-order') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+      <!-- /ko -->
+    </div>
   </div>
   <!-- /ko -->
 
 </div>
+
+<!-- ko if: (isChecked() == getCode()) && regionHasElements('billing-address') -->
+<div class="billing-address-card">
+  <div class="billing-address-card__title">
+    <!-- ko i18n: 'Billing Address' --><!-- /ko -->
+  </div>
+
+  <div class="billing-address-card__body">
+    <!-- ko foreach: getRegion('billing-address') -->
+      <!-- ko template: getTemplate() --><!-- /ko -->
+    <!-- /ko -->
+  </div>
+</div>
+<!-- /ko -->

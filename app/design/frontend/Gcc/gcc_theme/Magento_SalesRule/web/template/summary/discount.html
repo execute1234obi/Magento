@@ -1,0 +1,11 @@
+<!-- ko if: isDisplayed() -->
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span>
+        <span data-bind="text: getTitle()"></span>
+        <!-- ko if: getCouponCode() -->
+        <span class="text-xs text-gray-500 ml-1" data-bind="text: getCouponCode()"></span>
+        <!-- /ko -->
+    </span>
+    <span data-bind="text: getValue()"></span>
+</div>
+<!-- /ko -->
