@@ -4,6 +4,11 @@
     <body>
         <referenceContainer name="after.body.start">
             <block class="Magento\Framework\View\Element\Template"
+                   name="custom.autocomplete.product.compact"
+                   template="Mirasvit_SearchAutocomplete::autocomplete/product_compact.phtml"
+                   before="-"/>
+
+            <block class="Magento\Framework\View\Element\Template"
                    name="custom.autocomplete.vendors"
                    template="Mirasvit_SearchAutocomplete::autocomplete/vendors_custom.phtml"/>
         </referenceContainer>

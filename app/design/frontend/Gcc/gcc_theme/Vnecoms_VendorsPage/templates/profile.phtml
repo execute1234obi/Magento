@@ -28,7 +28,6 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
 $logoPath = $vendor->getData('upload_logo');
 $logoUrl = $logoPath ? $mediaUrl . $logoPath : '';
-$varify =$mediaUrl."wysiwyg/VerificationBadgeIcon.png";
 function showData($data) {
     return $data ? htmlspecialchars($data) : '-';
 }
@@ -169,7 +168,7 @@ $certificatePath = $vendor->getData('certificate');
     display: flex;
     flex-wrap: wrap;
     gap: 50px;
-    border-bottom: 1px solid #DBEAFE;
+    border-bottom: 1px solid #e5e7eb;
     margin: 0 5%;
   }
 
@@ -177,13 +176,13 @@ $certificatePath = $vendor->getData('certificate');
     padding: 12px 0;
     text-decoration: none;
     font-size: 15px;
-    color: #1E40AF;
+    color: #1A3764;
     position: relative;
     cursor: pointer;
   }
 
   .tabs a.active {
-    color: #1E40AF;
+    color: #1A3764;
     font-weight: bold;
   }
 
@@ -194,7 +193,7 @@ $certificatePath = $vendor->getData('certificate');
     bottom: -1px;
     width: 100%;
     height: 2px;
-    background: #1E40AF;
+    background: #1A3764;
   }
 
   .content {
@@ -293,7 +292,7 @@ $certificatePath = $vendor->getData('certificate');
   /* Card */
   .u-card {
     background: #fff;
-    border: 1px solid #e6edf7;
+    border: 1px solid #e5e7eb;
     border-radius: 14px;
     padding: 16px;
     position: relative;
@@ -308,7 +307,7 @@ $certificatePath = $vendor->getData('certificate');
   .u-imgbox{
     position: relative;
     border-radius: 12px;
-    background:#f6f8ff;
+    background:#f8fafc;
     height: 170px;
     display:flex; align-items:center; justify-content:center;
     overflow: hidden;
@@ -325,8 +324,8 @@ $certificatePath = $vendor->getData('certificate');
   .u-fav{
     position:absolute; top:10px; right:10px;
     width:36px; height:36px; border-radius:10px;
-    background:#fff; border:1px solid #e6edf7;
-    display:grid; place-items:center; color:#5b8bff; cursor:pointer;
+    background:#fff; border:1px solid #e5e7eb;
+    display:grid; place-items:center; color:#1A3764; cursor:pointer;
     box-shadow:0 2px 8px rgba(16,24,40,.06);
      /* ✨ ensures it stays clickable above image/product link */
   z-index: 2;
@@ -350,7 +349,13 @@ $certificatePath = $vendor->getData('certificate');
   }
   .u-verified{
     display:inline-flex; align-items:center; justify-content:center;
-    width:18px; height:18px; border-radius:999px; background:#eaf2ff; color:#2d62f0;
+    width:18px; height:18px; border-radius:999px; color:#1A3764;
+  }
+  .u-verified svg,
+  .brand-title .verified svg {
+    width: 100%;
+    height: 100%;
+    display: block;
   }
   .u-country{
     display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:14px;
@@ -362,11 +367,11 @@ $certificatePath = $vendor->getData('certificate');
   .u-cta{
     margin-top: 16px;
     width:100%; height:48px; border-radius:12px;
-    border:1px solid #2d62f0; background:#fff; color:#2d62f0;
+    border:1px solid #1A3764; background:#fff; color:#1A3764;
     font-weight:600; font-size:16px; cursor:pointer;
     transition: background .15s ease, color .15s ease, box-shadow .15s ease;
   }
-  .u-cta:hover{ background:#f2f6ff; box-shadow:0 2px 8px rgba(45,98,240,.15); }
+  .u-cta:hover{ background:#f8fafc; box-shadow:0 2px 8px rgba(26,55,100,.12); }
   /* Pagination */
 .u-pagination{
   display:flex; align-items:center; justify-content:center; gap:8px;
@@ -376,14 +381,14 @@ $certificatePath = $vendor->getData('certificate');
 .u-pagination .u-page{
   min-width:40px; height:40px; padding:0 10px;
   display:inline-flex; align-items:center; justify-content:center;
-  border:1px solid #e6edf7; background:#fff; color:#1E40AF;
+  border:1px solid #d7dee9; background:#fff; color:#1A3764;
   font-weight:600; border-radius:12px; text-decoration:none;
   box-shadow:0 1px 0 rgba(16,24,40,.02);
   transition: box-shadow .18s ease, transform .18s ease, background .15s ease, color .15s ease;
 }
-.u-pagination .u-page:hover{ box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-1px); background:#f2f6ff; }
+.u-pagination .u-page:hover{ box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-1px); background:#f8fafc; }
 .u-pagination .u-page.is-active{
-  background:#1E40AF; color:#fff; border-color:#1E40AF; cursor:default; transform:none; box-shadow:none;
+  background:#1A3764; color:#fff; border-color:#1A3764; cursor:default; transform:none; box-shadow:none;
 }
 .u-pagination .u-page.is-disabled{
   opacity:.45; pointer-events:none; background:#f7f8fc; color:#9aa4b2; border-color:#eef2f7;
@@ -392,7 +397,7 @@ $certificatePath = $vendor->getData('certificate');
 @media (max-width:480px){
   .u-pagination .u-page{ min-width:36px; height:36px; border-radius:10px; }
 }
-/* Title row: brand + blue check */
+/* Title row: brand badge */
 .brand-title{
   display:flex;
   align-items:center;
@@ -421,17 +426,17 @@ $certificatePath = $vendor->getData('certificate');
   display: inline-block;
   padding: 8px 0 6px;     /* was 12px 0 – brings the text down closer to the underline */
   font-size: 15px;
-  color: #1E40AF;
+  color: #1A3764;
   cursor: pointer;
 }
 
 /* inactive look */
 .tab-link:not(.active){
-  color:#1f3ea6;                    /* same blue but lighter weight only */
+  color:#475467;
   font-weight:00;
 }
 
-/* ACTIVE: bold + short blue underline sitting on the baseline */
+/* ACTIVE: bold + short brand underline sitting on the baseline */
 .tab-link.active{
   font-weight:700;
   transform: translateY(-2px);   /* gives that slightly “higher” look */
@@ -442,10 +447,10 @@ $certificatePath = $vendor->getData('certificate');
   content:"";
   position:absolute;
   left:0;
-  bottom:-3px;            /* was -12px – moves the blue line up, nearer to the text */
+  bottom:-3px;            /* was -12px – moves the underline up, nearer to the text */
   height:3px;
   width:0;
-  background:#1f3ea6;
+  background:#1A3764;
   border-radius:2px;
   transition: width .2s ease;
 }
@@ -470,8 +475,8 @@ $certificatePath = $vendor->getData('certificate');
   height:1.4em;
   padding:0 .4em;
   border-radius:.5em;        /* pill/rounded square */
-  background:#eaf1ff;        /* light blue */
-  color:#3b63ea;             /* medium blue text */
+  background:#eef2f7;
+  color:#1A3764;
   font: 300 12px/1 system-ui, -apple-system, "Segoe UI", Roboto, Inter, Arial, sans-serif;
   vertical-align:middle;
 }
@@ -548,7 +553,10 @@ $finalBannerUrl = (!empty($bannerUrl)) ? $bannerUrl : "https://placehold.co/1200
     if ($verificationBlock):
     $isVerified = $verificationBlock->isVendorVerified($vendorId);
     if ($isVerified): ?>
-            <img class="verified" src="<?= $block->escapeUrl($varify); ?>" alt="Verified">
+            <svg class="verified" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                <circle cx="10" cy="10" r="10" fill="#1A3764"></circle>
+                <path d="M8.2 12.9 5.9 10.6l-1.1 1.1 3.4 3.4 6-6-1.1-1.1z" fill="#fff"></path>
+            </svg>
         <?php else: ?>
             <?php endif; 
     else: ?>
@@ -689,7 +697,7 @@ $totalPages    = ceil($totalProducts / $pageSize);
     <div class="flex justify-center mt-6 space-x-2">
         <?php for ($i = 1; $i <= $totalPages; $i++): ?>
             <a href="<?= $block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true, '_query' => ['p' => $i]]) ?>"
-               class="px-3 py-1 rounded <?= $i == $currentPage ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700' ?>">
+               class="px-3 py-1 rounded <?= $i == $currentPage ? 'bg-[#1A3764] text-white' : 'bg-gray-200 text-gray-700' ?>">
                 <?= $i ?>
             </a>
         <?php endfor; ?>
