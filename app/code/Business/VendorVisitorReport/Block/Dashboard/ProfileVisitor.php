@@ -38,11 +38,12 @@ $vendorId = (int)$vendor->getId();
 
 
         $connection = $this->resource->getConnection();
-        $table = $this->resource->getTableName('business_vendor_profile_visitor');
-
+        //$table = $this->resource->getTableName('business_vendor_profile_visitor');
+        $table = $this->resource->getTableName('business_vendor_mostview_aggregated');
         $select = $connection->select()
-            ->from($table, ['total' => 'COUNT(*)'])
-            ->where('vendor_id = ?', $vendorId);
+    ->from($table, ['total_views' => 'SUM(views_num)'])
+    ->where('vendor_id = ?', $vendorId);
+
         // DEBUG: SQL dekhna ho to
         //echo $select->__toString(); die();
 

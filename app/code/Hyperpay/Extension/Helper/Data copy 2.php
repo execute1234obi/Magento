@@ -262,6 +262,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $firstNameShipping = $order->getShippingAddress()->getFirstname();
             $surNameShipping = $order->getShippingAddress()->getLastname();
             $countryShipping = $order->getShippingAddress()->getCountryId();
+            //by vru for testing
+            if ($this->_adapter->getEnv()) {
+                $countryShipping = 'SA';
+            }
             $telShipping = $order->getShippingAddress()->getTelephone();
             $postCodeShipping = $order->getShippingAddress()->getPostcode();
             $streetShipping = $order->getShippingAddress()->getStreet();
@@ -298,6 +302,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $firsName = $order->getBillingAddress()->getFirstname();
         $surName = $order->getBillingAddress()->getLastname();
         $country = $order->getBillingAddress()->getCountryId();
+        // 🔥 FORCE SA FOR SANDBOX (3DS FIX) by vru
+        if ($this->_adapter->getEnv()) {
+            $country = 'SA';
+        }
         $tel = $order->getBillingAddress()->getTelephone();
         $postCode = $order->getBillingAddress()->getPostcode();
         $street = $order->getBillingAddress()->getStreet();
@@ -333,8 +341,10 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($streetCompare) == false)) {
             $data .= $this->getStreetAddresses($street, "billing");
         }
-
-
+        //by vru for testing
+        $data .= "&shopperResultUrl=" . $this->_storeManager->getStore()->getBaseUrl() . "hyperpay/index/status";
+        $data .= "&testMode=EXTERNAL";
+        $data .= "&billing.state=Riyadh";
         return $data;
     }
 
@@ -384,7 +394,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         $params = $this->replaceArrayKeys($params);
 
         // 👇 DEBUG
-//$this->_logger->info('HYPERPAY POST DATA: ' . print_r($params, true));
+        $this->_logger->info('HYPERPAY POST DATA: ' . print_r($params, true));
         $this->_curlClient->post($url, $params);
         $response = $this->_curlClient->getBody();
         

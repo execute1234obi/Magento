@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <script src="Custom_VendorMap::js/vendor-map.js"/>
-    </head>
+   <head>
+    <!-- <script async="true" defer="true"
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9cdgF-qaAWQEglnvwMq-N3sIvqiQB-Kk&amp;libraries=places&amp;callback=initVendorMap"/>
+    <script src="Custom_VendorMap::js/vendor-map.js"/> -->
+</head>
 </page>

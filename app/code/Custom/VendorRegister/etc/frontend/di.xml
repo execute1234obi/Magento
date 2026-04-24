@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!-- Custom Vendor Register Plugin -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <type name="Vnecoms\Vendors\Controller\Seller\RegisterPost">
+        <plugin name="custom_vendor_map_save"
+                type="Custom\VendorRegister\Plugin\RegisterPostPlugin"
+                sortOrder="10"/>
+    </type>
+
+</config>

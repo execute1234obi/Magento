@@ -1,65 +1,79 @@
-require([
-    'jquery',
-    'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places'
-], function ($) {
+// require([
+//     'jquery'
+// ], function ($) {
 
-    $(document).ready(function () {
+//     $(document).ready(function () {
 
-        setTimeout(function () {
+//        window.initVendorMap = function () {
 
-            var $input = $('#vendor_map');
-            if (!$input.length) {
-                console.log('Vendor map field not found');
-                return;
-            }
+//     console.log('Google Map Init Called');
 
-            if ($('#vendor-google-map').length) {
-                return;
-            }
+//     var input = document.getElementById('vendor_map');
 
-            var mapDiv = $('<div id="vendor-google-map" style="height:300px;margin-top:10px;border:1px solid #ccc;"></div>');
-            $input.after(mapDiv);
+//     if (!input) {
+//         console.log('Input not found');
+//         return;
+//     }
 
-            var defaultLocation = { lat: 28.6139, lng: 77.2090 };
+//     // prevent duplicate map
+//     if (document.getElementById('vendor-google-map')) {
+//         return;
+//     }
 
-            var map = new google.maps.Map(document.getElementById('vendor-google-map'), {
-                center: defaultLocation,
-                zoom: 10
-            });
+//     var mapDiv = document.createElement('div');
+//     mapDiv.id = 'vendor-google-map';
+//     mapDiv.style.height = '300px';
+//     mapDiv.style.marginTop = '10px';
+//     mapDiv.style.border = '1px solid #ccc';
 
-            var marker = new google.maps.Marker({
-                map: map,
-                position: defaultLocation,
-                draggable: true
-            });
+//     input.parentNode.appendChild(mapDiv);
 
-            var autocomplete = new google.maps.places.Autocomplete($input[0]);
+//     var defaultLocation = { lat: 28.6139, lng: 77.2090 };
 
-            autocomplete.addListener('place_changed', function () {
-                var place = autocomplete.getPlace();
-                if (!place.geometry) return;
+//     var map = new google.maps.Map(mapDiv, {
+//         center: defaultLocation,
+//         zoom: 10
+//     });
 
-                map.setCenter(place.geometry.location);
-                marker.setPosition(place.geometry.location);
+//     var marker = new google.maps.Marker({
+//         position: defaultLocation,
+//         map: map,
+//         draggable: true
+//     });
 
-                $input.val(
-                    place.formatted_address +
-                    ' | ' +
-                    place.geometry.location.lat() +
-                    ',' +
-                    place.geometry.location.lng()
-                );
-            });
+//     var autocomplete = new google.maps.places.Autocomplete(input);
 
-            marker.addListener('dragend', function () {
-                $input.val(
-                    marker.getPosition().lat() +
-                    ',' +
-                    marker.getPosition().lng()
-                );
-            });
+//     autocomplete.addListener('place_changed', function () {
+//         var place = autocomplete.getPlace();
 
-        }, 1000);
+//         if (!place.geometry) return;
 
-    });
-});
+//         map.setCenter(place.geometry.location);
+//         marker.setPosition(place.geometry.location);
+
+//         input.value =
+//             place.formatted_address +
+//             ' | ' +
+//             place.geometry.location.lat() +
+//             ',' +
+//             place.geometry.location.lng();
+//     });
+
+//     marker.addListener('dragend', function () {
+//         input.value =
+//             marker.getPosition().lat() +
+//             ',' +
+//             marker.getPosition().lng();
+//     });
+// };
+
+//         // wait until google loads
+//         var interval = setInterval(function () {
+//             if (typeof google !== 'undefined') {
+//                 clearInterval(interval);
+//                 initVendorMap();
+//             }
+//         }, 500);
+
+//     });
+// });
