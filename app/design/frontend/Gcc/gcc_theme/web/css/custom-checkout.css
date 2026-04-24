@@ -278,6 +278,7 @@ body.checkout-index-index {
     justify-content: space-between;
     gap: 12px;
     padding: 22px 24px 18px;
+    background: #f8fafc;
     border-bottom: 1px solid #e2e8f0;
 }
 
@@ -316,6 +317,167 @@ body.checkout-index-index {
     flex-direction: column;
     gap: 12px;
     min-width: 0;
+}
+
+/* ---------------------------------------------------- */
+/* CHECKOUT ITEMS LIST */
+/* ---------------------------------------------------- */
+.checkout-index-index .checkout-items-list-wrap {
+    min-width: 0;
+    width: 100%;
+}
+
+.checkout-index-index .checkout-items-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-index-index .checkout-items-list__item {
+    margin: 0;
+    padding: 0 0 18px;
+    border-bottom: 1px solid #e5ebf5;
+}
+
+.checkout-index-index .checkout-items-list__item:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.checkout-index-index .checkout-item-row {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: start;
+    min-width: 0;
+}
+
+.checkout-index-index .checkout-item__thumbnail {
+    width: 72px !important;
+    height: 72px !important;
+    flex: 0 0 72px;
+    border: 1px solid #e1e8f4;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout-index-index .checkout-item__thumbnail .product-image-container {
+    width: 72px !important;
+    height: 72px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout-index-index .checkout-item__thumbnail .product-image-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.checkout-index-index .checkout-item__thumbnail img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+}
+
+.checkout-index-index .checkout-item__details {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 2px;
+}
+
+.checkout-index-index .checkout-item__title {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.35;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.checkout-index-index .checkout-item__description {
+    font-size: 0.92rem;
+    line-height: 1.45;
+    color: #64748b;
+}
+
+.checkout-index-index .checkout-item__qty {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.78rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #64748b;
+}
+
+.checkout-index-index .checkout-item__qty .label {
+    margin: 0;
+    font-weight: 700;
+}
+
+.checkout-index-index .checkout-item__qty .value {
+    color: #0f172a;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+.checkout-index-index .checkout-item__subtotal {
+    padding-top: 2px;
+    white-space: nowrap;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    color: #17326f;
+    font-size: 0.98rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.checkout-index-index .checkout-item__subtotal .subtotal {
+    color: inherit;
+    font: inherit;
+}
+
+.checkout-index-index .checkout-item__options {
+    margin-top: 2px;
+}
+
+.checkout-index-index .checkout-item__options .toggle,
+.checkout-index-index .checkout-item__options .subtitle {
+    font-size: 0.85rem;
+}
+
+@media (max-width: 767px) {
+    .checkout-index-index .checkout-item-row {
+        grid-template-columns: 68px minmax(0, 1fr);
+        gap: 14px;
+    }
+
+    .checkout-index-index .checkout-item__thumbnail,
+    .checkout-index-index .checkout-item__thumbnail .product-image-container {
+        width: 68px !important;
+        height: 68px !important;
+    }
+
+    .checkout-index-index .checkout-item__subtotal {
+        grid-column: 2;
+        justify-self: end;
+        padding-top: 0;
+    }
 }
 
 .checkout-index-index .billing-address-card {
