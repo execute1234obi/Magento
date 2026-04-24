@@ -1,0 +1,45 @@
+<!-- ko if: ifShowValue() && !ifShowDetails() -->
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span data-bind="text: title"></span>
+    <span>
+        <!-- ko if: isCalculated() -->
+        <span data-bind="text: getValue()"></span>
+        <!-- /ko -->
+        <!-- ko ifnot: isCalculated() -->
+        <span data-bind="text: getValue()"></span>
+        <!-- /ko -->
+    </span>
+</div>
+<!-- /ko -->
+<!-- ko if: ifShowValue() && ifShowDetails() -->
+<div class="flex justify-between items-center text-sm text-gray-700 cursor-pointer"
+     data-bind="mageInit: {'toggleAdvanced':{'selectorsToggleClass': 'shown', 'baseToggleClass': 'expanded', 'toggleContainers': '.totals-tax-details'}}">
+    <span data-bind="text: title"></span>
+    <span>
+        <!-- ko if: isCalculated() -->
+        <span data-bind="text: getValue()"></span>
+        <!-- /ko -->
+        <!-- ko ifnot: isCalculated() -->
+        <span data-bind="text: getValue()"></span>
+        <!-- /ko -->
+    </span>
+</div>
+<!-- ko foreach: getDetails() -->
+    <!-- ko foreach: rates -->
+    <div class="flex justify-between items-center text-xs text-gray-500 pl-2 totals-tax-details">
+        <!-- ko if: percent -->
+        <span data-bind="text: title + ' (' + percent + '%)'"></span>
+        <!-- /ko -->
+        <!-- ko if: !percent -->
+        <span data-bind="text: title"></span>
+        <!-- /ko -->
+        <!-- ko if: $parents[1].isCalculated() -->
+        <span data-bind="text: $parents[1].getTaxAmount($parents[0], percent)"></span>
+        <!-- /ko -->
+        <!-- ko ifnot: $parents[1].isCalculated() -->
+        <span data-bind="text: $parents[1].getTaxAmount($parents[0], percent)"></span>
+        <!-- /ko -->
+    </div>
+    <!-- /ko -->
+<!-- /ko -->
+<!-- /ko -->

@@ -117,11 +117,6 @@ body.vendorsmembership-index-index .column.main {
     display: none !important;
 }
 
-.opc-wrapper {
-
-    width: 50% !important;
-
-}
         .opc-progress-bar {
             margin: 0 0 20px;
             counter-reset: i;

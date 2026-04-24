@@ -1,0 +1,22 @@
+<!-- ko if: isTaxDisplayedInGrandTotal && isDisplayed() -->
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span data-bind="i18n: inclTaxLabel"></span>
+    <span class="font-medium" data-bind="text: getValue()"></span>
+</div>
+<div class="flex justify-between items-center text-sm text-gray-700">
+    <span data-bind="i18n: exclTaxLabel"></span>
+    <span class="font-medium" data-bind="text: getGrandTotalExclTax()"></span>
+</div>
+<!-- /ko -->
+<!-- ko if: !isTaxDisplayedInGrandTotal && isDisplayed() -->
+<div class="border-t border-dashed pt-3 mt-1 flex justify-between items-center">
+    <span class="font-bold text-base" data-bind="i18n: title"></span>
+    <span class="font-bold text-base" data-bind="text: getValue()"></span>
+</div>
+<!-- /ko -->
+<!-- ko if: isBaseGrandTotalDisplayNeeded() && isDisplayed() -->
+<div class="flex justify-between items-center text-sm text-gray-500">
+    <span data-bind="i18n: basicCurrencyMessage"></span>
+    <span data-bind="text: getBaseValue()"></span>
+</div>
+<!-- /ko -->
