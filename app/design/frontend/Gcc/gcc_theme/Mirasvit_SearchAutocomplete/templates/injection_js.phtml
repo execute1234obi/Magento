@@ -1,0 +1,208 @@
+<?php
+declare(strict_types=1);
+
+use Mirasvit\Core\Service\CspService;
+use Mirasvit\SearchAutocomplete\Block\Injection;
+use Mirasvit\SearchAutocomplete\Model\ConfigProvider;
+
+/**
+ * @var Injection $block
+ */
+
+$config = $block->getJsConfig();
+$nonce  = CspService::getNonce();
+?>
+<?php if ($block->getAutocompleteLayout() == ConfigProvider::LAYOUT_IN_PAGE): ?>
+    <?php
+    $templates = [
+        'Mirasvit_SearchAutocomplete::in-page/page.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/pagination.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/sorter.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/itemList.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/indexList.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/sidebar.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/stat.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/searchBar.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/magento_catalog_product.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/magento_catalog_category.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/magento_cms_page.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/mirasvit_blog_post.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/mirasvit_brand_page.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/mirasvit_kb_article.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/magefan_blog_post.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/magento_catalog_attribute.phtml',
+        'Mirasvit_SearchAutocomplete::in-page/index/magento_search_query.phtml',
+    ]
+    ?>
+    <?php foreach ($templates as $template): ?>
+        <?= /* @noEscape */ $block->getTemplateScript($template) ?>
+    <?php endforeach ?>
+
+    <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        require([
+                'jquery',
+                'underscore',
+                'Mirasvit_SearchAutocomplete/js/in-page'
+            ], function ($, _, InPage) {
+                const selector = 'input#search, input#mobile_search, .minisearch input[type="text"]';
+
+                $(document).ready(function () {
+                    $('#search_mini_form').prop("minSearchLength", 10000);
+
+                    const $input = $(selector);
+                    const config = <?= /* @noEscape */ $block->jsonEncode($config)?>;
+                    let inPage;
+                    $input.each(function (index, searchInput) {
+                        inPage = new InPage($(searchInput), config);
+
+                        _.delay(() => {
+                            if (
+                                config.isKeepLastSearchRequest
+                                && window.performance
+                                && (window.performance.navigation.type === window.performance.navigation.TYPE_BACK_FORWARD)
+                                && localStorage.getItem(config.localStorageFields.isRestorePrevRequestFlag)
+                            ) {
+                                inPage.restorePrevSearch();
+                                localStorage.setItem(config.localStorageFields.prevRequestField, "");
+                                localStorage.setItem(config.localStorageFields.isRestorePrevRequestFlag, "");
+                            }
+                        }, 10)
+                    });
+                });
+            }
+        );
+    </script>
+<?php else: ?>
+    <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+        require([
+                'jquery',
+                'Mirasvit_SearchAutocomplete/js/autocomplete',
+                'Mirasvit_SearchAutocomplete/js/typeahead'
+            ], function ($, autocomplete, typeahead) {
+                const selector = 'input#search, input#mobile_search, .minisearch input[type="text"]';
+
+                function applyLoadingState(instance, isLoading) {
+                    if (!instance) {
+                        return;
+                    }
+
+                    instance.loading = Boolean(isLoading);
+
+                    if (instance.model && typeof instance.model.loading === 'function') {
+                        instance.model.loading(instance.loading);
+                    }
+
+                    if (instance.$placeholder) {
+                        const $placeholder = instance.$placeholder();
+
+                        if ($placeholder && $placeholder.length) {
+                            $placeholder.toggleClass('_loading', instance.loading);
+                        }
+                    }
+
+                    if (instance.$spinner) {
+                        const $spinner = instance.$spinner();
+
+                        if ($spinner && $spinner.length) {
+                            $spinner.stop(true, true);
+                            $spinner.toggle(instance.loading);
+                        }
+                    }
+
+                    if (instance.$input && instance.$input.length) {
+                        instance.$input.attr('aria-busy', instance.loading ? 'true' : 'false');
+                    }
+                }
+
+                if (!autocomplete.prototype.__gccLoaderPatched) {
+                    autocomplete.prototype.__gccLoaderPatched = true;
+
+                    const originalInit = autocomplete.prototype.init;
+                    autocomplete.prototype.init = function (config) {
+                        const result = originalInit.apply(this, arguments);
+                        applyLoadingState(this, false);
+                        return result;
+                    };
+
+                    const originalSearch = autocomplete.prototype.search;
+                    autocomplete.prototype.search = function () {
+                        const shouldLoad = this.$input.val().length >= this.config.minSearchLength;
+
+                        if (shouldLoad) {
+                            this.setActiveState(true);
+                        }
+
+                        applyLoadingState(this, shouldLoad);
+
+                        const result = originalSearch.apply(this, arguments);
+
+                        if (!shouldLoad) {
+                            applyLoadingState(this, false);
+                        }
+
+                        return result;
+                    };
+
+                    const originalDoPopular = autocomplete.prototype.doPopular;
+                    autocomplete.prototype.doPopular = function () {
+                        applyLoadingState(this, false);
+                        return originalDoPopular.apply(this, arguments);
+                    };
+
+                    const originalSetActiveState = autocomplete.prototype.setActiveState;
+                    autocomplete.prototype.setActiveState = function (isActive) {
+                        if (!isActive) {
+                            applyLoadingState(this, false);
+                        }
+
+                        return originalSetActiveState.apply(this, arguments);
+                    };
+
+                    const originalDoSearch = autocomplete.prototype._doSearch;
+                    autocomplete.prototype._doSearch = function (query) {
+                        const response = originalDoSearch.apply(this, arguments);
+                        const currentXhr = this.xhr;
+
+                        if (currentXhr && typeof currentXhr.always === 'function') {
+                            currentXhr.always(function () {
+                                if (this.xhr === currentXhr) {
+                                    applyLoadingState(this, false);
+                                }
+                            }.bind(this));
+                        } else {
+                            applyLoadingState(this, false);
+                        }
+
+                        return response;
+                    };
+
+                    const originalProcessApplyBinding = autocomplete.prototype.processApplyBinding;
+                    autocomplete.prototype.processApplyBinding = function (data) {
+                        const response = originalProcessApplyBinding.apply(this, arguments);
+                        applyLoadingState(this, false);
+                        return response;
+                    };
+                }
+
+                $(document).ready(function () {
+                    $('#search_mini_form').prop("minSearchLength", 10000);
+
+                    const $input = $(selector);
+
+                    $input.each(function (index, searchInput) {
+                        <?php if ($config['isTypeaheadEnabled']): ?>
+                        new typeahead($(searchInput)).init(<?= /* @noEscape */ $block->jsonEncode($config)?>);
+                        <?php endif ?>
+                        new autocomplete($(searchInput)).init(<?= /* @noEscape */ $block->jsonEncode($config)?>);
+                    });
+                });
+            }
+        );
+    </script>
+
+    <?= /* @noEscape */ $block->fetchView($block->getTemplateFile('Mirasvit_SearchAutocomplete::injection_templates.phtml')) ?>
+<?php endif ?>
+
+<?php if ($block->getCssStyles() != ''): ?>
+    <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>><?= $block->escapeHtml($block->getCssStyles()) ?></style>
+<?php endif ?>

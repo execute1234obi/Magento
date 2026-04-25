@@ -7,6 +7,54 @@
     overflow: hidden;
   }
 
+  .mst-searchautocomplete__autocomplete._loading {
+    cursor: progress;
+  }
+
+  .mst-searchautocomplete__autocomplete._loading::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(1px);
+    z-index: 5;
+  }
+
+  .mst-searchautocomplete__autocomplete._loading::after {
+    content: 'Searching...';
+    position: absolute;
+    left: 50%;
+    top: calc(50% + 22px);
+    transform: translateX(-50%);
+    color: #1f3f75;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 7;
+  }
+
+  .mst-searchautocomplete__autocomplete._loading .mst-searchautocomplete__spinner {
+    display: block !important;
+    position: absolute;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translate(-50%, -50%) scale(1.35);
+    width: 28px;
+    height: 28px;
+    margin: 0;
+    z-index: 6;
+  }
+
+  .mst-searchautocomplete__autocomplete._loading .mst-searchautocomplete__spinner .spinner-item {
+    width: 28px;
+    height: 28px;
+    border-width: 3px;
+    border-color: #1f3f75 transparent transparent transparent;
+  }
+
   .mst-searchautocomplete__autocomplete .mst-searchautocomplete__wrapper {
     display: flex;
     flex-direction: column;
