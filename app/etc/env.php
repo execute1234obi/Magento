@@ -83,20 +83,20 @@ return [
         'date' => 'Thu, 17 Jul 2025 18:22:04 +0000'
     ],
     'elasticsearch' => [
-        'host' => 'magento_es',
+        'host' => 'localhost',
         'port' => '9200',
         'enable_auth' => '0',
         'index_prefix' => 'magento2',
         'enable_snapshot' => '0',
         'indexer' => [
-            'catalogsearch' => 'elasticsearch7'
+            'catalogsearch' => 'elasticsearch8'
         ]
     ],
     'search' => [
-        'engine' => 'elasticsearch7',
-        'elasticsearch7_server_hostname' => 'magento_es',
-        'elasticsearch7_server_port' => 9200,
-        'elasticsearch7_index_prefix' => 'magento2',
-        'elasticsearch7_enable_auth' => false
+        'engine' => 'elasticsearch8',
+        'elasticsearch8_server_hostname' => 'localhost',
+        'elasticsearch8_server_port' => 9200,
+        'elasticsearch8_index_prefix' => 'magento2',
+        'elasticsearch8_enable_auth' => false
     ]
 ];
