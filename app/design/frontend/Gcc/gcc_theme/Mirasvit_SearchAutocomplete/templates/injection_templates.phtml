@@ -1,0 +1,437 @@
+<style>
+  .mst-searchautocomplete__autocomplete {
+    border-top: 0;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.12);
+    overflow: hidden;
+  }
+
+  .mst-searchautocomplete__autocomplete .mst-searchautocomplete__wrapper {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    max-height: 70vh;
+    min-width: 0;
+  }
+
+  .mst-searchautocomplete__autocomplete .mst-searchautocomplete__results {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden !important;
+  }
+
+  .search-autocomplete-panel__scroll {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(31, 63, 117, 0.34) transparent;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .search-autocomplete-panel__scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .search-autocomplete-panel__scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .search-autocomplete-panel__scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(31, 63, 117, 0.30), rgba(31, 63, 117, 0.58));
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    min-height: 34px;
+  }
+
+  .search-autocomplete-panel__scroll::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(31, 63, 117, 0.42), rgba(31, 63, 117, 0.72));
+  }
+
+  .search-autocomplete-panel__section + .search-autocomplete-panel__section {
+    border-top: 1px solid #e9edf5;
+  }
+
+  .search-autocomplete-panel__section-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 16px;
+    background: #f7f9fc;
+    border-bottom: 1px solid #e5eaf2;
+  }
+
+  .search-autocomplete-panel__section-title {
+    color: #68778f;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+
+  .search-autocomplete-panel__section-count {
+    min-width: 0;
+    color: #1f3f75;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.3;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .search-autocomplete-panel__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .search-autocomplete-panel__item {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid #edf1f7;
+  }
+
+  .search-autocomplete-panel__item:first-child {
+    border-top: 0;
+  }
+
+  .search-autocomplete-panel__row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 12px 16px;
+    color: inherit;
+    text-decoration: none;
+    background: #ffffff;
+    transition: background-color 0.18s ease;
+  }
+
+  .search-autocomplete-panel__row:hover,
+  .mst-searchautocomplete__item._active .search-autocomplete-panel__row {
+    background: #f8fbff;
+  }
+
+  .search-autocomplete-panel__thumb {
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #e3e8f2;
+    border-radius: 9px;
+    background: #ffffff;
+  }
+
+  .search-autocomplete-panel__thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .search-autocomplete-panel__content {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .search-autocomplete-panel__title {
+    color: #1d3362;
+    font-size: 14.5px;
+    font-weight: 700;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-autocomplete-panel__subtitle {
+    color: #728096;
+    font-size: 12.5px;
+    line-height: 1.25;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-autocomplete-panel__badge {
+    flex: 0 0 auto;
+    margin-left: auto;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: #1f4c92;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    line-height: 1;
+    box-shadow: 0 8px 18px rgba(31, 76, 146, 0.22);
+  }
+
+  .search-autocomplete-panel__simple-link {
+    display: block;
+    min-width: 0;
+    flex: 1 1 auto;
+    padding: 0;
+    color: #1d3362;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.25;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .search-autocomplete-panel__simple-meta {
+    display: inline-block;
+    margin-left: auto;
+    color: #728096;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .search-autocomplete-panel__simple-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    padding: 14px 16px;
+    background: #ffffff;
+    transition: background-color 0.18s ease;
+  }
+
+  .search-autocomplete-panel__simple-row:hover,
+  .mst-searchautocomplete__item._active .search-autocomplete-panel__simple-row {
+    background: #f8fbff;
+  }
+
+  .mst-searchautocomplete__show-all.search-autocomplete-panel__show-all {
+    flex: 0 0 auto;
+    position: relative;
+    bottom: auto;
+    left: auto;
+    width: 100%;
+    height: auto;
+    border-top: 1px solid #e5eaf2;
+    background: #f7f9fc;
+  }
+
+  .mst-searchautocomplete__show-all.search-autocomplete-panel__show-all a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: 50px;
+    padding: 10px 16px;
+    color: #1f3f75;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.18s ease;
+  }
+
+  .mst-searchautocomplete__show-all.search-autocomplete-panel__show-all a:hover {
+    background: #edf3fb;
+  }
+
+  .search-autocomplete-panel__show-all-prefix,
+  .search-autocomplete-panel__show-all-text {
+    color: inherit;
+  }
+
+  .search-autocomplete-panel__show-all-count,
+  .search-autocomplete-panel__show-all-query {
+    color: inherit;
+    font-weight: 800;
+  }
+
+  .search-autocomplete-panel__empty-result {
+    padding: 18px 16px;
+    color: #728096;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 768px) {
+    .mst-searchautocomplete__autocomplete {
+      border-radius: 14px;
+    }
+
+    .search-autocomplete-panel__section-header {
+      padding: 11px 14px;
+      gap: 12px;
+    }
+
+    .search-autocomplete-panel__row,
+    .search-autocomplete-panel__simple-link {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+
+    .search-autocomplete-panel__row {
+      gap: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .search-autocomplete-panel__thumb {
+      width: 40px;
+      height: 40px;
+      flex-basis: 40px;
+      border-radius: 8px;
+    }
+
+    .search-autocomplete-panel__title {
+      font-size: 14px;
+    }
+
+    .search-autocomplete-panel__subtitle,
+    .search-autocomplete-panel__section-count {
+      font-size: 12px;
+    }
+
+    .mst-searchautocomplete__show-all.search-autocomplete-panel__show-all a {
+      min-height: 46px;
+      font-size: 14px;
+    }
+  }
+</style>
+
+<script id="searchAutocompletePlaceholder" type="text/x-custom-template">
+    <div class="mst-searchautocomplete__autocomplete">
+        <div class="mst-searchautocomplete__spinner">
+            <div class="spinner-item spinner-item-1"></div>
+            <div class="spinner-item spinner-item-2"></div>
+            <div class="spinner-item spinner-item-3"></div>
+            <div class="spinner-item spinner-item-4"></div>
+        </div>
+
+        <div class="mst-searchautocomplete__close">&times;</div>
+    </div>
+</script>
+
+<script id="searchAutocompleteWrapper" type="text/x-custom-template">
+    <div class="mst-searchautocomplete__wrapper search-autocomplete-panel">
+        <div class="mst-searchautocomplete__results search-autocomplete-panel__results" data-bind="visible: result().noResults == false">
+            <div class="search-autocomplete-panel__scroll">
+                <div data-bind="foreach: {
+                        data: result().indexes ? result().indexes.slice().sort(function (left, right) {
+                            var getWeight = function (index) {
+                                if (index.identifier === 'magento_catalog_product') {
+                                    return -1000;
+                                }
+
+                                return parseInt(index.position, 10) || 0;
+                            };
+
+                            return getWeight(left) - getWeight(right);
+                        }) : [],
+                        as: 'index'
+                    }">
+                    <section class="search-autocomplete-panel__section" data-bind="visible: index.totalItems">
+                        <header class="search-autocomplete-panel__section-header">
+                            <div class="search-autocomplete-panel__section-title" data-bind="text: index.title"></div>
+                            <div class="search-autocomplete-panel__section-count" data-bind="text: index.totalItems + ' &quot;' + $parent.result().query + '&quot; related ' + (index.identifier === 'magento_catalog_product' ? 'products' : 'vendors') + ' found'"></div>
+                        </header>
+
+                        <div class="search-autocomplete-panel__empty-result" data-bind="visible: index.isMisspell == true">
+                            <span data-bind="text: index.textMisspell"></span>
+                            <span data-bind="text: index.textCorrected"></span>
+                        </div>
+
+                        <ul class="search-autocomplete-panel__list" data-bind="foreach: { data: index.items, as: 'item' }" aria-label="Search Autocomplete Result">
+                            <li data-bind="
+                                template: { name: index.identifier, data: item },
+                                attr: {class: 'mst-searchautocomplete__item search-autocomplete-panel__item ' + index.identifier},
+                                event: { mouseover: $parents[1].onMouseOver, mouseout: $parents[1].onMouseOut, mousedown: $parents[1].onClick },
+                                css: {_active: $data.isActive}">
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
+
+            <div class="mst-searchautocomplete__show-all search-autocomplete-panel__show-all" data-bind="visible: result().urlAll && result().totalItems > 0">
+                <a data-bind="attr: { href: result().urlAll, 'aria-label': result().textAll }">
+                    <span class="search-autocomplete-panel__show-all-prefix">View All</span>
+                    <span class="search-autocomplete-panel__show-all-count" data-bind="text: result().totalItems"></span>
+                    <span class="search-autocomplete-panel__show-all-text">Results for</span>
+                    <span class="search-autocomplete-panel__show-all-query" data-bind="text: '&quot;' + result().query + '&quot;'"></span>
+                    <span class="search-autocomplete-panel__show-all-arrow" aria-hidden="true">&#8594;</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="mst-searchautocomplete__empty-result search-autocomplete-panel__empty-result" data-bind="visible: result().noResults == true && !loading()">
+            <span data-bind="text: result().textEmpty"></span>
+        </div>
+    </div>
+</script>
+
+<script id="popular" type="text/x-custom-template">
+    <div class="search-autocomplete-panel__simple-row">
+        <a class="search-autocomplete-panel__simple-link" data-bind="text: query"></a>
+    </div>
+</script>
+
+<?php
+$simpleTemplateIds = [
+    'magento_search_query',
+    'magento_catalog_categoryproduct',
+    'magento_catalog_category',
+    'magento_cms_page',
+    'magento_catalog_attribute',
+    'magento_catalog_attribute_2',
+    'magento_catalog_attribute_3',
+    'magento_catalog_attribute_4',
+    'magento_catalog_attribute_5',
+    'mirasvit_kb_article',
+    'external_wordpress_post',
+    'amasty_blog_post',
+    'amasty_faq_question',
+    'magefan_blog_post',
+    'mageplaza_blog_post',
+    'aheadworks_blog_post',
+    'mirasvit_blog_post',
+    'mirasvit_gry_registry',
+    'ves_blog_post',
+    'fishpig_glossary_word',
+    'blackbird_contentmanager_content',
+    'mirasvit_brand_page',
+];
+?>
+
+<?php foreach ($simpleTemplateIds as $templateId): ?>
+<script id="<?= $block->escapeHtmlAttr($templateId) ?>" type="text/x-custom-template">
+    <div class="search-autocomplete-panel__simple-row">
+        <a class="search-autocomplete-panel__simple-link" data-bind="html: query_text || name || title || query, attr: { href: url }, highlight"></a>
+        <span class="search-autocomplete-panel__simple-meta" data-bind="visible: typeof num_results !== 'undefined' && num_results !== null && num_results !== '', text: num_results"></span>
+    </div>
+</script>
+<?php endforeach; ?>
