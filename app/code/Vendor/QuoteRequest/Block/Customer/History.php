@@ -41,52 +41,94 @@ class History extends Template
     /**
      * Get Total Count for Pager
      */
-   public function getRfqCount()
-{
-    $connection = $this->resource->getConnection();
+    public function getRfqCount()
+    {
+        $connection = $this->resource->getConnection();
+        $quoteTable  = $this->resource->getTableName('vendor_quote');
 
-    $quoteTable  = $this->resource->getTableName('vendor_quote');
-    $detailTable = $this->resource->getTableName('vendor_quote_item');
+        $select = $connection->select()
+            ->from(['q' => $quoteTable], [
+                'count' => new \Zend_Db_Expr('COUNT(DISTINCT q.quote_id)')
+            ])
+            ->where('q.customer_id = ?', $this->getCustomerId());
 
-    $select = $connection->select()
-        ->from(['q' => $quoteTable], [])
-        ->joinLeft(
-            ['d' => $detailTable],
-            'q.quote_id = d.quote_id',
-            []
-        )
-        ->where('q.customer_id = ?', $this->getCustomerId())
-        ->columns([
-            'count' => new \Zend_Db_Expr('COUNT(d.item_id)')
-        ]);
+        return (int) $connection->fetchOne($select);
+    }
 
-    return (int)$connection->fetchOne($select);
-}
+    public function getRfqs()
+    {
+        if ($this->_rfqData !== null) {
+            return $this->_rfqData;
+        }
 
-    public function getRfqs() {
-        if ($this->_rfqData !== null) return $this->_rfqData;
-
-        $page = (int) $this->getRequest()->getParam('p', 1);
-        $limit = (int) $this->getRequest()->getParam('limit', 10);
+        $page = max(1, (int) $this->getRequest()->getParam('p', 1));
+        $limit = max(1, (int) $this->getRequest()->getParam('limit', 10));
         $offset = ($page - 1) * $limit;
 
         $connection = $this->resource->getConnection();
         $quoteTable  = $this->resource->getTableName('vendor_quote');
         $detailTable = $this->resource->getTableName('vendor_quote_item');
 
-        $select = $connection->select()
+        $quoteSelect = $connection->select()
             ->from(['q' => $quoteTable])
-            ->joinLeft(
-                ['d' => $detailTable],
-                'q.quote_id = d.quote_id',
-                ['product_id', 'qty']
-            )
             ->where('q.customer_id = ?', $this->getCustomerId())
             ->order('q.created_at DESC')
-            ->limit($limit, $offset); // Database level pagination
+            ->limit($limit, $offset);
 
-        $this->_rfqData = $connection->fetchAll($select);
+        $quotes = $connection->fetchAll($quoteSelect);
+        if (!$quotes) {
+            $this->_rfqData = [];
+            return $this->_rfqData;
+        }
+
+        $quoteIds = array_map('intval', array_column($quotes, 'quote_id'));
+        $itemsByQuote = [];
+
+        if (!empty($quoteIds)) {
+            $itemSelect = $connection->select()
+                ->from(['d' => $detailTable], [
+                    'item_id',
+                    'quote_id',
+                    'product_id',
+                    'qty',
+                    'proposed_price'
+                ])
+                ->where('d.quote_id IN (?)', $quoteIds)
+                ->order(['d.quote_id ASC', 'd.item_id ASC']);
+
+            foreach ($connection->fetchAll($itemSelect) as $itemRow) {
+                $itemsByQuote[(int) $itemRow['quote_id']][] = $itemRow;
+            }
+        }
+
+        $this->_rfqData = [];
+        foreach ($quotes as $quote) {
+            $quoteId = (int) ($quote['quote_id'] ?? 0);
+            $quote['items'] = $itemsByQuote[$quoteId] ?? [];
+            $quote['item_count'] = count($quote['items']);
+            $this->_rfqData[] = $quote;
+        }
+
         return $this->_rfqData;
+    }
+
+    public function getVendorCompanyName($vendorId)
+    {
+        $vendorId = (int) $vendorId;
+        if ($vendorId <= 0) {
+            return '';
+        }
+
+        $connection = $this->resource->getConnection();
+        $table = $this->resource->getTableName('ves_vendor_entity_varchar');
+
+        $select = $connection->select()
+            ->from($table, ['value'])
+            ->where('entity_id = ?', $vendorId)
+            ->where('attribute_id = ?', 174)
+            ->limit(1);
+
+        return (string) $connection->fetchOne($select);
     }
 
     /**

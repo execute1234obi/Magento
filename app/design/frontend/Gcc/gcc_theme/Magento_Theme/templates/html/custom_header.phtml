@@ -64,7 +64,7 @@ else
 }
         ?>
         <a href="<?=  $baseUrl; ?>">
-          <img src="<?= $block->escapeUrl($block->getViewFileUrl('wysiwyg/gcc-logo.png')) ?>" alt="GCC Trading" class="w-36">
+          <img src="<?= $mediaUrl ?>wysiwyg/gcc-logo.png" alt="GCC Trading" class="w-28 sm:w-32 lg:w-36">
         </a>
       </div>
 
@@ -133,7 +133,7 @@ else
       </nav>
     </div>
 
-    <div class="flex items-center space-x-6">
+    <div class="flex items-center gap-6">
       <div class="hidden md:flex items-center space-x-3 final-font gap-3" style="border-right:1px solid #dbe6f3;">
        <?php if ($block->isLoggedIn()): ?>
   <?php
@@ -318,7 +318,7 @@ if ($storeCode === 'default') {
     <div class="mobile-menu-shell">
       <div class="mobile-menu-topbar">
         <a href="<?= $baseUrl; ?>" class="mobile-menu-logo-link" aria-label="<?= __('GCC Trading home') ?>">
-          <img src="<?= $block->escapeUrl($block->getViewFileUrl('wysiwyg/gcc-logo.png')) ?>" alt="GCC Trading" class="mobile-menu-logo">
+          <img src="<?= $mediaUrl ?>wysiwyg/gcc-logo.png" alt="GCC Trading" class="mobile-menu-logo">
         </a>
 
         <div class="mobile-menu-topbar-actions">
@@ -504,14 +504,14 @@ if ($storeCode === 'default') {
     $isSearchResultPage = in_array($fullActionName, ['catalogsearch_result_index', 'mirasvit_search_result_index'], true);
     $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage || $isSearchResultPage;
   ?>
-  <?php if (!$hideSearchBar): ?>
-    <?php
-      if (!isset($layout)) { $layout = $block->getLayout(); }
+  <?php // if (!$hideSearchBar): ?>
+    <?php 
+      // if (!isset($layout)) { $layout = $block->getLayout(); }
       $searchBlock = $layout->createBlock(\Magento\Framework\View\Element\Template::class);
       $searchBlock->setTemplate('Magento_CatalogSearch::custom-search-box.phtml');
       echo $searchBlock->toHtml();
     ?>
-  <?php endif; ?>
+  <?php // endif; ?>
 </header>
 
 <style>
@@ -1051,7 +1051,7 @@ header .sign-in-btn {
 }
 
 /* Small Tablets / Large Mobiles */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
 
     /* Header padding smaller */
     #customHeader .header-main {
@@ -1125,12 +1125,8 @@ header .sign-in-btn {
     #customHeader .header-main {
         padding-left: 20px !important;
         padding-right: 20px !important;
-    }
-
-    /* Allow header content to wrap if needed */
-    #customHeader .header-main {
-        flex-wrap: wrap;
         gap: 10px;
+        flex-wrap: nowrap;
     }
 
     /* Reduce logo size */

@@ -1,376 +1,1078 @@
 <?php
 /** @var \Vendor\QuoteRequest\Block\Customer\History $block */
+
 $totalCount = $block->getRfqCount();
-$limit = (int)$block->getRequest()->getParam('limit', 10);
-$currentPage = (int)$block->getRequest()->getParam('p', 1);
-$totalPages = ceil($totalCount / $limit);
+$limit = max(1, (int) $block->getRequest()->getParam('limit', 10));
+$currentPage = max(1, (int) $block->getRequest()->getParam('p', 1));
+$totalPages = (int) ceil($totalCount / $limit);
 $rfqs = (array) $block->getRfqs();
+$newRequestUrl = $block->getUrl('quoterequest/view/index');
+
+$buildPageUrl = static function (int $page) use ($block): string {
+    return $block->getUrl('*/*/*', ['_current' => true, 'p' => $page]);
+};
+
+$paginationPages = [];
+if ($totalPages > 0) {
+    if ($totalPages <= 5) {
+        $paginationPages = range(1, $totalPages);
+    } else {
+        $paginationPages[] = 1;
+
+        $start = max(2, $currentPage - 1);
+        $end = min($totalPages - 1, $currentPage + 1);
+
+        if ($start > 2) {
+            $paginationPages[] = '...';
+        }
+
+        for ($page = $start; $page <= $end; $page++) {
+            $paginationPages[] = $page;
+        }
+
+        if ($end < $totalPages - 1) {
+            $paginationPages[] = '...';
+        }
+
+        $paginationPages[] = $totalPages;
+    }
+}
 ?>
 
-<div class="rfq-history-wrap">
-  <div class="rfq-history-head">
-    <div>
-      <h2 class="rfq-history-title">My RFQs</h2>
-      <p class="rfq-history-subtitle"><?= $totalCount ?> request(s)</p>
+<div class="rfq-page">
+  <div class="rfq-page__inner">
+    <nav class="rfq-breadcrumbs" aria-label="<?= $block->escapeHtmlAttr(__('Breadcrumb')) ?>">
+      <a href="<?= $block->escapeUrl($block->getUrl('customer/account')) ?>"><?= $block->escapeHtml(__('My Account')) ?></a>
+      <span>/</span>
+      <span><?= $block->escapeHtml(__('Directory')) ?></span>
+      <span>/</span>
+      <span class="is-current"><?= $block->escapeHtml(__('My Quote Requests')) ?></span>
+    </nav>
+
+    <div class="rfq-page__header">
+      <div class="rfq-page__copy">
+        <h1><?= $block->escapeHtml(__('My Quote Requests')) ?></h1>
+        <p><?= $block->escapeHtml(__('Manage and track your recent RFQs for household and office supplies.')) ?></p>
+      </div>
+
+      <div class="rfq-page__actions">
+        <div class="rfq-filter" data-rfq-filter>
+          <button
+            type="button"
+            class="rfq-btn rfq-btn--ghost rfq-filter__toggle"
+            data-rfq-filter-toggle
+            aria-expanded="false"
+            aria-haspopup="true"
+          >
+            <svg viewBox="0 0 18 18" aria-hidden="true">
+              <path d="M3 4.5h12M5.5 9h7M7.5 13.5h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+            </svg>
+            <span data-rfq-filter-label><?= $block->escapeHtml(__('Filter')) ?></span>
+          </button>
+
+          <div class="rfq-filter__menu" data-rfq-filter-menu hidden>
+            <button type="button" data-filter-status="all" class="is-active"><?= $block->escapeHtml(__('All Requests')) ?></button>
+            <button type="button" data-filter-status="pending"><?= $block->escapeHtml(__('Pending')) ?></button>
+            <button type="button" data-filter-status="approved"><?= $block->escapeHtml(__('Approved')) ?></button>
+            <button type="button" data-filter-status="rejected"><?= $block->escapeHtml(__('Rejected')) ?></button>
+          </div>
+        </div>
+
+        <a class="rfq-btn rfq-btn--primary" href="<?= $block->escapeUrl($newRequestUrl) ?>">
+          <span class="rfq-btn__plus">+</span>
+          <span><?= $block->escapeHtml(__('New Request')) ?></span>
+        </a>
+      </div>
     </div>
-  </div>
 
-  <?php if (!count($rfqs)): ?>
-    <div class="rfq-empty">No RFQs found.</div>
-  <?php else: ?>
-    <div class="rfq-table-shell">
-      <table class="rfq-table">
-        <thead>
-          <tr>
-            <th class="rfq-col-id">#</th>
-            <th>Product</th>
-            <th>SKU</th>
-            <th>Price</th>
-            <th class="rfq-col-qty">Qty</th>
-            <th class="rfq-col-status">Status</th>
-            <th class="rfq-col-date">Date</th>
-            <th class="rfq-col-action">Action</th>
-          </tr>
-        </thead>
+    <?php if (empty($rfqs)): ?>
+      <div class="rfq-empty">
+        <div class="rfq-empty__title"><?= $block->escapeHtml(__('No RFQs found.')) ?></div>
+        <p><?= $block->escapeHtml(__('Start a new request to begin tracking your quote submissions.')) ?></p>
+        <a class="rfq-btn rfq-btn--primary" href="<?= $block->escapeUrl($newRequestUrl) ?>">
+          <span class="rfq-btn__plus">+</span>
+          <span><?= $block->escapeHtml(__('New Request')) ?></span>
+        </a>
+      </div>
+    <?php else: ?>
+      <div class="rfq-list" data-rfq-list>
+        <?php foreach ($rfqs as $rfq): ?>
+          <?php
+            $quoteId = (int) ($rfq['quote_id'] ?? 0);
+            $status = strtolower(trim((string) ($rfq['status'] ?? 'pending')));
+            $statusClass = in_array($status, ['pending', 'approved', 'rejected'], true) ? $status : 'default';
+            $statusLabel = ucfirst($status ?: 'pending');
+            $requestDate = !empty($rfq['created_at'])
+                ? date('d M Y, h:i A', strtotime((string) $rfq['created_at']))
+                : '-';
+            $vendorId = (int) ($rfq['vendor_id'] ?? 0);
+            $vendorName = $vendorId > 0 ? $block->getVendorCompanyName($vendorId) : '';
+            $requestTitle = $vendorName !== '' ? $vendorName : 'RFQ Request';
+            $customerNote = trim((string) ($rfq['customer_note'] ?? ''));
+            $items = (array) ($rfq['items'] ?? []);
+            $itemCount = (int) ($rfq['item_count'] ?? count($items));
+          ?>
+          <article
+            class="rfq-card"
+            id="rfq-card-<?= (int) $quoteId ?>"
+            data-rfq-card
+            data-status="<?= $block->escapeHtmlAttr($statusClass) ?>"
+          >
+            <div class="rfq-card__top">
+              <div class="rfq-card__meta">
+                <span class="rfq-card__meta-label"><?= $block->escapeHtml(__('REQUEST PLACED')) ?></span>
+                <strong><?= $block->escapeHtml($requestDate) ?></strong>
+              </div>
 
-        <tbody>
-          <?php $i = (($currentPage - 1) * $limit) + 1;
-                foreach ($rfqs as $rfq): ?>
-            <?php
-              $product = $block->getProduct($rfq['product_id']);
-              $status = strtolower(trim((string)($rfq['status'] ?? '')));
-              $badge = 'rfq-badge--default';
-              if ($status === 'pending') $badge = 'rfq-badge--pending';
-              if ($status === 'approved') $badge = 'rfq-badge--approved';
-              if ($status === 'rejected') $badge = 'rfq-badge--rejected';
-            ?>
-            <tr>
-              <td class="rfq-col-id" data-label="#">#<?= $i++ ?></td>
+              <div class="rfq-card__meta">
+                <span class="rfq-card__meta-label"><?= $block->escapeHtml(__('REQUEST ID')) ?></span>
+                <strong><?= $block->escapeHtml(sprintf('#RFQ-%s', $quoteId)) ?></strong>
+              </div>
 
-              <td data-label="Product">
-                <?php if ($product && $product->getId()): ?>
-                  <div class="rfq-product">
-                    <div class="rfq-product-img">
-                      <img src="<?= $block->escapeUrl($block->getImageUrl($product)) ?>"
-                           alt="<?= $block->escapeHtmlAttr($product->getName()) ?>" />
+              <div class="rfq-card__status">
+                <span class="rfq-badge rfq-badge--<?= $block->escapeHtmlAttr($statusClass) ?>">
+                  <?= $block->escapeHtml($statusLabel) ?>
+                </span>
+              </div>
+            </div>
+
+            <div class="rfq-card__body">
+              <div class="rfq-card__summary">
+                <h2 class="rfq-card__title"><?= $block->escapeHtml($requestTitle) ?></h2>
+
+                <?php if ($customerNote !== ''): ?>
+                  <p class="rfq-card__note">"<?= $block->escapeHtml($customerNote) ?>"</p>
+                <?php else: ?>
+                  <p class="rfq-card__note"><?= $block->escapeHtml(__('Multiple products selected for this quote request.')) ?></p>
+                <?php endif; ?>
+
+                <div class="rfq-card__summary-meta">
+                  <span><?= $block->escapeHtml(__('Items: %1', $itemCount)) ?></span>
+                  <span><?= $block->escapeHtml(sprintf('#RFQ-%s', $quoteId)) ?></span>
+                </div>
+              </div>
+
+              <div class="rfq-card__actions">
+                <a class="rfq-action rfq-action--primary" href="#rfq-card-<?= (int) $quoteId ?>">
+                  <?= $block->escapeHtml(__('View Details')) ?>
+                </a>
+
+                <button type="button" class="rfq-action rfq-action--outline rfq-print-btn">
+                  <?= $block->escapeHtml(__('Download PDF')) ?>
+                </button>
+
+                <a class="rfq-action rfq-action--link" href="<?= $block->escapeUrl($newRequestUrl) ?>">
+                  <?= $block->escapeHtml(__('Re-Request')) ?>
+                </a>
+              </div>
+            </div>
+
+            <div class="rfq-card__products">
+              <?php if (!empty($items)): ?>
+                <?php foreach (array_slice($items, 0, 2) as $item): ?>
+                  <?php
+                    $product = $block->getProduct((int) ($item['product_id'] ?? 0));
+                    $productName = $product && $product->getId()
+                        ? (string) $product->getName()
+                        : (string) __('Product unavailable');
+                    $productSku = $product && $product->getId()
+                        ? (string) $product->getSku()
+                        : (string) ($item['product_id'] ?? '-');
+                    $qty = (int) ($item['qty'] ?? 0);
+                    $imageUrl = $product && $product->getId() ? $block->getImageUrl($product) : '';
+                  ?>
+                  <div class="rfq-product-card">
+                    <div class="rfq-product-card__image">
+                      <?php if (!empty($imageUrl)): ?>
+                        <img src="<?= $block->escapeUrl($imageUrl) ?>" alt="<?= $block->escapeHtmlAttr($productName) ?>">
+                      <?php endif; ?>
                     </div>
-                    <div>
-                      <p class="rfq-product-name"><?= $block->escapeHtml($product->getName()) ?></p>
-                      <p class="rfq-product-meta"><?= $product->isSaleable() ? 'In stock' : 'Out of stock' ?></p>
+                    <div class="rfq-product-card__content">
+                      <h3><?= $block->escapeHtml($productName) ?></h3>
+                      <p>
+                        <?= $block->escapeHtml(__('Qty: %1 | SKU: %2', $qty, $productSku)) ?>
+                      </p>
                     </div>
                   </div>
-                <?php else: ?>
-                  <span>Product not available</span>
+                <?php endforeach; ?>
+
+                <?php if ($itemCount > 2): ?>
+                  <div class="rfq-product-card rfq-product-card--more">
+                    <strong>+<?= (int) ($itemCount - 2) ?></strong>
+                    <span><?= $block->escapeHtml(__('more items')) ?></span>
+                  </div>
                 <?php endif; ?>
-              </td>
+              <?php else: ?>
+                <div class="rfq-product-card rfq-product-card--empty">
+                  <span><?= $block->escapeHtml(__('No products found for this request.')) ?></span>
+                </div>
+              <?php endif; ?>
+            </div>
+          </article>
+        <?php endforeach; ?>
+      </div>
 
-              <td data-label="SKU"><?= $product ? $block->escapeHtml($product->getSku()) : '-' ?></td>
-              <td data-label="Price"><?= $product ? $block->escapeHtml($block->formatPrice($product->getFinalPrice())) : '-' ?></td>
-              <td class="rfq-col-qty" data-label="Qty"><?= (int)($rfq['qty'] ?? 0) ?></td>
-
-              <td class="rfq-col-status" data-label="Status">
-                <span class="rfq-badge <?= $badge ?>"><?= $block->escapeHtml(ucfirst($status ?: 'N/A')) ?></span>
-              </td>
-
-              <td class="rfq-col-date" data-label="Date">
-                <?= !empty($rfq['created_at']) ? date('d M Y', strtotime($rfq['created_at'])) : '-' ?>
-              </td>
-
-              <td class="rfq-col-action" data-label="Action">
-                <?php if ($product && $product->getId()): ?>
-                  <a class="rfq-btn" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">View product</a>
-                <?php else: ?>
-                  -
-                <?php endif; ?>
-              </td>
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-      <?php //echo "pagination block here";
-      if ($totalPages > 1): ?>
-  <div class="custom-manual-pager">
-    <ul class="pager-items">
-
-      <?php for ($page = 1; $page <= $totalPages; $page++): ?>
-
-        <li class="item <?= ($page == $currentPage) ? 'current' : '' ?>">
-
-          <?php if ($page == $currentPage): ?>
-            <strong><?= $page ?></strong>
-
-          <?php else: ?>
-
-            <a href="<?= $block->getUrl('*/*/*', ['_current' => true, 'p' => $page]) ?>">
-              <?= $page ?>
+      <?php if ($totalPages > 1): ?>
+        <nav class="rfq-pagination" aria-label="<?= $block->escapeHtmlAttr(__('RFQ pagination')) ?>">
+          <?php if ($currentPage > 1): ?>
+            <a class="rfq-page-link rfq-page-link--nav" href="<?= $block->escapeUrl($buildPageUrl($currentPage - 1)) ?>">
+              <span aria-hidden="true">←</span>
+              <span><?= $block->escapeHtml(__('Previous')) ?></span>
             </a>
-
+          <?php else: ?>
+            <span class="rfq-page-link rfq-page-link--nav is-disabled">
+              <span aria-hidden="true">←</span>
+              <span><?= $block->escapeHtml(__('Previous')) ?></span>
+            </span>
           <?php endif; ?>
 
-        </li>
+          <div class="rfq-pagination__pages">
+            <?php foreach ($paginationPages as $page): ?>
+              <?php if ($page === '...'): ?>
+                <span class="rfq-page-link rfq-page-link--ellipsis">…</span>
+              <?php else: ?>
+                <?php $page = (int) $page; ?>
+                <a
+                  class="rfq-page-link <?= $page === $currentPage ? 'is-current' : '' ?>"
+                  href="<?= $block->escapeUrl($buildPageUrl($page)) ?>"
+                >
+                  <?= $page ?>
+                </a>
+              <?php endif; ?>
+            <?php endforeach; ?>
+          </div>
 
-      <?php endfor; ?>
+          <?php if ($currentPage < $totalPages): ?>
+            <a class="rfq-page-link rfq-page-link--nav" href="<?= $block->escapeUrl($buildPageUrl($currentPage + 1)) ?>">
+              <span><?= $block->escapeHtml(__('Next')) ?></span>
+              <span aria-hidden="true">→</span>
+            </a>
+          <?php else: ?>
+            <span class="rfq-page-link rfq-page-link--nav is-disabled">
+              <span><?= $block->escapeHtml(__('Next')) ?></span>
+              <span aria-hidden="true">→</span>
+            </span>
+          <?php endif; ?>
+        </nav>
+      <?php endif; ?>
+    <?php endif; ?>
 
-    </ul>
-  </div>
-<?php endif; ?>
+    <div class="rfq-empty rfq-empty--filtered" data-rfq-filter-empty hidden>
+      <div class="rfq-empty__title"><?= $block->escapeHtml(__('No requests match this filter.')) ?></div>
+      <p><?= $block->escapeHtml(__('Try a different status or clear the filter to see all RFQs.')) ?></p>
     </div>
-  <?php endif; ?>
+  </div>
 </div>
 
 <style>
-    /* RFQ History Page */
-.rfq-history-wrap {
-  max-width: 1200px;
+.rfq-page {
+  width: 100%;
+  background: linear-gradient(180deg, #f7f9fe 0%, #f3f6fb 100%);
+  color: #16233f;
+}
+
+.rfq-page,
+.rfq-page * {
+  box-sizing: border-box;
+}
+
+.rfq-page__inner {
+  max-width: 1184px;
   margin: 0 auto;
-  padding: 108px 16px 40px;
- 
+  padding: 104px 24px 72px;
 }
 
-.rfq-history-head {
+.rfq-breadcrumbs {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
-}
-
-.rfq-history-title {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0;
-  color: #111827;
-}
-
-.rfq-history-subtitle {
-  margin: 6px 0 0;
-  font-size: 13px;
-  color: #6b7280;
-}
-
-.rfq-empty {
-  border: 1px dashed #d1d5db;
-  background: #fff;
-  border-radius: 12px;
-  padding: 18px;
-  text-align: center;
-  color: #111827;
-}
-
-/* Table shell */
-.rfq-table-shell {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 6px 18px rgba(17, 24, 39, 0.06);
-}
-
-/* Table */
-.rfq-table {
-  width: 100%;
-  border-collapse: collapse;
+  margin-bottom: 24px;
+  color: #8a94a6;
   font-size: 14px;
+  line-height: 1.4;
 }
 
-.rfq-table thead th {
-  background: #f9fafb;
-  color: #374151;
-  text-align: left;
+.rfq-breadcrumbs a {
+  color: #8a94a6;
+  text-decoration: none;
+}
+
+.rfq-breadcrumbs .is-current {
+  color: #1f3d72;
   font-weight: 700;
-  padding: 12px 14px;
-  border-bottom: 1px solid #e5e7eb;
-  white-space: nowrap;
 }
 
-.rfq-table tbody td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #111827;
-  vertical-align: middle;
+.rfq-page__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
-.rfq-table tbody tr:hover {
-  background: #fafafa;
+.rfq-page__copy h1 {
+  margin: 0;
+  color: #1f3d72;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 800;
 }
 
-.rfq-col-id { width: 70px; white-space: nowrap; }
-.rfq-col-action { width: 140px; text-align: right; white-space: nowrap; }
-.rfq-col-qty { width: 70px; white-space: nowrap; }
-.rfq-col-status { width: 120px; white-space: nowrap; }
-.rfq-col-date { width: 120px; white-space: nowrap; }
+.rfq-page__copy p {
+  margin: 10px 0 0;
+  max-width: 840px;
+  color: #6b7890;
+  font-size: clamp(15px, 1.55vw, 18px);
+  line-height: 1.55;
+}
 
-/* Product cell */
-.rfq-product {
+.rfq-page__actions {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-width: 260px;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
-.rfq-product-img {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  background: #f3f4f6;
-  overflow: hidden;
-  flex: 0 0 auto;
-  border: 1px solid #eef2f7;
-}
-
-.rfq-product-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.rfq-product-name {
-  font-weight: 600;
-  color: #111827;
-  margin: 0;
-  line-height: 1.25;
-}
-
-.rfq-product-meta {
-  margin: 3px 0 0;
-  font-size: 12px;
-  color: #6b7280;
-}
-
-/* Badge */
-.rfq-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  border: 1px solid transparent;
-}
-
-.rfq-badge--pending { background: #fff7ed; color: #9a3412; border-color: #fed7aa; }
-.rfq-badge--approved { background: #ecfdf5; color: #065f46; border-color: #a7f3d0; }
-.rfq-badge--rejected { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-.rfq-badge--default { background: #f3f4f6; color: #374151; border-color: #e5e7eb; }
-
-/* Button */
 .rfq-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 12px;
-  border-radius: 10px;
-  border: 1px solid #2563eb;
-  color: #2563eb;
+  gap: 8px;
+  min-height: 38px;
+  padding: 10px 16px;
+  border-radius: 11px;
+  border: 1px solid transparent;
+  font-size: 14px;
   font-weight: 700;
   text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.rfq-btn:hover,
+.rfq-action:hover,
+.rfq-page-link:hover {
+  transform: translateY(-1px);
+}
+
+.rfq-btn__plus {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.rfq-btn--ghost {
+  background: #fff;
+  color: #1f3d72;
+  border-color: #d5ddea;
+  box-shadow: 0 8px 20px rgba(31, 61, 114, 0.06);
+}
+
+.rfq-btn--primary {
+  background: #1f3d72;
+  color: #fff !important;
+  border-color: #1f3d72;
+  box-shadow: 0 14px 28px rgba(31, 61, 114, 0.14);
+}
+
+.rfq-btn--primary:visited,
+.rfq-btn--primary:hover,
+.rfq-btn--primary:active,
+.rfq-btn--primary span,
+.rfq-btn--primary .rfq-btn__plus {
+  color: #fff !important;
+}
+
+.rfq-filter {
+  position: relative;
+}
+
+.rfq-filter__toggle svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.rfq-filter__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 220px;
+  padding: 8px;
+  background: #fff;
+  border: 1px solid #dbe3ef;
+  border-radius: 16px;
+  box-shadow: 0 24px 54px rgba(17, 36, 78, 0.14);
+  z-index: 20;
+}
+
+.rfq-filter__menu button {
+  width: 100%;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #1f3d72;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rfq-filter__menu button.is-active,
+.rfq-filter__menu button:hover {
+  background: #edf4ff;
+}
+
+.rfq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.rfq-card {
+  border: 1px solid #dbe3ef;
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 26px rgba(24, 40, 74, 0.06);
+  scroll-margin-top: 120px;
+}
+
+.rfq-card__top {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 18px 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  border-bottom: 1px solid #edf1f7;
+}
+
+.rfq-card__meta {
+  min-width: 0;
+}
+
+.rfq-card__meta-label {
+  display: block;
+  color: #7b879a;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rfq-card__meta strong {
+  display: block;
+  margin-top: 6px;
+  color: #15223f;
   font-size: 13px;
-  transition: 150ms ease;
+  font-weight: 800;
 }
 
-.rfq-btn:hover {
-  background: #eff6ff;
+.rfq-card__status {
+  justify-self: end;
 }
 
-/* Responsive: turn table rows into cards */
-@media (max-width: 900px) {
-  .rfq-history-head {
+.rfq-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rfq-badge--pending {
+  background: #fff7ed;
+  color: #b45309;
+  border-color: #fed7aa;
+}
+
+.rfq-badge--approved {
+  background: #ecfdf5;
+  color: #047857;
+  border-color: #a7f3d0;
+}
+
+.rfq-badge--rejected {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.rfq-badge--default {
+  background: #f3f4f6;
+  color: #374151;
+  border-color: #e5e7eb;
+}
+
+.rfq-card__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 190px;
+  gap: 24px;
+  align-items: start;
+  padding: 24px 22px 16px;
+}
+
+.rfq-card__summary {
+  min-width: 0;
+}
+
+.rfq-card__title {
+  margin: 0;
+  color: #15223f;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.rfq-card__note {
+  margin: 8px 0 0;
+  color: #6b7890;
+  font-size: 15px;
+  line-height: 1.55;
+  max-width: 800px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.rfq-card__summary-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  margin-top: 16px;
+  color: #8a94a6;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rfq-card__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rfq-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.rfq-action--primary {
+  background: #1f3d72;
+  color: #fff !important;
+  border-color: #1f3d72;
+  box-shadow: 0 12px 24px rgba(31, 61, 114, 0.14);
+}
+
+.rfq-action--primary:visited,
+.rfq-action--primary:hover,
+.rfq-action--primary:active {
+  color: #fff !important;
+}
+
+.rfq-action--outline {
+  background: #fff;
+  color: #1f3d72;
+  border-color: #d2dceb;
+}
+
+.rfq-action--link {
+  background: transparent;
+  color: #1f3d72;
+  border-color: transparent;
+  min-height: unset;
+  padding: 6px 0;
+}
+
+.rfq-card__products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  padding: 0 22px 22px;
+}
+
+.rfq-product-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 76px;
+  padding: 12px;
+  border: 1px solid #e7ecf5;
+  border-radius: 14px;
+  background: #fff;
+}
+
+.rfq-product-card__image {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f5f7fb;
+}
+
+.rfq-product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.rfq-product-card__content {
+  min-width: 0;
+}
+
+.rfq-product-card__content h3 {
+  margin: 0;
+  color: #15223f;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.rfq-product-card__content p {
+  margin: 4px 0 0;
+  color: #6b7890;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.rfq-product-card--more,
+.rfq-product-card--empty {
+  justify-content: center;
+  background: #f8fbff;
+  border-style: dashed;
+  color: #1f3d72;
+  text-align: center;
+}
+
+.rfq-product-card--more {
+  flex-direction: column;
+}
+
+.rfq-product-card--more strong {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.rfq-product-card--more span {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.rfq-empty {
+  display: grid;
+  place-items: center;
+  gap: 12px;
+  min-height: 220px;
+  padding: 28px;
+  background: #fff;
+  border: 1px solid #dbe3ef;
+  border-radius: 18px;
+  box-shadow: 0 10px 26px rgba(24, 40, 74, 0.06);
+  text-align: center;
+}
+
+.rfq-empty__title {
+  color: #15223f;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.rfq-empty p {
+  margin: 0;
+  color: #6b7890;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.rfq-empty--filtered {
+  display: none;
+  margin-top: 18px;
+}
+
+.rfq-empty--filtered.is-visible {
+  display: grid;
+}
+
+.rfq-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.rfq-pagination__pages {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rfq-page-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #d6deea;
+  border-radius: 8px;
+  background: #fff;
+  color: #1f3d72;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .18s ease, background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+
+.rfq-page-link--nav {
+  min-width: 110px;
+  gap: 8px;
+}
+
+.rfq-page-link--ellipsis {
+  min-width: 24px;
+  border: 0;
+  background: transparent;
+  color: #6b7890;
+}
+
+.rfq-page-link.is-current {
+  background: #1f3d72;
+  color: #fff;
+  border-color: #1f3d72;
+  box-shadow: 0 10px 20px rgba(31, 61, 114, 0.14);
+}
+
+.rfq-page-link.is-disabled {
+  opacity: .45;
+  pointer-events: none;
+}
+
+@media (max-width: 1024px) {
+  .rfq-page__inner {
+    padding-top: 92px;
+  }
+
+  .rfq-page__header {
     flex-direction: column;
-    align-items: flex-start;
   }
 
-  .rfq-table-shell {
-    border-radius: 12px;
+  .rfq-page__actions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
-  .rfq-table,
-  .rfq-table thead,
-  .rfq-table tbody,
-  .rfq-table th,
-  .rfq-table td,
-  .rfq-table tr {
-    display: block;
+  .rfq-card__body {
+    grid-template-columns: 1fr;
+  }
+
+  .rfq-pagination {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .rfq-pagination__pages {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .rfq-page__inner {
+    padding: 84px 16px 56px;
+  }
+
+  .rfq-breadcrumbs {
+    gap: 8px;
+    font-size: 12px;
+    margin-bottom: 18px;
+  }
+
+  .rfq-page__actions {
     width: 100%;
   }
 
-  .rfq-table thead {
-    display: none;
+  .rfq-btn--ghost,
+  .rfq-btn--primary {
+    flex: 1 1 0;
   }
 
-  .rfq-table tbody tr {
-    background: #fff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    margin: 12px;
-    overflow: hidden;
-    box-shadow: 0 6px 16px rgba(17, 24, 39, 0.06);
+  .rfq-filter {
+    width: 100%;
   }
 
-  .rfq-table tbody td {
-    border-bottom: 1px solid #f1f5f9;
-    position: relative;
-    padding: 12px 12px 12px 46%;
+  .rfq-filter__toggle,
+  .rfq-btn--primary {
+    width: 100%;
+  }
+
+  .rfq-filter__menu {
+    right: 0;
+    left: 0;
+    min-width: 0;
+  }
+
+  .rfq-card__top {
+    grid-template-columns: 1fr;
+  }
+
+  .rfq-card__status {
+    justify-self: start;
+  }
+
+  .rfq-card__body {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .rfq-card__actions {
+    flex-direction: column;
+  }
+
+  .rfq-card__products {
+    grid-template-columns: 1fr;
+  }
+
+  .rfq-page-link--nav {
+    min-width: 96px;
+  }
+}
+
+@media (max-width: 480px) {
+  .rfq-page__inner {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .rfq-page__copy h1 {
+    font-size: 30px;
+  }
+
+  .rfq-page__copy p {
+    font-size: 14px;
+  }
+
+  .rfq-btn,
+  .rfq-action {
     min-height: 42px;
   }
 
-  .rfq-table tbody td:last-child {
-    border-bottom: none;
+  .rfq-page-link {
+    min-width: 38px;
+    min-height: 38px;
+    padding: 0 10px;
+    font-size: 13px;
   }
 
-  .rfq-table tbody td::before {
-    content: attr(data-label);
-    position: absolute;
-    left: 12px;
-    top: 12px;
-    width: 40%;
-    font-weight: 800;
-    color: #374151;
-    font-size: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-
-  .rfq-col-action {
-    text-align: left;
-  }
-
-  .rfq-product {
+  .rfq-page-link--nav {
     min-width: 0;
+    padding: 0 10px;
   }
 }
-/*  Pagination class */
-.custom-manual-pager {
-  margin-top: 25px;
-  display: flex;
-  justify-content: center;
-}
 
-.pager-items {
-  display: flex;
-  list-style: none;
-  gap: 8px;
-  padding: 0;
-}
+@media (max-width: 576px) {
+  .rfq-page__inner {
+    padding: 76px 12px 48px;
+  }
 
-.pager-items .item a,
-.pager-items .item strong {
-  padding: 8px 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-}
+  .rfq-breadcrumbs {
+    gap: 6px;
+    margin-bottom: 14px;
+    font-size: 11px;
+  }
 
-.pager-items .item a {
-  background: #fff;
-  color: #2563eb;
-}
+  .rfq-page__header {
+    gap: 18px;
+    margin-bottom: 18px;
+  }
 
-.pager-items .item.current strong {
-  background: #2563eb;
-  color: #fff;
-  border-color: #2563eb;
+  .rfq-page__copy h1 {
+    font-size: 28px;
+  }
+
+  .rfq-page__copy p {
+    margin-top: 8px;
+  }
+
+  .rfq-card {
+    border-radius: 16px;
+  }
+
+  .rfq-card__top {
+    padding: 14px 14px 12px;
+    gap: 12px;
+  }
+
+  .rfq-card__meta strong {
+    font-size: 12px;
+  }
+
+  .rfq-card__body {
+    padding: 18px 14px 14px;
+    gap: 14px;
+  }
+
+  .rfq-card__title {
+    font-size: 18px;
+  }
+
+  .rfq-card__note {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .rfq-card__summary-meta {
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+    font-size: 12px;
+  }
+
+  .rfq-card__actions {
+    gap: 8px;
+  }
+
+  .rfq-card__products {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    padding: 0 14px 16px;
+  }
+
+  .rfq-product-card {
+    padding: 10px;
+    gap: 10px;
+    min-height: 70px;
+  }
+
+  .rfq-product-card__image {
+    width: 48px;
+    height: 48px;
+  }
+
+  .rfq-product-card__content h3 {
+    font-size: 14px;
+  }
+
+  .rfq-product-card__content p {
+    font-size: 11px;
+  }
+
+  .rfq-pagination {
+    margin-top: 18px;
+  }
+
+  .rfq-pagination__pages {
+    gap: 8px;
+  }
+
+  .rfq-page-link {
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
+  .rfq-page-link--nav {
+    min-width: 0;
+    padding: 0 10px;
+  }
 }
-    </style>
+</style>
+
+<script>
+(function () {
+  const filterRoot = document.querySelector('[data-rfq-filter]');
+  const cards = Array.from(document.querySelectorAll('[data-rfq-card]'));
+  const filterEmpty = document.querySelector('[data-rfq-filter-empty]');
+  const printButtons = document.querySelectorAll('.rfq-print-btn');
+
+  printButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      window.print();
+    });
+  });
+
+  if (!filterRoot) {
+    return;
+  }
+
+  const toggle = filterRoot.querySelector('[data-rfq-filter-toggle]');
+  const menu = filterRoot.querySelector('[data-rfq-filter-menu]');
+  const options = Array.from(filterRoot.querySelectorAll('[data-filter-status]'));
+  let activeStatus = 'all';
+
+  const setMenuState = (open) => {
+    if (!toggle || !menu) {
+      return;
+    }
+
+    menu.hidden = !open;
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+
+  const applyFilter = (status) => {
+    activeStatus = status;
+
+    cards.forEach((card) => {
+      const cardStatus = card.dataset.status || 'default';
+      const visible = status === 'all' || cardStatus === status;
+      card.hidden = !visible;
+    });
+
+    if (filterEmpty) {
+      const hasCards = cards.length > 0;
+      const anyVisible = cards.some((card) => !card.hidden);
+      filterEmpty.hidden = !hasCards || anyVisible;
+      filterEmpty.classList.toggle('is-visible', hasCards && !anyVisible);
+    }
+
+    options.forEach((option) => {
+      option.classList.toggle('is-active', option.dataset.filterStatus === status);
+    });
+
+    if (label) {
+    }
+  };
+
+  toggle?.addEventListener('click', (event) => {
+    event.stopPropagation();
+    setMenuState(menu.hidden);
+  });
+
+  options.forEach((option) => {
+    option.addEventListener('click', () => {
+      const status = option.dataset.filterStatus || 'all';
+      applyFilter(status);
+      setMenuState(false);
+    });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!filterRoot.contains(event.target)) {
+      setMenuState(false);
+    }
+  });
+
+  applyFilter(activeStatus);
+})();
+</script>

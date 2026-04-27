@@ -54,35 +54,41 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   }
 
   /* ===== Search bar ===== */
-  .search-container { width:95%; max-width:1320px; margin:24px auto; }
-  .search-wrap { margin-bottom:18px; }
+  .search-container {
+    width:100%;
+    max-width:1280px;
+    margin:18px auto 12px;
+    padding:0 1rem;
+  }
+  .search-wrap { margin-bottom:0; }
   .search-bar {
     position:relative; display:flex; align-items:center;
-    width:100%; height:56px; border-radius:14px;
-    background:#f9fbfd; box-shadow:inset 0 1px 0 rgba(17,24,39,.02);
+    width:100%; height:56px; border:1px solid #d7dfeb; border-radius:14px;
+    background:#ffffff; box-shadow:0 1px 2px rgba(15,23,42,.04);
+    transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
   }
-  .search-bar:hover { border-color:#b0c7e1; }
+  .search-bar:hover { border-color:#bfd0e6; }
   .search-bar:focus-within {
-    border-color:#cfe0ff; box-shadow:0 0 0 3px rgba(59,130,246,.15); background:#fbfdff;
+    border-color:#9fb8db; box-shadow:0 0 0 3px rgba(59,130,246,.12); background:#fbfdff;
   }
 
   .search-icon {
-    position:absolute; left:16px; width:20px; height:20px;
+    position:absolute; left:18px; width:18px; height:18px;
     stroke:#7f8a9b; stroke-width:2; fill:none;
   }
 
   .search-input {
     width:100% !important; height:100% !important;
-    padding:0 64px 0 46px !important;
+    padding:0 74px 0 48px !important;
     border:0; background:transparent; outline:none;
-    font-size:16px; color:#0f172a;
+    font-size:15px; color:#0f172a;
   }
   .search-input::placeholder { color:#9aa3b2; }
 
   .shortcut {
     position:absolute; right:18px; top:50%;
     transform:translateY(-50%);
-    color:#98a1af; font-weight:600; letter-spacing:.02em; font-size:14px;
+    color:#98a1af; font-weight:600; letter-spacing:.02em; font-size:13px;
   }
 
   /* ===== RTL Support ===== */
@@ -95,8 +101,8 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   body[dir="rtl"] .search-input {
     direction: rtl !important;
     text-align: right !important;
-    padding-right: 46px !important;
-    padding-left: 64px !important;
+    padding-right: 48px !important;
+    padding-left: 74px !important;
   }
 
   html[lang="ar"] .search-icon,
@@ -146,6 +152,7 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
     .search-container{
       width: calc(100% - 12px);
       margin: 12px auto 8px;
+      padding: 0;
     }
     .search-wrap{
       margin-bottom: 8px;
