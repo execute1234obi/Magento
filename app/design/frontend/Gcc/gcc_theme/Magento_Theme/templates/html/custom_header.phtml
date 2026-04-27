@@ -503,10 +503,10 @@ if ($storeCode === 'default') {
     $isRegisterPage= ($fullActionName === 'customer_account_create');
     $isSearchResultPage = in_array($fullActionName, ['catalogsearch_result_index', 'mirasvit_search_result_index'], true);
     $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage || $isSearchResultPage;
+    $layout = $block->getLayout();
   ?>
   <?php // if (!$hideSearchBar): ?>
     <?php 
-      // if (!isset($layout)) { $layout = $block->getLayout(); }
       $searchBlock = $layout->createBlock(\Magento\Framework\View\Element\Template::class);
       $searchBlock->setTemplate('Magento_CatalogSearch::custom-search-box.phtml');
       echo $searchBlock->toHtml();
