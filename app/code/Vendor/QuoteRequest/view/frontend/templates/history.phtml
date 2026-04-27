@@ -153,7 +153,7 @@ if ($totalPages > 0) {
               </div>
 
               <div class="rfq-card__actions">
-                <a class="rfq-action rfq-action--primary" href="#rfq-card-<?= (int) $quoteId ?>">
+                <a class="rfq-action rfq-action--primary" href="<?= $block->escapeUrl($block->getUrl('quoterequest/customer/details', ['quote_id' => $quoteId])) ?>">
                   <?= $block->escapeHtml(__('View Details')) ?>
                 </a>
 
