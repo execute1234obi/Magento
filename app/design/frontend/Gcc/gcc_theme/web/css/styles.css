@@ -332,7 +332,7 @@ body.catalogsearch-result-index .breadcrumbs{
 body.catalogsearch-result-index .search-page-header{
     width:100%;
     max-width:1320px;
-    margin:0 auto 30px;
+    margin:0 auto 24px;
     padding:0 16px;
     box-sizing:border-box;
 }
@@ -342,8 +342,8 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
     display:flex;
     align-items:center;
     flex-wrap:wrap;
-    gap:8px;
-    margin:0 0 14px;
+    gap:10px;
+    margin:0 0 10px;
     padding:0;
     font-size:14px;
     line-height:1.4;
@@ -352,7 +352,7 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
 
 /* link */
 body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs a{
-    color:#2563EB;
+    color:#6B7280;
     font-weight:500;
     text-decoration:none;
 }
@@ -371,11 +371,11 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs stro
 /* main title */
 body.catalogsearch-result-index .search-main-title{
     margin:0;
-    font-size:clamp(42px,6vw,64px);
+    font-size:clamp(32px,4vw,46px);
     line-height:1.05;
     font-weight:800;
     color:#111827;
-    letter-spacing:-0.03em;
+    letter-spacing:-0.04em;
 }
 
 /* spacing before grid */
@@ -385,15 +385,17 @@ body.catalogsearch-result-index .search-main-title{
 @media(max-width:767px){
 
 body.catalogsearch-result-index .search-page-header{
-    margin-bottom:22px;
+    margin-bottom:18px;
 }
 
 body.catalogsearch-result-index .search-main-title{
-    font-size:36px;
+    font-size:30px;
 }
 
 body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
     font-size:13px;
+    gap:8px;
+    margin-bottom:8px;
 }
 
 }

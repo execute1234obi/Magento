@@ -17,7 +17,6 @@ $indexData          = [];
 $aggregations       = $block->getAggregationData();
 $nonce              = CspService::getNonce();
 $searchFiltersHtml  = trim((string) $block->getChildHtml('search_filters'));
-$searchQuery        = trim((string) $block->getRequest()->getParam('q'));
 ?>
 <?php if ($searchFiltersHtml !== '') : ?>
     <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
@@ -39,60 +38,103 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         }
 
         body.catalogsearch-result-index .page-main {
-            padding-top: 16px !important;
+            padding-top: 64px !important;
+        }
+
+        body.catalogsearch-result-index .search-page-header {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 8px !important;
+            width: 100% !important;
+            max-width: 1320px !important;
+            margin: 16px auto 30px !important;
+            padding: 0 16px !important;
+            box-sizing: border-box !important;
+            position: relative !important;
+            z-index: 2 !important;
+            clear: both !important;
+            min-width: 0 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs {
+            display: flex !important;
+            align-items: center !important;
+            flex-wrap: wrap !important;
+            gap: 10px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #6b7280 !important;
+            font-size: 14px !important;
+            line-height: 1.4 !important;
+            font-weight: 400 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs a {
+            color: #6b7280 !important;
+            font-weight: 500 !important;
+            text-decoration: none !important;
+        }
+
+        body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs span {
+            color: #94a3b8 !important;
+        }
+
+        body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs strong {
+            color: #111827 !important;
+            font-weight: 600 !important;
+        }
+
+        body.catalogsearch-result-index .search-page-header .search-main-title {
+            margin: 0 !important;
+            color: #111827 !important;
+            font-size: clamp(32px, 4vw, 46px) !important;
+            line-height: 1.05 !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.04em !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         body.catalogsearch-result-index .column.main {
-            display: grid !important;
-            grid-template-columns: minmax(300px, 340px) minmax(0, 1fr) !important;
-            column-gap: clamp(24px, 3vw, 40px) !important;
-            row-gap: 0 !important;
-            align-items: start !important;
+            display: block !important;
             width: 100% !important;
             max-width: 1320px !important;
             margin: 0 auto !important;
-            padding: 0 !important;
+            padding: 0 16px !important;
             box-sizing: border-box !important;
             min-width: 0 !important;
         }
 
-        body.catalogsearch-result-index .column.main > .gcc-search-results__header {
+        body.catalogsearch-result-index .column.main > .gcc-search-results__header,
+        body.catalogsearch-result-index .column.main > .search-page-header,
+        body.catalogsearch-result-index .column.main > .gcc-search-results,
+        body.catalogsearch-result-index .column.main > .gcc-search-newsletter {
             width: 100% !important;
             max-width: 1320px !important;
-            margin: 8px auto 28px !important;
-            padding: 0 16px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
             box-sizing: border-box !important;
             min-width: 0 !important;
+        }
+
+        body.catalogsearch-result-index .column.main > .gcc-search-results {
+            padding: 84px 16px 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        body.catalogsearch-result-index .column.main > .gcc-search-results__header,
+        body.catalogsearch-result-index .column.main > .search-page-header {
             display: flex !important;
             flex-direction: column !important;
             align-items: flex-start !important;
             gap: 6px !important;
-        }
-
-        body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar {
-            grid-column: 1 !important;
-            display: grid !important;
-            grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) !important;
-            column-gap: clamp(24px, 3vw, 40px) !important;
-            row-gap: 20px !important;
-            align-items: start !important;
-            width: 100% !important;
-            max-width: 1320px !important;
-            margin: 0 auto !important;
+            margin: 8px auto 26px !important;
             padding: 0 16px !important;
-            box-sizing: border-box !important;
-            min-width: 0 !important;
-        }
-
-        body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
-            grid-column: 2 !important;
-            display: block !important;
-            width: 100% !important;
-            max-width: 1320px !important;
-            min-width: 0 !important;
-            margin: 0 auto !important;
-            padding: 0 16px !important;
-            box-sizing: border-box !important;
         }
 
         body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar > .sidebar {
@@ -111,7 +153,7 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         body.catalogsearch-result-index .gcc-search-results__title {
             margin: 0 !important;
             color: #111827 !important;
-            font-size: clamp(40px, 4.5vw, 58px) !important;
+            font-size: clamp(32px, 3.6vw, 46px) !important;
             line-height: 1.02 !important;
             font-weight: 800 !important;
             letter-spacing: -0.05em !important;
@@ -120,7 +162,7 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         body.catalogsearch-result-index .gcc-search-results__title-term {
             display: inline-block !important;
             color: #111827 !important;
-            font-size: 30px;
+            font-size: inherit !important;
         }
 
         body.catalogsearch-result-index .gcc-search-breadcrumbs {
@@ -226,10 +268,10 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         body.catalogsearch-result-index .mst-search__result-tabs {
             display: flex !important;
             align-items: flex-end !important;
-            gap: 28px !important;
+            gap: 24px !important;
             list-style: none !important;
             width: 100% !important;
-            margin: 0 0 28px !important;
+            margin: 0 0 24px !important;
             padding: 0 !important;
             float: none !important;
             border-bottom: 1px solid #e5e7eb !important;
@@ -247,14 +289,14 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
             position: relative !important;
             display: inline-flex !important;
             align-items: center !important;
-            gap: 14px !important;
-            padding: 0 6px 16px !important;
+            gap: 8px !important;
+            padding: 0 6px 14px !important;
             background: transparent !important;
             border: 0 !important;
             border-bottom: 3px solid transparent !important;
             border-radius: 0 !important;
             color: #6b7280 !important;
-            font-size: 20px !important;
+            font-size: 18px !important;
             line-height: 1.2 !important;
             font-weight: 700 !important;
             text-decoration: none !important;
@@ -293,186 +335,6 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
             box-sizing: border-box !important;
         }
 
-        body.catalogsearch-result-index .search-result-list {
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 16px !important;
-            width: 100% !important;
-            min-width: 0 !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card {
-            display: grid !important;
-            grid-template-columns: minmax(0, 1fr) auto !important;
-            gap: 22px !important;
-            width: 100% !important;
-            padding: 20px 22px !important;
-            background: #ffffff !important;
-            border: 1px solid #e7edf5 !important;
-            border-radius: 20px !important;
-            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05) !important;
-            box-sizing: border-box !important;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card:hover {
-            transform: translateY(-2px) !important;
-            border-color: #d8e4f1 !important;
-            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08) !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__main {
-            display: flex !important;
-            align-items: flex-start !important;
-            gap: 16px !important;
-            min-width: 0 !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__logo {
-            flex: 0 0 56px !important;
-            width: 56px !important;
-            height: 56px !important;
-            border-radius: 18px !important;
-            border: 1px solid #e5eaf2 !important;
-            background: linear-gradient(180deg, #fbfcfe 0%, #f6f9fd 100%) !important;
-            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8) !important;
-            overflow: hidden !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            text-decoration: none !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__logo img {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: contain !important;
-            display: block !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__body {
-            min-width: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            gap: 10px !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__title-row {
-            display: flex !important;
-            align-items: center !important;
-            gap: 10px !important;
-            flex-wrap: wrap !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__title-link {
-            color: #1e2b4a !important;
-            font-size: 20px !important;
-            line-height: 1.15 !important;
-            font-weight: 700 !important;
-            text-decoration: none !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__title-link:hover {
-            color: #1f4fbf !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__verified {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            width: 20px !important;
-            height: 20px !important;
-            border-radius: 999px !important;
-            background: #2f94f6 !important;
-            color: #ffffff !important;
-            font-size: 12px !important;
-            font-weight: 800 !important;
-            line-height: 1 !important;
-            box-shadow: 0 8px 18px rgba(47, 148, 246, 0.22) !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__subtitle {
-            color: #8b95a7 !important;
-            font-size: 14px !important;
-            line-height: 1.35 !important;
-            font-weight: 600 !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__description {
-            color: #3f4654 !important;
-            font-size: 14px !important;
-            line-height: 1.75 !important;
-            display: -webkit-box !important;
-            -webkit-line-clamp: 3 !important;
-            -webkit-box-orient: vertical !important;
-            overflow: hidden !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__aside {
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: flex-end !important;
-            justify-content: space-between !important;
-            gap: 14px !important;
-            min-width: 180px !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__country {
-            display: inline-flex !important;
-            align-items: center !important;
-            gap: 8px !important;
-            color: #6b7280 !important;
-            font-size: 14px !important;
-            line-height: 1.3 !important;
-            font-weight: 600 !important;
-            white-space: nowrap !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__flag {
-            width: 18px !important;
-            height: 12px !important;
-            border-radius: 2px !important;
-            object-fit: cover !important;
-            box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.18) !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__button {
-            display: inline-flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            gap: 8px !important;
-            min-height: 44px !important;
-            padding: 0 18px !important;
-            border-radius: 12px !important;
-            background: #d7e6f2 !important;
-            color: #1f3f75 !important;
-            font-size: 14px !important;
-            line-height: 1 !important;
-            font-weight: 700 !important;
-            text-decoration: none !important;
-            white-space: nowrap !important;
-            transition: background-color 0.2s ease, transform 0.2s ease !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-card__button:hover {
-            background: #c7d9e7 !important;
-            transform: translateY(-1px) !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-empty {
-            padding: 24px !important;
-            background: #ffffff !important;
-            border: 1px solid #e7edf5 !important;
-            border-radius: 18px !important;
-            color: #6b7280 !important;
-            box-shadow: 0 12px 26px rgba(15, 23, 42, 0.04) !important;
-        }
-
-        body.catalogsearch-result-index .search-vendor-pager {
-            margin-top: 8px !important;
-            padding-top: 10px !important;
-        }
-
         @media (max-width: 767px) {
             body.catalogsearch-result-index .column.main {
                 display: block !important;
@@ -485,7 +347,9 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
 
             body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar,
             body.catalogsearch-result-index .column.main > .gcc-search-results__header,
-            body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
+            body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar),
+            body.catalogsearch-result-index .column.main > .search-page-header,
+            body.catalogsearch-result-index .column.main > .gcc-search-newsletter {
                 width: 100% !important;
                 max-width: 100% !important;
                 min-width: 0 !important;
@@ -494,20 +358,33 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
             }
 
             body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar {
-                display: grid !important;
-                grid-template-columns: minmax(0, 1fr) !important;
-                gap: 20px !important;
                 margin-bottom: 22px !important;
-                padding: 0 16px !important;
             }
 
-            body.catalogsearch-result-index .column.main > .gcc-search-results__header {
-                margin: 12px 0 22px !important;
+            body.catalogsearch-result-index .column.main > .gcc-search-results {
+                padding: 48px 16px 0 !important;
+                box-sizing: border-box !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results__header,
+            body.catalogsearch-result-index .column.main > .search-page-header {
+                margin: 12px auto 22px !important;
                 padding: 0 16px !important;
+                gap: 4px !important;
+            }
+
+            body.catalogsearch-result-index .search-page-header {
+                margin: 12px auto 22px !important;
+                padding: 0 16px !important;
+                gap: 4px !important;
+            }
+
+            body.catalogsearch-result-index .search-page-header .search-main-title {
+                font-size: 30px !important;
             }
 
             body.catalogsearch-result-index .gcc-search-results__title {
-                font-size: clamp(32px, 9vw, 44px) !important;
+                font-size: clamp(30px, 9vw, 40px) !important;
             }
 
             body.catalogsearch-result-index .breadcrumbs {
@@ -528,43 +405,6 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
                 min-width: 25px !important;
                 height: 25px !important;
                 font-size: 12px !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card {
-                grid-template-columns: minmax(0, 1fr) !important;
-                gap: 16px !important;
-                padding: 16px !important;
-                border-radius: 18px !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card__main {
-                gap: 12px !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card__logo {
-                width: 48px !important;
-                height: 48px !important;
-                flex-basis: 48px !important;
-                border-radius: 14px !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card__title-link {
-                font-size: 17px !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card__description {
-                -webkit-line-clamp: 4 !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card__aside {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                min-width: 0 !important;
-            }
-
-            body.catalogsearch-result-index .search-vendor-card__button {
-                width: 100% !important;
-                justify-content: center !important;
             }
         }
 
