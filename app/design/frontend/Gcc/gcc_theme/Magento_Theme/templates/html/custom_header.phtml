@@ -496,22 +496,37 @@ if ($storeCode === 'default') {
   </div>
 
   <?php
-    $request       = $block->getRequest();
-    $fullActionName= $request->getFullActionName();
-    $isCmsPage     = ($block->getRequest()->getModuleName() === 'cms');
-    $isLoginPage   = ($fullActionName === 'customer_account_login');
-    $isRegisterPage= ($fullActionName === 'customer_account_create');
-    $isSearchResultPage = in_array($fullActionName, ['catalogsearch_result_index', 'mirasvit_search_result_index'], true);
-    $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage || $isSearchResultPage;
-    $layout = $block->getLayout();
+    // $request       = $block->getRequest();
+    // $fullActionName= $request->getFullActionName();
+    // $isCmsPage     = ($block->getRequest()->getModuleName() === 'cms');
+    // $isLoginPage   = ($fullActionName === 'customer_account_login');
+    // $isRegisterPage= ($fullActionName === 'customer_account_create');
+    // $isSearchResultPage = in_array($fullActionName, ['catalogsearch_result_index', 'mirasvit_search_result_index'], true);
+    // $hideSearchBar = $isCmsPage || $isLoginPage || $isRegisterPage || $isSearchResultPage;
+    // $layout = $block->getLayout();
   ?>
-  <?php // if (!$hideSearchBar): ?>
+  <?php
+  //new code for search bar visibility not on home and customer page
+    $request        = $block->getRequest();
+$fullActionName = $request->getFullActionName();
+
+$isHomePage = ($fullActionName === 'cms_index_index');
+
+$requestPath = trim((string)$request->getOriginalPathInfo(), '/');
+
+$isCustomerPage = ($requestPath === 'customer-page');
+
+$hideSearchBar = $isHomePage || $isCustomerPage;
+$layout = $block->getLayout();
+  ?>
+
+  <?php  if (!$hideSearchBar): ?>
     <?php 
-      $searchBlock = $layout->createBlock(\Magento\Framework\View\Element\Template::class);
+       $searchBlock = $layout->createBlock(\Magento\Framework\View\Element\Template::class);
       $searchBlock->setTemplate('Magento_CatalogSearch::custom-search-box.phtml');
       echo $searchBlock->toHtml();
     ?>
-  <?php // endif; ?>
+  <?php  endif; ?>
 </header>
 
 <style>

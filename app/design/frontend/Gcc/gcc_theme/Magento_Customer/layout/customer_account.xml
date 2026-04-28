@@ -3,6 +3,7 @@
     <head>
         <css src="css/customer-dashboard.css"/>
         <style>
+        
         body.customer-account-index .page-main,
         body.customer-account .page-main {
             padding-top: 160px !important;
