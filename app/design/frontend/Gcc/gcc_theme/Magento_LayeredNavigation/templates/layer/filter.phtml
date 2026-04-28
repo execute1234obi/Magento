@@ -1,0 +1,24 @@
+<?php
+/** @var \Magento\LayeredNavigation\Block\Navigation\FilterRenderer $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$viewModel = $block->getData('view_model');
+$filterItems = $block->getFilterItems(); // Ensure items are fetched
+?>
+
+<ol class="items">
+    <?php foreach ($filterItems as $filterItem): ?>
+        <li class="item">
+            <?php if ($filterItem->getCount() > 0): ?>
+                <a href="<?= $escaper->escapeUrl($filterItem->getUrl()) ?>" rel="nofollow">
+                    <?= $escaper->escapeHtml($filterItem->getLabel()) ?>
+                    <?php if ($viewModel && method_exists($viewModel, 'shouldDisplayProductCountOnLayer') && $viewModel->shouldDisplayProductCountOnLayer()): ?>
+                        <span class="count"><?= (int)$filterItem->getCount() ?></span>
+                    <?php endif; ?>
+                </a>
+            <?php else: ?>
+                <?= $escaper->escapeHtml($filterItem->getLabel()) ?>
+            <?php endif; ?>
+        </li>
+    <?php endforeach ?>
+</ol>
