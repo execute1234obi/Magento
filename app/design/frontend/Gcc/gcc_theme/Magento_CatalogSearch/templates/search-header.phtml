@@ -1,0 +1,24 @@
+<?php
+$searchQuery = trim((string)$block->getRequest()->getParam('q'));
+?>
+
+<?php if ($searchQuery): ?>
+<div class="search-page-header">
+    <nav class="gcc-search-breadcrumbs">
+        <a href="<?= $block->escapeUrl($block->getUrl('')) ?>">
+            <?= $block->escapeHtml(__('Home')) ?>
+        </a>
+
+        <span>/</span>
+
+        <span>
+            <?= $block->escapeHtml(__('Search results for:')) ?>
+            <strong>'<?= $block->escapeHtml($searchQuery) ?>'</strong>
+        </span>
+    </nav>
+
+    <h1 class="search-main-title">
+        <?= $block->escapeHtml($searchQuery) ?>
+    </h1>
+</div>
+<?php endif; ?>

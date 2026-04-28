@@ -19,66 +19,7 @@ $filters['verified'] = array_filter($filters['verified']);
 $filters['business_types'] = array_filter($filters['business_types']);
 ?>
 <style>
-  body.catalogsearch-result-index .column.main {
-    display: grid !important;
-    grid-template-columns: minmax(300px, 340px) minmax(0, 1fr) !important;
-    column-gap: clamp(24px, 3vw, 40px) !important;
-    row-gap: 0 !important;
-    align-items: start !important;
-    width: 100% !important;
-    max-width: 1320px !important;
-    margin: 0 auto !important;
-    padding: 0 !important;
-    box-sizing: border-box !important;
-    min-width: 0 !important;
-  }
-
-  body.catalogsearch-result-index .column.main > .gcc-search-results__header {
-    width: 100% !important;
-    max-width: 1320px !important;
-    margin: 8px auto 28px !important;
-    padding: 0 16px !important;
-    box-sizing: border-box !important;
-    min-width: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 6px !important;
-  }
-
-  body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar {
-    grid-column: 1 !important;
-    display: grid !important;
-    grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) !important;
-    column-gap: clamp(24px, 3vw, 40px) !important;
-    row-gap: 20px !important;
-    align-items: start !important;
-    width: 100% !important;
-    max-width: 1320px !important;
-    margin: 0 auto !important;
-    padding: 0 16px !important;
-    box-sizing: border-box !important;
-    min-width: 0 !important;
-  }
-
-  body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
-    grid-column: 2 !important;
-    display: block !important;
-    width: 100% !important;
-    max-width: 1320px !important;
-    min-width: 0 !important;
-    margin: 0 auto !important;
-    padding: 0 16px !important;
-    box-sizing: border-box !important;
-  }
-
-  body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar > .sidebar {
-    width: 100% !important;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    box-sizing: border-box !important;
-    position: relative !important;
-  }
+ 
 
   body.catalogsearch-result-index .search-sidebar-intro {
     margin: 0 0 22px !important;
@@ -142,10 +83,7 @@ $filters['business_types'] = array_filter($filters['business_types']);
     font-weight: 800 !important;
   }
 
-  body.catalogsearch-result-index .column.main > input[name="form_key"],
-  body.catalogsearch-result-index .column.main > #authenticationPopup {
-    display: none !important;
-  }
+
 
   body.catalogsearch-result-index .mst-search__result-tabs {
     display: flex !important;
@@ -388,14 +326,14 @@ $filters['business_types'] = array_filter($filters['business_types']);
     background: #f8fafc !important;
   }
 
-  .layout {
+  /* .layout {
     display: block;
     width: 100%;
     max-width: 100%;
     margin: 0;
-  }
+  } */
 
-  .filter-title1 {
+  /* .filter-title1 {
     display: block;
     margin: 0 0 16px;
     color: #1f3f75;
@@ -420,7 +358,7 @@ $filters['business_types'] = array_filter($filters['business_types']);
 
   .filter-group {
     margin-bottom: 20px;
-  }
+  } */
 
   .filter-group:last-child {
     margin-bottom: 0;
@@ -474,13 +412,13 @@ $filters['business_types'] = array_filter($filters['business_types']);
     font-weight: 400 !important;
   }
 
-  .page-main {
+  /* .page-main {
     padding-top: 0 !important;
-  }
+  } */
 
-  .page-title-wrapper {
+  /* .page-title-wrapper {
     display: none;
-  }
+  } */
 
   #vendor-sidebar.force-show {
     display: block;
@@ -495,37 +433,6 @@ $filters['business_types'] = array_filter($filters['business_types']);
   }
 
   @media (max-width: 768px) {
-    body.catalogsearch-result-index .column.main {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-
-    body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar,
-    body.catalogsearch-result-index .column.main > .gcc-search-results__header,
-    body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
-      width: 100% !important;
-      max-width: 100% !important;
-      min-width: 0 !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-    }
-
-    body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar {
-      grid-template-columns: minmax(0, 1fr) !important;
-      gap: 20px !important;
-      margin-bottom: 22px !important;
-      padding: 0 16px !important;
-    }
-
-    body.catalogsearch-result-index .column.main > .gcc-search-results__header {
-      margin: 12px 0 22px !important;
-      padding: 0 16px !important;
-    }
-
     body.catalogsearch-result-index .mst-search__result-tabs {
       gap: 18px !important;
       margin-bottom: 20px !important;
@@ -620,25 +527,7 @@ $filters['business_types'] = array_filter($filters['business_types']);
 </style>
 
 <!-- Your vendor filters -->
-<?php if ($searchQuery !== '') : ?>
-  <div class="search-sidebar-intro">
-    <nav class="gcc-search-breadcrumbs" aria-label="<?= $block->escapeHtmlAttr(__('Breadcrumb')) ?>">
-      <a class="gcc-search-breadcrumbs__link"
-         href="<?= $block->escapeUrl($block->getUrl('')) ?>"
-         rel="home">
-        <?= $block->escapeHtml(__('Dashboard')) ?>
-      </a>
-      <span class="gcc-search-breadcrumbs__separator" aria-hidden="true">/</span>
-      <span class="gcc-search-breadcrumbs__current">
-        <?= $block->escapeHtml(__('Search results for:')) ?>
-        <span class="gcc-search-breadcrumbs__query">'<?= $block->escapeHtml($searchQuery) ?>'</span>
-      </span>
-    </nav>
-    <h1 class="gcc-search-results__title">
-      <span class="gcc-search-results__title-term"><?= $block->escapeHtml($searchQuery) ?></span>
-    </h1>
-  </div>
-<?php endif; ?>
+
 <div class="layout">
   <div class="filter-title1"><?= __('Filter') ?></div>
 
@@ -715,7 +604,8 @@ require(['jquery', 'domReady!'], function($){
 
     // --- Phase 2: Vendor Tab Count Sync (🔥 MAIN FIX) ---
     function updateVendorTabCount() {
-    var count = <?= (int)$block->getSearchCollection()->getSize() ?>;
+    
+    var count = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
 
     $('.mst-search__result-tabs a').each(function () {
         var $tab = $(this);

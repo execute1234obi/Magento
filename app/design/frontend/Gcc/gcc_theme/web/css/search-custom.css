@@ -1,0 +1,65 @@
+/* ===== MAIN WRAPPER ===== */
+.gcc-search-results {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 16px;
+    box-sizing: border-box;
+}
+
+/* ===== SIDEBAR ===== */
+.gcc-search-results .sidebar {
+    width: 100%;
+    position: sticky;
+    top: 120px; /* adjust based on header height */
+    align-self: start;
+}
+
+/* ===== RIGHT SIDE (RESULT AREA) ===== */
+.gcc-search-results > div:last-child {
+    width: 100%;
+    min-width: 0;
+}
+
+/* ===== PRODUCTS GRID FIX ===== */
+.catalogsearch-result-index .products-grid,
+.catalogsearch-result-index .u-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+/* ===== PRODUCT CARD FIX ===== */
+.product-item {
+    width: 100%;
+}
+
+/* ===== REMOVE EXTRA WIDTH ISSUES ===== */
+.catalogsearch-result-index .page-main {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding-top: 0 !important;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+    .gcc-search-results {
+        grid-template-columns: 240px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .gcc-search-results {
+        grid-template-columns: 1fr;
+    }
+
+    .gcc-search-results .sidebar {
+        position: static;
+    }
+
+    .catalogsearch-result-index .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

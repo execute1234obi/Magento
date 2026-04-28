@@ -9,7 +9,6 @@
         <referenceBlock name="catalog.topnav" remove="true"/>
         <referenceBlock name="page.main.title" remove="true"/>
         <referenceBlock name="catalogsearch.leftnav" remove="true"/>
-        
 
         <!-- CONTENT WRAPPER -->
         <referenceContainer name="content">
