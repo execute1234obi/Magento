@@ -22,28 +22,26 @@ $filters['business_types'] = array_filter($filters['business_types']);
  
 
   body.catalogsearch-result-index .search-sidebar-intro {
-    margin: 0 0 24px !important;
-    padding-top: 60px !important;
-    box-sizing: border-box !important;
+    margin: 0 0 22px !important;
   }
 
   body.catalogsearch-result-index .search-sidebar-intro .gcc-search-breadcrumbs {
     display: flex !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 14px !important;
     width: 100% !important;
-    margin: 0 0 10px !important;
+    margin: 0 0 12px !important;
     padding: 0 !important;
     box-sizing: border-box !important;
     flex-wrap: wrap !important;
-    color: #9ca3af !important;
+    color: #374151 !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
     font-weight: 400 !important;
   }
 
   body.catalogsearch-result-index .search-sidebar-intro .gcc-search-breadcrumbs__link {
-    color: #9ca3af !important;
+    color: #1f2937 !important;
     font-weight: 500 !important;
     text-decoration: none !important;
   }
@@ -60,7 +58,7 @@ $filters['business_types'] = array_filter($filters['business_types']);
   }
 
   body.catalogsearch-result-index .search-sidebar-intro .gcc-search-breadcrumbs__current {
-    color: #9ca3af !important;
+    color: #374151 !important;
   }
 
   body.catalogsearch-result-index .search-sidebar-intro .gcc-search-breadcrumbs__query {
@@ -71,8 +69,8 @@ $filters['business_types'] = array_filter($filters['business_types']);
   body.catalogsearch-result-index .search-sidebar-intro .gcc-search-results__title {
     margin: 0 !important;
     color: #111827 !important;
-    font-size: clamp(36px, 4.4vw, 56px) !important;
-    line-height: 1.05 !important;
+    font-size: clamp(40px, 4.5vw, 58px) !important;
+    line-height: 1.02 !important;
     font-weight: 800 !important;
     letter-spacing: -0.05em !important;
   }
@@ -80,8 +78,8 @@ $filters['business_types'] = array_filter($filters['business_types']);
   body.catalogsearch-result-index .search-sidebar-intro .gcc-search-results__title-term {
     display: inline-block !important;
     color: #111827 !important;
-    font-size: clamp(36px, 4.4vw, 56px) !important;
-    line-height: 1.05 !important;
+    font-size: clamp(40px, 4.5vw, 58px) !important;
+    line-height: 1.02 !important;
     font-weight: 800 !important;
   }
 
@@ -525,31 +523,8 @@ $filters['business_types'] = array_filter($filters['business_types']);
       background-position: calc(100% - 24px) 50%, calc(100% - 16px) 50%;
     }
   }
-
+  
 </style>
-
-<?php if ($searchQuery): ?>
-  <div class="search-sidebar-intro">
-    <nav class="gcc-search-breadcrumbs">
-      <a class="gcc-search-breadcrumbs__link" href="<?= $block->escapeUrl($block->getUrl('')) ?>">
-        <?= $block->escapeHtml(__('Home')) ?>
-      </a>
-
-      <span class="gcc-search-breadcrumbs__separator">/</span>
-
-      <span class="gcc-search-breadcrumbs__current">
-        <?= $block->escapeHtml(__('Search results for:')) ?>
-        <strong class="gcc-search-breadcrumbs__query">'<?= $block->escapeHtml($searchQuery) ?>'</strong>
-      </span>
-    </nav>
-
-    <h1 class="gcc-search-results__title">
-      <span class="gcc-search-results__title-term">
-        <?= $block->escapeHtml($searchQuery) ?>
-      </span>
-    </h1>
-  </div>
-<?php endif; ?>
 
 <!-- Your vendor filters -->
 

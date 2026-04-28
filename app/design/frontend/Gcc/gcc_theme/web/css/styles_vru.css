@@ -7,40 +7,6 @@
     padding-top:20px;
 }
 
-/* html {
-    scroll-behavior: smooth;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(31, 63, 117, 0.32) transparent;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-html::-webkit-scrollbar-track,
-body::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(31, 63, 117, 0.30), rgba(31, 63, 117, 0.58));
-    border: 1px solid rgba(255, 255, 255, 0.9);
-    border-radius: 999px;
-    min-height: 34px;
-}
-
-html::-webkit-scrollbar-thumb:hover,
-body::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(31, 63, 117, 0.42), rgba(31, 63, 117, 0.72));
-}
-
-/* ================================ */
-/* Global Typography for Entire Site */
-/* ================================ */
-
 body,
 body *{
     font-family:'Inter',sans-serif !important;
@@ -332,7 +298,7 @@ body.catalogsearch-result-index .breadcrumbs{
 body.catalogsearch-result-index .search-page-header{
     width:100%;
     max-width:1320px;
-    margin:0 auto 24px;
+    margin:0 auto 30px;
     padding:0 16px;
     box-sizing:border-box;
 }
@@ -342,8 +308,8 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
     display:flex;
     align-items:center;
     flex-wrap:wrap;
-    gap:10px;
-    margin:0 0 10px;
+    gap:8px;
+    margin:0 0 14px;
     padding:0;
     font-size:14px;
     line-height:1.4;
@@ -352,7 +318,7 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
 
 /* link */
 body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs a{
-    color:#6B7280;
+    color:#2563EB;
     font-weight:500;
     text-decoration:none;
 }
@@ -371,11 +337,11 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs stro
 /* main title */
 body.catalogsearch-result-index .search-main-title{
     margin:0;
-    font-size:clamp(32px,4vw,46px);
+    font-size:clamp(42px,6vw,64px);
     line-height:1.05;
     font-weight:800;
     color:#111827;
-    letter-spacing:-0.04em;
+    letter-spacing:-0.03em;
 }
 
 /* spacing before grid */
@@ -385,17 +351,15 @@ body.catalogsearch-result-index .search-main-title{
 @media(max-width:767px){
 
 body.catalogsearch-result-index .search-page-header{
-    margin-bottom:18px;
+    margin-bottom:22px;
 }
 
 body.catalogsearch-result-index .search-main-title{
-    font-size:30px;
+    font-size:36px;
 }
 
 body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
     font-size:13px;
-    gap:8px;
-    margin-bottom:8px;
 }
 
 }
@@ -429,3 +393,6 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
     grid-template-columns: 280px 1fr;
     gap: 32px;
 } */
+
+
+

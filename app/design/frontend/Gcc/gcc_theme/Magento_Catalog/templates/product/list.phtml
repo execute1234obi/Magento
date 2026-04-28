@@ -66,9 +66,17 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
         
         ?>
         <article class="u-card">
-            <a class="u-imgbox" href="<?= $_product->getProductUrl(); ?>">
-                <img src="<?= $imgUrl; ?>" alt="<?= $block->escapeHtml($_product->getName()); ?>" />
-            </a>
+            <div class="u-card__media">
+                <a class="u-imgbox" href="<?= $_product->getProductUrl(); ?>">
+                    <img src="<?= $imgUrl; ?>" alt="<?= $block->escapeHtml($_product->getName()); ?>" />
+                </a>
+
+                <button class="u-favorite" type="button" aria-label="<?= $block->escapeHtmlAttr(__('Add to favorites')) ?>" title="<?= $block->escapeHtmlAttr(__('Add to favorites')) ?>">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 20.5l-1.4-1.3C5.4 14.1 2 11.1 2 7.4 2 4.5 4.3 2.2 7.2 2.2c1.7 0 3.3.8 4.3 2.1 1-1.3 2.6-2.1 4.3-2.1 2.9 0 5.2 2.3 5.2 5.2 0 3.7-3.4 6.7-8.6 11.8L12 20.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
 
             <h3 class="u-title"><?= $block->escapeHtml($_product->getName()); ?></h3>
             <div class="u-price">
@@ -88,18 +96,9 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
 
             <div class="u-brand">
                 <span><?= $block->escapeHtml($vendorName); ?></span>
-                <?php
-                /** --- FIXED MEDIA VARIABLES --- **/
-// Pehle storemediaUrl define karein
-$storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-
-// Phir varifyImage define karein jo isi URL ko use karega
-//$varify = $storemediaUrl . "wysiwyg/VerificationBadgeIcon.png";
-                $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
-            $varify =$mediaUrl."pub/media/wysiwyg/VerificationBadgeIcon.png";
-                if ($isVerified): ?>
-                    <span class="u-verified" title="<?= $block->escapeHtmlAttr(__('Verified vendor')); ?>">
-                        <img src="<?= $block->escapeUrl($varify); ?>" alt="Verified" width="7%">
+                <?php if ($isVerified): ?>
+                    <span class="u-verified-badge" title="<?= $block->escapeHtmlAttr(__('Verified vendor')); ?>" aria-label="<?= $block->escapeHtmlAttr(__('Verified vendor')); ?>">
+                        &#10003;
                     </span>
                 <?php endif; ?>
             </div>
@@ -126,17 +125,22 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 <?php endif; ?>
 
 <style>
-.u-grid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; max-width: 100%; min-width: 0; }
-.u-card { background:#fff; border:1px solid #e6edf7; border-radius:14px; padding:16px; position:relative; display:flex; flex-direction:column; box-shadow:0 1px 0 rgba(16,24,40,.02); transition: box-shadow .18s ease, transform .18s ease; }
+.products.wrapper.search-products-wrapper { width: 100%; max-width: 100%; min-width: 0; }
+.products.wrapper.search-products-wrapper > .u-grid { display: grid !important; gap: 16px !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; width: 100% !important; max-width: 100% !important; min-width: 0 !important; align-items: stretch !important; grid-auto-flow: row !important; }
+.products.wrapper.search-products-wrapper > .u-grid > .u-card { min-width: 0; width: 100%; }
+.u-card { background:#fff; border:1px solid #dfe9f5; border-radius:16px; padding:14px; position:relative; display:flex; flex-direction:column; height:100%; box-shadow:0 1px 0 rgba(16,24,40,.02); transition: box-shadow .18s ease, transform .18s ease, border-color .18s ease; min-width:0; }
 .u-card:hover { box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-2px); }
-.u-imgbox { position:relative; border-radius:12px; background:#f6f8ff; height:170px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:14px; }
-.u-imgbox img { width:88%; height:88%; object-fit:contain; display:block; }
-.u-title { font-size:18px; line-height:1.25; font-weight:700; color:#111827; margin:0 0 8px; min-height:45px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.u-price { font-size:16px; color:#111827; font-weight:600; margin-bottom:14px; }
-.u-divider { height:1px; background:#eef2f7; margin:2px 0 12px; border:0; }
-.u-brand { display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:6px; }
-.u-verified { /*display:inline-flex; */align-items:center; justify-content:center; /*width:18px;*/ height:18px; border-radius:999px; /*background:#eaf2ff;*/ color:#2d62f0; }
-.u-country { display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:14px; }
+.u-card__media { position:relative; }
+.u-imgbox { position:relative; border-radius:14px; background:#f5f7fb; height:152px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:12px; }
+.u-imgbox img { width:84%; height:84%; object-fit:contain; display:block; }
+.u-favorite { position:absolute; top:10px; right:10px; width:30px; height:30px; border:0; border-radius:8px; background:#fff; color:#1f3f75; box-shadow:0 8px 18px rgba(31,63,117,.10); display:inline-flex; align-items:center; justify-content:center; cursor:default; padding:0; }
+.u-favorite svg { width:16px; height:16px; display:block; }
+.u-title { font-size:16px; line-height:1.32; font-weight:700; color:#111827; margin:0 0 6px; min-height:42px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-width:0; }
+.u-price { font-size:14px; color:#111827; font-weight:600; margin-bottom:12px; min-width:0; }
+.u-divider { height:1px; background:#eef2f7; margin:0 0 12px; border:0; }
+.u-brand { display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:5px; font-size:14px; min-width:0; }
+.u-verified-badge { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:999px; background:#2f94f6; color:#fff; font-size:11px; line-height:1; box-shadow:0 8px 18px rgba(47,148,246,.18); }
+.u-country { display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:13px; min-width:0; }
 /* .u-flag { width:26px; height:18px; border-radius:4px; background:#e6f6ea; display:inline-block; } */
 .u-flag {
   width: 24px;
@@ -146,7 +150,7 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
   display: inline-block;
 }
 
-.u-cta { margin-top:16px; width:100%; height:48px; border-radius:12px; border:1px solid #1A3764; background:#fff; color:#1A3764; font-weight:600; font-size:16px; cursor:pointer; transition: background .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease; }
+.u-cta { margin-top:14px; width:100%; height:40px; border-radius:10px; border:1px solid #1A3764; background:#fff; color:#1A3764; font-weight:600; font-size:14px; cursor:pointer; transition: background .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease; }
 .u-cta:hover { background:rgba(26, 55, 100, 0.06); border-color:#1A3764; box-shadow:0 2px 8px rgba(26,55,100,.15); }
 .price-as-configured,
 .price-from,
@@ -161,15 +165,9 @@ body.catalogsearch-result-index .toolbar.toolbar-products {
   box-sizing: border-box;
 }
 
-@media (min-width: 768px) and (max-width: 1199px) {
-  .u-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 767px) {
-  .u-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .products.wrapper.search-products-wrapper > .u-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
     gap: 16px;
   }
 
@@ -178,9 +176,16 @@ body.catalogsearch-result-index .toolbar.toolbar-products {
     padding: 14px;
   }
 
+  .u-favorite {
+    width: 28px;
+    height: 28px;
+    top: 8px;
+    right: 8px;
+  }
+
   .u-imgbox {
-    height: 150px;
-    margin-bottom: 12px;
+    height: 140px;
+    margin-bottom: 10px;
   }
 
   .u-title {
@@ -189,13 +194,13 @@ body.catalogsearch-result-index .toolbar.toolbar-products {
   }
 
   .u-price {
-    font-size: 15px;
-    margin-bottom: 12px;
+    font-size: 14px;
+    margin-bottom: 10px;
   }
 
   .u-cta {
-    height: 44px;
-    font-size: 15px;
+    height: 40px;
+    font-size: 14px;
   }
 
   body.catalogsearch-result-index .toolbar.toolbar-products {

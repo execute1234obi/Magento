@@ -2,27 +2,33 @@
 /** @var \Custom\SearchExtended\Block\Index\Vendors $block */
 
 $vendors = $block->getSearchCollection();
+$mediaBaseUrl = preg_replace(
+    '#/(en|ar|default)(/|$)#i',
+    '/',
+    rtrim((string) $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA), '/') . '/pub/media/'
+);
+$logoPlaceholder = $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg');
 ?>
 
 <style>
   #vendors {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding-top: 6px;
+    gap: 14px;
+    padding-top: 4px;
     min-width: 0;
   }
 
   .search-vendor-card {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 22px;
+    gap: 18px;
     width: 100%;
-    padding: 20px 22px;
+    padding: 18px 20px;
     background: #ffffff;
     border: 1px solid #e7edf5;
-    border-radius: 20px;
-    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.05);
+    border-radius: 18px;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.05);
     box-sizing: border-box;
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   }
@@ -36,15 +42,15 @@ $vendors = $block->getSearchCollection();
   .search-vendor-card__main {
     display: flex;
     align-items: flex-start;
-    gap: 16px;
+    gap: 14px;
     min-width: 0;
   }
 
   .search-vendor-card__logo {
-    flex: 0 0 56px;
-    width: 56px;
-    height: 56px;
-    border-radius: 18px;
+    flex: 0 0 52px;
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
     border: 1px solid #e5eaf2;
     background: linear-gradient(180deg, #fbfcfe 0%, #f6f9fd 100%);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -66,7 +72,7 @@ $vendors = $block->getSearchCollection();
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
 
   .search-vendor-card__title-row {
@@ -78,7 +84,7 @@ $vendors = $block->getSearchCollection();
 
   .search-vendor-card__title-link {
     color: #1e2b4a;
-    font-size: 20px;
+    font-size: 18px;
     line-height: 1.15;
     font-weight: 700;
     text-decoration: none;
@@ -105,17 +111,17 @@ $vendors = $block->getSearchCollection();
 
   .search-vendor-card__subtitle {
     color: #8b95a7;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.35;
     font-weight: 600;
   }
 
   .search-vendor-card__description {
     color: #3f4654;
-    font-size: 14px;
-    line-height: 1.75;
+    font-size: 13px;
+    line-height: 1.6;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
@@ -125,8 +131,8 @@ $vendors = $block->getSearchCollection();
     flex-direction: column;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 14px;
-    min-width: 180px;
+    gap: 12px;
+    min-width: 160px;
   }
 
   .search-vendor-card__country {
@@ -134,7 +140,7 @@ $vendors = $block->getSearchCollection();
     align-items: center;
     gap: 8px;
     color: #6b7280;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.3;
     font-weight: 600;
     white-space: nowrap;
@@ -153,13 +159,13 @@ $vendors = $block->getSearchCollection();
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 42px;
-    padding: 0 20px;
+    min-height: 40px;
+    padding: 0 18px;
     border-radius: 10px;
     border: 1px solid rgba(31, 63, 117, 0.08);
     background: #cfdde8;
     color: #1f3f75;
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1;
     font-weight: 600;
     text-decoration: none !important;
@@ -184,8 +190,8 @@ $vendors = $block->getSearchCollection();
 
   .search-vendor-pager {
     width: 100%;
-    margin-top: 28px;
-    padding-top: 24px;
+    margin-top: 22px;
+    padding-top: 20px;
     border-top: 1px solid #e7edf5;
     box-sizing: border-box;
   }
@@ -215,7 +221,7 @@ $vendors = $block->getSearchCollection();
 
   .search-vendor-pager .pager--search-inner > .limiter .limiter-label {
     color: #1f2937;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
     line-height: 1.2;
   }
@@ -225,7 +231,7 @@ $vendors = $block->getSearchCollection();
     -webkit-appearance: none;
     -moz-appearance: none;
     min-width: 96px;
-    height: 48px;
+    height: 44px;
     padding: 0 42px 0 16px;
     border: 1px solid #dbe3f0;
     border-radius: 12px;
@@ -281,7 +287,7 @@ $vendors = $block->getSearchCollection();
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 48px;
+    min-height: 44px;
     padding: 0 16px;
     border: 1px solid #dbe3f0;
     border-radius: 12px;
@@ -296,19 +302,19 @@ $vendors = $block->getSearchCollection();
   }
 
   .search-vendor-pager .pager--search-inner .page {
-    min-width: 48px;
+    min-width: 44px;
     padding: 0;
   }
 
   .search-vendor-pager .pager--search-inner .action,
   .search-vendor-pager .pager--search-inner .disabled {
-    min-width: 126px;
+    min-width: 112px;
     gap: 8px;
   }
 
   .search-vendor-pager .pager--search-inner .pages-item-previous a,
   .search-vendor-pager .pager--search-inner .pages-item-previous .disabled {
-    min-width: 148px;
+    min-width: 128px;
   }
 
   .search-vendor-pager .pager--search-inner .item.current .page {
@@ -366,7 +372,7 @@ $vendors = $block->getSearchCollection();
 
     .search-vendor-card {
       padding: 16px;
-      border-radius: 18px;
+      border-radius: 16px;
     }
 
     .search-vendor-card__main {
@@ -381,7 +387,7 @@ $vendors = $block->getSearchCollection();
     }
 
     .search-vendor-card__title-link {
-      font-size: 17px;
+      font-size: 16px;
     }
 
     .search-vendor-card__description {
@@ -399,8 +405,8 @@ $vendors = $block->getSearchCollection();
     }
 
     .search-vendor-pager {
-      margin-top: 22px;
-      padding-top: 20px;
+      margin-top: 20px;
+      padding-top: 18px;
     }
 
     .search-vendor-pager .pager--search-inner > .limiter {
@@ -414,9 +420,9 @@ $vendors = $block->getSearchCollection();
 
     .search-vendor-pager .pager--search-inner > .limiter .limiter-options {
       min-width: 84px;
-      height: 44px;
+      height: 40px;
       padding-right: 38px;
-      font-size: 15px;
+      font-size: 14px;
     }
 
     .search-vendor-pager .pager--search-inner > .pages {
@@ -433,16 +439,16 @@ $vendors = $block->getSearchCollection();
 
     .search-vendor-pager .pager--search-inner .action,
     .search-vendor-pager .pager--search-inner .disabled {
-      min-width: 112px;
-      min-height: 44px;
+      min-width: 104px;
+      min-height: 40px;
       padding: 0 14px;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .search-vendor-pager .pager--search-inner .page {
-      min-width: 44px;
-      min-height: 44px;
-      font-size: 14px;
+      min-width: 40px;
+      min-height: 40px;
+      font-size: 13px;
     }
   }
 </style>
@@ -455,15 +461,18 @@ $vendors = $block->getSearchCollection();
             $vendorUrl = $this->getBaseUrl() . 'shop/v' . $vendorId;
             $vendorName = trim((string) $block->getVendorName($vendor));
             $countryCode = trim((string) $vendor->getData('country_id'));
-            $countryName = $block->getCountryName($countryCode);
-            $countryFlag = $block->getCountryFlagUrl($countryCode);
+            $countryName = trim((string) $block->getCountryName($countryCode));
+            $countryFlag = trim((string) $block->getCountryFlagUrl($countryCode));
             $businessType = trim((string) $block->getBusinessTypeLabel($vendor));
             $description = trim((string) $block->getBusinessDescriptions($vendor));
             $websiteUrl = $block->getWebsiteUrl($vendor) ?: $vendorUrl;
             $logo = trim((string) $vendor->getData('upload_logo'));
-            $mediaUrl = $logo
-                ? $block->getUrl('pub/media/') . ltrim($logo, '/')
-                : $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg');
+            $logoPath = $logo !== ''
+                ? preg_replace('#/+#', '/', preg_replace('#^(?:/?pub/media/|/?media/)#i', '', $logo))
+                : '';
+            $mediaUrl = $logoPath !== ''
+                ? rtrim($mediaBaseUrl, '/') . '/' . ltrim((string) $logoPath, '/')
+                : $logoPlaceholder;
             $isVerified = $block->isVerifiedVendor($vendorId);
             $isExternalWebsite = $websiteUrl !== $vendorUrl;
             ?>
@@ -472,7 +481,10 @@ $vendors = $block->getSearchCollection();
                 <div class="search-vendor-card__main">
                     <a class="search-vendor-card__logo" href="<?= $block->escapeUrl($vendorUrl) ?>" aria-label="<?= $block->escapeHtmlAttr($vendorName) ?>">
                         <img src="<?= $block->escapeUrl($mediaUrl) ?>"
-                             alt="<?= $block->escapeHtmlAttr($vendorName) ?>">
+                             alt="<?= $block->escapeHtmlAttr($vendorName) ?>"
+                             loading="lazy"
+                             decoding="async"
+                             onerror="this.onerror=null;this.src='<?= $block->escapeUrl($logoPlaceholder) ?>';">
                     </a>
 
                     <div class="search-vendor-card__body">
