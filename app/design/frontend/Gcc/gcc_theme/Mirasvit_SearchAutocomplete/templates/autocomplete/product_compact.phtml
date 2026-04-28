@@ -8,17 +8,21 @@ $placeholder = $block->escapeUrl(
 
 <script type="text/html" id="magento_catalog_product">
     <a rel="noreferrer"
+       class="search-autocomplete-panel__row search-autocomplete-panel__row--product"
        data-bind="attr: { href: url, 'aria-label': '<?= $block->escapeJs(__('View product details: ')) ?>' + name }"
-       style="display:flex;align-items:center;gap:10px;width:100%;min-width:0;text-decoration:none;color:inherit;">
+    >
         <!-- ko if: $parents[2].config.isShowImage -->
-        <span style="width:40px;height:40px;flex:0 0 40px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid #e5e7eb;border-radius:8px;background:#fff;">
+        <span class="search-autocomplete-panel__thumb">
             <img data-bind="attr: { src: (imageUrl ? imageUrl : '<?= $placeholder ?>'), alt: '<?= $block->escapeJs(__('Product image: ')) ?>' + name }"
-                 style="width:100%;height:100%;object-fit:contain;display:block;" />
+                 />
         </span>
         <!-- /ko -->
 
-        <span
-            data-bind="html: name, highlight"
-            style="min-width:0;flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#111827;font-size:14px;font-weight:600;line-height:1.4;"></span>
+        <span class="search-autocomplete-panel__content">
+            <span class="search-autocomplete-panel__title" data-bind="html: name, highlight"></span>
+            <!-- ko if: description || sku -->
+            <span class="search-autocomplete-panel__subtitle" data-bind="text: description || sku, highlight"></span>
+            <!-- /ko -->
+        </span>
     </a>
 </script>

@@ -1,10 +1,30 @@
-<div style="color:red;">🔥 Template HIT: vnecoms_vendors</div>
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$placeholder = $block->escapeUrl(
+    $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg')
+);
+?>
+
 <script type="text/html" id="vnecoms_vendors">
-    <li class="mst-search__item">
-        <a data-bind="attr: { href: url }">
-              <span style="color:red;">✅ Template Loaded</span>
-            <span class="vendor-title" data-bind="text: title"></span>
-            <div class="vendor-detail" data-bind="text: detail"></div>
-        </a>
-    </li>
+    <a class="search-autocomplete-panel__row search-autocomplete-panel__row--vendor"
+       data-bind="attr: { href: url, 'aria-label': '<?= $block->escapeJs(__('View vendor details: ')) ?>' + title }">
+        <span class="search-autocomplete-panel__thumb">
+            <img data-bind="attr: {
+                src: (logo ? logo : '<?= $placeholder ?>'),
+                alt: title
+            }" />
+        </span>
+
+        <span class="search-autocomplete-panel__content">
+            <span class="search-autocomplete-panel__title" data-bind="text: title, highlight"></span>
+            <!-- ko if: detail -->
+            <span class="search-autocomplete-panel__subtitle" data-bind="text: detail, highlight"></span>
+            <!-- /ko -->
+        </span>
+
+        <!-- ko if: detail && detail.toLowerCase().indexOf('verified') !== -1 -->
+        <span class="search-autocomplete-panel__badge" aria-hidden="true">&#10003;</span>
+        <!-- /ko -->
+    </a>
 </script>

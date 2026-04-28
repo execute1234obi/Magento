@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="sidebar.main" remove="true"/>
+        <referenceContainer name="sidebar.additional" remove="true"/>
+        <referenceBlock name="checkout.cart.sidebar" remove="true"/>
+
+        <referenceContainer name="content">
+            <block class="Vendor\QuoteRequest\Block\Customer\Details"
+                   name="rfq.customer.details"
+                   template="Vendor_QuoteRequest::customer/details.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

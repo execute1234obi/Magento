@@ -135,7 +135,8 @@
 /* --- Responsive tweaks --- */
 @media (max-width: 575.98px){
   .vendor-card{ max-width: 92vw; padding: 20px 18px; min-height: 420px; }
-  .vendor-description{ -webkit-line-clamp: 5; }
+  /* Hide the long description copy on phones so the card stays clean */
+  .vendor-description{ display:none; }
 }
 @media (min-width: 576px) and (max-width: 1199.98px){
   .vendor-card{ max-width: 320px; }

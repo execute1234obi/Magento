@@ -1,4 +1,33 @@
 @import '_newsletter.less';
+html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(31, 63, 117, 0.32) transparent;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(31, 63, 117, 0.30), rgba(31, 63, 117, 0.58));
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
+    min-height: 34px;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(31, 63, 117, 0.42), rgba(31, 63, 117, 0.72));
+}
 .page-main {
     padding-top: 50px; // adjust this based on your header height
 }
