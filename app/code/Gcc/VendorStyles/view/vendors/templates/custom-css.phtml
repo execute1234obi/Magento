@@ -2934,18 +2934,18 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
         align-items: stretch !important;
         box-sizing: border-box !important;
         position: fixed !important;
-        top: var(--vendor-product-grid-filter-drawer-top, 148px) !important;
-        right: 16px !important;
-        width: min(1180px, calc(100vw - 24px)) !important;
-        max-width: calc(100vw - 24px) !important;
-        height: calc(100vh - var(--vendor-product-grid-filter-drawer-top, 148px) - 24px) !important;
-        height: calc(100dvh - var(--vendor-product-grid-filter-drawer-top, 148px) - 24px) !important;
-        max-height: calc(100vh - var(--vendor-product-grid-filter-drawer-top, 148px) - 24px) !important;
-        max-height: calc(100dvh - var(--vendor-product-grid-filter-drawer-top, 148px) - 24px) !important;
+        top: auto !important;
+        bottom: 12px !important;
+        left: 8px !important;
+        right: 8px !important;
+        width: auto !important;
+        max-width: none !important;
+        height: auto !important;
+        max-height: none !important;
         margin: 0 !important;
-        padding: 20px 22px 18px !important;
+        padding: 12px 14px 10px !important;
         border: 1px solid #dfe8f5 !important;
-        border-radius: 18px !important;
+        border-radius: 16px !important;
         background: #ffffff !important;
         box-shadow: 0 24px 60px rgba(17, 44, 98, 0.18) !important;
         overflow: hidden !important;
@@ -2955,12 +2955,6 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
         opacity: 0;
         visibility: hidden;
         pointer-events: none;
-        scrollbar-gutter: stable;
-        scrollbar-width: thin;
-        scrollbar-color: #b8c9e3 #f4f8fd;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-        touch-action: pan-y;
         transition: transform 0.28s ease, opacity 0.2s ease, visibility 0.2s ease;
     }
 
@@ -2988,9 +2982,9 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 16px;
-        margin: -20px -22px 18px;
-        padding: 20px 22px 14px;
+        gap: 10px;
+        margin: -12px -14px 10px;
+        padding: 12px 14px 8px;
         background: linear-gradient(180deg, #ffffff 88%, rgba(255, 255, 255, 0.92) 100%);
         border-bottom: 1px solid #edf2fb;
     }
@@ -2998,20 +2992,14 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
     body.catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body,
     body.vendors-catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body,
     body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body {
-        flex: 1 1 auto;
+        flex: 0 0 auto;
         position: relative;
         min-height: 0;
         display: block;
         width: 100%;
         padding: 0;
         overflow-x: hidden !important;
-        overflow-y: auto !important;
-        scrollbar-gutter: stable;
-        scrollbar-width: thin;
-        scrollbar-color: #b8c9e3 #f4f8fd;
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain;
-        touch-action: pan-y;
+        overflow-y: visible !important;
     }
 
     body.catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__viewport,
@@ -3022,27 +3010,6 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
         display: block;
         width: 100%;
         overflow: visible !important;
-    }
-
-    body.catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar,
-    body.vendors-catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar,
-    body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar {
-        width: 10px;
-    }
-
-    body.catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar-track,
-    body.vendors-catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar-track,
-    body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar-track {
-        background: #f4f8fd;
-        border-radius: 999px;
-    }
-
-    body.catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar-thumb,
-    body.vendors-catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar-thumb,
-    body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__body::-webkit-scrollbar-thumb {
-        background: #b8c9e3;
-        border-radius: 999px;
-        border: 2px solid #f4f8fd;
     }
 
     body.catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__title,
@@ -3085,8 +3052,8 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
     body.vendors-catalog-product-index .admin__data-grid-filters-wrap .admin__data-grid-filters,
     body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .admin__data-grid-filters {
         display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 18px 18px;
+        grid-template-columns: repeat(13, minmax(0, 1fr));
+        gap: 10px 12px;
         align-items: start;
         margin: 0;
         padding: 0;
@@ -3194,8 +3161,9 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
     body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .admin__data-grid-filters > .vendor-product-grid-filter-range {
         display: grid !important;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        column-gap: 18px;
-        row-gap: 8px;
+        grid-column: span 4;
+        column-gap: 8px;
+        row-gap: 4px;
         align-items: start;
     }
 
@@ -3263,10 +3231,10 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
     body.vendors-catalog-product-index .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__matrix,
     body[class*="catalog-product-index"] .admin__data-grid-filters-wrap .vendor-product-grid-filter-panel__matrix {
         display: grid;
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-        gap: 18px 18px;
+        grid-template-columns: repeat(13, minmax(0, 1fr));
+        gap: 8px 10px;
         align-items: start;
-        margin: 18px 0 0;
+        margin: 8px 0 0;
         padding: 0;
         width: 100%;
         min-width: 0;
@@ -3353,9 +3321,9 @@ body[class*="catalog-product-index"] .vendor-product-grid-toolbar-source-row .ad
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        gap: 12px;
-        margin: 16px -22px -18px;
-        padding: 16px 22px 18px;
+        gap: 10px;
+        margin: 8px -14px -10px;
+        padding: 10px 14px 12px;
         background: linear-gradient(180deg, rgba(255, 255, 255, 0.88) 0%, #ffffff 18px);
         border-top: 1px solid #edf2fb;
         backdrop-filter: blur(6px);
@@ -3807,6 +3775,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         scrollContainer.dataset.vendorProductScrollBound = 'true';
+        // Keep the drawer scrollable even when the page body is locked.
         scrollContainer.addEventListener('wheel', function (event) {
             var maxScrollTop;
             var nextScrollTop;
@@ -3827,7 +3796,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 event.stopPropagation();
                 scrollContainer.scrollTop = Math.max(0, Math.min(maxScrollTop, nextScrollTop));
             }
-        }, { passive: false });
+        }, { passive: false, capture: true });
     }
 
     function arrangeVendorProductFilterSections(filterWrap, filterBody) {
@@ -4090,8 +4059,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var isDesktop = isVendorProductFilterDrawerDesktop();
         var filterBody;
         var filterViewport;
+        var wasOpen;
         var isOpen;
-        var triggerRect;
         var topOffset;
 
         if (!filterWrap) {
@@ -4102,8 +4071,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         ensureVendorProductFilterPanel(filterWrap);
 
+        wasOpen = filterWrap.dataset.vendorProductFilterDrawerOpen === 'true';
         isOpen = isDesktop && filterWrap.classList.contains('_show');
         setVendorProductFilterDrawerState(isOpen);
+        filterWrap.dataset.vendorProductFilterDrawerOpen = isOpen ? 'true' : 'false';
 
         if (backdrop) {
             backdrop.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
@@ -4113,18 +4084,19 @@ document.addEventListener('DOMContentLoaded', function () {
             filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
             filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
 
-            if (filterBody) {
+            if (filterBody && !wasOpen) {
                 filterBody.scrollTop = 0;
             }
 
-            if (filterViewport) {
+            if (filterViewport && !wasOpen) {
                 filterViewport.scrollTop = 0;
             }
 
-            filterWrap.scrollTop = 0;
+            if (!wasOpen) {
+                filterWrap.scrollTop = 0;
+            }
 
-            triggerRect = filterButton ? filterButton.getBoundingClientRect() : filterWrap.getBoundingClientRect();
-            topOffset = Math.max(140, Math.round(((triggerRect && typeof triggerRect.bottom === 'number') ? triggerRect.bottom : 0) + 16));
+            topOffset = 80;
             body.style.setProperty('--vendor-product-grid-filter-drawer-top', topOffset + 'px');
         } else {
             body.style.removeProperty('--vendor-product-grid-filter-drawer-top');

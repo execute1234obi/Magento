@@ -12,7 +12,7 @@
     $requestPath = strtolower(trim((string) $block->getRequest()->getPathInfo(), '/'));
     $isAccountPage = in_array($fullActionName, ['account_index_index', 'vendors_account_index', 'default_vendors_account'], true)
         || strpos($requestPath, 'vendors/account') !== false;
-    $hidePageTitle = $isAccountPage && $pageTitle === 'Account';
+    $hidePageTitle = ($isAccountPage && $pageTitle === 'Account');
 ?>
 
 <style>
