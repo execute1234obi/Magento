@@ -1,4 +1,3 @@
-<?php //echo $block->getFormUrl(); ?>
 <style>
     <?php if($block->getLang()=="ar"){ ?>
       
@@ -102,7 +101,9 @@ iframe.wpwl-control {
     src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
-
+<script src="<?php echo $block->getFormUrl(); ?>"></script>
+<form action="<?php echo $block->getShopperUrl(); ?>" class="paymentWidgets"
+      data-brands="<?php echo $block->getPaymentBrand(); ?>"></form>
 
 <script>
     /*global define */
@@ -142,12 +143,12 @@ function displayName(element) {
     });
 }
 
-var wpwlOptions = {
+let wpwlOptions = {
     locale: "<?php echo $block->getLang();?>",
     
     /** 🔥 Important: keeps the iframe open — do NOT use _top */
-    //paymentTarget: "_self",
-    paymentTarget: "_Top",
+    paymentTarget: "_self",
+
     /** Prevent widget from removing the form after submit */
     preventCheckoutRedirect: true,
 
@@ -257,6 +258,3 @@ var wpwlOptions = {
     <h1><?php echo __('Please note,ApplePay only works on IOS and Safari browsers') ?></h1>
     <p><?php echo __('To proceed with the payment, please click on the below button') ?></p>
 <?php } ?>
-<script src="<?php echo $block->getFormUrl(); ?>"></script>
-<form action="<?php echo $block->getShopperUrl(); ?>" class="paymentWidgets"
-      data-brands="<?php echo $block->getPaymentBrand(); ?>"></form>
