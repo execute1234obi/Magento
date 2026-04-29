@@ -122,6 +122,7 @@ class Request extends \Magento\Framework\App\Action\Action
         }
         try {
             $base = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+            //$base = "https://hypocrite-wildcard-oops.ngrok-free.dev/";
             $statusUrl = $base . "hyperpay/index/status/?method=" . $order->getPayment()->getData('method');
             $urlReq = $this->prepareTheCheckout($order, $statusUrl);
 
@@ -176,7 +177,8 @@ class Request extends \Magento\Framework\App\Action\Action
             "&paymentType=" . $paymentType .
             "&customer.email=" . $email .
             "&customParameters[plugin]=magento" .
-            "&shipping.customer.email=" . $email;
+            "&shipping.customer.email=" . $email .
+            "&integrity=true";
         $accesstoken = $this->_adapter->getAccessToken();
         $auth = array('Authorization' => 'Bearer ' . $accesstoken);
         $this->_helper->setHeaders($auth);
@@ -220,9 +222,14 @@ class Request extends \Magento\Framework\App\Action\Action
         if (!isset($decodedData['id'])) {
             $this->_helper->doError(__('Request id is not found'));
         }
-        return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'];
+        //return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'];
 
+       //for 3d secure
+        $integrity = $decodedData['integrity'] ?? '';
 
+return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId="
+    . $decodedData['id']
+    . "&integrity=" . urlencode($integrity);
     }
 
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
