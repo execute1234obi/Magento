@@ -134,8 +134,8 @@ iframe.wpwl-control {
     //    }
     // }
 
-   jq331 = jQuery.noConflict(true);
-
+   //jq331 = jQuery.noConflict(true);
+var jq331 = jQuery.noConflict();
 function displayName(element) {
     jq331('.wpwl-brand-card').each(function () {
         jq331(element).append(this);
@@ -147,7 +147,7 @@ var wpwlOptions = {
     
     /** 🔥 Important: keeps the iframe open — do NOT use _top */
     //paymentTarget: "_self",
-    paymentTarget: "_Top",
+    paymentTarget: "_top",
     /** Prevent widget from removing the form after submit */
     preventCheckoutRedirect: true,
 
