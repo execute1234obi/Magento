@@ -272,7 +272,7 @@ class Request extends \Magento\Framework\App\Action\Action
         'testMode' => 'EXTERNAL',
          'customParameters[3DS2_enrolled]' => 'true',
          'customParameters[3DS2_flow]' => 'challenge',  
-         "&Integrity=true"
+        'integrity' => 'true' // This is a flag to indicate that we want integrity in response, not a request param
     ];
 
     // optional plugin info
