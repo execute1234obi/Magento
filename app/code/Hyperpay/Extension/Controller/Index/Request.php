@@ -164,9 +164,19 @@ class Request extends \Magento\Framework\App\Action\Action
     $currency     = $this->_adapter->getSupportedCurrencyCode($method);
     $paymentType  = $this->_adapter->getPaymentType($method);
     $entityId     = $this->_adapter->getEntity($method);
-    $baseUrl      = rtrim($this->_adapter->getUrl(), '/'); // ensure trailing slash
-    $url          = $baseUrl . '/v1/checkouts';
+    // $baseUrl      = rtrim($this->_adapter->getUrl(), '/'); // ensure trailing slash
+    // $url          = $baseUrl . '/v1/checkouts';
+    $baseUrl = $this->_adapter->getUrl();
 
+// remove trailing slash only
+$baseUrl = rtrim($baseUrl, '/');
+
+// ensure no duplicate /v1
+if (str_ends_with($baseUrl, '/v1')) {
+    $url = $baseUrl . '/checkouts';
+} else {
+    $url = $baseUrl . '/v1/checkouts';
+}
     // Build parameters as array (safer than string concatenation)
     $params = [
         'entityId'              => $entityId,
