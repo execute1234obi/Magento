@@ -178,7 +178,9 @@ class Request extends \Magento\Framework\App\Action\Action
             "&customer.email=" . $email .
             "&customParameters[plugin]=magento" .
             "&shipping.customer.email=" . $email .
-            "&integrity=true";
+           "&testMode=EXTERNAL" .
+    "&customParameters[3DS2_enrolled]=true" .
+    "&customParameters[3DS2_flow]=challenge";
         $accesstoken = $this->_adapter->getAccessToken();
         $auth = array('Authorization' => 'Bearer ' . $accesstoken);
         $this->_helper->setHeaders($auth);
@@ -241,7 +243,11 @@ return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId="
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization:Bearer ' . $auth));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);// this should be set to true in production
+        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);// this should be set to true in production
+       // for production
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+        //end for production
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $responseData = curl_exec($ch);
         if (curl_errno($ch)) {
