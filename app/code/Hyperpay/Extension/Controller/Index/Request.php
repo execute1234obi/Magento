@@ -216,7 +216,10 @@ class Request extends \Magento\Framework\App\Action\Action
     $accesstoken = $this->_adapter->getAccessToken();
     $headers     = ['Authorization: Bearer ' . $accesstoken];
 
-    echo "<pre>";
+echo "<pre>";
+echo "BASE URL: " . $baseUrl . "\n";
+echo "FINAL URL: " . $url . "\n";
+echo "REQUEST PARAMS: \n";
 print_r($params);
 
     // Execute cURL request
