@@ -180,7 +180,9 @@ class Request extends \Magento\Framework\App\Action\Action
             "&shipping.customer.email=" . $email .
            "&testMode=EXTERNAL" .
     "&customParameters[3DS2_enrolled]=true" .
-    "&customParameters[3DS2_flow]=challenge";
+    "&customParameters[3DS2_flow]=challenge".
+    "&Integrity=true"
+    ;
         $accesstoken = $this->_adapter->getAccessToken();
         $auth = array('Authorization' => 'Bearer ' . $accesstoken);
         $this->_helper->setHeaders($auth);
