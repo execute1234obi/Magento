@@ -2,41 +2,33 @@
 
 namespace Hyperpay\Extension\Controller\Index;
 
-
 class Request extends \Magento\Framework\App\Action\Action
 {
     /**
-     *
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
     /**
-     *
      * @var \Magento\Framework\View\Result\PageFactory
      */
     protected $_pageFactory;
     /**
-     *
      * @var \Magento\Framework\Registry
      */
     protected $_coreRegistry;
     /**
-     *
      * @var \Hyperpay\Extension\Helper\Data
      */
     protected $_helper;
     /**
-     *
      * @var \Magento\Checkout\Model\Session
      */
     protected $_checkoutSession;
     /**
-     *
      * @var \Hyperpay\Extension\Model\Adapter
      */
     protected $_adapter;
     /**
-     *
      * @var \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress
      */
     protected $_remote;
@@ -45,30 +37,17 @@ class Request extends \Magento\Framework\App\Action\Action
      */
     protected $_stockManagement;
     /**
-     *
      * @var \Magento\Framework\Locale\Resolver
      */
     protected $_resolver;
     protected $_quoteFactory;
     /**
-     *
      * @var string
      */
     protected $_storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
     /**
      * Constructor
-     *
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Framework\Registry $coreRegistry
-     * @param \Hyperpay\Extension\Helper\Data $helper
-     * @param \Magento\Checkout\Model\Session $checkoutSession
-     * @param \Magento\Framework\View\Result\PageFactory $pageFactory
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\Locale\Resolver $resolver
-     * @param \Magento\CatalogInventory\Api\StockManagementInterface $stockManagement
-     * @param \Hyperpay\Extension\Model\Adapter $adapter
-     * @param \Magento\Framework\HTTP\PhpEnvironment\RemoteAddress $remote
      */
     public function __construct(
         \Magento\Framework\App\Action\Context                  $context,
@@ -95,7 +74,6 @@ class Request extends \Magento\Framework\App\Action\Action
         $this->_remote = $remote;
         $this->_stockManagement = $stockManagement;
         $this->_quoteFactory = $quoteFactory;
-
     }
 
     public function execute()
@@ -110,217 +88,115 @@ class Request extends \Magento\Framework\App\Action\Action
             $this->messageManager->addError($e->getMessage());
             return $this->_pageFactory->create();
         }
+
         $quote = $this->_quoteFactory->create()->load($order->getQuoteId());
         $quote->setIsActive(true);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
+
         if (($order->getState() !== 'new') && ($order->getState() !== 'pending_payment')) {
-            $this->messageManager->addError(__("This order has already been processed,Please place a new order"));
+            $this->messageManager->addError(__("This order has already been processed, Please place a new order"));
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('checkout/onepage/failure');
             return $resultRedirect;
         }
+
         try {
             $base = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
-            //$base = "https://hypocrite-wildcard-oops.ngrok-free.dev/";
             $statusUrl = $base . "hyperpay/index/status/?method=" . $order->getPayment()->getData('method');
-            $urlReq = $this->prepareTheCheckout($order, $statusUrl);
+            
+            // Returns Array: ['script_url' => ..., 'integrity' => ...]
+            $checkoutData = $this->prepareTheCheckout($order, $statusUrl);
+
+            // ✅ FIXED: Separately registering values to avoid Unserialize errors
+            $this->_coreRegistry->register('formurl', $checkoutData['script_url']);
+            $this->_coreRegistry->register('integrity_hash', $checkoutData['integrity']);
+            $this->_coreRegistry->register('status', $statusUrl);
 
         } catch (\Exception $e) {
             $this->messageManager->addError($e->getMessage());
             $resultRedirect = $this->resultRedirectFactory->create();
             $resultRedirect->setPath('checkout/onepage/failure');
             return $resultRedirect;
-     }
-
-        $this->_coreRegistry->register('formurl', $urlReq);
-        $this->_coreRegistry->register('status', $statusUrl);
+        }
 
         return $this->_pageFactory->create();
     }
 
     /**
      * Build data and make a request to hyperpay payment gateway
-     * and return url of form
-     *
-     * @param $order
-     * @return string
      */
-//     public function prepareTheCheckout($order, $status)
-//     {
+    public function prepareTheCheckout($order, $status)
+    {
+        $payment = $order->getPayment();
+        $method = $payment->getData('method');
+        $email = $order->getBillingAddress()->getEmail();
+        $orderId = $order->getIncrementId();
 
-//         $payment = $order->getPayment();
-//         $method = $payment->getData('method');
-//         $email = $order->getBillingAddress()->getEmail();
-//         //order#
-//         $orderId = $order->getIncrementId();
-//         $amount = $order->getBaseGrandTotal();
-//         $total = $this->_helper->convertPrice($payment, $amount);
+        $amount = $order->getBaseGrandTotal();
+        $total = $this->_helper->convertPrice($payment, $amount);
 
-//         if ($this->_adapter->getEnv()) {
-//             $grandTotal = (int)$total;
+        $grandTotal = $this->_adapter->getEnv() 
+            ? (int)$total 
+            : number_format($total, 2, '.', '');
 
-//         } else {
-//             $grandTotal = number_format($total, 2, '.', '');
-//         }
+        $currency = $this->_adapter->getSupportedCurrencyCode($method);
+        $paymentType = $this->_adapter->getPaymentType($method);
+        $entityId = $this->_adapter->getEntity($method);
+        
+        $baseUrl = rtrim($this->_adapter->getUrl(), '/') . '/';
+        $url = $baseUrl . 'v1/checkouts';
 
-//         $currency = $this->_adapter->getSupportedCurrencyCode($method);
-//         $paymentType = $this->_adapter->getPaymentType($method);
-//         $this->_adapter->setPaymentTypeAndCurrency($order, $paymentType, $currency);
-//         $entityId = $this->_adapter->getEntity($method);
-//         $baseUrl = $this->_adapter->getUrl();
-//         $url = $baseUrl . 'checkouts';
-//         $data = "entityId=" . $entityId .
-//             "&notificationUrl=" . urlencode($status) .
-//             "&amount=" . $grandTotal .
-//             "&currency=" . $currency .
-//             "&paymentType=" . $paymentType .
-//             "&customer.email=" . $email .
-//             "&customParameters[plugin]=magento" .
-//             "&shipping.customer.email=" . $email .
-//             "&testMode=EXTERNAL" .
-//     "&customParameters[3DS2_enrolled]=true" .
-//     "&customParameters[3DS2_flow]=challenge".
-//     "&Integrity=true";
-//         $accesstoken = $this->_adapter->getAccessToken();
-//         $auth = array('Authorization' => 'Bearer ' . $accesstoken);
-//         $this->_helper->setHeaders($auth);
-//         $data .= $this->_helper->getBillingAndShippingAddress($order);
-//         if (!empty($this->_adapter->getRiskChannelId())) {
-//             $data .= "&risk.channelId=" . $this->_adapter->getRiskChannelId() .
-//                 "&risk.serviceId=I" .
-//                 "&risk.amount=" . $grandTotal .
-//                 "&risk.parameters[USER_DATA1]=Mobile";
-//         }
-//         $data .= $this->_adapter->getModeHyperpay();
-//         if ($method == 'HyperPay_SadadNcb') {
-//             $data .= "&bankAccount.country=SA";
-//         }
-//         if ($method == 'HyperPay_stc') {
-//             $data .= '&customParameters[branch_id]=1';
-//             $data .= '&customParameters[teller_id]=1';
-//             $data .= '&customParameters[device_id]=1';
-//             $data .= '&customParameters[locale]=' . substr($this->_resolver->getLocale(), 0, -3);
-//             $data .= '&customParameters[bill_number]=' . $orderId;
+        $params = [
+            'entityId'              => $entityId,
+            'amount'                => $grandTotal,
+            'currency'              => $currency,
+            'paymentType'           => $paymentType,
+            'notificationUrl'       => $status,
+            'customer.email'        => $email,
+            'merchantTransactionId' => $orderId,
+            'testMode'              => 'EXTERNAL',
+            'integrity'             => 'true',
+            'customParameters[plugin]' => 'magento',
+            'customParameters[3DS2_enrolled]' => 'true',
+            'customParameters[3DS2_flow]'     => 'challenge'
+        ];
 
-//         }
+        if ($method == 'HyperPay_stc') {
+            $params['customParameters[branch_id]'] = '1';
+            $params['customParameters[teller_id]'] = '1';
+            $params['customParameters[device_id]'] = '1';
+            $params['customParameters[bill_number]'] = $orderId;
+        }
 
-//         if($method == 'HyperPay_Click_to_pay'){
-//             $data .= '&customParameters[3DS2_enrolled]=true';
-//         }
+        $data = http_build_query($params);
 
-//         if ($this->_adapter->getEnv() && $method == 'HyperPay_ApplePay') {
-//             $data .= "&customParameters[3Dsimulator.forceEnrolled]=true";
-//         }
+        $addressData = $this->_helper->getBillingAndShippingAddress($order);
+        if (!empty($addressData)) {
+            $data .= '&' . ltrim($addressData, '&');
+        }
 
-// //        if ($this->checkIfExist($order, $entityId, $accesstoken, $orderId, $baseUrl)) {
-// //            $count = $this->_checkoutSession->getNumerOfTries();
-// //            $orderId .= "_$count";
-// //            $count = $count++;
-// //            $this->_checkoutSession->setNumerOfTries($count);
-// //        }
-//         $data .= "&merchantTransactionId=" . $orderId;
-//         $decodedData = $this->_helper->getCurlReqData($url, $data);
+        $accessToken = $this->_adapter->getAccessToken();
+        $this->_helper->setHeaders(['Authorization' => 'Bearer ' . $accessToken]);
 
-//         // if (!isset($decodedData['id'])) {
-//         //     $this->_helper->doError(__('Request id is not found'));
-//         // }
-//         // Is naye code se:
-// if (!isset($decodedData['id'])) {
-//     $resCode = $decodedData['result']['code'] ?? 'N/A';
-//     $resDesc = $decodedData['result']['description'] ?? 'No description';
-//     throw new \Exception("HyperPay Error: [$resCode] $resDesc");
-// }
-//         //return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'];
+        $decodedData = $this->_helper->getCurlReqData($url, $data);
 
-//        //for 3d secure
-//         $integrity = $decodedData['integrity'] ?? '';
+        if (!isset($decodedData['id'])) {
+            $resCode = $decodedData['result']['code'] ?? 'N/A';
+            $resDesc = $decodedData['result']['description'] ?? 'No description';
+            throw new \Exception("HyperPay Error: [$resCode] $resDesc");
+        }
 
-// return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId="
-//     . $decodedData['id']
-//     . "&integrity=" . urlencode($integrity);
-//     }
-public function prepareTheCheckout($order, $status)
-{
-    $payment = $order->getPayment();
-    $method = $payment->getData('method');
-    $email = $order->getBillingAddress()->getEmail();
-    $orderId = $order->getIncrementId();
+        $checkoutId = $decodedData['id'];
+        $integrityHash = $decodedData['integrity'] ?? '';
 
-    $amount = $order->getBaseGrandTotal();
-    $total = $this->_helper->convertPrice($payment, $amount);
-
-    // HyperPay expects decimal string for amount in production (e.g. 92.00)
-    $grandTotal = $this->_adapter->getEnv() 
-        ? (int)$total 
-        : number_format($total, 2, '.', '');
-
-    $currency = $this->_adapter->getSupportedCurrencyCode($method);
-    $paymentType = $this->_adapter->getPaymentType($method);
-    $entityId = $this->_adapter->getEntity($method);
-    
-    // Ensure Base URL ends with / as per "Important" note in Step 3 of your doc
-    $baseUrl = rtrim($this->_adapter->getUrl(), '/') . '/';
-    $url = $baseUrl . 'v1/checkouts';
-
-    // ✅ STEP 1 PARAMS (Matching your Doc Example)
-    $params = [
-        'entityId'              => $entityId,
-        'amount'                => $grandTotal,
-        'currency'              => $currency,
-        'paymentType'           => $paymentType,
-        'notificationUrl'       => $status, // shooterResultUrl logic
-        'customer.email'        => $email,
-        'merchantTransactionId' => $orderId,
-        'testMode'              => 'EXTERNAL',
-        'integrity'             => 'true', // Flag to request SRI hash in response
-        'customParameters[plugin]' => 'magento',
-        'customParameters[3DS2_enrolled]' => 'true',
-        'customParameters[3DS2_flow]'     => 'challenge'
-    ];
-
-    if ($method == 'HyperPay_stc') {
-        $params['customParameters[branch_id]'] = '1';
-        $params['customParameters[teller_id]'] = '1';
-        $params['customParameters[device_id]'] = '1';
-        $params['customParameters[bill_number]'] = $orderId;
+        return [
+            'script_url' => $baseUrl . "v1/paymentWidgets.js?checkoutId=" . $checkoutId,
+            'integrity'  => $integrityHash,
+            'checkoutId' => $checkoutId
+        ];
     }
 
-    $data = http_build_query($params);
-
-    // Append billing/shipping if exists
-    $addressData = $this->_helper->getBillingAndShippingAddress($order);
-    if (!empty($addressData)) {
-        $data .= '&' . ltrim($addressData, '&');
-    }
-
-    // Auth Header
-    $accessToken = $this->_adapter->getAccessToken();
-    $this->_helper->setHeaders(['Authorization' => 'Bearer ' . $accessToken]);
-
-    // Send Request (POST)
-    $decodedData = $this->_helper->getCurlReqData($url, $data);
-
-    if (!isset($decodedData['id'])) {
-        $resCode = $decodedData['result']['code'] ?? 'N/A';
-        $resDesc = $decodedData['result']['description'] ?? 'No description';
-        throw new \Exception("HyperPay Error: [$resCode] $resDesc");
-    }
-
-    $checkoutId = $decodedData['id'];
-    
-    // Documentation Step 1 response returns this if integrity=true was sent
-    $integrityHash = $decodedData['integrity'] ?? '';
-	
-
-    // ✅ RETURN DATA ARRAY instead of just string
-    // This allows your template (.phtml) to put integrity in the right place
-    return [
-        'script_url' => $baseUrl . "v1/paymentWidgets.js?checkoutId=" . $checkoutId,
-        'integrity'  => $integrityHash,
-        'checkoutId' => $checkoutId
-    ];
-}
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
     {
         $url = $baseUrl . "query";
@@ -330,11 +206,8 @@ public function prepareTheCheckout($order, $status)
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization:Bearer ' . $auth));
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);// this should be set to true in production
-       // for production
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        //end for production
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $responseData = curl_exec($ch);
         if (curl_errno($ch)) {
@@ -342,10 +215,10 @@ public function prepareTheCheckout($order, $status)
         }
         curl_close($ch);
         $response = json_decode($responseData);
-        if ($response->result->code === "700.400.580") {
+        if (isset($response->result->code) && $response->result->code === "700.400.580") {
             return false;
         }
-        if (count($response->payments) == 0) {
+        if (!isset($response->payments) || count($response->payments) == 0) {
             return false;
         }
         $orderTime = new \DateTime($order->getCreatedAt());
@@ -356,9 +229,7 @@ public function prepareTheCheckout($order, $status)
             if ($diffDays <= 1) {
                 return true;
             }
-
         }
         return false;
-
     }
 }
