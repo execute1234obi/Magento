@@ -216,6 +216,9 @@ class Request extends \Magento\Framework\App\Action\Action
     $accesstoken = $this->_adapter->getAccessToken();
     $headers     = ['Authorization: Bearer ' . $accesstoken];
 
+    echo "<pre>";
+print_r($params);
+
     // Execute cURL request
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -234,8 +237,12 @@ class Request extends \Magento\Framework\App\Action\Action
     $decodedData = json_decode($responseData, true);
 
 // DEBUG LOG (IMPORTANT)
- print_r("decode".$decodedData);
-Print_r("response".$responseData);
+echo "<pre>";
+echo "RAW RESPONSE:\n";
+print_r($responseData);
+
+echo "\n\nDECODED RESPONSE:\n";
+print_r($decodedData);
 exit();
 if (empty($decodedData['id'])) {
 
