@@ -146,101 +146,165 @@ class Request extends \Magento\Framework\App\Action\Action
      * @param $order
      * @return string
      */
+//     public function prepareTheCheckout($order, $status)
+//     {
+
+//         $payment = $order->getPayment();
+//         $method = $payment->getData('method');
+//         $email = $order->getBillingAddress()->getEmail();
+//         //order#
+//         $orderId = $order->getIncrementId();
+//         $amount = $order->getBaseGrandTotal();
+//         $total = $this->_helper->convertPrice($payment, $amount);
+
+//         if ($this->_adapter->getEnv()) {
+//             $grandTotal = (int)$total;
+
+//         } else {
+//             $grandTotal = number_format($total, 2, '.', '');
+//         }
+
+//         $currency = $this->_adapter->getSupportedCurrencyCode($method);
+//         $paymentType = $this->_adapter->getPaymentType($method);
+//         $this->_adapter->setPaymentTypeAndCurrency($order, $paymentType, $currency);
+//         $entityId = $this->_adapter->getEntity($method);
+//         $baseUrl = $this->_adapter->getUrl();
+//         $url = $baseUrl . 'checkouts';
+//         $data = "entityId=" . $entityId .
+//             "&notificationUrl=" . urlencode($status) .
+//             "&amount=" . $grandTotal .
+//             "&currency=" . $currency .
+//             "&paymentType=" . $paymentType .
+//             "&customer.email=" . $email .
+//             "&customParameters[plugin]=magento" .
+//             "&shipping.customer.email=" . $email .
+//             "&testMode=EXTERNAL" .
+//     "&customParameters[3DS2_enrolled]=true" .
+//     "&customParameters[3DS2_flow]=challenge".
+//     "&Integrity=true";
+//         $accesstoken = $this->_adapter->getAccessToken();
+//         $auth = array('Authorization' => 'Bearer ' . $accesstoken);
+//         $this->_helper->setHeaders($auth);
+//         $data .= $this->_helper->getBillingAndShippingAddress($order);
+//         if (!empty($this->_adapter->getRiskChannelId())) {
+//             $data .= "&risk.channelId=" . $this->_adapter->getRiskChannelId() .
+//                 "&risk.serviceId=I" .
+//                 "&risk.amount=" . $grandTotal .
+//                 "&risk.parameters[USER_DATA1]=Mobile";
+//         }
+//         $data .= $this->_adapter->getModeHyperpay();
+//         if ($method == 'HyperPay_SadadNcb') {
+//             $data .= "&bankAccount.country=SA";
+//         }
+//         if ($method == 'HyperPay_stc') {
+//             $data .= '&customParameters[branch_id]=1';
+//             $data .= '&customParameters[teller_id]=1';
+//             $data .= '&customParameters[device_id]=1';
+//             $data .= '&customParameters[locale]=' . substr($this->_resolver->getLocale(), 0, -3);
+//             $data .= '&customParameters[bill_number]=' . $orderId;
+
+//         }
+
+//         if($method == 'HyperPay_Click_to_pay'){
+//             $data .= '&customParameters[3DS2_enrolled]=true';
+//         }
+
+//         if ($this->_adapter->getEnv() && $method == 'HyperPay_ApplePay') {
+//             $data .= "&customParameters[3Dsimulator.forceEnrolled]=true";
+//         }
+
+// //        if ($this->checkIfExist($order, $entityId, $accesstoken, $orderId, $baseUrl)) {
+// //            $count = $this->_checkoutSession->getNumerOfTries();
+// //            $orderId .= "_$count";
+// //            $count = $count++;
+// //            $this->_checkoutSession->setNumerOfTries($count);
+// //        }
+//         $data .= "&merchantTransactionId=" . $orderId;
+//         $decodedData = $this->_helper->getCurlReqData($url, $data);
+
+//         // if (!isset($decodedData['id'])) {
+//         //     $this->_helper->doError(__('Request id is not found'));
+//         // }
+//         // Is naye code se:
+// if (!isset($decodedData['id'])) {
+//     $resCode = $decodedData['result']['code'] ?? 'N/A';
+//     $resDesc = $decodedData['result']['description'] ?? 'No description';
+//     throw new \Exception("HyperPay Error: [$resCode] $resDesc");
+// }
+//         //return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'];
+
+//        //for 3d secure
+//         $integrity = $decodedData['integrity'] ?? '';
+
+// return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId="
+//     . $decodedData['id']
+//     . "&integrity=" . urlencode($integrity);
+//     }
     public function prepareTheCheckout($order, $status)
-    {
+{
+    $payment = $order->getPayment();
+    $method = $payment->getData('method');
+    $email = $order->getBillingAddress()->getEmail();
+    $orderId = $order->getIncrementId();
+    $amount = $order->getBaseGrandTotal();
+    $total = $this->_helper->convertPrice($payment, $amount);
 
-        $payment = $order->getPayment();
-        $method = $payment->getData('method');
-        $email = $order->getBillingAddress()->getEmail();
-        //order#
-        $orderId = $order->getIncrementId();
-        $amount = $order->getBaseGrandTotal();
-        $total = $this->_helper->convertPrice($payment, $amount);
+    // Amount format handle karein
+    $grandTotal = $this->_adapter->getEnv() ? (int)$total : number_format($total, 2, '.', '');
+    
+    $currency = $this->_adapter->getSupportedCurrencyCode($method);
+    $paymentType = $this->_adapter->getPaymentType($method);
+    $entityId = $this->_adapter->getEntity($method);
+    $baseUrl = $this->_adapter->getUrl();
+    $url = $baseUrl . 'checkouts';
 
-        if ($this->_adapter->getEnv()) {
-            $grandTotal = (int)$total;
+    // Sabhi parameters ko ek array mein rakhein (Zyada safe method)
+    $params = [
+        'entityId'                => $entityId,
+        'amount'                  => $grandTotal,
+        'currency'                => $currency,
+        'paymentType'             => $paymentType,
+        'customer.email'          => $email,
+        'notificationUrl'         => $status,
+        'merchantTransactionId'   => $orderId,
+        'testMode'                => 'EXTERNAL',
+        'integrity'               => 'true', // Small 'i' try karein agar Error 404 aaye
+        'customParameters[plugin]'=> 'magento',
+        'customParameters[3DS2_enrolled]' => 'true',
+        'customParameters[3DS2_flow]'     => 'challenge'
+    ];
 
-        } else {
-            $grandTotal = number_format($total, 2, '.', '');
-        }
+    // Array ko string mein convert karein
+    $data = http_build_query($params);
 
-        $currency = $this->_adapter->getSupportedCurrencyCode($method);
-        $paymentType = $this->_adapter->getPaymentType($method);
-        $this->_adapter->setPaymentTypeAndCurrency($order, $paymentType, $currency);
-        $entityId = $this->_adapter->getEntity($method);
-        $baseUrl = $this->_adapter->getUrl();
-        $url = $baseUrl . 'checkouts';
-        $data = "entityId=" . $entityId .
-            "&notificationUrl=" . urlencode($status) .
-            "&amount=" . $grandTotal .
-            "&currency=" . $currency .
-            "&paymentType=" . $paymentType .
-            "&customer.email=" . $email .
-            "&customParameters[plugin]=magento" .
-            "&shipping.customer.email=" . $email .
-            "&testMode=EXTERNAL" .
-    "&customParameters[3DS2_enrolled]=true" .
-    "&customParameters[3DS2_flow]=challenge".
-    "&Integrity=true";
-        $accesstoken = $this->_adapter->getAccessToken();
-        $auth = array('Authorization' => 'Bearer ' . $accesstoken);
-        $this->_helper->setHeaders($auth);
-        $data .= $this->_helper->getBillingAndShippingAddress($order);
-        if (!empty($this->_adapter->getRiskChannelId())) {
-            $data .= "&risk.channelId=" . $this->_adapter->getRiskChannelId() .
-                "&risk.serviceId=I" .
-                "&risk.amount=" . $grandTotal .
-                "&risk.parameters[USER_DATA1]=Mobile";
-        }
-        $data .= $this->_adapter->getModeHyperpay();
-        if ($method == 'HyperPay_SadadNcb') {
-            $data .= "&bankAccount.country=SA";
-        }
-        if ($method == 'HyperPay_stc') {
-            $data .= '&customParameters[branch_id]=1';
-            $data .= '&customParameters[teller_id]=1';
-            $data .= '&customParameters[device_id]=1';
-            $data .= '&customParameters[locale]=' . substr($this->_resolver->getLocale(), 0, -3);
-            $data .= '&customParameters[bill_number]=' . $orderId;
+    // Address aur baki fields append karein (Helper method string return karta hai)
+    //$data .= $this->_helper->getBillingAndShippingAddress($order);
+    $data .= '&' . $this->_helper->getBillingAndShippingAddress($order);
+$data .= $this->_adapter->getModeHyperpay();
 
-        }
-
-        if($method == 'HyperPay_Click_to_pay'){
-            $data .= '&customParameters[3DS2_enrolled]=true';
-        }
-
-        if ($this->_adapter->getEnv() && $method == 'HyperPay_ApplePay') {
-            $data .= "&customParameters[3Dsimulator.forceEnrolled]=true";
-        }
-
-//        if ($this->checkIfExist($order, $entityId, $accesstoken, $orderId, $baseUrl)) {
-//            $count = $this->_checkoutSession->getNumerOfTries();
-//            $orderId .= "_$count";
-//            $count = $count++;
-//            $this->_checkoutSession->setNumerOfTries($count);
-//        }
-        $data .= "&merchantTransactionId=" . $orderId;
-        $decodedData = $this->_helper->getCurlReqData($url, $data);
-
-        // if (!isset($decodedData['id'])) {
-        //     $this->_helper->doError(__('Request id is not found'));
-        // }
-        // Is naye code se:
-if (!isset($decodedData['id'])) {
-    $resCode = $decodedData['result']['code'] ?? 'N/A';
-    $resDesc = $decodedData['result']['description'] ?? 'No description';
-    throw new \Exception("HyperPay Error: [$resCode] $resDesc");
-}
-        //return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'];
-
-       //for 3d secure
-        $integrity = $decodedData['integrity'] ?? '';
-
-return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId="
-    . $decodedData['id']
-    . "&integrity=" . urlencode($integrity);
+    // Extra conditional parameters
+    if ($method == 'HyperPay_stc') {
+        $data .= '&customParameters[branch_id]=1&customParameters[teller_id]=1&customParameters[device_id]=1';
+        $data .= '&customParameters[bill_number]=' . $orderId;
     }
 
+    $accesstoken = $this->_adapter->getAccessToken();
+    $auth = array('Authorization' => 'Bearer ' . $accesstoken);
+    $this->_helper->setHeaders($auth);
+
+    $decodedData = $this->_helper->getCurlReqData($url, $data);
+
+    if (!isset($decodedData['id'])) {
+        $resCode = $decodedData['result']['code'] ?? 'N/A';
+        $resDesc = $decodedData['result']['description'] ?? 'No description';
+        throw new \Exception("HyperPay Error: [$resCode] $resDesc");
+    }
+
+    $integrityHash = $decodedData['integrity'] ?? '';
+
+    return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'] . 
+           ($integrityHash ? "&integrity=" . urlencode($integrityHash) : "");
+}
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
     {
         $url = $baseUrl . "query";
