@@ -344,58 +344,90 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
 
     $params = [];
 
-    // Shipping
-    $shipping = $order->getShippingAddress();
-    if ($shipping) {
-        $streetShippingCompare = implode(',', $shipping->getStreet());
+    $isMigs = ($this->_adapter->getConnector($method) === 'migs');
 
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getCity()))) {
+    // ================= SHIPPING =================
+    $shipping = $order->getShippingAddress();
+
+    if ($shipping) {
+
+        $shippingStreet = implode(',', (array)$shipping->getStreet());
+
+        if (!($isMigs && !$this->isThisEnglishText($shipping->getCity()))) {
             $params['shipping.city'] = $shipping->getCity();
         }
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getCountryId()))) {
+
+        if (!($isMigs && !$this->isThisEnglishText($shipping->getCountryId()))) {
             $params['shipping.country'] = $shipping->getCountryId();
         }
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getPostcode()))) {
+
+        if (!($isMigs && !$this->isThisEnglishText($shipping->getPostcode()))) {
             $params['shipping.postcode'] = $shipping->getPostcode();
         }
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getFirstname()))) {
+
+        if (!($isMigs && !$this->isThisEnglishText($shipping->getFirstname()))) {
             $params['shipping.customer.givenName'] = $shipping->getFirstname();
         }
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getLastname()))) {
+
+        if (!($isMigs && !$this->isThisEnglishText($shipping->getLastname()))) {
             $params['shipping.customer.surname'] = $shipping->getLastname();
         }
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getTelephone()))) {
+
+        if (!($isMigs && !$this->isThisEnglishText($shipping->getTelephone()))) {
             $params['shipping.customer.phone'] = $shipping->getTelephone();
         }
-        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($streetShippingCompare))) {
-            $params = array_merge($params, $this->getStreetAddresses($shipping->getStreet(), "shipping"));
+
+        // SAFE STREET HANDLING (NO CRASH)
+        if (!($isMigs && !$this->isThisEnglishText($shippingStreet))) {
+
+            $streetParams = $this->getStreetAddresses((array)$shipping->getStreet(), "shipping");
+
+            if (is_array($streetParams)) {
+                $params = array_merge($params, $streetParams);
+            }
         }
     }
 
-    // Billing
+    // ================= BILLING =================
     $billing = $order->getBillingAddress();
-    $streetCompare = implode(',', $billing->getStreet());
 
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getCity()))) {
-        $params['billing.city'] = $billing->getCity();
-    }
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getCountryId()))) {
-        $params['billing.country'] = $billing->getCountryId();
-    }
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getFirstname()))) {
-        $params['customer.givenName'] = $billing->getFirstname();
-    }
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getTelephone()))) {
-        $params['customer.phone'] = $billing->getTelephone();
-    }
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getPostcode()))) {
-        $params['billing.postcode'] = $billing->getPostcode();
-    }
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getLastname()))) {
-        $params['customer.surname'] = $billing->getLastname();
-    }
-    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($streetCompare))) {
-        $params = array_merge($params, $this->getStreetAddresses($billing->getStreet(), "billing"));
+    if ($billing) {
+
+        $billingStreet = implode(',', (array)$billing->getStreet());
+
+        if (!($isMigs && !$this->isThisEnglishText($billing->getCity()))) {
+            $params['billing.city'] = $billing->getCity();
+        }
+
+        if (!($isMigs && !$this->isThisEnglishText($billing->getCountryId()))) {
+            $params['billing.country'] = $billing->getCountryId();
+        }
+
+        if (!($isMigs && !$this->isThisEnglishText($billing->getFirstname()))) {
+            $params['customer.givenName'] = $billing->getFirstname();
+        }
+
+        if (!($isMigs && !$this->isThisEnglishText($billing->getTelephone()))) {
+            $params['customer.phone'] = $billing->getTelephone();
+        }
+
+        if (!($isMigs && !$this->isThisEnglishText($billing->getPostcode()))) {
+            $params['billing.postcode'] = $billing->getPostcode();
+        }
+
+        if (!($isMigs && !$this->isThisEnglishText($billing->getLastname()))) {
+            $params['customer.surname'] = $billing->getLastname();
+        }
+
+        // SAFE STREET HANDLING (NO CRASH)
+        if (!($isMigs && !$this->isThisEnglishText($billingStreet))) {
+
+            $streetParams = $this->getStreetAddresses((array)$billing->getStreet(), "billing");
+
+            if (is_array($streetParams)) {
+                $params = array_merge($params, $streetParams);
+            }
+        }
     }
 
     return $params;
@@ -420,19 +452,39 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param  $type
      * @return string
      */
-    public function getStreetAddresses($street, $type)
-    {
-        $streetAdd = "";
-        foreach ($street as $key => $value) {
-            if ($key == '2')
-                break;
-            $end = $key + 1;
-            $streetAdd .= "&" . $type . "." . "street" . $end . "=" . $street[$key];
-        }
+    // public function getStreetAddresses($street, $type)
+    // {
+    //     $streetAdd = "";
+    //     foreach ($street as $key => $value) {
+    //         if ($key == '2')
+    //             break;
+    //         $end = $key + 1;
+    //         $streetAdd .= "&" . $type . "." . "street" . $end . "=" . $street[$key];
+    //     }
 
-        return $streetAdd;
+    //     return $streetAdd;
+    // }
+public function getStreetAddresses($street, $type)
+{
+    $data = [];
+
+    if (!is_array($street)) {
+        return $data;
     }
 
+    foreach ($street as $key => $value) {
+
+        if ($key >= 2) {
+            break;
+        }
+
+        $end = $key + 1;
+
+        $data[$type . '.street' . $end] = $value;
+    }
+
+    return $data;
+}
     /**
      * Post a request and retrieve decoded data
      *

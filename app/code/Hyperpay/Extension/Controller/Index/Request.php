@@ -236,7 +236,7 @@ class Request extends \Magento\Framework\App\Action\Action
         $this->_helper->doError(__('Request id is not found'));
     }
 
-    return $baseUrl . '/v1/paymentWidgets.js?checkoutId=' . $decodedData['id'];
+    return $baseUrl . '/paymentWidgets.js?checkoutId=' . $decodedData['id'];
 }
 
 
@@ -276,26 +276,4 @@ class Request extends \Magento\Framework\App\Action\Action
         return false;
 
     }
-
-public function getBillingAndShippingAddress($order)
-{
-    $billing = $order->getBillingAddress();
-    $shipping = $order->getShippingAddress();
-
-    return [
-        'billing.city'    => $billing->getCity(),
-        'billing.country' => $billing->getCountryId(),
-        'billing.street'  => implode(' ', $billing->getStreet()),
-        'billing.postcode'=> $billing->getPostcode(),
-        'billing.state'   => $billing->getRegion(),
-
-        'shipping.city'    => $shipping->getCity(),
-        'shipping.country' => $shipping->getCountryId(),
-        'shipping.street'  => implode(' ', $shipping->getStreet()),
-        'shipping.postcode'=> $shipping->getPostcode(),
-        'shipping.state'   => $shipping->getRegion(),
-    ];
-}
-
-
 }
