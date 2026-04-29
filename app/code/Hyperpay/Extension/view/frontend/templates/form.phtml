@@ -6,7 +6,13 @@ var wpwlOptions = {
 };
 </script>
 
-<script src="<?= $block->getFormUrl(); ?>"></script>
+<script 
+    src="<?= $block->getFormUrl(); ?>"
+    <?php if ($block->getIntegrityHash()): ?>
+        integrity="<?= $block->getIntegrityHash(); ?>"
+    <?php endif; ?>
+    crossorigin="anonymous">
+</script>
 
 <form action="<?= $block->getShopperUrl(); ?>"
       class="paymentWidgets"
