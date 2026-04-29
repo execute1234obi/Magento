@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<requests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:framework:Search/etc/search_request.xsd">
+    <request query="catalogsearch_fulltext" index="catalogsearch_fulltext">
+        <dimensions>
+            <dimension name="scope" value="default"/>
+        </dimensions>
+
+        <queries>
+            <query xsi:type="boolQuery" name="catalogsearch_fulltext" boost="1">
+                <queryReference clause="should" ref="search_query"/>
+            </query>
+
+            <query xsi:type="matchQuery" name="search_query" value="$search_term$">
+                <match field="*"/>
+            </query>
+        </queries>
+
+        <from>0</from>
+        <size>1000</size>
+    </request>
+</requests>
