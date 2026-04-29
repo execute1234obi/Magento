@@ -240,7 +240,7 @@ class Request extends \Magento\Framework\App\Action\Action
 //     . $decodedData['id']
 //     . "&integrity=" . urlencode($integrity);
 //     }
-  public function prepareTheCheckout($order, $status)
+public function prepareTheCheckout($order, $status)
 {
     $payment = $order->getPayment();
     $method = $payment->getData('method');
@@ -250,35 +250,35 @@ class Request extends \Magento\Framework\App\Action\Action
     $amount = $order->getBaseGrandTotal();
     $total = $this->_helper->convertPrice($payment, $amount);
 
-    $grandTotal = $this->_adapter->getEnv()
-        ? (int)$total
+    // HyperPay expects decimal string for amount in production (e.g. 92.00)
+    $grandTotal = $this->_adapter->getEnv() 
+        ? (int)$total 
         : number_format($total, 2, '.', '');
 
     $currency = $this->_adapter->getSupportedCurrencyCode($method);
     $paymentType = $this->_adapter->getPaymentType($method);
     $entityId = $this->_adapter->getEntity($method);
+    
+    // Ensure Base URL ends with / as per "Important" note in Step 3 of your doc
     $baseUrl = rtrim($this->_adapter->getUrl(), '/') . '/';
     $url = $baseUrl . 'v1/checkouts';
 
-    // ✅ STEP 1: REQUIRED PARAMS ONLY (as per docs)
+    // ✅ STEP 1 PARAMS (Matching your Doc Example)
     $params = [
-        'entityId' => $entityId,
-        'amount' => $grandTotal,
-        'currency' => $currency,
-        'paymentType' => $paymentType,
-        'customer.email' => $email,
-        'notificationUrl' => $status,
+        'entityId'              => $entityId,
+        'amount'                => $grandTotal,
+        'currency'              => $currency,
+        'paymentType'           => $paymentType,
+        'notificationUrl'       => $status, // shooterResultUrl logic
+        'customer.email'        => $email,
         'merchantTransactionId' => $orderId,
-        'testMode' => 'EXTERNAL',
-         'customParameters[3DS2_enrolled]' => 'true',
-         'customParameters[3DS2_flow]' => 'challenge',  
-        'integrity' => 'true' // This is a flag to indicate that we want integrity in response, not a request param
+        'testMode'              => 'EXTERNAL',
+        'integrity'             => 'true', // Flag to request SRI hash in response
+        'customParameters[plugin]' => 'magento',
+        'customParameters[3DS2_enrolled]' => 'true',
+        'customParameters[3DS2_flow]'     => 'challenge'
     ];
 
-    // optional plugin info
-    $params['customParameters[plugin]'] = 'magento';
-
-    // STC / method specific
     if ($method == 'HyperPay_stc') {
         $params['customParameters[branch_id]'] = '1';
         $params['customParameters[teller_id]'] = '1';
@@ -286,50 +286,34 @@ class Request extends \Magento\Framework\App\Action\Action
         $params['customParameters[bill_number]'] = $orderId;
     }
 
-    // IMPORTANT: build query safely (DOC compliant POST body)
     $data = http_build_query($params);
 
-    // OPTIONAL: billing/shipping (safe merge)
+    // Append billing/shipping if exists
     $addressData = $this->_helper->getBillingAndShippingAddress($order);
     if (!empty($addressData)) {
         $data .= '&' . ltrim($addressData, '&');
     }
 
-    $modeData = $this->_adapter->getModeHyperpay();
-    if (!empty($modeData)) {
-        $data .= '&' . ltrim($modeData, '&');
-    }
-
-    // Auth header
+    // Auth Header
     $accessToken = $this->_adapter->getAccessToken();
-    $this->_helper->setHeaders([
-        'Authorization' => 'Bearer ' . $accessToken
-    ]);
+    $this->_helper->setHeaders(['Authorization' => 'Bearer ' . $accessToken]);
 
-    // ✅ STEP 2: CALL API (POST as per docs)
+    // Send Request (POST)
     $decodedData = $this->_helper->getCurlReqData($url, $data);
 
-    // ERROR HANDLING
     if (!isset($decodedData['id'])) {
         $resCode = $decodedData['result']['code'] ?? 'N/A';
         $resDesc = $decodedData['result']['description'] ?? 'No description';
-
         throw new \Exception("HyperPay Error: [$resCode] $resDesc");
     }
 
     $checkoutId = $decodedData['id'];
+    
+    // Documentation Step 1 response returns this if integrity=true was sent
+    $integrityHash = $decodedData['integrity'] ?? '';
+	
 
-    // ⚠️ IMPORTANT: integrity is NOT from request params
-    // It is NOT guaranteed in response for checkout API
-    $integrity = $decodedData['integrity'] ?? '';
-
-    // STEP 3: JS URL (DOC format)
-    $scriptUrl = $baseUrl . "v1/paymentWidgets.js?checkoutId=" . $checkoutId;
-
-    if (!empty($integrity)) {
-        $scriptUrl .= "&integrity=" . urlencode($integrity);
-    }
-   $this->logger->debug(json_encode([
+  $this->logger->debug(json_encode([
     'checkout_id' => $checkoutId,
     'integrity' => $integrity,
     'base_url' => $baseUrl,
@@ -337,7 +321,13 @@ class Request extends \Magento\Framework\App\Action\Action
     'request_data' => $data,
     'script_url' => $scriptUrl
 ], JSON_PRETTY_PRINT));
-    return $scriptUrl;
+    // ✅ RETURN DATA ARRAY instead of just string
+    // This allows your template (.phtml) to put integrity in the right place
+    return [
+        'script_url' => $baseUrl . "v1/paymentWidgets.js?checkoutId=" . $checkoutId,
+        'integrity'  => $integrityHash,
+        'checkoutId' => $checkoutId
+    ];
 }
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
     {
