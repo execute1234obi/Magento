@@ -279,13 +279,23 @@ class Request extends \Magento\Framework\App\Action\Action
 
 public function getBillingAndShippingAddress($order)
 {
+    $billing = $order->getBillingAddress();
+    $shipping = $order->getShippingAddress();
+
     return [
-        'billing.city'    => $order->getBillingAddress()->getCity(),
-        'billing.country' => $order->getBillingAddress()->getCountryId(),
-        'shipping.city'   => $order->getShippingAddress()->getCity(),
-        'shipping.country'=> $order->getShippingAddress()->getCountryId(),
-        // add other fields as needed
+        'billing.city'    => $billing->getCity(),
+        'billing.country' => $billing->getCountryId(),
+        'billing.street'  => implode(' ', $billing->getStreet()),
+        'billing.postcode'=> $billing->getPostcode(),
+        'billing.state'   => $billing->getRegion(),
+
+        'shipping.city'    => $shipping->getCity(),
+        'shipping.country' => $shipping->getCountryId(),
+        'shipping.street'  => implode(' ', $shipping->getStreet()),
+        'shipping.postcode'=> $shipping->getPostcode(),
+        'shipping.state'   => $shipping->getRegion(),
     ];
 }
+
 
 }

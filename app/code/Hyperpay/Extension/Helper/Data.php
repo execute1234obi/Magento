@@ -252,91 +252,155 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
      * @param  $order
      * @return string
      */
+    // public function getBillingAndShippingAddress($order)
+    // {
+    //     $data = "";
+    //     $payment = $order->getPayment();
+    //     $method = $payment->getData('method');
+    //     $shippingAddress = $order->getShippingAddress();
+    //     if (isset($shippingAddress) && !empty($shippingAddress)) {
+    //         $firstNameShipping = $order->getShippingAddress()->getFirstname();
+    //         $surNameShipping = $order->getShippingAddress()->getLastname();
+    //         $countryShipping = $order->getShippingAddress()->getCountryId();
+    //         $telShipping = $order->getShippingAddress()->getTelephone();
+    //         $postCodeShipping = $order->getShippingAddress()->getPostcode();
+    //         $streetShipping = $order->getShippingAddress()->getStreet();
+    //         $cityShipping = $order->getShippingAddress()->getCity();
+    //         $streetShippingCompare = implode(',', $streetShipping);
+
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($cityShipping) == false)) {
+    //             $data .= "&shipping.city=" . $cityShipping;
+    //         }
+
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($countryShipping) == false)) {
+    //             $data .= "&shipping.country=" . $countryShipping;
+    //         }
+
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($postCodeShipping) == false)) {
+    //             $data .= "&shipping.postcode=" . $postCodeShipping;
+    //         }
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($firstNameShipping) == false)) {
+    //             $data .= "&shipping.customer.givenName=" . $firstNameShipping;
+    //         }
+
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($surNameShipping) == false)) {
+    //             $data .= "&shipping.customer.surname=" . $surNameShipping;
+    //         }
+
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($telShipping) == false)) {
+    //             $data .= "&shipping.customer.phone=" . $telShipping;
+    //         }
+    //         if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($streetShippingCompare) == false)) {
+    //             $data .= $this->getStreetAddresses($streetShipping, "shipping");
+    //         }
+    //     }
+
+    //     $firsName = $order->getBillingAddress()->getFirstname();
+    //     $surName = $order->getBillingAddress()->getLastname();
+    //     $country = $order->getBillingAddress()->getCountryId();
+    //     $tel = $order->getBillingAddress()->getTelephone();
+    //     $postCode = $order->getBillingAddress()->getPostcode();
+    //     $street = $order->getBillingAddress()->getStreet();
+    //     $city = $order->getBillingAddress()->getCity();
+    //     $streetCompare = implode(',', $street);
+
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($city) == false)) {
+    //         $data .= "&billing.city=" . $city;
+    //     }
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($country) == false)) {
+    //         $data .= "&billing.country=" . $country;
+    //     }
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($firsName) == false)) {
+    //         $data .= "&customer.givenName=" . $firsName;
+    //     }
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($tel) == false)) {
+    //         $data .= "&customer.phone=" . $tel;
+    //     }
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($postCode) == false)) {
+    //         $data .= "&billing.postcode=" . $postCode;
+    //     }
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($surName) == false)) {
+    //         $data .= "&customer.surname=" . $surName;
+    //     }
+
+
+    //     if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($streetCompare) == false)) {
+    //         $data .= $this->getStreetAddresses($street, "billing");
+    //     }
+
+
+    //     return $data;
+    //}
     public function getBillingAndShippingAddress($order)
-    {
-        $data = "";
-        $payment = $order->getPayment();
-        $method = $payment->getData('method');
-        $shippingAddress = $order->getShippingAddress();
-        if (isset($shippingAddress) && !empty($shippingAddress)) {
-            $firstNameShipping = $order->getShippingAddress()->getFirstname();
-            $surNameShipping = $order->getShippingAddress()->getLastname();
-            $countryShipping = $order->getShippingAddress()->getCountryId();
-            $telShipping = $order->getShippingAddress()->getTelephone();
-            $postCodeShipping = $order->getShippingAddress()->getPostcode();
-            $streetShipping = $order->getShippingAddress()->getStreet();
-            $cityShipping = $order->getShippingAddress()->getCity();
-            $streetShippingCompare = implode(',', $streetShipping);
+{
+    $payment = $order->getPayment();
+    $method  = $payment->getData('method');
 
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($cityShipping) == false)) {
-                $data .= "&shipping.city=" . $cityShipping;
-            }
+    $params = [];
 
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($countryShipping) == false)) {
-                $data .= "&shipping.country=" . $countryShipping;
-            }
+    // Shipping
+    $shipping = $order->getShippingAddress();
+    if ($shipping) {
+        $streetShippingCompare = implode(',', $shipping->getStreet());
 
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($postCodeShipping) == false)) {
-                $data .= "&shipping.postcode=" . $postCodeShipping;
-            }
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($firstNameShipping) == false)) {
-                $data .= "&shipping.customer.givenName=" . $firstNameShipping;
-            }
-
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($surNameShipping) == false)) {
-                $data .= "&shipping.customer.surname=" . $surNameShipping;
-            }
-
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($telShipping) == false)) {
-                $data .= "&shipping.customer.phone=" . $telShipping;
-            }
-            if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($streetShippingCompare) == false)) {
-                $data .= $this->getStreetAddresses($streetShipping, "shipping");
-            }
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getCity()))) {
+            $params['shipping.city'] = $shipping->getCity();
         }
-
-        $firsName = $order->getBillingAddress()->getFirstname();
-        $surName = $order->getBillingAddress()->getLastname();
-        $country = $order->getBillingAddress()->getCountryId();
-        $tel = $order->getBillingAddress()->getTelephone();
-        $postCode = $order->getBillingAddress()->getPostcode();
-        $street = $order->getBillingAddress()->getStreet();
-        $city = $order->getBillingAddress()->getCity();
-        $streetCompare = implode(',', $street);
-
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($city) == false)) {
-            $data .= "&billing.city=" . $city;
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getCountryId()))) {
+            $params['shipping.country'] = $shipping->getCountryId();
         }
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($country) == false)) {
-            $data .= "&billing.country=" . $country;
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getPostcode()))) {
+            $params['shipping.postcode'] = $shipping->getPostcode();
         }
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($firsName) == false)) {
-            $data .= "&customer.givenName=" . $firsName;
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getFirstname()))) {
+            $params['shipping.customer.givenName'] = $shipping->getFirstname();
         }
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($tel) == false)) {
-            $data .= "&customer.phone=" . $tel;
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getLastname()))) {
+            $params['shipping.customer.surname'] = $shipping->getLastname();
         }
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($postCode) == false)) {
-            $data .= "&billing.postcode=" . $postCode;
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($shipping->getTelephone()))) {
+            $params['shipping.customer.phone'] = $shipping->getTelephone();
         }
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($surName) == false)) {
-            $data .= "&customer.surname=" . $surName;
+        if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($streetShippingCompare))) {
+            $params = array_merge($params, $this->getStreetAddresses($shipping->getStreet(), "shipping"));
         }
-
-
-        if (!($this->_adapter->getConnector($method) == 'migs' && $this->isThisEnglishText($streetCompare) == false)) {
-            $data .= $this->getStreetAddresses($street, "billing");
-        }
-
-
-        return $data;
     }
+
+    // Billing
+    $billing = $order->getBillingAddress();
+    $streetCompare = implode(',', $billing->getStreet());
+
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getCity()))) {
+        $params['billing.city'] = $billing->getCity();
+    }
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getCountryId()))) {
+        $params['billing.country'] = $billing->getCountryId();
+    }
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getFirstname()))) {
+        $params['customer.givenName'] = $billing->getFirstname();
+    }
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getTelephone()))) {
+        $params['customer.phone'] = $billing->getTelephone();
+    }
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getPostcode()))) {
+        $params['billing.postcode'] = $billing->getPostcode();
+    }
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($billing->getLastname()))) {
+        $params['customer.surname'] = $billing->getLastname();
+    }
+    if (!($this->_adapter->getConnector($method) == 'migs' && !$this->isThisEnglishText($streetCompare))) {
+        $params = array_merge($params, $this->getStreetAddresses($billing->getStreet(), "billing"));
+    }
+
+    return $params;
+}
+
 
     /**
      * method to check if test passed is English
