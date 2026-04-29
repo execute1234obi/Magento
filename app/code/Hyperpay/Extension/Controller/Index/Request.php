@@ -246,34 +246,39 @@ class Request extends \Magento\Framework\App\Action\Action
     $method = $payment->getData('method');
     $email = $order->getBillingAddress()->getEmail();
     $orderId = $order->getIncrementId();
+
     $amount = $order->getBaseGrandTotal();
     $total = $this->_helper->convertPrice($payment, $amount);
 
-    $grandTotal = $this->_adapter->getEnv() ? (int)$total : number_format($total, 2, '.', '');
-    
+    $grandTotal = $this->_adapter->getEnv()
+        ? (int)$total
+        : number_format($total, 2, '.', '');
+
     $currency = $this->_adapter->getSupportedCurrencyCode($method);
     $paymentType = $this->_adapter->getPaymentType($method);
     $entityId = $this->_adapter->getEntity($method);
-    $baseUrl = $this->_adapter->getUrl();
-    $url = $baseUrl . 'checkouts';
+    $baseUrl = rtrim($this->_adapter->getUrl(), '/') . '/';
+    $url = $baseUrl . 'v1/checkouts';
 
-    // 1. Sabhi mandatory parameters ek array mein
+    // ✅ STEP 1: REQUIRED PARAMS ONLY (as per docs)
     $params = [
-        'entityId'                => $entityId,
-        'amount'                  => $grandTotal,
-        'currency'                => $currency,
-        'paymentType'             => $paymentType,
-        'customer.email'          => $email,
-        'notificationUrl'         => $status,
-        'merchantTransactionId'   => $orderId,
-        'testMode'                => 'EXTERNAL',
-        'integrity'               => 'true', 
-        'customParameters[plugin]'=> 'magento',
-        'customParameters[3DS2_enrolled]' => 'true',
-        'customParameters[3DS2_flow]'     => 'challenge'
+        'entityId' => $entityId,
+        'amount' => $grandTotal,
+        'currency' => $currency,
+        'paymentType' => $paymentType,
+        'customer.email' => $email,
+        'notificationUrl' => $status,
+        'merchantTransactionId' => $orderId,
+        'testMode' => 'EXTERNAL',
+         'customParameters[3DS2_enrolled]' => 'true',
+         'customParameters[3DS2_flow]' => 'challenge',  
+         "&Integrity=true"
     ];
 
-    // 2. Extra method-specific params
+    // optional plugin info
+    $params['customParameters[plugin]'] = 'magento';
+
+    // STC / method specific
     if ($method == 'HyperPay_stc') {
         $params['customParameters[branch_id]'] = '1';
         $params['customParameters[teller_id]'] = '1';
@@ -281,39 +286,51 @@ class Request extends \Magento\Framework\App\Action\Action
         $params['customParameters[bill_number]'] = $orderId;
     }
 
-    // 3. String banana (Clean way)
+    // IMPORTANT: build query safely (DOC compliant POST body)
     $data = http_build_query($params);
 
-    // 4. Address append karna (Ensure single & connection)
+    // OPTIONAL: billing/shipping (safe merge)
     $addressData = $this->_helper->getBillingAndShippingAddress($order);
     if (!empty($addressData)) {
         $data .= '&' . ltrim($addressData, '&');
     }
 
-    // 5. Mode append karna
     $modeData = $this->_adapter->getModeHyperpay();
     if (!empty($modeData)) {
         $data .= '&' . ltrim($modeData, '&');
     }
 
-    $accesstoken = $this->_adapter->getAccessToken();
-    $this->_helper->setHeaders(['Authorization' => 'Bearer ' . $accesstoken]);
+    // Auth header
+    $accessToken = $this->_adapter->getAccessToken();
+    $this->_helper->setHeaders([
+        'Authorization' => 'Bearer ' . $accessToken
+    ]);
 
+    // ✅ STEP 2: CALL API (POST as per docs)
     $decodedData = $this->_helper->getCurlReqData($url, $data);
 
-    // ERROR CHECKING
+    // ERROR HANDLING
     if (!isset($decodedData['id'])) {
         $resCode = $decodedData['result']['code'] ?? 'N/A';
         $resDesc = $decodedData['result']['description'] ?? 'No description';
-        
-        // Debugging ke liye pura payload log karein agar error aaye
-        throw new \Exception("HyperPay Error: [$resCode] $resDesc. Check if entityId or Amount is correct.");
+
+        throw new \Exception("HyperPay Error: [$resCode] $resDesc");
     }
 
-    $integrityHash = $decodedData['integrity'] ?? '';
+    $checkoutId = $decodedData['id'];
 
-    return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'] . 
-           ($integrityHash ? "&integrity=" . urlencode($integrityHash) : "");
+    // ⚠️ IMPORTANT: integrity is NOT from request params
+    // It is NOT guaranteed in response for checkout API
+    $integrity = $decodedData['integrity'] ?? '';
+
+    // STEP 3: JS URL (DOC format)
+    $scriptUrl = $baseUrl . "v1/paymentWidgets.js?checkoutId=" . $checkoutId;
+
+    if (!empty($integrity)) {
+        $scriptUrl .= "&integrity=" . urlencode($integrity);
+    }
+
+    return $scriptUrl;
 }
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
     {
