@@ -240,7 +240,7 @@ class Request extends \Magento\Framework\App\Action\Action
 //     . $decodedData['id']
 //     . "&integrity=" . urlencode($integrity);
 //     }
-    public function prepareTheCheckout($order, $status)
+  public function prepareTheCheckout($order, $status)
 {
     $payment = $order->getPayment();
     $method = $payment->getData('method');
@@ -249,7 +249,6 @@ class Request extends \Magento\Framework\App\Action\Action
     $amount = $order->getBaseGrandTotal();
     $total = $this->_helper->convertPrice($payment, $amount);
 
-    // Amount format handle karein
     $grandTotal = $this->_adapter->getEnv() ? (int)$total : number_format($total, 2, '.', '');
     
     $currency = $this->_adapter->getSupportedCurrencyCode($method);
@@ -258,7 +257,7 @@ class Request extends \Magento\Framework\App\Action\Action
     $baseUrl = $this->_adapter->getUrl();
     $url = $baseUrl . 'checkouts';
 
-    // Sabhi parameters ko ek array mein rakhein (Zyada safe method)
+    // 1. Sabhi mandatory parameters ek array mein
     $params = [
         'entityId'                => $entityId,
         'amount'                  => $grandTotal,
@@ -268,36 +267,47 @@ class Request extends \Magento\Framework\App\Action\Action
         'notificationUrl'         => $status,
         'merchantTransactionId'   => $orderId,
         'testMode'                => 'EXTERNAL',
-        'integrity'               => 'true', // Small 'i' try karein agar Error 404 aaye
+        'integrity'               => 'true', 
         'customParameters[plugin]'=> 'magento',
         'customParameters[3DS2_enrolled]' => 'true',
         'customParameters[3DS2_flow]'     => 'challenge'
     ];
 
-    // Array ko string mein convert karein
+    // 2. Extra method-specific params
+    if ($method == 'HyperPay_stc') {
+        $params['customParameters[branch_id]'] = '1';
+        $params['customParameters[teller_id]'] = '1';
+        $params['customParameters[device_id]'] = '1';
+        $params['customParameters[bill_number]'] = $orderId;
+    }
+
+    // 3. String banana (Clean way)
     $data = http_build_query($params);
 
-    // Address aur baki fields append karein (Helper method string return karta hai)
-    //$data .= $this->_helper->getBillingAndShippingAddress($order);
-    $data .= '&' . $this->_helper->getBillingAndShippingAddress($order);
-$data .= $this->_adapter->getModeHyperpay();
+    // 4. Address append karna (Ensure single & connection)
+    $addressData = $this->_helper->getBillingAndShippingAddress($order);
+    if (!empty($addressData)) {
+        $data .= '&' . ltrim($addressData, '&');
+    }
 
-    // Extra conditional parameters
-    if ($method == 'HyperPay_stc') {
-        $data .= '&customParameters[branch_id]=1&customParameters[teller_id]=1&customParameters[device_id]=1';
-        $data .= '&customParameters[bill_number]=' . $orderId;
+    // 5. Mode append karna
+    $modeData = $this->_adapter->getModeHyperpay();
+    if (!empty($modeData)) {
+        $data .= '&' . ltrim($modeData, '&');
     }
 
     $accesstoken = $this->_adapter->getAccessToken();
-    $auth = array('Authorization' => 'Bearer ' . $accesstoken);
-    $this->_helper->setHeaders($auth);
+    $this->_helper->setHeaders(['Authorization' => 'Bearer ' . $accesstoken]);
 
     $decodedData = $this->_helper->getCurlReqData($url, $data);
 
+    // ERROR CHECKING
     if (!isset($decodedData['id'])) {
         $resCode = $decodedData['result']['code'] ?? 'N/A';
         $resDesc = $decodedData['result']['description'] ?? 'No description';
-        throw new \Exception("HyperPay Error: [$resCode] $resDesc");
+        
+        // Debugging ke liye pura payload log karein agar error aaye
+        throw new \Exception("HyperPay Error: [$resCode] $resDesc. Check if entityId or Amount is correct.");
     }
 
     $integrityHash = $decodedData['integrity'] ?? '';
