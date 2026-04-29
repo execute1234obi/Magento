@@ -313,14 +313,6 @@ public function prepareTheCheckout($order, $status)
     $integrityHash = $decodedData['integrity'] ?? '';
 	
 
-  $this->logger->debug(json_encode([
-    'checkout_id' => $checkoutId,
-    'integrity' => $integrity,
-    'base_url' => $baseUrl,
-    'api_url' => $url,
-    'request_data' => $data,
-    'script_url' => $scriptUrl
-], JSON_PRETTY_PRINT));
     // ✅ RETURN DATA ARRAY instead of just string
     // This allows your template (.phtml) to put integrity in the right place
     return [
