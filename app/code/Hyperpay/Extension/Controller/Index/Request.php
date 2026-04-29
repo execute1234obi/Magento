@@ -171,18 +171,17 @@ class Request extends \Magento\Framework\App\Action\Action
         $baseUrl = $this->_adapter->getUrl();
         $url = $baseUrl . 'checkouts';
         $data = "entityId=" . $entityId .
-            "&notificationUrl=" . $status .
+            "&notificationUrl=" . urlencode($status) .
             "&amount=" . $grandTotal .
             "&currency=" . $currency .
             "&paymentType=" . $paymentType .
             "&customer.email=" . $email .
             "&customParameters[plugin]=magento" .
             "&shipping.customer.email=" . $email .
-           "&testMode=EXTERNAL" .
+            "&testMode=EXTERNAL" .
     "&customParameters[3DS2_enrolled]=true" .
     "&customParameters[3DS2_flow]=challenge".
-    "&Integrity=true"
-    ;
+    "&Integrity=true";
         $accesstoken = $this->_adapter->getAccessToken();
         $auth = array('Authorization' => 'Bearer ' . $accesstoken);
         $this->_helper->setHeaders($auth);
@@ -223,9 +222,15 @@ class Request extends \Magento\Framework\App\Action\Action
         $data .= "&merchantTransactionId=" . $orderId;
         $decodedData = $this->_helper->getCurlReqData($url, $data);
 
-        if (!isset($decodedData['id'])) {
-            $this->_helper->doError(__('Request id is not found'));
-        }
+        // if (!isset($decodedData['id'])) {
+        //     $this->_helper->doError(__('Request id is not found'));
+        // }
+        // Is naye code se:
+if (!isset($decodedData['id'])) {
+    $resCode = $decodedData['result']['code'] ?? 'N/A';
+    $resDesc = $decodedData['result']['description'] ?? 'No description';
+    throw new \Exception("HyperPay Error: [$resCode] $resDesc");
+}
         //return $this->_adapter->getUrl() . "paymentWidgets.js?checkoutId=" . $decodedData['id'];
 
        //for 3d secure
