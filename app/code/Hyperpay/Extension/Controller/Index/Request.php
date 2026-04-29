@@ -232,9 +232,17 @@ class Request extends \Magento\Framework\App\Action\Action
     curl_close($ch);
 
     $decodedData = json_decode($responseData, true);
-    if (!isset($decodedData['id'])) {
-        $this->_helper->doError(__('Request id is not found'));
-    }
+
+// DEBUG LOG (IMPORTANT)
+$this->_logger->info('HyperPay Response: ' . print_r($decodedData, true));
+
+if (empty($decodedData['id'])) {
+
+    $code = $decodedData['result']['code'] ?? 'NO_CODE';
+    $desc = $decodedData['result']['description'] ?? $responseData;
+
+    throw new \Exception("HyperPay Error [$code]: $desc");
+}
 
     return $baseUrl . '/paymentWidgets.js?checkoutId=' . $decodedData['id'];
 }
