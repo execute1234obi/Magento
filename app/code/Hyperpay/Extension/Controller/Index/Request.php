@@ -226,11 +226,11 @@ if (str_ends_with($baseUrl, '/v1')) {
     $accesstoken = $this->_adapter->getAccessToken();
     $headers     = ['Authorization: Bearer ' . $accesstoken];
 
-echo "<pre>";
-echo "BASE URL: " . $baseUrl . "\n";
-echo "FINAL URL: " . $url . "\n";
-echo "REQUEST PARAMS: \n";
-print_r($params);
+// echo "<pre>";
+// echo "BASE URL: " . $baseUrl . "\n";
+// echo "FINAL URL: " . $url . "\n";
+// echo "REQUEST PARAMS: \n";
+// print_r($params);
 
     // Execute cURL request
     $ch = curl_init();
@@ -250,13 +250,13 @@ print_r($params);
     $decodedData = json_decode($responseData, true);
 
 // DEBUG LOG (IMPORTANT)
-echo "<pre>";
-echo "RAW RESPONSE:\n";
-print_r($responseData);
+// echo "<pre>";
+// echo "RAW RESPONSE:\n";
+// print_r($responseData);
 
-echo "\n\nDECODED RESPONSE:\n";
-print_r($decodedData);
-exit();
+// echo "\n\nDECODED RESPONSE:\n";
+// print_r($decodedData);
+// exit();
 if (empty($decodedData['id'])) {
 
     $code = $decodedData['result']['code'] ?? 'NO_CODE';
