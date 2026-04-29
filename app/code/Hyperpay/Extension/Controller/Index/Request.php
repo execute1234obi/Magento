@@ -234,8 +234,9 @@ class Request extends \Magento\Framework\App\Action\Action
     $decodedData = json_decode($responseData, true);
 
 // DEBUG LOG (IMPORTANT)
-$this->_logger->info('HyperPay Response: ' . print_r($decodedData, true));
-
+ print_r("decode".$decodedData);
+Print_r("response".$responseData);
+exit();
 if (empty($decodedData['id'])) {
 
     $code = $decodedData['result']['code'] ?? 'NO_CODE';
