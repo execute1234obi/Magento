@@ -329,7 +329,14 @@ class Request extends \Magento\Framework\App\Action\Action
     if (!empty($integrity)) {
         $scriptUrl .= "&integrity=" . urlencode($integrity);
     }
-
+   $this->logger->debug(json_encode([
+    'checkout_id' => $checkoutId,
+    'integrity' => $integrity,
+    'base_url' => $baseUrl,
+    'api_url' => $url,
+    'request_data' => $data,
+    'script_url' => $scriptUrl
+], JSON_PRETTY_PRINT));
     return $scriptUrl;
 }
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
