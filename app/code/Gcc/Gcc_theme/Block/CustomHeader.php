@@ -29,6 +29,31 @@ class CustomHeader extends Template
             : null;
     }
 
+    public function getCustomerDisplayName()
+    {
+        if (!$this->isLoggedIn()) {
+            return null;
+        }
+
+        $customer = $this->customerSession->getCustomer();
+        $firstName = trim((string) $customer->getFirstname());
+        $lastName = trim((string) $customer->getLastname());
+        $fullName = trim($firstName . ' ' . $lastName);
+
+        if ($fullName !== '') {
+            return $fullName;
+        }
+
+        return $firstName !== '' ? $firstName : null;
+    }
+
+    public function getCustomerEmail()
+    {
+        return $this->isLoggedIn()
+            ? trim((string) $this->customerSession->getCustomer()->getEmail())
+            : null;
+    }
+
     public function getLogoutUrl()
     {
         return $this->getUrl('customer/account/logout');
