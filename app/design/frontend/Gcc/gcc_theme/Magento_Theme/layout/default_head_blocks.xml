@@ -22,5 +22,13 @@
                 </arguments>
                 <css src="css/rtl.css" media="all" /> 
             </block> -->
+            <meta http-equiv="Content-Security-Policy"
+content="
+style-src 'self' https://eu-test.oppwa.com 'unsafe-inline';
+frame-src 'self' https://eu-test.oppwa.com;
+script-src 'self' https://eu-test.oppwa.com 'unsafe-inline';
+connect-src 'self' https://eu-test.oppwa.com;
+img-src 'self' https://eu-test.oppwa.com;
+"/>
     </head>
 </page>
