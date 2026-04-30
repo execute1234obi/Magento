@@ -500,7 +500,7 @@ public function getStreetAddresses($street, $type)
         $params = $this->replaceArrayKeys($params);
 
         // 👇 DEBUG
-//$this->_logger->info('HYPERPAY POST DATA: ' . print_r($params, true));
+        $this->_logger->info('HYPERPAY POST DATA: ' . print_r($params, true));
         $this->_curlClient->post($url, $params);
         $response = $this->_curlClient->getBody();
         
