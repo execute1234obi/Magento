@@ -133,8 +133,8 @@ else
       </nav>
     </div>
 
-    <div class="flex items-center gap-6">
-      <div class="hidden md:flex items-center space-x-3 final-font gap-3" style="border-right:1px solid #dbe6f3;">
+    <div class="flex items-center gap-6 header-actions">
+      <div class="hidden md:flex items-center final-font header-auth-group">
        <?php if ($block->isLoggedIn()): ?>
   <?php
     $layout = $block->getLayout();
@@ -309,6 +309,7 @@ else
     <?= __('Sign In') ?>
   </a>
 <?php endif; ?>
+        <span class="header-auth-divider" aria-hidden="true"></span>
       </div>
           <?php
 $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
@@ -318,10 +319,12 @@ $storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::
 $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
 ?>
       <div class="relative inline-block text-left">
-        <div id="langToggle" class="flex items-center space-x-1 cursor-pointer text-[#3B82F6] gap-2 px-2 py-1 rounded-md hover:bg-gray-50">
+        <div id="langToggle" class="flex items-center cursor-pointer text-[#3B82F6] gap-2 px-2 py-1 rounded-md hover:bg-gray-50">
           <img src="<?= $mediaUrl ?>/wysiwyg/gc-lan.png" alt="Language Icon" class="w-24" style="height:18px;">
           <span class="text-sm font-medium"><?= $store_code;//$block->escapeHtml($currentStore->getCode()) ?></span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          <svg class="lang-chevron" aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 9l6 6 6-6"/>
+          </svg>
         </div>
 
           <div id="languageMenu"
@@ -621,7 +624,16 @@ $layout = $block->getLayout();
     background:#ffffff;
     object-fit:contain;
 }
-#customHeader .custom-style,#customHeader a.custom-style,#customHeader .custom-style:visited{color:#fff!important;text-decoration:none!important;padding:12px 20px;border-radius:11px;}
+#customHeader .custom-style,#customHeader a.custom-style,#customHeader .custom-style:visited{
+    color:#fff!important;
+    text-decoration:none!important;
+    padding:0 20px!important;
+    min-height:52px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:14px;
+}
 #customHeader .custom-style:hover{color:#fff!important;}
 #customHeader .nav-text-color{color:#4B5563!important;}
 #customHeader img{max-height:37px;width:auto;}
@@ -630,6 +642,23 @@ $layout = $block->getLayout();
 .final-font{font-size:clamp(15px,4vw,7px)!important}
 .link-text{font-size:clamp(15px,4vw,7px)!important}
 .border-\[\#3B82F6\]{--tw-border-opacity:1;border-color:rgb(59 130 246/var(--tw-border-opacity,1));text-decoration:none!important;padding:12px 20px!important;border-radius:11px!important;}
+#customHeader .header-actions{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+#customHeader .header-auth-group{
+    display:flex;
+    align-items:center;
+    gap:16px;
+}
+#customHeader .header-auth-divider{
+    width:1px;
+    height:56px;
+    background:#dbe6f3;
+    flex:0 0 auto;
+    margin:0 12px 0 8px;
+}
 
 /* ===== RTL core ===== */
 .rtl-header{direction:rtl;text-align:right;--tw-space-x-reverse:1;}
@@ -655,14 +684,17 @@ $layout = $block->getLayout();
     direction: rtl;
 }
 .sign-in-btn {
-    padding: 6px 20px; /* px-5 py-1.5 same as Sign Up */
+    min-height:52px;
+    padding: 0 18px; /* slightly tighter for header fit */
     border: 1px solid #1A3764; /* same blue color */
     color: #1A3764; /* outline text color */
-    border-radius: 6px; /* rounded-md */
+    border-radius: 14px; /* match Figma rounding */
     font-size: 14px; /* text-sm */
     font-weight: 400; /* match Sign Up */
-    line-height: 1.2; /* correct height */
-    display: inline-block;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background: transparent;
 }
 
@@ -675,10 +707,18 @@ header .sign-in-btn {
 }
 /* Lang toggle (globe icon, text, arrow) */
 #langToggle,
-#langToggle span,
-#langToggle svg {
+#langToggle span {
     color: #1A3764 !important; /* Text and arrow */
-    fill: #1A3764 !important;  /* SVG arrow */
+}
+
+#langToggle .lang-chevron {
+    width: 16px !important;
+    height: 16px !important;
+    flex: 0 0 auto;
+    display: block;
+    color: #1A3764 !important;
+    fill: none !important;
+    stroke: currentColor !important;
 }
 
 /* Image icon inside toggle */
