@@ -136,38 +136,30 @@ $filters['business_types'] = array_filter($filters['business_types'] ?? []);
         $blockNav = $block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation::class)
             ->setLayer($layer)
             ->setFilterList($filterList)
-            ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');foreach ($blockNav->getFilters() as $filter) {
-    if ($filter->getItemsCount() || $block->getRequest()->getParam($filter->getRequestVar())) { 
-        // Upar wali line ensure karegi ki agar filter select ho gaya hai tab bhi div render ho
-        
+            ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');
+
+       foreach ($blockNav->getFilters() as $filter) {
+    if ($filter->getItemsCount()) {
         echo '<div class="filter-group-item">';
         echo '<h3>' . $block->escapeHtml(__($filter->getName())) . '</h3>';
         echo '<div class="filter-items-container"><ul>';
         
-        $currentValue = $block->getRequest()->getParam($filter->getRequestVar());
-
         foreach ($filter->getItems() as $item) {
-            // Check karein ki kya ye item currently selected hai
-            $isSelected = ($currentValue == $item->getValueString()) ? 'active-filter-link' : '';
-            
-            echo '<li class="filter-item ' . $isSelected . '">';
+            echo '<li class="filter-item">';
             echo '<a href="' . $block->escapeUrl($item->getUrl()) . '">';
             
+            // Yahan badlav kiya gaya hai: 
+            // 1. escapeHtml hata kar Price tags ko render hone diya (Price format fix)
+            // 2. Count wala span poori tarah hata diya
             echo '<span class="label">' . $item->getLabel() . '</span>'; 
             
             echo '</a></li>';
         }
         
-        // Agar filter selected hai, toh ek "Clear" option dikhayye taaki user use hata sake
-        if ($currentValue) {
-            // Remove filter URL nikalne ke liye
-            $removeUrl = $block->escapeUrl($block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation\State::class)->getClearFiltersUrl());
-            echo '<li class="filter-item clear-filter"><a href="'.$removeUrl.'" style="color:red; font-size:12px;">× Clear Filter</a></li>';
-        }
-
         echo '</ul></div></div>';
     }
-}?>
+}
+        ?>
 </div>
 <script>
 require(['jquery', 'domReady!'], function($){

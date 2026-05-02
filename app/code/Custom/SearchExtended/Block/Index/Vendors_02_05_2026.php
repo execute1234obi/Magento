@@ -12,11 +12,6 @@ use Magento\Directory\Model\CountryFactory;
 use Magento\Eav\Model\Config as EavConfig;
 use Custom\SearchExtended\Model\VendorFilter;
 
-/* ADD THESE USES */
-use Magento\Catalog\Model\Layer\Search;
-use Magento\Catalog\Model\Layer\Search\FilterableAttributeList;
-use Magento\Catalog\Model\Layer\FilterList;
-
 class Vendors extends Template
 {
     private $vendorCollectionFactory;
@@ -27,11 +22,6 @@ class Vendors extends Template
     private $eavConfig;
     private $vendorFilter;
 
-    /* ADD THESE */
-    private $searchLayer;
-    private $filterableAttributes;
-    private $filterList;
-
     public function __construct(
         Context $context,
         VendorCollectionFactory $vendorCollectionFactory,
@@ -41,12 +31,6 @@ class Vendors extends Template
         CountryFactory $countryFactory,
         EavConfig $eavConfig,
         VendorFilter $vendorFilter,
-
-        /* ADD THESE */
-        Search $searchLayer,
-        FilterableAttributeList $filterableAttributes,
-        FilterList $filterList,
-
         array $data = []
     ) {
         $this->vendorCollectionFactory = $vendorCollectionFactory;
@@ -56,47 +40,9 @@ class Vendors extends Template
         $this->countryFactory = $countryFactory;
         $this->eavConfig = $eavConfig;
         $this->vendorFilter = $vendorFilter;
-
-        /* ADD THESE */
-        $this->searchLayer = $searchLayer;
-        $this->filterableAttributes = $filterableAttributes;
-        $this->filterList = $filterList;
-
         parent::__construct($context, $data);
     }
 
-    /* =======================================================
-       PRODUCT FILTERS METHOD
-       ======================================================= */
-    public function getProductFilters()
-    {
-        return $this->filterList->getFilters($this->searchLayer);
-    }
-
-    /* =======================================================
-       PRODUCT FILTER LINKS METHOD
-       ======================================================= */
-    public function getFilterItemUrl($item)
-    {
-        return $item->getUrl();
-    }
-
-    /* =======================================================
-       CHECK SELECTED FILTER
-       ======================================================= */
-    public function isSelectedFilter($filter, $item)
-    {
-        $requestVar = $filter->getRequestVar();
-        $current = $this->request->getParam($requestVar);
-
-        if (!$current) {
-            return false;
-        }
-
-        $values = explode(',', $current);
-
-        return in_array($item->getValueString(), $values);
-    }
     public function getSearchCollection()
     {
         $collection = $this->vendorCollectionFactory->create();

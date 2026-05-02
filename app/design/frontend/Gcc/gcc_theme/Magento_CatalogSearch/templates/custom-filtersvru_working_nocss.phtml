@@ -32,43 +32,6 @@
 #default-magento-filter {
     margin-top: 20px;
 }
-/* Magento Filter List */
-.filter-items-container ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.filter-item {
-    margin-bottom: 10px;
-}
-
-.filter-item a {
-    display: block; /* Flex ki jagah block taaki click area bada ho */
-    padding: 5px 0;
-    color: #475569;
-    font-size: 14px;
-    text-decoration: none;
-    transition: 0.2s;
-}
-
-.filter-item a:hover {
-    color: #1f3f75;
-    padding-left: 5px; /* Chota sa hover effect */
-}
-
-/* Price span jo ab tak raw text dikh raha tha uski styling */
-.filter-item .price {
-    font-weight: normal;
-    color: inherit;
-}
-.filter-item .count {
-    background: #f1f5f9;
-    color: #64748b;
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 12px;
-}
 </style>
 
 <?php
@@ -128,46 +91,42 @@ $filters['business_types'] = array_filter($filters['business_types'] ?? []);
 <div id="default-magento-filter">
 
 <?php
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
-        $filterableAttributes = $objectManager->get(\Magento\Catalog\Model\Layer\Search\FilterableAttributeList::class);
-        $filterList = $objectManager->create(\Magento\Catalog\Model\Layer\FilterList::class, ['filterableAttributes' => $filterableAttributes]);
 
-        $blockNav = $block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation::class)
-            ->setLayer($layer)
-            ->setFilterList($filterList)
-            ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');foreach ($blockNav->getFilters() as $filter) {
-    if ($filter->getItemsCount() || $block->getRequest()->getParam($filter->getRequestVar())) { 
-        // Upar wali line ensure karegi ki agar filter select ho gaya hai tab bhi div render ho
-        
-        echo '<div class="filter-group-item">';
-        echo '<h3>' . $block->escapeHtml(__($filter->getName())) . '</h3>';
-        echo '<div class="filter-items-container"><ul>';
-        
-        $currentValue = $block->getRequest()->getParam($filter->getRequestVar());
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-        foreach ($filter->getItems() as $item) {
-            // Check karein ki kya ye item currently selected hai
-            $isSelected = ($currentValue == $item->getValueString()) ? 'active-filter-link' : '';
-            
-            echo '<li class="filter-item ' . $isSelected . '">';
-            echo '<a href="' . $block->escapeUrl($item->getUrl()) . '">';
-            
-            echo '<span class="label">' . $item->getLabel() . '</span>'; 
-            
-            echo '</a></li>';
-        }
-        
-        // Agar filter selected hai, toh ek "Clear" option dikhayye taaki user use hata sake
-        if ($currentValue) {
-            // Remove filter URL nikalne ke liye
-            $removeUrl = $block->escapeUrl($block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation\State::class)->getClearFiltersUrl());
-            echo '<li class="filter-item clear-filter"><a href="'.$removeUrl.'" style="color:red; font-size:12px;">× Clear Filter</a></li>';
-        }
+$layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
 
-        echo '</ul></div></div>';
+$filterableAttributes = $objectManager->get(
+    \Magento\Catalog\Model\Layer\Search\FilterableAttributeList::class
+);
+
+$filterList = $objectManager->create(
+    \Magento\Catalog\Model\Layer\FilterList::class,
+    ['filterableAttributes' => $filterableAttributes]
+);
+
+$blockNav = $block->getLayout()
+    ->createBlock(\Magento\LayeredNavigation\Block\Navigation::class)
+    ->setLayer($layer)
+    ->setFilterList($filterList)
+    ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');
+
+$filters = $blockNav->getFilters();
+
+foreach ($filters as $filter) {
+
+    echo '<h3>' . $filter->getName() . '</h3>';
+
+    foreach ($filter->getItems() as $item) {
+
+        echo 'Label: ' . $item->getLabel() . '<br>';
+        echo 'Count: ' . $item->getCount() . '<br>';
+        echo 'URL: ' . $item->getUrl() . '<br><br>';
     }
-}?>
+}
+
+?>
+
 </div>
 <script>
 require(['jquery', 'domReady!'], function($){
@@ -217,15 +176,6 @@ require(['jquery', 'domReady!'], function($){
             '&svendor_business_type=' + encodeURIComponent($('#business-type').val());
         window.location.href = url;
     });
-                  // Move to Sidebar
-    if($('.sidebar-main').length && $('#custom-sidebar-wrapper').length){
-        $('.sidebar-main').prepend($('#custom-sidebar-wrapper'));
-    }
 
-    // Accordion Logic - Conflict Free
-    $(document).on('click', '#custom-sidebar-wrapper h3, .filter-options-title', function(){
-        $(this).toggleClass('active');
-        $(this).next().stop().slideToggle(300);
-    });
 });
 </script>
