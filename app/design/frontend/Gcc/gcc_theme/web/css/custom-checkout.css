@@ -485,19 +485,197 @@ body.checkout-index-index {
     border: 1px solid #dbe5f2;
     border-radius: 18px;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
-    padding: 18px 20px;
+    overflow: hidden;
 }
 
 .checkout-index-index .billing-address-card__title {
-    font-size: 0.95rem;
-    line-height: 1.3;
-    font-weight: 700;
+    padding: 22px 24px 18px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 1.1rem;
+    line-height: 1.2;
+    font-weight: 800;
     color: #0f172a;
-    margin-bottom: 12px;
+}
+
+.checkout-index-index .billing-address-card__body {
+    padding: 20px 24px 24px;
+    min-width: 0;
+}
+
+.checkout-index-index .billing-address-card__same {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    color: #0f172a;
+    font-size: 0.98rem;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.checkout-index-index .billing-address-card__same input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    accent-color: #1a2b5e;
+    flex: 0 0 auto;
+}
+
+.checkout-index-index .billing-address-card__same-label {
+    display: inline-flex;
+    align-items: center;
+}
+
+.checkout-index-index .billing-address-card__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 18px;
+    min-width: 0;
+}
+
+.checkout-index-index .billing-address-card__field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+.checkout-index-index .billing-address-card__field--full {
+    grid-column: 1 / -1;
+}
+
+.checkout-index-index .billing-address-card__label {
+    font-size: 0.75rem;
+    line-height: 1.2;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #475569;
+}
+
+.checkout-index-index .billing-address-card__input {
+    width: 100%;
+    min-height: 52px;
+    padding: 0 16px;
+    border: 1px solid #dbe5f2;
+    border-radius: 12px;
+    background: #fff;
+    color: #0f172a;
+    font-size: 1rem;
+    line-height: 1.2;
+    box-sizing: border-box;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.checkout-index-index .billing-address-card__input[readonly] {
+    background: #fbfdff;
+}
+
+.checkout-index-index .billing-address-card__input:focus {
+    outline: none;
+    border-color: #9fc1ef;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
 }
 
 .checkout-index-index .billing-address-card__body {
     min-width: 0;
+}
+
+/* ---------------------------------------------------- */
+/* PAYMENT METHOD LIST */
+/* ---------------------------------------------------- */
+.checkout-index-index #checkout-payment-method-load .payment-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-group > .step-title {
+    display: none;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method {
+    background: #fff;
+    border: 1px solid #dbe5f2;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method + .payment-method {
+    margin-top: 12px;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method._active {
+    border-color: #c4d2ea;
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.08);
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method-title.field.choice {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 18px 20px;
+    margin: 0;
+    cursor: pointer;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method-title.field.choice input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method-title.field.choice .label {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    color: #0f172a;
+    font-size: 1rem;
+    line-height: 1.35;
+    font-weight: 700;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method-title.field.choice .label > span {
+    color: inherit;
+    font: inherit;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method-title.field.choice .label img {
+    max-height: 28px;
+    width: auto;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method-content {
+    display: none;
+    padding: 0 20px 20px;
+    border-top: 1px solid #e2e8f0;
+    background: #fff;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method._active .payment-method-content {
+    display: block;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method .payment-method-billing-address {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #dbe5f2;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method .checkout-agreements-block {
+    margin-top: 16px;
+}
+
+.checkout-index-index #checkout-payment-method-load .payment-method .actions-toolbar {
+    display: none !important;
 }
 
 /* ---------------------------------------------------- */
@@ -512,7 +690,7 @@ body.checkout-index-index {
 }
 
 .checkout-index-index #opc-sidebar .summary-title {
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     line-height: 1.2;
     font-weight: 800;
     color: #0f172a;
@@ -522,10 +700,51 @@ body.checkout-index-index {
 }
 
 .checkout-index-index #opc-sidebar .summary-totals-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
     min-width: 0;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals .table-caption {
+    display: none;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals tbody tr {
+    border-bottom: 1px solid #e5ebf5;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals tbody tr:last-child {
+    border-bottom: 0;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals th,
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals td {
+    padding: 10px 0;
+    border: 0;
+    color: #334155;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals td {
+    text-align: right;
+    color: #0f172a;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals .grand.totals th,
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals .grand.totals td {
+    padding-top: 16px;
+    font-size: 1.15rem;
+    font-weight: 800;
+}
+
+.checkout-index-index #opc-sidebar .summary-totals-wrap .table-totals .grand.totals {
+    border-top: 1px dashed #d1d5db;
 }
 
 .checkout-index-index .complete-payment-btn {
