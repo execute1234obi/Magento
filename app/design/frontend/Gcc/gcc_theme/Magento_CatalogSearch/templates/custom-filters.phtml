@@ -73,8 +73,17 @@
 
 <?php
 /** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
 $filters = $block->getFilterData() ?: [];
 $selected = $block->getSelectedFilters() ?: [];
+//active filetr check 
+$activeFilters = array_filter([
+    $selected['country'] ?? '',
+    $selected['verified'] ?? '',
+    $selected['business_type'] ?? ''
+]);
+
+$isFilterApplied = count($activeFilters) > 0;
 $searchQuery = trim((string) $block->getRequest()->getParam('q'));
 
 $filters['countries'] = array_filter($filters['countries'] ?? []);
@@ -86,7 +95,16 @@ $filters['business_types'] = array_filter($filters['business_types'] ?? []);
     <div class="filter-title1" style="font-size: 22px; font-weight: 700; color: #1f3f75; margin-bottom: 15px;">
         <?= __('Filter') ?>
     </div>
+    <?php if ($isFilterApplied): ?>
 
+    <div style="margin-bottom:10px;">
+       <a href="<?= $block->getUrl('*/*/*', ['_query' => ['q' => $searchQuery]]) ?>"
+style="color:red; font-weight:600; font-size:13px;">
+    × Clear All Filters
+</a>
+    </div>
+
+<?php endif; ?>
     <div class="sidebar" id="vendor-sidebar-content">
         <div class="filter-group">
             <label style="font-weight:700;"><?= __('Country') ?></label>
@@ -129,7 +147,21 @@ $filters['business_types'] = array_filter($filters['business_types'] ?? []);
 
 <?php
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
+        //$layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
+        $request = $block->getRequest();
+$price = $request->getParam('price');
+
+// 👇 CONDITION START
+if ($price) {
+
+    // If price filter exists → use SEARCH layer
+    $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
+
+} else {
+
+    // default category/search safe layer
+    $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Resolver::class)->get();
+}
         $filterableAttributes = $objectManager->get(\Magento\Catalog\Model\Layer\Search\FilterableAttributeList::class);
         $filterList = $objectManager->create(\Magento\Catalog\Model\Layer\FilterList::class, ['filterableAttributes' => $filterableAttributes]);
 
@@ -172,60 +204,113 @@ $filters['business_types'] = array_filter($filters['business_types'] ?? []);
 <script>
 require(['jquery', 'domReady!'], function($){
 
-    // Move everything into the main sidebar container
+    /* ==============================
+       MOVE SIDEBAR
+    ============================== */
     if($('.sidebar-main').length && $('#custom-sidebar-wrapper').length){
         $('.sidebar-main').prepend($('#custom-sidebar-wrapper'));
     }
 
+    /* ==============================
+       TAB SWITCH LOGIC (UNCHANGED)
+    ============================== */
     function toggleFiltersByTab(){
-        // Aapke active tab ka class '_active' hai ya 'active' check karein
+
         var activeTab = $('.mst-search__result-tabs ._active, .mst-search__result-tabs .active, .mst-search__result-tabs li[aria-selected="true"]');
         var activeText = activeTab.text().trim().toLowerCase();
 
         var $vendorFilters = $('#vendor-sidebar-content');
         var $magentoFilters = $('#default-magento-filter');
-        var $defaultMagentoBlock = $('.sidebar-main .block.filter'); // Native block
+        var $defaultMagentoBlock = $('.sidebar-main .block.filter');
 
         if(activeText.indexOf('vendor') !== -1){
-            // VENDOR TAB: Show our dropdowns, hide default
             $vendorFilters.show();
             $magentoFilters.hide();
             $defaultMagentoBlock.hide();
         } else {
-            // PRODUCT/OTHER TABS: Hide our dropdowns, show default
             $vendorFilters.hide();
             $magentoFilters.show();
             $defaultMagentoBlock.show();
         }
+
+        updateTabCounts(); // 🔥 sync count on tab change
     }
 
-    // Page Load par check karein
     setTimeout(toggleFiltersByTab, 500);
 
-    // Tab click par check karein
     $(document).on('click', '.mst-search__result-tabs li, .mst-search__result-tabs a', function(){
         setTimeout(toggleFiltersByTab, 300);
     });
 
-    // Dropdown Change Logic
+    /* ==============================
+       FILTER REDIRECT
+    ============================== */
     $('#country, #verified-seller, #business-type').on('change', function(){
-        var query    = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
+
+        var query = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
+
         var url = window.location.origin + window.location.pathname +
             '?q=' + encodeURIComponent(query) +
             '&svendor_country_id=' + encodeURIComponent($('#country').val()) +
             '&svendor_is_verified=' + encodeURIComponent($('#verified-seller').val()) +
             '&svendor_business_type=' + encodeURIComponent($('#business-type').val());
+
         window.location.href = url;
     });
-                  // Move to Sidebar
-    if($('.sidebar-main').length && $('#custom-sidebar-wrapper').length){
-        $('.sidebar-main').prepend($('#custom-sidebar-wrapper'));
-    }
 
-    // Accordion Logic - Conflict Free
-    $(document).on('click', '#custom-sidebar-wrapper h3, .filter-options-title', function(){
-        $(this).toggleClass('active');
-        $(this).next().stop().slideToggle(300);
+    /* ==============================
+       CLEAR FILTER (FIXED)
+    ============================== */
+    $(document).on('click', '.clear-filter', function(e){
+        e.preventDefault();
+
+        let params = new URLSearchParams(window.location.search);
+        let q = params.get('q');
+
+        let newUrl = window.location.pathname;
+
+        if(q){
+            newUrl += '?q=' + encodeURIComponent(q);
+        }
+
+        window.location.href = newUrl;
     });
+
+    /* ==============================
+       TAB COUNT FIX (IMPORTANT FIX)
+       REAL FILTER COUNT FROM URL
+    ============================== */
+function updateVendorTabCount() {
+
+    var count = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
+
+    $('.mst-search__result-tabs li').each(function () {
+
+        var $tab = $(this);
+        var label = $tab.find('.mst-search__tab-label').text().trim().toLowerCase();
+
+        if (label.includes('vendor')) {
+
+            var $badge = $tab.find('.mst-search__tab-count');
+
+            if ($badge.length) {
+                $badge.text(count);   // ONLY update number
+            } else {
+                $tab.find('.mst-search__tab-label').after(
+                    '<span class="mst-search__tab-count">' + count + '</span>'
+                );
+            }
+        }
+    });
+}
+
+    setTimeout(updateTabCounts, 500);
+
+    $('#country, #verified-seller, #business-type').on('change', function(){
+        setTimeout(updateTabCounts, 400);
+    });
+
 });
+
 </script>
+

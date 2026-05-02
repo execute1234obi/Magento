@@ -130,10 +130,14 @@ class Vendors extends Template
 
             $collection->addAttributeToFilter($searchFilters);
         }
+        
 
         /* ================= ADDITIONAL FILTERS ================= */
         $this->applyExtraFilters($collection);
-
+       // echo '<pre>';
+       // print_r($collection->getSelect()->__toString());
+       // echo '</pre>';
+       // exit;
         return $collection;
     }
 
@@ -252,63 +256,127 @@ class Vendors extends Template
  * Get filter data based on current search collection
  * @return array
  */
+// public function getFilterData()
+// {
+//     $collection = $this->vendorCollectionFactory->create();
+//      $this->vendorFilter->apply($collection);
+//    // $collection = $this->getSearchCollection();
+//         $collection->addAttributeToSelect(['country_id', 'business_type']);
+
+//         $vendorCountries = [];
+//         $vendorVerifieds = [];
+//         $businessTypes = [];
+
+//         foreach ($collection as $vendor) {
+//            // $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
+//            if ($vendor->getCountryId()) {
+//     $countryCode = $vendor->getCountryId();
+
+//     if (!isset($vendorCountries[$countryCode])) {
+//         try {
+//             $country = $this->countryFactory->create()->loadByCode($countryCode);
+//             $countryName = $country->getName();
+//         } catch (\Exception $e) {
+//             $countryName = $countryCode;
+//         }
+
+//         $vendorCountries[$countryCode] = $countryName;
+//     }
+// }
+//             $isVerified = $this->isVerifiedVendor($vendor->getId());
+//             $vendorVerifieds[$isVerified ? 1 : 0] = $isVerified ? 'Verified' : 'Unverified';
+//             // if ($vendor->getBusinessType()) {
+//             //     $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
+//             // }
+//          if ($vendor->getBusinessType()) {
+//     $value = $vendor->getBusinessType();
+
+//     if (!isset($businessTypes[$value])) {
+
+//         $attribute = $this->eavConfig->getAttribute('vendor', 'business_type');
+
+//         $label = $attribute && $attribute->usesSource()
+//             ? $attribute->getSource()->getOptionText($value)
+//             : $value;
+
+//         $businessTypes[$value] = $label;
+//     }
+// }
+//         }
+//     echo '<pre>';
+// print_r([
+//     'countries' => $vendorCountries,
+//     'verified' => $vendorVerifieds,
+//     'business_types' => $businessTypes
+// ]);
+// echo '</pre>';
+// exit;
+//         return [
+//             'countries' => $vendorCountries,
+//             'verified' => $vendorVerifieds,
+//             'business_types' => $businessTypes
+//         ];
+
+// }
+
 public function getFilterData()
 {
-    $collection = $this->vendorCollectionFactory->create();
-     $this->vendorFilter->apply($collection);
-   // $collection = $this->getSearchCollection();
-        $collection->addAttributeToSelect(['country_id', 'business_type']);
+    // 🔥 IMPORTANT: use SEARCH collection (not raw)
+    $collection = $this->getSearchCollection();
 
-        $vendorCountries = [];
-        $vendorVerifieds = [];
-        $businessTypes = [];
+    // Select attributes
+    $collection->addAttributeToSelect([
+        'country_id',
+        'business_type'
+    ]);
 
-        foreach ($collection as $vendor) {
-           // $vendorCountries[$vendor->getCountryId()] = $vendor->getCountryId();
-           if ($vendor->getCountryId()) {
-    $countryCode = $vendor->getCountryId();
+    $vendorCountries = [];
+    $vendorVerifieds = [];
+    $businessTypes   = [];
 
-    if (!isset($vendorCountries[$countryCode])) {
-        try {
-            $country = $this->countryFactory->create()->loadByCode($countryCode);
-            $countryName = $country->getName();
-        } catch (\Exception $e) {
-            $countryName = $countryCode;
+    foreach ($collection as $vendor) {
+
+        // COUNTRY
+        $countryCode = $vendor->getCountryId();
+
+        if ($countryCode && !isset($vendorCountries[$countryCode])) {
+            try {
+                $country = $this->countryFactory->create()->loadByCode($countryCode);
+                $countryName = $country->getName();
+            } catch (\Exception $e) {
+                $countryName = $countryCode;
+            }
+
+            $vendorCountries[$countryCode] = $countryName;
         }
 
-        $vendorCountries[$countryCode] = $countryName;
-    }
-}
-            $isVerified = $this->isVerifiedVendor($vendor->getId());
-            $vendorVerifieds[$isVerified ? 1 : 0] = $isVerified ? 'Verified' : 'Unverified';
-            // if ($vendor->getBusinessType()) {
-            //     $businessTypes[$vendor->getBusinessType()] = $vendor->getBusinessType();
-            // }
-         if ($vendor->getBusinessType()) {
-    $value = $vendor->getBusinessType();
+        // VERIFIED
+        $isVerified = $this->isVerifiedVendor($vendor->getId());
 
-    if (!isset($businessTypes[$value])) {
+        $vendorVerifieds[$isVerified ? 1 : 0] =
+            $isVerified ? 'Verified' : 'Unverified';
 
-        $attribute = $this->eavConfig->getAttribute('vendor', 'business_type');
+        // BUSINESS TYPE
+        $value = $vendor->getBusinessType();
 
-        $label = $attribute && $attribute->usesSource()
-            ? $attribute->getSource()->getOptionText($value)
-            : $value;
+        if ($value && !isset($businessTypes[$value])) {
 
-        $businessTypes[$value] = $label;
-    }
-}
+            $attribute = $this->eavConfig->getAttribute('vendor', 'business_type');
+
+            $label = ($attribute && $attribute->usesSource())
+                ? $attribute->getSource()->getOptionText($value)
+                : $value;
+
+            $businessTypes[$value] = $label;
         }
+    }
 
-        return [
-            'countries' => $vendorCountries,
-            'verified' => $vendorVerifieds,
-            'business_types' => $businessTypes
-        ];
-
+    return [
+        'countries' => $vendorCountries,
+        'verified' => $vendorVerifieds,
+        'business_types' => $businessTypes
+    ];
 }
-
-
 /**
  * Get currently selected filter values from request
  * @return array
@@ -321,5 +389,8 @@ public function getSelectedFilters()
         'business_type' => $this->request->getParam('svendor_business_type', ''),
     ];
 }
-
+public function getVendorResultCount()
+{
+    return $this->getSearchCollection()->getSize();
+}
 }

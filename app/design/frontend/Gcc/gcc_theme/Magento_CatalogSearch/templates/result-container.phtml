@@ -1,13 +1,7 @@
 <div class="gcc-search-layout">
 
     <!-- SIDEBAR -->
-    <aside class="gcc-sidebar">
-        <div class="filter-card">
-            <!-- <h3>Filter</h3> -->
-           <?= $block->getLayout()->getBlock('gcc.custom.filters')->toHtml(); ?>
-        </div>
-    </aside>
-
+ 
     <!-- MAIN AREA -->
     <main class="gcc-main-products-area">
    
@@ -29,7 +23,4 @@
 
 </div>
 <style>/* Main Layout */.gcc-search-layout{    display:flex;    align-items:flex-start;    gap:40px;    width:100%;    max-width:1300px;    margin:0 auto;    padding:0 20px;    box-sizing:border-box;}/* Sidebar */.gcc-sidebar{    width:300px;    flex-shrink:0;}.filter-card{    background:#fff;    border:1px solid #e2e8f0;    border-radius:16px;    padding:24px;    box-shadow:0 4px 15px rgba(0,0,0,.03);}/* Main Content */.gcc-main-products-area{    flex:1;    min-width:0;    width:100%;}/* Reset Mirasvit wrappers */.gcc-main-products-area .search.results,.gcc-main-products-area .products.wrapper,.gcc-main-products-area .toolbar-products{    width:100% !important;    max-width:100% !important;    margin:0 !important;    padding:0 !important;    float:none !important;    clear:none !important;}/* Optional result block reset */.mst-search__result-index{    margin:0 !important;    padding:0 !important;}
-
-
-  
 </style>
