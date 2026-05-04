@@ -1340,6 +1340,470 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
             }
         </style>
 
+        <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+            body.catalogsearch-result-index .column.main > .gcc-search-results .gcc-search-results__main,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .gcc-search-results__main > .search.results,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .gcc-search-results__main > .search.results > .products.wrapper.search-products-wrapper {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-sizing: border-box !important;
+                flex: 1 1 auto !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .search-products-wrapper .u-grid {
+                display: grid !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 18px !important;
+                align-items: stretch !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: space-between !important;
+                gap: 24px !important;
+                width: 100% !important;
+                margin: 40px 0 0 !important;
+                padding-top: 24px !important;
+                border-top: 1px solid #e5e7eb !important;
+                box-sizing: border-box !important;
+                clear: both !important;
+                flex-wrap: nowrap !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter {
+                order: 1 !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 14px !important;
+                flex: 0 0 auto !important;
+                margin: 0 !important;
+                min-width: 0 !important;
+                white-space: nowrap !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .label span {
+                color: #1f2937 !important;
+                font-size: 16px !important;
+                font-weight: 500 !important;
+                line-height: 1 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .limiter-options {
+                appearance: auto !important;
+                -webkit-appearance: auto !important;
+                -moz-appearance: auto !important;
+                min-width: 84px !important;
+                height: 44px !important;
+                padding: 0 14px !important;
+                border: 1px solid #dbe3f0 !important;
+                border-radius: 12px !important;
+                background: #fff !important;
+                color: #1f2937 !important;
+                font-size: 16px !important;
+                font-weight: 500 !important;
+                outline: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner {
+                order: 2 !important;
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                width: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .toolbar-amount,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-label {
+                display: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages {
+                width: auto !important;
+                float: none !important;
+                margin: 0 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-items {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                gap: 8px !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                list-style: none !important;
+                white-space: nowrap !important;
+                flex-wrap: nowrap !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .item {
+                margin: 0 !important;
+                padding: 0 !important;
+                flex: 0 0 auto !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+                min-height: 44px !important;
+                border: 1px solid #dbe3f0 !important;
+                border-radius: 12px !important;
+                background: #fff !important;
+                color: #6b7280 !important;
+                font-size: 16px !important;
+                font-weight: 500 !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                line-height: 1 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page {
+                width: 44px !important;
+                min-width: 44px !important;
+                padding: 0 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled {
+                min-width: 118px !important;
+                padding: 0 16px !important;
+                gap: 8px !important;
+                background: #f8fafc !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .item.current .page {
+                background: #1f3f75 !important;
+                border-color: #1f3f75 !important;
+                color: #fff !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled .label {
+                display: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled::before {
+                content: "\2039" !important;
+                font-size: 24px !important;
+                line-height: 1 !important;
+                font-weight: 400 !important;
+                color: inherit !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a::after,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled::after {
+                content: "\203A" !important;
+                font-size: 24px !important;
+                line-height: 1 !important;
+                font-weight: 400 !important;
+                color: inherit !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled {
+                opacity: 1 !important;
+                color: #8b93a5 !important;
+                border-color: #dbe3f0 !important;
+                background: #f8fafc !important;
+            }
+
+            @media (max-width: 767px) {
+                body.catalogsearch-result-index .column.main > .gcc-search-results .search-products-wrapper .u-grid {
+                    grid-template-columns: minmax(0, 1fr) !important;
+                    gap: 16px !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] {
+                    flex-direction: column !important;
+                    align-items: stretch !important;
+                    gap: 16px !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter {
+                    width: 100% !important;
+                    justify-content: space-between !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .limiter .limiter-options {
+                    min-width: 88px !important;
+                    height: 44px !important;
+                    font-size: 15px !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner {
+                    width: 100% !important;
+                    justify-content: flex-end !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-items {
+                    flex-wrap: wrap !important;
+                }
+            }
+        </style>
+
+        <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                order: 2 !important;
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+                width: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .toolbar-amount,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .toolbar-amount,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-label {
+                display: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                width: auto !important;
+                float: none !important;
+                margin: 0 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-items,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-items {
+                display: flex !important;
+                align-items: center !important;
+                justify-content: flex-end !important;
+                gap: 8px !important;
+                list-style: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                flex-wrap: nowrap !important;
+                white-space: nowrap !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .item,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .item {
+                margin: 0 !important;
+                padding: 0 !important;
+                flex: 0 0 auto !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+                min-height: 52px !important;
+                border: 1px solid #dfe6f1 !important;
+                border-radius: 14px !important;
+                background: #fff !important;
+                color: #7b8392 !important;
+                font-size: 16px !important;
+                font-weight: 400 !important;
+                text-decoration: none !important;
+                white-space: nowrap !important;
+                line-height: 1 !important;
+                overflow: visible !important;
+                box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page {
+                width: 52px !important;
+                min-width: 52px !important;
+                padding: 0 !important;
+                font-size: 16px !important;
+            }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled {
+                min-width: 212px !important;
+                padding: 0 24px !important;
+                gap: 12px !important;
+                background: #fff !important;
+                color: #7b8392 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled {
+                min-width: 212px !important;
+                justify-content: center !important;
+                overflow: visible !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .item.current .page,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .item.current .page {
+                background: #1f3f75 !important;
+                border-color: #1f3f75 !important;
+                color: #fff !important;
+                box-shadow: 0 8px 16px rgba(31, 63, 117, 0.12) !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action .label,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled .label {
+                display: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled::before {
+                content: "\2039" !important;
+                font-size: 24px !important;
+                line-height: 1 !important;
+                font-weight: 400 !important;
+                color: #8a90a0 !important;
+                margin-right: 8px !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a::before,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled::before {
+                content: "\203A" !important;
+                font-size: 24px !important;
+                line-height: 1 !important;
+                font-weight: 400 !important;
+                color: #8a90a0 !important;
+                font-family: inherit !important;
+                flex: 0 0 auto !important;
+                margin-left: 8px !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a::after,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled::after,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a::after,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled::after {
+                content: none !important;
+                display: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a > span:not(.label),
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled > span:not(.label) {
+                display: inline-block !important;
+                position: static !important;
+                clip: auto !important;
+                height: auto !important;
+                width: auto !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+                font-size: 16px !important;
+                line-height: 1 !important;
+                font-weight: 400 !important;
+                white-space: nowrap !important;
+                text-indent: 0 !important;
+                flex: 0 0 auto !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous a,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous a,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled {
+                min-width: 220px !important;
+                padding: 0 26px !important;
+                gap: 16px !important;
+                flex-direction: row !important;
+                justify-content: center !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next a,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next a,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+                min-width: 220px !important;
+                padding: 0 26px !important;
+                gap: 16px !important;
+                flex-direction: row-reverse !important;
+                justify-content: center !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-previous .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-item-next .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-previous .disabled,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-item-next .disabled {
+                opacity: 1 !important;
+                color: #8b93a5 !important;
+                border-color: #dfe6f1 !important;
+                background: #fff !important;
+            }
+
+            @media (max-width: 767px) {
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages {
+                    width: 100% !important;
+                    justify-content: flex-end !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .pages-items,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .pages-items {
+                    width: 100% !important;
+                    flex-wrap: wrap !important;
+                    justify-content: flex-end !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .action,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .disabled,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .action,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .disabled {
+                    min-width: 112px !important;
+                    height: 44px !important;
+                    padding: 0 14px !important;
+                    font-size: 14px !important;
+                }
+
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pager--search-inner .page,
+                body.catalogsearch-result-index .column.main > .gcc-search-results .toolbar.toolbar-products.pager--search[data-search-toolbar="bottom"] > .pages .page {
+                    width: 44px !important;
+                    min-width: 44px !important;
+                    height: 44px !important;
+                    font-size: 14px !important;
+                }
+            }
+        </style>
+
         <?php if ($block->isHighlightingEnabled()): ?>
             <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
                 require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {
