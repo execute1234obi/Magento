@@ -2,6 +2,34 @@
 /** @var \Custom\SearchExtended\Block\Index\Vendors $block */
 
 $vendors = $block->getSearchCollection();
+
+$normalizeUrl = static function (string $url): string {
+    if ($url === '') {
+        return '';
+    }
+
+    $parts = parse_url($url);
+
+    if ($parts === false) {
+        return preg_replace('#(?<!:)/{2,}#', '/', $url) ?? $url;
+    }
+
+    $scheme = isset($parts['scheme']) ? $parts['scheme'] . '://' : '';
+    $host = $parts['host'] ?? '';
+    $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+    $path = isset($parts['path']) ? preg_replace('#/+#', '/', $parts['path']) : '';
+    $query = isset($parts['query']) ? '?' . $parts['query'] : '';
+    $fragment = isset($parts['fragment']) ? '#' . $parts['fragment'] : '';
+
+    if ($host === '') {
+        return $path . $query . $fragment;
+    }
+
+    return $scheme . $host . $port . $path . $query . $fragment;
+};
+
+$storeMediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'pub/media/';
+$mediaBaseUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storeMediaUrl) ?? $storeMediaUrl;
 ?>
 
 <style>
@@ -461,9 +489,39 @@ $vendors = $block->getSearchCollection();
             $description = trim((string) $block->getBusinessDescriptions($vendor));
             $websiteUrl = $block->getWebsiteUrl($vendor) ?: $vendorUrl;
             $logo = trim((string) $vendor->getData('upload_logo'));
-            $mediaUrl = $logo
-                ? $block->getUrl('pub/media/') . ltrim($logo, '/')
-                : $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg');
+
+            if ($logo !== '') {
+                $logo = preg_replace('#/+#', '/', $logo) ?? $logo;
+            }
+
+            if ($logo === '') {
+                $logo = trim((string) $vendor->getData('logo'));
+            }
+
+            if ($logo === '') {
+                $logo = trim((string) $vendor->getData('thumbnailUrl'));
+            }
+
+            if ($logo === '') {
+                $logo = trim((string) $vendor->getData('thumbnail_url'));
+            }
+
+            $mediaUrl = '';
+
+            if ($logo !== '') {
+                if (preg_match('#^https?://#i', $logo)) {
+                    $mediaUrl = $normalizeUrl($logo);
+                } else {
+                    $mediaUrl = $mediaBaseUrl . ltrim($logo, '/');
+                    $mediaUrl = $normalizeUrl($mediaUrl);
+                }
+            }
+
+            if ($mediaUrl === '') {
+                $mediaUrl = $block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg');
+            }
+
+            $initial = $vendorName !== '' ? strtoupper(substr($vendorName, 0, 1)) : 'V';
             $isVerified = $block->isVerifiedVendor($vendorId);
             $isExternalWebsite = $websiteUrl !== $vendorUrl;
             ?>
@@ -472,7 +530,14 @@ $vendors = $block->getSearchCollection();
                 <div class="search-vendor-card__main">
                     <a class="search-vendor-card__logo" href="<?= $block->escapeUrl($vendorUrl) ?>" aria-label="<?= $block->escapeHtmlAttr($vendorName) ?>">
                         <img src="<?= $block->escapeUrl($mediaUrl) ?>"
-                             alt="<?= $block->escapeHtmlAttr($vendorName) ?>">
+                             alt="<?= $block->escapeHtmlAttr($vendorName) ?>"
+                             loading="lazy"
+                             decoding="async"
+                             onerror="this.style.display='none';var fallback=this.nextElementSibling;if(fallback){fallback.style.display='flex';}">
+                        <span class="search-vendor-card__logo-fallback"
+                              style="display:none;align-items:center;justify-content:center;width:100%;height:100%;color:#93a4b7;font-size:18px;font-weight:800;background:linear-gradient(180deg,#fbfcfe 0%,#f4f7fb 100%);">
+                            <?= $block->escapeHtml($initial) ?>
+                        </span>
                     </a>
 
                     <div class="search-vendor-card__body">

@@ -1258,6 +1258,88 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
             </div>
         <?php endif ?>
 
+        <style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs {
+                display: flex !important;
+                align-items: flex-end !important;
+                justify-content: flex-start !important;
+                gap: 28px !important;
+                list-style: none !important;
+                width: 100% !important;
+                margin: 0 0 24px !important;
+                padding: 0 !important;
+                float: none !important;
+                border-bottom: 1px solid #e5e7eb !important;
+                overflow: visible !important;
+                min-width: 0 !important;
+                background: transparent !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs li {
+                margin: 0 !important;
+                padding: 0 !important;
+                float: none !important;
+                list-style: none !important;
+                background: transparent !important;
+                border: 0 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs a {
+                all: unset !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+                padding: 0 8px 16px !important;
+                background: transparent !important;
+                border: 0 !important;
+                border-bottom: 2px solid transparent !important;
+                border-radius: 0 !important;
+                color: #6b7280 !important;
+                font-size: 18px !important;
+                line-height: 1.2 !important;
+                font-weight: 600 !important;
+                text-decoration: none !important;
+                box-shadow: none !important;
+                cursor: pointer !important;
+                box-sizing: border-box !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs a:hover,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs a:focus {
+                color: #1f3f75 !important;
+                background: transparent !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs a.active,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs li[aria-selected="true"] > a {
+                color: #1f3f75 !important;
+                border-bottom-color: #1f3f75 !important;
+                font-weight: 700 !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs .mst-search__tab-count {
+                display: none !important;
+            }
+
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs a.active .mst-search__tab-count,
+            body.catalogsearch-result-index .column.main > .gcc-search-results .mst-search__result-tabs li[aria-selected="true"] .mst-search__tab-count {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                min-width: 34px !important;
+                height: 34px !important;
+                padding: 0 10px !important;
+                border-radius: 999px !important;
+                background: #b8dcee !important;
+                color: #17386b !important;
+                font-size: 13px !important;
+                line-height: 1 !important;
+                font-weight: 700 !important;
+                flex: 0 0 auto !important;
+                box-sizing: border-box !important;
+            }
+        </style>
+
         <?php if ($block->isHighlightingEnabled()): ?>
             <script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="text/javascript">
                 require(['jquery', 'Mirasvit_Search/js/highlight'], function ($, highlight) {

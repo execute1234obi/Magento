@@ -72,11 +72,11 @@ class InstantProvider extends AbstractInstantProvider implements InstantProvider
 
         foreach ($collection as $vendor) {
             $logoUrl = '';
-            $logo = $vendor->getData('upload_logo');
+            $logo = trim((string) $vendor->getData('upload_logo'));
             $baseMediaUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
 
-            if ($logo) {
-                $logoUrl = $baseMediaUrl . $logo;
+            if ($logo !== '') {
+                $logoUrl = $baseMediaUrl . ltrim($logo, '/');
             }
 
             $storeCode = $this->storeManager->getStore()->getCode();

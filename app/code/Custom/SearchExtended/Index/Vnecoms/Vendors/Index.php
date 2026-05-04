@@ -147,8 +147,8 @@ class Index extends AbstractIndex
         $baseMediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
 
         foreach ($collection as $vendor) {
-            $logo = $vendor->getData('upload_logo');
-            $fullLogoUrl = $logo ? $baseMediaUrl . $logo : null;
+            $logo = trim((string) $vendor->getData('upload_logo'));
+            $fullLogoUrl = $logo !== '' ? $baseMediaUrl . ltrim($logo, '/') : null;
 
             $url = $this->urlBuilder->getUrl(
                 'shop/' . $vendor->getData('vendor_id'),
