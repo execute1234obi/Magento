@@ -43,23 +43,53 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         }
 
         body.catalogsearch-result-index .column.main {
-            display: grid !important;
-            grid-template-columns: minmax(300px, 340px) minmax(0, 1fr) !important;
-            column-gap: clamp(24px, 3vw, 40px) !important;
-            row-gap: 0 !important;
-            align-items: start !important;
+            display: block !important;
             width: 100% !important;
-            max-width: 1320px !important;
-            margin: 0 auto !important;
+            max-width: 100% !important;
+            margin: 0 !important;
             padding: 0 !important;
             box-sizing: border-box !important;
             min-width: 0 !important;
         }
 
+        body.catalogsearch-result-index .gcc-search-results {
+            display: block !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results,
+        body.catalogsearch-result-index .gcc-search-results__main,
+        body.catalogsearch-result-index .search.results,
+        body.catalogsearch-result-index .search-products-wrapper {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
+        body.catalogsearch-result-index .gcc-search-results__main > .search.results,
+        body.catalogsearch-result-index .gcc-search-results__main > .search.results > .products.wrapper.search-products-wrapper {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            box-sizing: border-box !important;
+        }
+
         body.catalogsearch-result-index .column.main > .gcc-search-results__header {
             width: 100% !important;
-            max-width: 1320px !important;
-            margin: 8px auto 28px !important;
+            max-width: 100% !important;
+            margin: 8px 0 28px !important;
             padding: 0 16px !important;
             box-sizing: border-box !important;
             min-width: 0 !important;
@@ -70,27 +100,25 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         }
 
         body.catalogsearch-result-index .column.main > .gcc-search-results.gcc-search-results--with-sidebar {
-            grid-column: 1 !important;
             display: grid !important;
             grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) !important;
             column-gap: clamp(24px, 3vw, 40px) !important;
             row-gap: 20px !important;
             align-items: start !important;
             width: 100% !important;
-            max-width: 1320px !important;
-            margin: 0 auto !important;
+            max-width: 100% !important;
+            margin: 0 !important;
             padding: 0 16px !important;
             box-sizing: border-box !important;
             min-width: 0 !important;
         }
 
         body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
-            grid-column: 2 !important;
             display: block !important;
             width: 100% !important;
-            max-width: 1320px !important;
+            max-width: 100% !important;
             min-width: 0 !important;
-            margin: 0 auto !important;
+            margin: 0 !important;
             padding: 0 16px !important;
             box-sizing: border-box !important;
         }
@@ -1092,6 +1120,26 @@ $searchQuery        = trim((string) $block->getRequest()->getParam('q'));
         }
     </style>
 <?php endif; ?>
+<style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+    body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) .gcc-search-results__main,
+    body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) .gcc-search-results__main > .search.results,
+    body.catalogsearch-result-index .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) .gcc-search-results__main > .search.results > .products.wrapper.search-products-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+</style>
 <div class="gcc-search-results<?= $searchFiltersHtml !== '' ? ' gcc-search-results--with-sidebar' : '' ?>">
     <?php if ($searchFiltersHtml !== '') : ?>
         <aside class="gcc-search-results__sidebar" aria-label="<?= $block->escapeHtmlAttr(__('Search filters')) ?>">

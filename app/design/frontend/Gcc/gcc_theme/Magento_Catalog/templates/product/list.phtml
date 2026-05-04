@@ -20,6 +20,9 @@ $getBrand = function($product) {
 };
 $vendorFactory = $om->create(\Vnecoms\Vendors\Model\VendorFactory::class);
 $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verification\View\Verification::class);
+$mediaBaseUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+$verificationIconUrl = $mediaBaseUrl . 'wysiwyg/VerificationBadgeIcon.png';
+$defaultFlagUrl = $mediaBaseUrl . 'wysiwyg/SA_flag.PNG';
 ?>
 
 <?php if (!$_productCollection->getSize()): ?>
@@ -58,11 +61,13 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
         }
 
         $displayBrand = $brand ?: ($vendorName ?: __('Brand'));
-         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-         $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
-         $country_id = $countryFactory->create()->loadByCode($countryCode);
-         $country = $country_id->getName(); 
-         $displayCountry = $country ?: 'SA'; // default country code if missing
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
+        $country_id = $countryFactory->create()->loadByCode($countryCode);
+        $country = $country_id->getName();
+        $displayCountry = $country ?: 'SA'; // default country name if missing
+        $flagCode = preg_match('/^[a-z]{2}$/i', (string) $countryCode) ? strtolower((string) $countryCode) : '';
+        $flagUrl = $flagCode !== '' ? 'https://flagcdn.com/w40/' . $flagCode . '.png' : $defaultFlagUrl;
         
         ?>
         <article class="u-card">
@@ -70,9 +75,18 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
                 <img src="<?= $imgUrl; ?>" alt="<?= $block->escapeHtml($_product->getName()); ?>" />
             </a>
 
+            <!-- Wishlist heart -->
+            <a href="#"
+               class="u-fav action towishlist"
+               title="<?= $block->escapeHtmlAttr(__('Add to Wishlist')) ?>"
+               data-post='<?= /* @noEscape */ $block->getAddToWishlistParams($_product) ?>'>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                    <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
+                </svg>
+            </a>
+
             <h3 class="u-title"><?= $block->escapeHtml($_product->getName()); ?></h3>
             <div class="u-price">
-                <!-- <?= $block->getProductPrice($_product); ?> -->
                  <?php
                     $price = (float)$_product->getPrice();
                     $finalPrice = (float)$_product->getFinalPrice();
@@ -80,33 +94,26 @@ $verificationBlock = $om->get(\Vendor\VendorsVerification\Block\Vendors\Verifica
 
                     <?php if ($price > 0 || $finalPrice > 0): ?>
                         <?= $block->getProductPrice($_product); ?>
+                        <span>/ 1 pcs</span>
                     <?php endif; ?>
-                <!-- <span>/ 1 pcs</span> -->
             </div>
 
             <hr class="u-divider" />
 
             <div class="u-brand">
-                <span><?= $block->escapeHtml($vendorName); ?></span>
-                <?php
-                /** --- FIXED MEDIA VARIABLES --- **/
-// Pehle storemediaUrl define karein
-$storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-
-// Phir varifyImage define karein jo isi URL ko use karega
-//$varify = $storemediaUrl . "wysiwyg/VerificationBadgeIcon.png";
-                $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
-            $varify =$mediaUrl."pub/media/wysiwyg/VerificationBadgeIcon.png";
-                if ($isVerified): ?>
+                <span><?= $block->escapeHtml($vendorName ?: $displayBrand); ?></span>
+                <?php if ($isVerified): ?>
                     <span class="u-verified" title="<?= $block->escapeHtmlAttr(__('Verified vendor')); ?>">
-                        <img src="<?= $block->escapeUrl($varify); ?>" alt="Verified" width="7%">
+                        <img src="<?= $block->escapeUrl($verificationIconUrl); ?>" alt="Verified" width="18" height="18">
                     </span>
                 <?php endif; ?>
             </div>
 
             <!-- Country with flag -->
           <div class="u-country" data-code="<?= strtolower($countryCode); ?>">
-                <span class="u-flag" aria-hidden="true"></span>
+                <span class="u-flag" aria-hidden="true">
+                    <img class="country-flag" src="<?= $block->escapeUrl($flagUrl); ?>" alt="<?= $block->escapeHtmlAttr($displayCountry); ?> Flag">
+                </span>
                 <span><?= $block->escapeHtml($displayCountry); ?></span>
            </div>
 
@@ -126,25 +133,46 @@ $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_ME
 <?php endif; ?>
 
 <style>
-.u-grid { display: grid; gap: 20px; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; max-width: 100%; min-width: 0; }
-.u-card { background:#fff; border:1px solid #e6edf7; border-radius:14px; padding:16px; position:relative; display:flex; flex-direction:column; box-shadow:0 1px 0 rgba(16,24,40,.02); transition: box-shadow .18s ease, transform .18s ease; }
-.u-card:hover { box-shadow:0 8px 24px rgba(16,24,40,.08); transform: translateY(-2px); }
-.u-imgbox { position:relative; border-radius:12px; background:#f6f8ff; height:170px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:14px; }
-.u-imgbox img { width:88%; height:88%; object-fit:contain; display:block; }
-.u-title { font-size:18px; line-height:1.25; font-weight:700; color:#111827; margin:0 0 8px; min-height:45px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.u-price { font-size:16px; color:#111827; font-weight:600; margin-bottom:14px; }
-.u-divider { height:1px; background:#eef2f7; margin:2px 0 12px; border:0; }
-.u-brand { display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:6px; }
-.u-verified { /*display:inline-flex; */align-items:center; justify-content:center; /*width:18px;*/ height:18px; border-radius:999px; /*background:#eaf2ff;*/ color:#2d62f0; }
-.u-country { display:inline-flex; align-items:center; gap:8px; color:#374151; font-size:14px; }
-/* .u-flag { width:26px; height:18px; border-radius:4px; background:#e6f6ea; display:inline-block; } */
-.u-flag {
-  width: 24px;
-  height: 16px;
-  border-radius: 4px;
-  background-color: #e6f6ea;
-  display: inline-block;
+body.catalogsearch-result-index .search.results,
+body.catalogsearch-result-index .search-products-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
 }
+
+body.catalogsearch-result-index .search-products-wrapper .u-grid {
+  display: grid !important;
+  gap: 16px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+body.catalogsearch-result-index .search-products-wrapper .u-grid > * {
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.u-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; max-width: 100%; min-width: 0; align-items: stretch; }
+.u-card { background:#fff; border:1px solid #dce8fb; border-radius:16px; padding:16px; position:relative; display:flex; flex-direction:column; height:100%; box-sizing:border-box; box-shadow:0 1px 0 rgba(16,24,40,.02); transition: box-shadow .18s ease, transform .18s ease; }
+.u-card:hover { box-shadow:0 10px 26px rgba(16,24,40,.08); transform: translateY(-2px); }
+.u-imgbox { position:relative; border-radius:12px; background:#f6f7fb; height:154px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom:14px; }
+.u-imgbox img { width:84%; height:84%; object-fit:contain; display:block; }
+.u-fav{ position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:10px; background:#fff; border:1px solid #e6edf7; display:grid; place-items:center; color:#1A3764; cursor:pointer; box-shadow:0 2px 8px rgba(16,24,40,.06); z-index:2; }
+.u-fav svg{ width:18px; height:18px; }
+.u-title { font-size:18px; line-height:1.25; font-weight:700; color:#111827; margin:0 0 8px; min-height:45px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.u-price { font-size:16px; color:#111827; font-weight:600; margin-bottom:14px; display:flex; align-items:baseline; gap:4px; flex-wrap:wrap; }
+.u-divider { height:1px; background:#eef2f7; margin:2px 0 12px; border:0; }
+.u-brand { display:flex; align-items:center; gap:8px; font-weight:700; color:#111827; margin-bottom:6px; font-size:16px; }
+.u-verified { display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:999px; overflow:hidden; background:#eaf2ff; flex:0 0 auto; }
+.u-verified img { width:18px; height:18px; display:block; }
+.u-country { display:flex; align-items:center; gap:8px; color:#374151; font-size:14px; line-height:1.3; }
+.u-flag { width:24px; height:16px; border-radius:4px; overflow:hidden; display:inline-flex; align-items:center; justify-content:center; background:#eef3f8; flex:0 0 auto; }
+.u-flag .country-flag { width:100%; height:100%; object-fit:cover; display:block; }
 
 .u-cta { margin-top:16px; width:100%; height:48px; border-radius:12px; border:1px solid #1A3764; background:#fff; color:#1A3764; font-weight:600; font-size:16px; cursor:pointer; transition: background .15s ease, color .15s ease, box-shadow .15s ease, border-color .15s ease; }
 .u-cta:hover { background:rgba(26, 55, 100, 0.06); border-color:#1A3764; box-shadow:0 2px 8px rgba(26,55,100,.15); }
@@ -162,15 +190,19 @@ body.catalogsearch-result-index .toolbar.toolbar-products {
 }
 
 @media (min-width: 768px) and (max-width: 1199px) {
-  .u-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  body.catalogsearch-result-index .search-products-wrapper .u-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
   }
 }
 
 @media (max-width: 767px) {
-  .u-grid {
-    grid-template-columns: minmax(0, 1fr);
+  body.catalogsearch-result-index .search-products-wrapper .u-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
     gap: 16px;
+  }
+
+  body.catalogsearch-result-index .search-products-wrapper .u-grid > * {
+    min-width: 0 !important;
   }
 
   .u-card {

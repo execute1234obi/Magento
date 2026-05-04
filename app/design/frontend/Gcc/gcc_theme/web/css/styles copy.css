@@ -590,14 +590,11 @@ body.catalogsearch-result-index .column.main {
 
 /* Search results: two-column grid for the custom filter rail + results area. */
 html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
-     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 32px;
-    align-items: start;
+    display: block;
     width: 100%;
-    max-width: 1320px;
+    max-width: 100%;
     min-width: 0;
-    margin: 0 auto;
+    margin: 0;
     padding: 0 16px;
     box-sizing: border-box;
 }
@@ -878,9 +875,7 @@ body.catalogsearch-result-index .pager--search .pages-item-next .disabled::after
 
 @media (max-width: 767px) {
     html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr);
-        gap: 22px;
+        display: block;
         max-width: 100%;
         min-width: 0;
     }
