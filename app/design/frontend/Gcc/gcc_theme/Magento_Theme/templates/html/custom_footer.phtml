@@ -12,8 +12,8 @@ $mediaUrl = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterfac
 footer.custom-footer {
   background: #fff;
   padding: 16px 32px 48px 32px;
-  color: #374151;
-  font-family: Arial, sans-serif;
+  color: #2B3131;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 footer.custom-footer .footer-container {
   max-width: 1200px;
@@ -46,9 +46,10 @@ footer.custom-footer .footer-column {
 }
 footer.custom-footer h4 {
   margin-bottom: 16px;
-  font-size: 17px;
+  font-size: 15px !important;
   font-weight: 600;
-  color: #111827;
+  color: #2B3131;
+  line-height: 1.25;
 }
 footer.custom-footer ul {
   list-style: none;
@@ -56,12 +57,25 @@ footer.custom-footer ul {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-size: 0.875rem;
+  gap: 12px;
+  font-size: 15px !important;
+  line-height: 1.5;
 }
 footer.custom-footer a {
-  color: #374151;
+  color: #2B3131;
   text-decoration: none;
+  font-size: 15px !important;
+  line-height: 1.5;
+}
+footer.custom-footer .footer-bottom a {
+  font-size: 15px !important;
+  color: #2B3131;
+  line-height: 1.5;
+}
+footer.custom-footer .footer-bottom-links a {
+  font-size: 15px !important;
+  color: #2B3131;
+  line-height: 1.5;
 }
 footer.custom-footer hr {
   border: none;
@@ -73,17 +87,22 @@ footer.custom-footer .footer-bottom {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.875rem;
-  color: #6b7280;
+  font-size: 15px !important;
+  color: #2B3131;
+  line-height: 1.5;
 }
 footer.custom-footer .footer-bottom-links {
   display: flex;
   gap: 24px;
+  font-size: 15px !important;
+  line-height: 1.5;
 }
 footer.custom-footer .social-item {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 15px !important;
+  line-height: 1.5;
 }
 footer.custom-footer .social-item img {
   width: 16px;

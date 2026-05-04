@@ -422,8 +422,8 @@ if ($storeCode === 'default') {
             <a href="<?= $block->escapeUrl($messagesUrl) ?>" class="mobile-account-tool" title="<?= __('Messages') ?>">
               <span class="mobile-account-tool-icon">
                 <svg width="22" height="22" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19.4348 2.57153H8.56627C7.2417 2.57153 6.57999 2.57153 6.04513 2.75782C5.54105 2.93693 5.08496 3.22966 4.71218 3.61334C4.3394 3.99702 4.05993 4.46136 3.89542 4.97039C3.71484 5.52125 3.71484 6.20239 3.71484 7.56582V23.5704C3.71484 24.551 4.84056 25.0721 5.55256 24.4207C5.75231 24.2361 6.0143 24.1336 6.28627 24.1336C6.55825 24.1336 6.82023 24.2361 7.01999 24.4207L7.57199 24.9258C7.92194 25.2494 8.38105 25.4292 8.8577 25.4292C9.33435 25.4292 9.79346 25.2494 10.1434 24.9258C10.4934 24.6022 10.9525 24.4225 11.4291 24.4225C11.9058 24.4225 12.3649 24.6022 12.7148 24.9258C13.0648 25.2494 13.5239 25.4292 14.0006 25.4292C14.4772 25.4292 14.9363 25.2494 15.2863 24.9258C15.6362 24.6022 16.0953 24.4225 16.572 24.4225C17.0486 24.4225 17.5077 24.6022 17.8577 24.9258C18.2077 25.2494 18.6668 25.4292 19.1434 25.4292C19.6201 25.4292 20.0792 25.2494 20.4291 24.9258L20.9811 24.4207C21.1809 24.2361 21.4429 24.1336 21.7148 24.1336C21.9868 24.1336 22.2488 24.2361 22.4486 24.4207C23.1606 25.0721 24.2863 24.551 24.2863 23.5704V7.56582C24.2863 6.20239 24.2863 5.5201 24.1057 4.97153C23.9413 4.46229 23.6619 3.99773 23.2891 3.61384C22.9164 3.22995 22.4602 2.93705 21.956 2.75782C21.4211 2.57153 20.7594 2.57153 19.4348 2.57153Z" stroke="#3B82F6" stroke-width="1.71429"/>
-                  <path d="M12.2861 12.8573H19.7147M8.28613 12.8573H8.85756M8.28613 8.8573H8.85756M8.28613 16.8573H8.85756M12.2861 8.8573H19.7147M12.2861 16.8573H19.7147" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round"/>
+                  <path d="M19.4348 2.57153H8.56627C7.2417 2.57153 6.57999 2.57153 6.04513 2.75782C5.54105 2.93693 5.08496 3.22966 4.71218 3.61334C4.3394 3.99702 4.05993 4.46136 3.89542 4.97039C3.71484 5.52125 3.71484 6.20239 3.71484 7.56582V23.5704C3.71484 24.551 4.84056 25.0721 5.55256 24.4207C5.75231 24.2361 6.0143 24.1336 6.28627 24.1336C6.55825 24.1336 6.82023 24.2361 7.01999 24.4207L7.57199 24.9258C7.92194 25.2494 8.38105 25.4292 8.8577 25.4292C9.33435 25.4292 9.79346 25.2494 10.1434 24.9258C10.4934 24.6022 10.9525 24.4225 11.4291 24.4225C11.9058 24.4225 12.3649 24.6022 12.7148 24.9258C13.0648 25.2494 13.5239 25.4292 14.0006 25.4292C14.4772 25.4292 14.9363 25.2494 15.2863 24.9258C15.6362 24.6022 16.0953 24.4225 16.572 24.4225C17.0486 24.4225 17.5077 24.6022 17.8577 24.9258C18.2077 25.2494 18.6668 25.4292 19.1434 25.4292C19.6201 25.4292 20.0792 25.2494 20.4291 24.9258L20.9811 24.4207C21.1809 24.2361 21.4429 24.1336 21.7148 24.1336C21.9868 24.1336 22.2488 24.2361 22.4486 24.4207C23.1606 25.0721 24.2863 24.551 24.2863 23.5704V7.56582C24.2863 6.20239 24.2863 5.5201 24.1057 4.97153C23.9413 4.46229 23.6619 3.99773 23.2891 3.61384C22.9164 3.22995 22.4602 2.93705 21.956 2.75782C21.4211 2.57153 20.7594 2.57153 19.4348 2.57153Z" stroke="#1A3764" stroke-width="1.71429"/>
+                  <path d="M12.2861 12.8573H19.7147M8.28613 12.8573H8.85756M8.28613 8.8573H8.85756M8.28613 16.8573H8.85756M12.2861 8.8573H19.7147M12.2861 16.8573H19.7147" stroke="#1A3764" stroke-width="1.71429" stroke-linecap="round"/>
                 </svg>
                 <?php if (!empty($messageCount)): ?>
                   <span class="mobile-account-badge"><?= $block->escapeHtml($messageCount) ?></span>
@@ -435,7 +435,7 @@ if ($storeCode === 'default') {
             <a href="<?= $block->escapeUrl($block->getUrl('quoterequest/view/index/')) ?>" class="mobile-account-tool" title="<?= __('Request for Quotation') ?>">
               <span class="mobile-account-tool-icon">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M12 11v4M10 13h4" stroke="#3B82F6" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M12 11v4M10 13h4" stroke="#1A3764" stroke-width="1.71429" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 <span id="mobile-quote-counter" class="mobile-account-badge" style="display:none;">0</span>
               </span>
@@ -929,7 +929,7 @@ header .sign-in-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: #2563eb;
+    color: #1A3764;
     font-size: 14px;
     font-weight: 500;
 }
@@ -968,14 +968,14 @@ header .sign-in-btn {
 
 .mobile-language-link:hover {
     background: #f8fafc;
-    color: #2563eb !important;
+    color: #1A3764 !important;
 }
 
 .mobile-menu-close {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #2563eb;
+    color: #1A3764;
     padding: 4px;
 }
 
@@ -1075,7 +1075,7 @@ header .sign-in-btn {
 
 .mobile-menu-section-toggle.is-active,
 .mobile-menu-link.is-active {
-    color: #2563eb !important;
+    color: #1A3764 !important;
     font-weight: 600;
 }
 
@@ -1173,15 +1173,15 @@ header .sign-in-btn {
 }
 
 .mobile-menu-auth-primary {
-    background: #3b82f6;
+    background: #1A3764;
     color: #fff !important;
-    border: 1px solid #3b82f6;
+    border: 1px solid #1A3764;
 }
 
 .mobile-menu-auth-outline {
     background: #fff;
-    color: #2563eb !important;
-    border: 1px solid #3b82f6;
+    color: #1A3764 !important;
+    border: 1px solid #1A3764;
 }
 
 /* Large screens (already mostly handled by Tailwind) */
