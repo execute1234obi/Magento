@@ -1,0 +1,113 @@
+<?php
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+
+// $filters = $block->getFilterData();
+// echo '<pre>Filters:'; print_r($filters); echo '</pre>';
+
+$filters = $block->getFilterData() ?: [];
+$selected = $block->getSelectedFilters() ?: [];
+// Dump the arrays
+// echo '<pre>';
+// print_r($filters);
+// print_r($selected);
+// echo '</pre>';
+// Ensure keys exist
+$filters['countries'] = $filters['countries'] ?? [];
+$filters['verified'] = $filters['verified'] ?? [];
+$filters['business_types'] = $filters['business_types'] ?? [];
+
+$selected['country'] = $selected['country'] ?? '';
+$selected['verified'] = $selected['verified'] ?? '';
+$selected['business_type'] = $selected['business_type'] ?? '';
+?>
+<div class="bg-white shadow-md rounded-lg p-4">
+  <h2 class="text-xl font-bold mb-4">Filter</h2>
+
+  <!-- Country Filter -->
+  <div class="mb-4">
+    <label for="country" class="block text-gray-700 text-sm font-bold mb-2">Country</label>
+    <select id="country" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?php echo __('Please Select');?></option>
+      <?php foreach($filters['countries'] as $country): ?>
+        <option value="<?= $country ?>" <?= ($selected['country'] == $country) ? 'selected' : '' ?>>
+          <?= $country ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <!-- Verified Seller Filter -->
+  <div class="mb-4">
+    <label for="verified-seller" class="block text-gray-700 text-sm font-bold mb-2">Verified Seller</label>
+    <select id="verified-seller" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?php echo __('Please Select');?></option>
+      <?php foreach($filters['verified'] as $key => $label): ?>
+        <option value="<?= $key ?>" <?= ($selected['verified'] == $key) ? 'selected' : '' ?>>
+          <?= $label ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <!-- Business Type Filter -->
+  <div class="mb-4">
+    <label for="business-type" class="block text-gray-700 text-sm font-bold mb-2">Business Type</label>
+    <select id="business-type" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?php echo __('Please Select');?></option>
+      <?php foreach($filters['business_types'] as $key => $label): ?>
+        <option value="<?= $key ?>" <?= ($selected['business_type'] == $key) ? 'selected' : '' ?>>
+          <?= $label ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+  </div>
+</div>
+
+<script type="text/javascript">
+require(['jquery', 'domReady!'], function($){
+    function reloadPage(){
+        var query = '<?= $block->getRequest()->getParam('q', '') ?>';
+        var country = $('#country').val();
+        var verified = $('#verified-seller').val();
+        var business = $('#business-type').val();
+        var url = window.location.origin + window.location.pathname + '?q=' + encodeURIComponent(query) +
+                  '&svendor_country_id=' + country +
+                  '&svendor_is_verified=' + verified +
+                  '&svendor_business_type=' + business;
+        window.location.href = url;
+    }
+
+    $('#country, #verified-seller, #business-type').change(reloadPage);
+});
+require(['jquery', 'domReady!'], function($) {
+
+    /**
+     * Updates the Vendor tab text with the current count
+     * @param {Number} count - Number of vendors matching the current filter
+     */
+    function updateVendorTab(count) {
+        var vendorTab = $('li[role="tab"]:contains("Vendor") a');
+        vendorTab.text('Vendor (' + count + ')');
+    }
+
+    /**
+     * Fetches the vendor count dynamically and updates the tab
+     * Replace the logic inside this function with your actual data source/API
+     */
+    function refreshVendorTab() {
+        // Example: fetching count from your collection or API
+        var count = <?= $block->getSearchCollection()->getSize() ?>;
+        updateVendorTab(count);
+    }
+
+    // Run on filter change
+    $('#country, #verified-seller, #business-type').on('change', function() {
+        refreshVendorTab();
+    });
+
+    // Initial load
+    refreshVendorTab();
+
+});
+
+</script>

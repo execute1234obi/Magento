@@ -154,81 +154,194 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
 </div>
 
 <script>
-  // Shortcut setup
-  (function(){
-    const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
-    document.getElementById('shortcutHint').textContent = isMac ? '⌘K' : 'Ctrl K';
+/* ================================
+   1️⃣ Shortcut (Ctrl K / ⌘K)
+================================ */
+(function(){
+  const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
 
-    document.addEventListener('keydown', (e) => {
-      const key = e.key.toLowerCase();
-      if ((isMac && e.metaKey && key === 'k') || (!isMac && e.ctrlKey && key === 'k')) {
+  const hint = document.getElementById('shortcutHint');
+  if (hint) {
+    hint.textContent = isMac ? '⌘K' : 'Ctrl K';
+  }
+
+  document.addEventListener('keydown', function (e) {
+    const key = (e.key || '').toLowerCase();
+
+    if ((isMac && e.metaKey && key === 'k') ||
+        (!isMac && e.ctrlKey && key === 'k')) {
+      e.preventDefault();
+
+      const searchInput = document.getElementById('search');
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }
+  });
+})();
+</script>
+
+<script>
+/* ================================
+   2️⃣ Stable Enter Submit
+================================ */
+require(['jquery'], function ($) {
+  $(document).on('keydown', '#search', function (e) {
+
+    if (e.key === 'Enter') {
+      const val = $(this).val().trim();
+
+      if (!val.length) {
         e.preventDefault();
-        document.getElementById('search').focus();
+        return;
       }
+
+      $('#custom_search_form')[0].submit(); // native submit
+    }
+
+  });
+});
+
+</script>
+
+<script>
+/* =========================================
+   3️⃣ Safer Mirasvit Layout Enhancement
+========================================= */
+// (function () {
+
+//   function txt(el) {
+//     return (el && (el.innerText || el.textContent) || '')
+//       .trim()
+//       .toLowerCase();
+//   }
+
+//   function findHost(wrapper){
+//     return wrapper.querySelector('[class*="__blocks"]')
+//         || wrapper.querySelector('[class*="__content"]')
+//         || wrapper;
+//   }
+
+//   function findBlocks(host){
+//     let blocks = Array.from(host.children)
+//       .filter(n => n.className && String(n.className).includes('__block'));
+
+//     if (!blocks.length) {
+//       blocks = Array.from(host.querySelectorAll('[class*="__block"]'));
+//     }
+
+//     return blocks;
+//   }
+
+//   function buildTwoColumns(wrapper){
+//     if (!wrapper) return;
+
+//     const host = findHost(wrapper);
+//     if (!host || host.querySelector('.ms-grid')) return;
+
+//     const blocks = findBlocks(host);
+//     if (!blocks.length) return;
+
+//     const grid  = document.createElement('div');
+//     grid.className = 'ms-grid';
+
+//     const left  = document.createElement('div');
+//     left.className = 'ms-col';
+
+//     const right = document.createElement('div');
+//     right.className = 'ms-col';
+
+//     const full  = document.createElement('div');
+//     full.className = 'ms-full';
+
+//     blocks.forEach(block => {
+//       const title = block.querySelector('[class*="__title"]');
+//       const t = txt(title);
+
+//       if (t.includes('vendor')) {
+//         left.appendChild(block);
+//       } 
+//       else if (t.includes('product')) {
+//         right.appendChild(block);
+//       } 
+//       else {
+//         full.appendChild(block);
+//       }
+//     });
+
+//     grid.append(left, right, full);
+
+//     /* 🔒 SAFER than innerHTML = '' */
+//     while (host.firstChild) {
+//       host.removeChild(host.firstChild);
+//     }
+
+//     host.appendChild(grid);
+//   }
+
+//   function enhanceAll(){
+//     document
+//       .querySelectorAll('.mst-search-autocomplete__wrapper')
+//       .forEach(buildTwoColumns);
+//   }
+
+//   /* ⏱️ Throttle DOM updates */
+//   let enhanceTimer;
+//   function scheduleEnhance(){
+//     clearTimeout(enhanceTimer);
+//     enhanceTimer = setTimeout(enhanceAll, 80);
+//   }
+
+//   const input = document.getElementById('search');
+//   if (input) {
+//     ['focus','input','keyup'].forEach(ev =>
+//       input.addEventListener(ev, scheduleEnhance)
+//     );
+//   }
+
+//   /* 👀 Optimized MutationObserver */
+//   let moTimer;
+//   const observer = new MutationObserver(function () {
+//     clearTimeout(moTimer);
+//     moTimer = setTimeout(enhanceAll, 120);
+//   });
+
+//   observer.observe(document.body, {
+//     childList: true,
+//     subtree: true
+//   });
+
+//   enhanceAll();
+
+// })();
+</script>
+
+<script>
+/* =========================================
+   4️⃣ Optional Overlay Control (Safe)
+========================================= */
+require(['jquery'], function ($) {
+
+  function hideDuplicateOverlay() {
+    $('.mst-search-autocomplete__typeahead-overlay')
+      .not(':first')
+      .css('display', 'none');
+  }
+
+  $(document).ready(function () {
+    hideDuplicateOverlay();
+
+    let overlayTimer;
+    const observer = new MutationObserver(function () {
+      clearTimeout(overlayTimer);
+      overlayTimer = setTimeout(hideDuplicateOverlay, 100);
     });
-  })();
 
-  // Mirasvit autocomplete layout enhancement
-  (function () {
-    const txt = el => (el && (el.innerText || el.textContent) || '').trim().toLowerCase();
-
-    function findHost(wrapper){
-      return wrapper.querySelector('[class*="__blocks"]')
-          || wrapper.querySelector('[class*="__content"]')
-          || wrapper;
-    }
-
-    function findBlocks(host){
-      let blocks = Array.from(host.children).filter(n => n.className && String(n.className).includes('__block'));
-      if (!blocks.length) blocks = Array.from(host.querySelectorAll('[class*="__block"]'));
-      return blocks;
-    }
-
-    function buildTwoColumns(wrapper){
-      if (!wrapper) return;
-      const host = findHost(wrapper);
-      const blocks = findBlocks(host);
-      if (!blocks.length || host.querySelector('.ms-grid')) return;
-
-      const grid  = document.createElement('div'); grid.className = 'ms-grid';
-      const left  = document.createElement('div'); left.className = 'ms-col';
-      const right = document.createElement('div'); right.className = 'ms-col';
-      const full  = document.createElement('div'); full.className = 'ms-full';
-
-      blocks.forEach(block => {
-        const title = block.querySelector('[class*="__title"]');
-        const t = txt(title);
-        if (t.includes('vendor')) left.appendChild(block);
-        else if (t.includes('product')) right.appendChild(block);
-        else full.appendChild(block);
-      });
-
-      grid.append(left, right, full);
-      host.innerHTML = ''; host.appendChild(grid);
-    }
-
-    function enhanceAll(){
-      document.querySelectorAll('.mst-search-autocomplete__wrapper').forEach(buildTwoColumns);
-    }
-
-    const input = document.getElementById('search');
-    if (input) ['focus','input','keyup'].forEach(ev => input.addEventListener(ev, () => setTimeout(enhanceAll, 50)));
-
-    const mo = new MutationObserver(() => enhanceAll());
-    mo.observe(document.body, { childList:true, subtree:true });
-
-    enhanceAll();
-  })();
-
-  // Hide duplicate Mirasvit overlays
-  require(['jquery'], function($) {
-    $(document).ready(function() {
-      function hideAutocomplete() {
-        $('.mst-search-autocomplete__typeahead-overlay').hide();
-      }
-      hideAutocomplete();
-      const observer = new MutationObserver(hideAutocomplete);
-      observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
     });
   });
+
+});
 </script>

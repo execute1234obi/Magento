@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+
+        <!-- REMOVE DEFAULT -->
+        <referenceBlock name="catalog.topnav" remove="true"/>
+        <referenceBlock name="page.main.title" remove="true"/>
+        <referenceBlock name="catalogsearch.leftnav" remove="true"/>
+        
+
+        <!-- CONTENT WRAPPER -->
+        <referenceContainer name="content">
+
+            <!-- HEADER -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="gcc.search.header"
+                   template="Magento_CatalogSearch::search-header.phtml"
+                   before="-"/>
+
+            <!-- FILTER (SIDE COMPONENT, NOT RESULT CHILD) -->
+            <block class="Custom\SearchExtended\Block\Index\Vendors"
+                   name="gcc.custom.filters"
+                   template="Magento_CatalogSearch::custom-filters.phtml" display="false" />
+
+            <!-- RESULT -->
+            <!-- <block class="Mirasvit\Search\Block\Result"
+                   name="mst.search.result"
+                   template="Mirasvit_Search::result.phtml" display="false"/> -->
+
+            <!-- WRAPPER -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="gcc.search.container"
+                   template="Magento_CatalogSearch::result-container.phtml"
+                   after="gcc.search.header"/>
+
+   
+        </referenceContainer>
+        <!-- NEWSLETTER --> <referenceContainer name="main"> <container name="gcc.search-newsletter" htmlTag="div" htmlClass="gcc-search-newsletter" after="content"> <block class="Magento\Framework\View\Element\Template" name="custom.newsletter.search" template="Magento_Theme::html/newsletter.phtml"/> </container> </referenceContainer>
+
+    </body>
+</page>

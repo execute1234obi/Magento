@@ -1,0 +1,393 @@
+.page-main {
+    padding-top: 20px;
+    /* Adjust based on your header height */
+}
+
+body.custom_result-bg {
+    background-color: #F9FAFB !important;
+}
+
+/* ================================ */
+/* Global Typography for Entire Site */
+/* ================================ */
+
+body,
+body * {
+    font-family: 'Inter', sans-serif !important;
+    /* font-weight: bold !important; */
+}
+
+body.customer-account .page-main {
+    padding-top: 150px !important;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: clamp(28px, 4vw, 33px);
+    line-height: 1.2;
+    margin: 0 0 1em 0;
+}
+
+/* Paragraphs, spans, divs, links */
+p,
+span,
+div,
+a,
+li,
+label,
+td,
+th {
+    font-size: clamp(12px, 2vw, 16px);
+    line-height: 1.5;
+}
+
+/* Links */
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Optional: make input/textarea readable */
+input,
+textarea,
+select,
+button {
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: clamp(12px, 2vw, 16px);
+}
+
+/* Apply only on vendor-membership page */
+@media (min-width: 768px) {
+    .vendorsmembership-index-index .page-wrapper {
+        margin: 0;
+        position: relative;
+        transition: margin .3s ease-out 0s;
+        padding-top: 150px;
+    }
+}
+
+.pricing-heading {
+    color: #9C9E9F;
+    margin-bottom: 4rem;
+    text-align: center;
+    padding-top: 10px !important;
+}
+
+@media screen and (min-width: 768px) {
+
+    .checkout-index-index .page-wrapper,
+    .checkout-cart-index.page-layout-1column .page-wrapper {
+        margin: 0;
+        position: relative;
+        transition: margin .3s ease-out 0s;
+        padding-top: 150px;
+    }
+}
+
+.success-custom-padding .columns .column.main {
+    padding-top: 200px !important;
+}
+
+.block.block-reorder,
+.block-reorder,
+.sidebar .block-reorder .sidebar-additional {
+    display: none !important;
+}
+
+.opc-wrapper {
+
+    width: 50% !important;
+
+}
+        .opc-progress-bar {
+            margin: 0 0 20px;
+            counter-reset: i;
+            display: none;
+            font-size: 0;
+        }
+    
+    @media (min-width: 769px), print {
+        .opc-progress-bar {
+            margin: 0 0 20px;
+            counter-reset: i;
+            display: none;
+            font-size: 0;
+        }
+    }
+
+    .payment-method-content { display: none; }
+.payment-method._active .payment-method-content { display: block; }
+
+/* Checkout payment methods - modern UI */
+.checkout-index-index {
+
+  .payment-method {
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    background: #fff;
+    overflow: hidden;
+    margin: 0 0 12px;
+  }
+
+  .payment-method._active {
+    border-color: #93c5fd;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.12);
+  }
+
+  /* Row header (radio + title + logos) */
+  .payment-method-title.field.choice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .payment-method-title.field.choice input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    flex: 0 0 auto;
+  }
+
+  /* Make label take remaining width */
+  .payment-method-title.field.choice .label {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* title left, logos right */
+    gap: 12px;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  /* Payment title text */
+  .payment-method-title.field.choice .label span,
+  .payment-method-title.field.choice .label {
+    font-weight: 600;
+    color: #111827;
+  }
+
+  /* Logos: keep same size and aligned */
+  .payment-method-title.field.choice img,
+  .payment-method-title.field.choice svg {
+    height: 22px;
+    width: auto;
+    max-width: 52px;
+    object-fit: contain;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* If too many logos, allow smooth horizontal scroll instead of breaking layout */
+  .payment-method-title.field.choice .label {
+    overflow: hidden;
+  }
+
+  .payment-method-title.field.choice .label img,
+  .payment-method-title.field.choice .label svg {
+    flex: 0 0 auto;
+  }
+
+  /* Greyscale non-selected logos (nice modern effect) */
+  .payment-method:not(._active) .payment-method-title img,
+  .payment-method:not(._active) .payment-method-title svg {
+    opacity: 0.75;
+    filter: grayscale(100%);
+  }
+
+  .payment-method._active .payment-method-title img,
+  .payment-method._active .payment-method-title svg {
+    opacity: 1;
+    filter: none;
+  }
+
+  /* Content area */
+  .payment-method-content {
+    border-top: 1px solid #f3f4f6;
+    padding: 16px;
+  }
+}
+.payment-method-title.field.choice img,
+.payment-method-title.field.choice svg {
+  height: 22px !important;
+  width: auto !important;
+  max-width: 52px !important;
+  object-fit: contain !important;
+}
+
+/* Hide progress bar only on payment step */
+.checkout-index-index.checkout-payment-index .opc-progress-bar,
+.checkout-index-index.checkout-payment-index .opc-progress-bar-container {
+  display: none !important;
+}
+/* Hide progress bar on all checkout pages */
+.checkout-index-index .opc-progress-bar,
+.checkout-index-index .opc-progress-bar-container {
+  display: none !important;
+}
+
+
+/* ===== Right sidebar: Order Summary modern card ===== */
+.checkout-index-index #opc-sidebar {
+  position: sticky;
+  top: 110px;               /* adjust if header height differs */
+  align-self: start;
+}
+
+/* the container you highlighted: div.space-y-4 */
+.checkout-index-index #opc-sidebar .space-y-4 {
+  background: #f8fbff;
+  border: 1px solid #dbeafe;
+  border-radius: 16px;
+  padding: 18px 18px 20px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+/* Title */
+.checkout-index-index #opc-sidebar .space-y-4 .text-lg,
+.checkout-index-index #opc-sidebar .space-y-4 .text-lg.font-semibold {
+  font-size: 22px !important;
+  font-weight: 800 !important;
+  color: #0f2a5f !important;
+  margin-bottom: 12px !important;
+}
+
+/* Totals table */
+.checkout-index-index #opc-sidebar .table-totals {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* spacing between rows like modern UI */
+}
+
+/* Each row */
+.checkout-index-index #opc-sidebar .table-totals tr th,
+.checkout-index-index #opc-sidebar .table-totals tr td {
+  font-size: 15px;
+  color: #4b5563;
+  padding: 2px 0;
+  font-weight: 500;
+}
+
+.checkout-index-index #opc-sidebar .table-totals tr td {
+  text-align: right;
+  color: #0f2a5f;
+  font-weight: 700;
+}
+
+/* Make grand total area prominent */
+.checkout-index-index #opc-sidebar .grand.totals th,
+.checkout-index-index #opc-sidebar .grand.totals td {
+  font-size: 18px !important;
+  font-weight: 900 !important;
+  color: #0f2a5f !important;
+  padding-top: 10px !important;
+}
+
+/* dashed divider like screenshot */
+.checkout-index-index #opc-sidebar .table-totals tbody::after {
+  content: "";
+  display: block;
+  border-top: 2px dashed #cbd5e1;
+  margin: 14px 0 10px;
+}
+
+/* ===== Discount / Coupon block ===== */
+/* Works for common Magento coupon containers */
+.checkout-index-index #opc-sidebar .discount,
+.checkout-index-index #opc-sidebar .payment-option.discount,
+.checkout-index-index #opc-sidebar .opc-block-summary .discount {
+  margin-top: 12px;
+}
+
+/* Coupon input + button row */
+.checkout-index-index #opc-sidebar .discount .field,
+.checkout-index-index #opc-sidebar .payment-option.discount .field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Input */
+.checkout-index-index #opc-sidebar .discount input,
+.checkout-index-index #opc-sidebar .payment-option.discount input {
+  flex: 1 1 auto;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #c7ddff;
+  background: #ffffff;
+  padding: 0 14px;
+  outline: none;
+  font-size: 14px;
+}
+
+.checkout-index-index #opc-sidebar .discount input:focus,
+.checkout-index-index #opc-sidebar .payment-option.discount input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+}
+
+/* Apply button */
+.checkout-index-index #opc-sidebar .discount .action,
+.checkout-index-index #opc-sidebar .payment-option.discount .action {
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 12px;
+  background: #1d4ed8;
+  color: #fff;
+  border: 0;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.checkout-index-index #opc-sidebar .discount .action:hover,
+.checkout-index-index #opc-sidebar .payment-option.discount .action:hover {
+  filter: brightness(0.95);
+}
+
+/* ===== “Purchase Now” style primary button in summary if you have one ===== */
+/* Magento sometimes renders buttons inside sidebar (place order is left). This is safe anyway */
+.checkout-index-index #opc-sidebar button,
+.checkout-index-index #opc-sidebar .action.primary {
+  width: 100%;
+  margin-top: 16px;
+  height: 52px;
+  border-radius: 14px;
+  background: #1d4ed8;
+  border: 0;
+  color: #fff;
+  font-weight: 900;
+  font-size: 16px;
+}
+
+/* Remove extra default borders/paddings from summary items block */
+.checkout-index-index #opc-sidebar .opc-block-summary {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+/* FIX: make sidebar button text visible */
+.checkout-index-index #opc-sidebar button,
+.checkout-index-index #opc-sidebar button *,
+.checkout-index-index #opc-sidebar .action.primary,
+.checkout-index-index #opc-sidebar .action.primary * {
+  color: #fff !important;
+  fill: #fff !important;   /* if any svg icon */
+}
+
+/* In case some rule set font-size: 0 on buttons */
+.checkout-index-index #opc-sidebar button {
+  font-size: 16px !important;
+  line-height: 1.2 !important;
+}
+
+/* If the button uses <span> inside and it becomes hidden */
+.checkout-index-index #opc-sidebar button span {
+  opacity: 1 !important;
+  visibility: visible !important;
+}

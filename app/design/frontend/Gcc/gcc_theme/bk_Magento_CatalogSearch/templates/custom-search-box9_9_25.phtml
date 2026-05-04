@@ -1,0 +1,76 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* .search-autocomplete {
+  position: relative;
+  z-index: 10;
+}
+.mst-searchautocomplete__autocomplete {
+  z-index: 5;
+}
+.custom-breadcrumbs {
+    margin-top: 10px;
+    padding: 10px 0;
+} */
+ .search-autocomplete {
+    position: relative;
+    z-index: 10;
+  }
+
+   .custom-breadcrumbs {
+    margin-top: 10px;
+    padding: 10px 0;
+  }
+/* Fix input styling */
+input#search {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+/* Fix autocomplete dropdown positioning and border conflict */
+.mst-searchautocomplete__autocomplete {
+  margin-top: -1px;             /* overlap slightly to remove gap */
+  border-top: 1px solid #ccc;   /* optional: cleaner top border */
+  border-radius: 0 0 0.5rem 0.5rem; /* match input border radius */
+  z-index: 1000;
+  position: absolute;
+  width: 100%;
+  background: white;
+}
+  </style>
+<div class="my-7">
+  <form class="flex justify-center"  action="<?= $block->getUrl('catalogsearch/result') ?>" 
+    method="get" id="search_mini_form">
+  <div class="flex w-full max-w-[1200px] border border-gray-300 rounded-xl shadow-sm bg-white min-h-[50px]" style="z-index: 999; position: relative;">
+   <input id="search"
+        type="text" 
+        name="q" 
+        placeholder="Search for vendors or products..." 
+        value="<?= $block->escapeHtml($block->getQueryText()) ?>" 
+  class="flex-1 px-5 py-3 text-base text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-0 border-0"
+  autocomplete="off"
+/>
+
+    <button 
+      type="submit" 
+      class="bg-blue-600 text-white font-semibold px-8 py-3 hover:bg-blue-700 transition-colors duration-200"
+    >
+      Search
+    </button>
+  </div>
+</form>
+</div>
+<div class="custom-breadcrumbs">
+<?php
+// Try to get the existing breadcrumbs block and render it here
+$breadcrumbsBlock = $block->getLayout()->getBlock('breadcrumbs');
+if ($breadcrumbsBlock) {
+    echo $breadcrumbsBlock->toHtml();
+} else {
+    echo "<!-- Breadcrumbs block not found in layout -->";
+}
+?>
+</div>

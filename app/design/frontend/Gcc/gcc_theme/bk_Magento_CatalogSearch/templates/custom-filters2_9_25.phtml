@@ -11,66 +11,53 @@ $filters['business_types'] = $filters['business_types'] ?? [];
 $selected['country'] = $selected['country'] ?? '';
 $selected['verified'] = $selected['verified'] ?? '';
 $selected['business_type'] = $selected['business_type'] ?? '';
-
-// Remove empty values (fix blank dropdown option issue)
-$filters['countries'] = array_filter($filters['countries']);
-$filters['verified'] = array_filter($filters['verified']);
-$filters['business_types'] = array_filter($filters['business_types']);
 ?>
-<style>
-.layout {
-    display: flex;
-    gap: 20px;
-    align-items: flex-start;
-    flex-wrap: nowrap;
-}
-
-.sidebar {
-    width: 250px;
-    flex: 0 0 250px;
-}
-
-.result-container {
-    flex: 1;
-    min-width: 0;
-}
-  </style>
    <!-- Your vendor filters -->
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="filter-title1"><?= __('Filter') ?></div>
-    <div class="filter-group">
-      <label for="country"><?= __('Country') ?></label>
-      <select id="country">
-         <option value=""><?= __('Please Select') ?></option>
+<div class="bg-white shadow-md rounded-lg p-4">
+  <h2 class="text-xl font-bold mb-4">Filter</h2>
+
+  <!-- Country Filter -->
+  <div class="mb-4">
+    <label for="country" class="block text-gray-700 text-sm font-bold mb-2"><?= __('Country') ?></label>
+    <select id="country" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?= __('Please Select') ?></option>
       <?php foreach ($filters['countries'] as $country): ?>
         <option value="<?= $block->escapeHtmlAttr($country) ?>" <?= ($selected['country'] == $country) ? 'selected' : '' ?>>
           <?= $block->escapeHtml($country) ?>
         </option>
       <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label for="verified-seller"><?= __('Verified Seller') ?></label>
-      <select id="verified-seller"><option value=""><?= __('Please Select') ?></option>
+    </select>
+  </div>
+
+  <!-- Verified Seller Filter -->
+  <div class="mb-4">
+    <label for="verified-seller" class="block text-gray-700 text-sm font-bold mb-2"><?= __('Verified Seller') ?></label>
+    <select id="verified-seller" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?= __('Please Select') ?></option>
       <?php foreach ($filters['verified'] as $key => $label): ?>
         <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['verified'] == $key) ? 'selected' : '' ?>>
           <?= $block->escapeHtml($label) ?>
         </option>
-      <?php endforeach; ?></select>
-    </div>
-    <div class="filter-group">
-      <label for="business-type"><?= __('Business Type') ?></label>
-      
-      <select id="business-type"><option value=""><?= __('Please Select') ?>
-       <?php foreach ($filters['business_types'] as $key => $label): ?>
+      <?php endforeach; ?>
+    </select>
+  </div>
+
+  <!-- Business Type Filter -->
+  <div class="mb-4">
+    <label for="business-type" class="block text-gray-700 text-sm font-bold mb-2"><?= __('Business Type') ?></label>
+    <select id="business-type" class="block w-full bg-white border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value=""><?= __('Please Select') ?></option>
+      <?php foreach ($filters['business_types'] as $key => $label): ?>
         <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['business_type'] == $key) ? 'selected' : '' ?>>
           <?= $block->escapeHtml($label) ?>
         </option>
-      <?php endforeach; ?></select>
-    </div>
-  
+      <?php endforeach; ?>
+    </select>
+  </div>
+</div>
+</div>
+
 <style>
   #vendor-sidebar.force-show {
     display: block;
@@ -138,51 +125,6 @@ $filters['business_types'] = array_filter($filters['business_types']);
 //     var activeTabId = $('.mst-search-tabs .mst-tab.active').data('tab') || 'product';
 //     toggleSidebar(activeTabId);
 // });
-require(['jquery', 'domReady!'], function($){
-    function reloadPage(){
-        var query = '<?= $block->getRequest()->getParam('q', '') ?>';
-        var country = $('#country').val();
-        var verified = $('#verified-seller').val();
-        var business = $('#business-type').val();
-        var url = window.location.origin + window.location.pathname + '?q=' + encodeURIComponent(query) +
-                  '&svendor_country_id=' + country +
-                  '&svendor_is_verified=' + verified +
-                  '&svendor_business_type=' + business;
-        window.location.href = url;
-    }
-
-    $('#country, #verified-seller, #business-type').change(reloadPage);
-});
-require(['jquery', 'domReady!'], function($) {
-
-    /**
-     * Updates the Vendor tab text with the current count
-     * @param {Number} count - Number of vendors matching the current filter
-     */
-    function updateVendorTab(count) {
-        var vendorTab = $('li[role="tab"]:contains("Vendor") a');
-        vendorTab.text('Vendor (' + count + ')');
-    }
-
-    /**
-     * Fetches the vendor count dynamically and updates the tab
-     * Replace the logic inside this function with your actual data source/API
-     */
-    function refreshVendorTab() {
-        // Example: fetching count from your collection or API
-        var count = <?= $block->getSearchCollection()->getSize() ?>;
-        updateVendorTab(count);
-    }
-
-    // Run on filter change
-    $('#country, #verified-seller, #business-type').on('change', function() {
-        refreshVendorTab();
-    });
-
-    // Initial load
-    refreshVendorTab();
-
-});
 jQuery(document).ready(function($) {
     function toggleSidebarByActiveTab() {
          var activeTab = $('.mst-search__result-tabs li[aria-selected="true"] a');

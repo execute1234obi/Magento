@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="catalog.topnav" remove="true" />
+
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.search.box"
+                   template="Magento_CatalogSearch::custom-search-box.phtml"
+                   after="header.panel" />
+        </referenceContainer>
+
+        <referenceBlock name="catalog.compare.sidebar" remove="true" />
+        <referenceBlock name="wishlist_sidebar" remove="true" />
+
+        <referenceBlock name="mst.search.result">
+            <block class="Custom\SearchExtended\Block\Index\Vendors"
+                   name="search_filters"
+                   as="search_filters"
+                   template="Magento_CatalogSearch::custom-filters.phtml"
+                   cacheable="false" />
+        </referenceBlock>
+
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="search.result.list.products"
+                   after="search.result.list.vendors"
+                   cacheable="false">
+                <arguments>
+                    <argument name="index" xsi:type="string">magento_catalog_product</argument>
+                    <argument name="title" xsi:type="string" translate="true">Products</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="main">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="custom.newsletter"
+                   template="Magento_Theme::html/newsletter.phtml"
+                   after="content" />
+        </referenceContainer>
+    </body>
+</page>

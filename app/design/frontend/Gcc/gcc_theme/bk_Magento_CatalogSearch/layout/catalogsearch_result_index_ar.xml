@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <body>
+        <!-- REMOVE CONTENT COMPLETELY TO TEST -->
+        <referenceContainer name="content" remove="true" />
+
+        <referenceContainer name="page.wrapper">
+            <block class="Magento\Framework\View\Element\Text" name="rtl_test_block">
+                <arguments>
+                    <argument name="text" xsi:type="string">
+                        <strong style="color:red;font-size:30px">ARABIC XML LOADED!!!</strong>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>
