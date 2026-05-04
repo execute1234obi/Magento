@@ -83,6 +83,70 @@ $filters['business_types'] = array_filter($filters['business_types']);
     font-weight: 800 !important;
   }
 
+  body.catalogsearch-result-index.page-layout-1column .column.main {
+    display: grid !important;
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) !important;
+    grid-template-areas:
+      "header header"
+      "sidebar results" !important;
+    column-gap: clamp(24px, 3vw, 40px) !important;
+    row-gap: 20px !important;
+    align-items: start !important;
+    width: 100% !important;
+    max-width: 1320px !important;
+    margin: 0 auto !important;
+    padding: 0 16px !important;
+    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results__header {
+    grid-area: header !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column .column.main > #vendor-sidebar {
+    grid-area: sidebar !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results,
+  body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results.gcc-search-results--with-sidebar,
+  body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
+    grid-area: results !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column #vendor-sidebar .sidebar {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column #vendor-sidebar .filter-title1 {
+    margin: 0 0 16px !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column #vendor-sidebar .filter-group {
+    margin-bottom: 16px !important;
+  }
+
+  body.catalogsearch-result-index.page-layout-1column #vendor-sidebar .filter-group:last-child {
+    margin-bottom: 0 !important;
+  }
+
 
 
   body.catalogsearch-result-index .mst-search__result-tabs {
@@ -433,6 +497,23 @@ $filters['business_types'] = array_filter($filters['business_types']);
   }
 
   @media (max-width: 768px) {
+    body.catalogsearch-result-index.page-layout-1column .column.main {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      padding: 0 16px !important;
+    }
+
+    body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results__header,
+    body.catalogsearch-result-index.page-layout-1column .column.main > #vendor-sidebar,
+    body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results,
+    body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results.gcc-search-results--with-sidebar,
+    body.catalogsearch-result-index.page-layout-1column .column.main > .gcc-search-results:not(.gcc-search-results--with-sidebar) {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 0 20px !important;
+    }
+
     body.catalogsearch-result-index .mst-search__result-tabs {
       gap: 18px !important;
       margin-bottom: 20px !important;

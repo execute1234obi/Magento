@@ -262,7 +262,6 @@ body.catalogsearch-result-index .toolbar.toolbar-products.pager--search > .pages
     align-items: flex-start;
 }
 
-.catalogsearch-result-index .sidebar.sidebar-main,
 .catalogsearch-result-index #vendor-sidebar {
     width: 100%;
     max-width: 100%;
@@ -303,12 +302,51 @@ body.catalogsearch-result-index {
 
 body.catalogsearch-result-index .page-wrapper,
 body.catalogsearch-result-index .page-main,
-body.catalogsearch-result-index .columns,
-body.catalogsearch-result-index .column.main {
+body.catalogsearch-result-index .columns {
     width: 100%;
     max-width: 100%;
     min-width: 0;
     box-sizing: border-box;
+}
+
+body.catalogsearch-result-index .column.main {
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+@media (min-width: 769px) {
+    /* Force the search page's outer Magento columns into a real two-column rail layout. */
+    body.catalogsearch-result-index.page-layout-2columns-left .page-main > .columns {
+        display: flex !important;
+        align-items: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 32px !important;
+    }
+
+    body.catalogsearch-result-index.page-layout-2columns-left .page-main > .columns > .sidebar.sidebar-main {
+        order: 1 !important;
+        flex: 0 0 320px !important;
+        width: 320px !important;
+        max-width: 320px !important;
+        min-width: 320px !important;
+        float: none !important;
+        margin: 0 !important;
+    }
+
+    body.catalogsearch-result-index.page-layout-2columns-left .page-main > .columns > .column.main {
+        order: 2 !important;
+        flex: 1 1 0 !important;
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        float: none !important;
+        margin: 0 !important;
+    }
+
+    body.catalogsearch-result-index.page-layout-2columns-left .page-main > .columns > .sidebar.sidebar-main #vendor-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 }
 
 html:not([lang="ar"]) body.catalogsearch-result-index .gcc-search-results {
