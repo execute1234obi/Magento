@@ -285,12 +285,16 @@ html[lang="ar"] .sign-in-text {
 </div>
 </div>
             
-            <div class="form-group">
-                <label for="confirm-password"><?= __('Confirm Password') ?> <span class="required text-[#d02d4e]">*</span></label>
-                <input type="password"  id="password-confirmation" name="password_confirmation" required data-validate="{required:true, equalTo:'#password'}">
-                 <!-- Eye icon with slashed eye for hidden -->
-                 <!-- <span class="eye-icon" id="toggle-password2">👁️‍🗨️</span> -->
-            </div>
+<div class="form-group password-container"> <label for="password-confirmation"><?= __('Confirm Password') ?> <span class="required text-[#d02d4e]">*</span></label>
+    
+    <input type="password"  
+           id="password-confirmation" 
+           name="password_confirmation" 
+           required 
+           data-validate="{required:true, equalTo:'#password'}">
+
+    <span class="eye-icon" id="toggle-password-conf">👁️‍🗨️</span> 
+</div>
 
             <div class="form-group">
                 <label>
@@ -333,6 +337,15 @@ html[lang="ar"] .sign-in-text {
         const isPassword = passwordField.type === 'password';
         passwordField.type = isPassword ? 'text' : 'password';
         togglePassword.textContent = isPassword ? '👁️' : '👁️‍🗨️'; // Show / slashed eye
+    });
+    // Naya Confirm Password Toggle
+    const toggleConfirm = document.getElementById('toggle-password-conf');
+    const confirmField = document.getElementById('password-confirmation');
+
+    toggleConfirm.addEventListener('click', function () {
+        const isPassword = confirmField.type === 'password';
+        confirmField.type = isPassword ? 'text' : 'password';
+        this.textContent = isPassword ? '👁️' : '👁️‍🗨️';
     });
     
 </script>
