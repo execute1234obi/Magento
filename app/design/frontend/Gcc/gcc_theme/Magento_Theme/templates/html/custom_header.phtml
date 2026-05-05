@@ -68,7 +68,7 @@ else
         </a>
       </div>
 
-      <nav class="hidden md:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font">
+      <nav class="hidden lg:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font">
         <div class="relative group">
           <a href="<?= $block->escapeUrl($block->getUrl('vendor-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;">
             <button type="button" onclick="toggleDropdown('vendorMenu')" id="vendorBtn"
@@ -134,7 +134,7 @@ else
     </div>
 
     <div class="flex items-center gap-6 header-actions">
-      <div class="hidden md:flex items-center final-font header-auth-group">
+      <div class="hidden lg:flex items-center final-font header-auth-group">
        <?php if ($block->isLoggedIn()): ?>
   <?php
     $layout = $block->getLayout();
@@ -363,14 +363,14 @@ if ($storeCode === 'default') {
 
       </div>
 
-      <button type="button" onclick="toggleMobileMenu()" class="md:hidden focus:outline-none bg-transparent border-0">
+      <button type="button" onclick="toggleMobileMenu()" class="lg:hidden focus:outline-none bg-transparent border-0">
         <svg id="hamburgerIcon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         <svg id="closeIcon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
   </div>
 
-  <div id="mobileMenu" class="hidden md:hidden mobile-menu-drawer">
+  <div id="mobileMenu" class="hidden lg:hidden mobile-menu-drawer">
     <div class="mobile-menu-shell">
       <div class="mobile-menu-topbar">
         <a href="<?= $baseUrl; ?>" class="mobile-menu-logo-link" aria-label="<?= __('GCC Trading home') ?>">

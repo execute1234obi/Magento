@@ -7,13 +7,16 @@
     </p>
 
     <form class="gcc-subscribe__form" action="#" method="post">
-      <input
-        class="gcc-subscribe__input"
-        type="email"
-        placeholder="<?= __('Enter your email address') ?>"
-        aria-label="Email address"
-        required
-      />
+      <div class="gcc-subscribe__field">
+        <input
+          id="gcc-subscribe-email"
+          class="gcc-subscribe__input"
+          type="email"
+          placeholder="<?= __('Enter your email address') ?>"
+          autocomplete="email"
+          required
+        />
+      </div>
       <button class="gcc-subscribe__btn" type="submit">
         <span><?= __('Subscribe') ?></span>
         
@@ -59,7 +62,7 @@
 }
 .gcc-subscribe__desc{
   margin:0 auto 28px auto;
-  color:var(--muted);
+  color:#2B3131;
   font-size: clamp(14px, 1.8vw, 18px);
   max-width: 760px;
 }
@@ -77,20 +80,49 @@
   overflow:hidden;                  /* make one continuous pill */
   box-shadow: 0 12px 28px rgba(2,6,23,0.12);
 }
-.gcc-subscribe__input{
+.gcc-subscribe__field{
   flex:1 1 auto;
+  min-width:0;
+}
+.gcc-subscribe__input{
+  width:100%;
   min-height: 60px;
-  padding: 0 18px;
-  font-size: 16px;
-  color:#111827;
+  padding: 0 24px;
+  font-size: 15px;
+  color:#2B3131 !important;
+  -webkit-text-fill-color:#2B3131 !important;
   background:#fff;
   border:none !important;          /* override Magento */
   outline:none;
   box-shadow:none !important;      /* override Magento */
   -webkit-appearance:none; 
   appearance:none;
+  line-height:1.25;
+  caret-color:#2B3131;
+  box-sizing:border-box;
 }
-.gcc-subscribe__input::placeholder{ color:#9aa3b2; }
+.gcc-subscribe__input::placeholder{
+  color:#2B3131 !important;
+  opacity:1 !important;
+  -webkit-text-fill-color:#2B3131 !important;
+}
+.gcc-subscribe__input::-webkit-input-placeholder{
+  color:#2B3131 !important;
+  opacity:1 !important;
+  -webkit-text-fill-color:#2B3131 !important;
+}
+.gcc-subscribe__input::-moz-placeholder{
+  color:#2B3131 !important;
+  opacity:1 !important;
+  -webkit-text-fill-color:#2B3131 !important;
+}
+.gcc-subscribe__input:-ms-input-placeholder{
+  color:#2B3131 !important;
+}
+.gcc-subscribe__input::-ms-input-placeholder{
+  color:#2B3131 !important;
+  opacity:1 !important;
+}
 
 /* button */
 .gcc-subscribe__btn{
