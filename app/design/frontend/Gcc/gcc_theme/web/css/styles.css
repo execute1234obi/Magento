@@ -429,3 +429,13 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
     grid-template-columns: 280px 1fr;
     gap: 32px;
 } */
+
+@media (max-width: 575.98px) {
+    /* Vendor nearby subtitle on customer-page and related CMS sections */
+    section.bg-blue-50 .text-center > p.text-gray-600.text-3xl.mt-5,
+    .bg-blue-50 .text-gray-600.text-3xl.mt-5,
+    .section-subtitle {
+        font-size: 16px !important;
+        line-height: 1.6 !important;
+    }
+}

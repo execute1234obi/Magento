@@ -1,209 +1,266 @@
 <?php $vendors = $block->getVendorDetails(); // Get vendor details ?>
 
-    <?php //print_r($vendors); exit();?>
-   
 <style>
-  /* --- Carousel shell --- */
-.vendors-carousel{width : 100%; position:relative;  }
-.vendors-track{
-  display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory;
-  -webkit-overflow-scrolling: touch; scrollbar-width:none;
-}
-.vendors-track::-webkit-scrollbar{ display:none; }
-.vc-slide{ flex:0 0 auto; scroll-snap-align:start; }
+  .vendors-carousel{
+    width: 100%;
+    position: relative;
+    padding: 8px 0 0;
+    box-sizing: border-box;
+  }
 
-/* Nav buttons */
-.vc-btn{
-  position:absolute; top:50%; transform:translateY(-50%);
-  width:36px; height:36px; border-radius:50%; border:0; cursor:pointer;
-  background:rgba(0,0,0,.06);
-}
-.vc-btn.prev{ left:6px; } .vc-btn.next{ right:6px; }
-.vc-btn:focus{ outline:2px solid #4c9ffe; }
+  .vendors-track{
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0 10px;
+  }
 
-/* Dots */
-.vc-pagination{ text-align:center; margin-top:10px; }
-.vc-dot{
-  width:8px; height:8px; border-radius:50%; border:0; margin:0 4px;
-  background:#cfd3d7; cursor:pointer;
-}
-.vc-dot.active{ background:#2a7be4; }
+  .vendors-track::-webkit-scrollbar{
+    display: none;
+  }
 
-/* Card should be fluid inside slides */
-/* --- Card: modern, responsive, consistent heights --- */
-.vendor-card{
-  /* layout */
-  width:100%;
-  max-width: 360px;          /* cap the width inside each slide */
-  min-height: 400px;         /* ensure enough vertical space for long names */
-  margin: 0 auto;
-  padding: 24px 22px;
+  .vc-slide{
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: center;
+  }
 
-  /* look & feel */
-  background: #fff;
-  border: 1px solid rgba(15, 23, 42, .06);
-  border-radius: 18px;
-  box-shadow: 0 6px 18px rgba(15, 23, 42, .06);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
+  .vc-btn{
+    display: none !important;
+  }
 
-  /* motion */
-  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-}
-.vendor-card:hover{
-  box-shadow: 0 10px 28px rgba(15,23,42,.12);
-  border: 2px solid #3b82f6;              /* ✅ correct */
- 
-}
+  .vc-btn.prev{
+    left: 0;
+  }
 
-/* --- Logo: circular badge, contain any image ratio --- */
-.vendor-logo{
-  width: 76px;
-  height: 76px;
-  border-radius: 999px;
-  object-fit: contain;
-  background: #fff;
-  border: 1px solid rgba(15, 23, 42, .08);
-  box-shadow: 0 2px 6px rgba(15,23,42,.06) inset;
-  padding: 6px;
-  margin-bottom: 14px;
-}
+  .vc-btn.next{
+    right: 0;
+  }
 
-/* --- Title / Category --- */
-.vendor-title{
-  font-weight: 800 !important;
-  text-transform: uppercase;
-  letter-spacing: .3px;
-  margin: 4px 0 6px;
-  font-size: clamp(2.3rem, 0.8vw + 0.95rem, 3.35rem);
-  color: #1A3764; /* slate-900 */
-}
-.vendor-category{
-  font-size: .95rem;
-  color: #6b7280; /* gray-500 */
-  margin-bottom: 14px;
-}
+  .vc-btn:hover{
+    background: #f8fbff;
+  }
 
-/* --- Description: neat clamp, readable line-height --- */
-.vendor-description{
-  color: #374151;             /* gray-700 */
-  margin-bottom: 16px;
-    font-size: 1.45rem;         /* ↑ body */
-  line-height: 1.6;
-  -webkit-line-clamp: 5;      /* ↓ one less line helps reduce height */
-  margin-bottom: 12px;
+  .vc-btn:focus{
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+  }
 
-  /* clamp to ~6 lines for equal heights */
-  display: -webkit-box;
-  -webkit-line-clamp: 6;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
+  .vc-pagination{
+    display: none;
+  }
 
-/* --- Country row: anchored at the bottom for equalized cards --- */
-.vendor-country{
-  margin-top: auto;           /* push to bottom */
-  padding-top: 14px;
-  border-top: 1px dashed #e5e7eb;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 600;
-  color: #1f2937;             /* gray-800 */
-  font-size: .98rem;
-}
-.vendor-country img{
-  width: 18px;
-  height: 12px;
-  object-fit: cover;
-  border-radius: 2px;
-  box-shadow: 0 1px 2px rgba(15,23,42,.08);
-}
+  .vc-dot{
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    margin: 0 4px;
+    background: #cfd3d7;
+    cursor: pointer;
+  }
 
-/* --- Slides: center card within each slide (works with your existing vanilla carousel) --- */
-.vc-slide{ display:flex; justify-content:center; }
+  .vc-dot.active{
+    background: #2a7be4;
+  }
 
-/* --- Controls: keep what you have; optional tidy --- */
-.vc-btn{
-  background: rgba(0,0,0,.06);
-  width: 36px; height: 36px; border-radius: 999px; border: 0; cursor: pointer;
-}
-.vc-btn:focus{ outline: 2px solid #93c5fd; }
+  .vendor-card{
+    width: 100%;
+    max-width: 340px;
+    min-height: 430px;
+    margin: 0 auto;
+    padding: 28px 24px 22px;
+    background: #fff;
+    border: 1px solid #e7edf5;
+    border-radius: 20px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+  }
 
-/* --- Responsive tweaks --- */
-@media (max-width: 575.98px){
-  .vendor-card{ max-width: 92vw; padding: 20px 18px; min-height: 420px; }
-  /* Hide the long description copy on phones so the card stays clean */
-  .vendor-description{ display:none; }
-}
-@media (min-width: 576px) and (max-width: 1199.98px){
-  .vendor-card{ max-width: 320px; }
-}
+  .vendor-card:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.10);
+    border-color: #7aa7ff;
+  }
 
+  .vc-slide.is-active .vendor-card{
+    border-color: #5b8cff;
+    box-shadow: 0 16px 34px rgba(77, 122, 255, 0.14);
+  }
+
+  .vendor-logo{
+    width: 78px;
+    height: 78px;
+    border-radius: 999px;
+    object-fit: contain;
+    background: #fff;
+    border: 1px solid #e5eaf2;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05) inset;
+    padding: 6px;
+    margin-bottom: 14px;
+  }
+
+  .vendor-title{
+    font-weight: 700 !important;
+    letter-spacing: 0;
+    margin: 4px 0 6px;
+    font-size: clamp(1.5rem, 0.9vw + 1rem, 2rem);
+    line-height: 1.18;
+    color: #1A3764;
+  }
+
+  .vendor-category{
+    font-size: 15px;
+    color: #667085;
+    line-height: 1.35;
+    margin-bottom: 16px;
+  }
+
+  .vendor-description{
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto 12px;
+    text-align: center;
+    color: #111827;
+    font-size: 15px;
+    line-height: 1.6;
+    letter-spacing: 0;
+    overflow-wrap: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .vendor-country{
+    margin-top: auto;
+    padding-top: 18px;
+    border-top: 1px dashed #e5e7eb;
+    width: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 15px;
+  }
+
+  .vendor-country img{
+    width: 18px;
+    height: 12px;
+    object-fit: cover;
+    border-radius: 2px;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+  }
+
+  @media (max-width: 1199.98px){
+    .vendor-card{
+      max-width: 320px;
+    }
+  }
+
+  @media (max-width: 575.98px){
+    .vendor-card{
+      max-width: 92vw;
+      padding: 24px 16px 22px;
+      min-height: 460px;
+    }
+
+    .vendor-title{
+      font-size: 22px;
+      margin: 6px 0 4px;
+    }
+
+    .vendor-category{
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .vendor-description{
+      max-width: 100%;
+      margin: 0 auto 18px;
+      font-size: 15px;
+      line-height: 1.65;
+      -webkit-line-clamp: 6;
+    }
+
+    .vendor-country{
+      font-size: 15px;
+      padding-top: 16px;
+    }
+
+  }
 </style>
 
-<div class="vendors-carousel" id="vendorsCarousel">
-  <button class="vc-btn prev" aria-label="Previous">&#10094;</button>
+<div class="vendors-carousel" id="vendorsCarousel" tabindex="0">
+  <button class="vc-btn prev" type="button" aria-label="Previous">&#10094;</button>
 
   <div class="vendors-track" role="region" aria-label="Vendors carousel">
     <?php foreach ($vendors as $vendor): ?>
+      <?php
+        $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'pub/media/';
+        $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
+        $logoPath = !empty($vendor['vendor_logo']) ? trim($vendor['vendor_logo'], '/') : 'default/logo.png';
+        $fullLogoUrl = $mediaUrl . $logoPath;
+        $vendorurl = $this->getBaseUrl() . 'shop/' . $vendor['custom_vendor_id'];
+
+        $countryCode = $vendor['country_id'] ?? null;
+        $countryName = null;
+        $defaultFlag = 'https://via.placeholder.com/18x12.png?text=AK';
+
+        if ($countryCode) {
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
+            $countryModel = $countryFactory->create()->loadByCode($countryCode);
+            $countryName = $countryModel->getName();
+
+            if ($countryName) {
+                $defaultFlag = 'https://flagcdn.com/' . strtolower($countryCode) . '.svg';
+            }
+        }
+      ?>
       <div class="vc-slide">
         <div class="vendor-card">
-          <?php
-            $storemediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) ."pub/media/";
-            $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $storemediaUrl);
-            //$mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA)."pub/media/";
-            $logoPath = !empty($vendor['vendor_logo']) ? trim($vendor['vendor_logo'], '/') : 'default/logo.png';
-            $fullLogoUrl = $mediaUrl . $logoPath;
-            $vendorurl = $this->getBaseUrl() . 'shop/' . $vendor['custom_vendor_id'];
-          ?>
           <a href="<?= $block->escapeUrl($vendorurl) ?>">
-            <img src="<?= $fullLogoUrl ?>" alt="<?= $block->escapeHtml($vendor['company_name'] ?? '-') ?>" class="vendor-logo">
+            <img src="<?= $block->escapeUrl($fullLogoUrl) ?>"
+                 alt="<?= $block->escapeHtmlAttr($vendor['company_name'] ?? '-') ?>"
+                 class="vendor-logo"
+                 loading="lazy"
+                 decoding="async"
+                 onerror="this.onerror=null;this.src='<?= $block->escapeUrl($block->getViewFileUrl('Magento_Catalog::images/product/placeholder/thumbnail.jpg')) ?>';">
           </a>
+
           <h3 class="vendor-title"><?= $block->escapeHtml($vendor['company_name'] ?? '-') ?></h3>
           <p class="vendor-category"><?= $block->escapeHtml($vendor['business_category_name'] ?? '-') ?></p>
+
           <div class="vendor-description">
             <?= $block->escapeHtml($vendor['business_description'] ?? 'No description available') ?>
           </div>
-          <div class="vendor-country"><?php
-$countryCode = $vendor['country_id'] ?? null; // Get country code
-$countryName = null;
 
-// Default online flag if no country is set
-$defaultFlag = "https://via.placeholder.com/18x12.png?text=AK"; 
-
-if ($countryCode) {
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $countryFactory = $objectManager->get(\Magento\Directory\Model\CountryFactory::class);
-    $countryModel = $countryFactory->create()->loadByCode($countryCode);
-    $countryName = $countryModel->getName();
-
-    if ($countryName) {
-        // Replace with actual flag from flagcdn
-        $defaultFlag = "https://flagcdn.com/" . strtolower($countryCode) . ".svg";
-    }
-}
-?>
-
-<div class="vendor-country">
-    <img class="country-flag" src="<?= $block->escapeHtml($defaultFlag) ?>" 
-         alt="<?= $block->escapeHtml($countryName ?? 'Unknown') ?>">
-    <?= $block->escapeHtml($countryName ?? 'Unknown') ?>
-</div>
-
+          <div class="vendor-country">
+            <img class="country-flag"
+                 src="<?= $block->escapeUrl($defaultFlag) ?>"
+                 alt="<?= $block->escapeHtmlAttr($countryName ?? 'Unknown') ?>">
+            <span><?= $block->escapeHtml($countryName ?? 'Unknown') ?></span>
           </div>
         </div>
       </div>
     <?php endforeach; ?>
   </div>
 
-  <button class="vc-btn next" aria-label="Next">&#10095;</button>
-  <!-- <div class="vc-pagination" aria-hidden="true"></div> -->
+  <button class="vc-btn next" type="button" aria-label="Next">&#10095;</button>
+  <div class="vc-pagination" aria-hidden="true"></div>
 </div>
-
-
 
 <script>
 (function(){
@@ -212,28 +269,21 @@ if ($countryCode) {
 
   var track = root.querySelector('.vendors-track');
   var slides = Array.prototype.slice.call(root.querySelectorAll('.vc-slide'));
-  var prev  = root.querySelector('.vc-btn.prev');
-  var next  = root.querySelector('.vc-btn.next');
+  var prev = root.querySelector('.vc-btn.prev');
+  var next = root.querySelector('.vc-btn.next');
   var pager = root.querySelector('.vc-pagination');
   var currentIndex = 0;
 
   function slidesPerView(){
     var w = window.innerWidth;
-    if (w < 576)  return 1.1;   // peek next card
+    if (w < 576)  return 1.05;
     if (w < 768)  return 2;
     if (w < 1200) return 3;
     return 4;
   }
 
-  function layout(){
-    var spv = slidesPerView();
-    var basis = (100 / spv) + '%';
-    slides.forEach(function(s){ s.style.flex = '0 0 ' + basis; });
-    buildDots();
-    snapTo(currentIndex, false);
-  }
-
   function buildDots(){
+    if (!pager) return;
     pager.innerHTML = '';
     slides.forEach(function(_, i){
       var dot = document.createElement('button');
@@ -244,24 +294,34 @@ if ($countryCode) {
     });
   }
 
+  function updateDots(){
+    if (!pager) return;
+    var dots = pager.querySelectorAll('.vc-dot');
+    for (var d = 0; d < dots.length; d++) {
+      dots[d].classList.toggle('active', d === currentIndex);
+    }
+  }
+
+  function updateActiveSlide(){
+    slides.forEach(function(s, i){
+      s.classList.toggle('is-active', i === currentIndex);
+    });
+  }
+
   function snapTo(i, smooth){
+    if (!slides.length) return;
     i = Math.max(0, Math.min(i, slides.length - 1));
     currentIndex = i;
     var s = slides[i];
     var left = s.offsetLeft - track.offsetLeft;
     track.scrollTo({ left: left, behavior: smooth ? 'smooth' : 'auto' });
     updateDots();
-  }
-
-  function updateDots(){
-    var dots = pager.querySelectorAll('.vc-dot');
-    for (var d=0; d<dots.length; d++){
-      dots[d].classList.toggle('active', d === currentIndex);
-    }
+    updateActiveSlide();
   }
 
   function visibleIndex(){
-    var sl = track.scrollLeft + 8; // bias
+    if (!slides.length) return 0;
+    var sl = track.scrollLeft + 8;
     var idx = 0, best = Infinity;
     slides.forEach(function(s, i){
       var dist = Math.abs(s.offsetLeft - sl);
@@ -270,20 +330,29 @@ if ($countryCode) {
     return idx;
   }
 
-  // controls
+  function layout(){
+    if (!slides.length) return;
+    var spv = slidesPerView();
+    var basis = (100 / spv) + '%';
+    slides.forEach(function(s){ s.style.flex = '0 0 ' + basis; });
+    buildDots();
+    snapTo(Math.min(currentIndex, slides.length - 1), false);
+  }
+
   next.addEventListener('click', function(){ snapTo(currentIndex + 1, true); });
   prev.addEventListener('click', function(){ snapTo(currentIndex - 1, true); });
 
-  // sync on scroll/resize
   track.addEventListener('scroll', function(){
-    currentIndex = visibleIndex(); updateDots();
-  }, {passive:true});
+    currentIndex = visibleIndex();
+    updateDots();
+    updateActiveSlide();
+  }, { passive: true });
+
   window.addEventListener('resize', layout);
 
-  // keyboard accessibility
   root.addEventListener('keydown', function(e){
     if (e.key === 'ArrowRight') next.click();
-    if (e.key === 'ArrowLeft')  prev.click();
+    if (e.key === 'ArrowLeft') prev.click();
   });
 
   layout();
