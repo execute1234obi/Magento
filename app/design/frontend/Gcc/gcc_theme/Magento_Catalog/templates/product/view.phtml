@@ -781,7 +781,7 @@ body {
 </style>
 <style>
 :root {
-    --pdp-bg: #f6f8fb;
+    --pdp-bg: #f9fafb;
     --pdp-surface: #ffffff;
     --pdp-surface-muted: #eff3f8;
     --pdp-border: #e6edf5;
@@ -1952,30 +1952,40 @@ body.catalog-product-view {
     }
 
     .tab-header {
-        display: grid !important;
-        grid-template-columns: 1fr;
-        gap: 8px !important;
-        margin-bottom: 12px !important;
-        padding-bottom: 0 !important;
-        border-bottom: 0 !important;
-        overflow: visible !important;
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        gap: 14px !important;
+        margin-bottom: 0 !important;
+        padding-bottom: 6px !important;
+        border-bottom: 1px solid var(--pdp-border) !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .tab-header::-webkit-scrollbar {
+        display: none;
     }
 
     .tab-header button {
-        width: 100%;
-        padding: 10px 12px !important;
-        border: 1px solid var(--pdp-border) !important;
-        border-radius: 10px !important;
-        background: #F8FAFC !important;
-        white-space: normal !important;
+        width: auto !important;
+        flex: 0 0 auto !important;
+        padding: 0 0 8px !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        color: #6C8798 !important;
+        white-space: nowrap !important;
         text-align: left !important;
-        line-height: 1.35 !important;
+        line-height: 1.2 !important;
     }
 
     .tab-header button.active {
-        background: #EEF5FF !important;
+        background: transparent !important;
         box-shadow: none !important;
-        border-color: var(--pdp-blue) !important;
+        border-bottom: 2px solid var(--pdp-blue) !important;
+        color: var(--pdp-blue) !important;
     }
 
     .tab-content td {
@@ -2835,7 +2845,7 @@ body,
 
 .tab-header button {
     padding: 0 0 10px !important;
-    color: #667085 !important;
+    color: #6C8798 !important;
     font-size: 15px !important;
 }
 
@@ -3713,7 +3723,7 @@ body,
         border: 0 !important;
         border-radius: 0 !important;
         background: transparent !important;
-        color: #667085 !important;
+        color: #6C8798 !important;
         font-size: 13px !important;
         white-space: nowrap !important;
         text-align: left !important;
@@ -4233,19 +4243,22 @@ body.catalog-product-view .product-main {
     display: grid !important;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
     gap: 24px !important;
-    align-items: start !important;
+    align-items: stretch !important;
+    margin-bottom: 8px !important;
 }
 
 body.catalog-product-view .product-main > div:first-child {
     display: flex !important;
     flex-direction: column !important;
-    gap: 20px !important;
+    gap: 16px !important;
     min-width: 0 !important;
+    height: 100% !important;
 }
 
 body.catalog-product-view .product-main > .product-info-main {
     min-width: 0 !important;
-    padding: 40px !important;
+    padding: 20px !important;
+    height: 100% !important;
 }
 
 body.catalog-product-view .pdp-vendor-card {
@@ -4330,30 +4343,40 @@ body.catalog-product-view .pdp-vendor-side-meta .rating-star-svg {
 }
 
 body.catalog-product-view .product-gallery {
-    padding: 24px !important;
+    padding: 0 !important;
     border-radius: 22px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
 }
 
 body.catalog-product-view .main-frame {
-    min-height: 405px !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border-radius: 0 !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    padding: 22px !important;
+    background: #e9eded !important;
+    border-radius: 16px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    align-self: stretch !important;
+    flex: 1 1 auto !important;
 }
 
 body.catalog-product-view .main-image {
-    width: min(100%, 460px) !important;
-    max-height: 100% !important;
+    width: auto !important;
+    max-width: 100% !important;
+    max-height: 380px !important;
+    height: auto !important;
     object-fit: contain !important;
+    margin: 0 auto !important;
 }
 
 body.catalog-product-view .thumbs-wrap {
     grid-template-columns: 22px minmax(0, 1fr) 22px !important;
     gap: 14px !important;
-    margin-top: 18px !important;
+    margin-top: 10px !important;
 }
 
 body.catalog-product-view .thumb-arrow {
@@ -4371,6 +4394,15 @@ body.catalog-product-view .thumb-arrow {
 body.catalog-product-view .gallery-thumbs {
     gap: 12px !important;
     padding: 4px 2px 0 !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    overflow-y: hidden !important;
+}
+
+body.catalog-product-view .gallery-thumbs::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
 }
 
 body.catalog-product-view .gallery-thumbs img {
@@ -4391,9 +4423,23 @@ body.catalog-product-view .product-title {
 }
 
 body.catalog-product-view .fav-btn {
-    width: 46px !important;
-    height: 46px !important;
-    border-radius: 14px !important;
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #344054 !important;
+}
+
+body.catalog-product-view .fav-btn:hover {
+    color: var(--pdp-blue) !important;
+    transform: none !important;
+    box-shadow: none !important;
 }
 
 body.catalog-product-view .desc-text {
@@ -4430,28 +4476,52 @@ body.catalog-product-view .variation .options button {
 }
 
 body.catalog-product-view .tabs {
-    margin-top: 8px !important;
+    margin-top: 0 !important;
     padding: 28px 32px !important;
-    border-radius: 20px !important;
+    border: 0 !important;
+    border-radius: 22px !important;
+    background: #fff !important;
+    box-shadow: none !important;
 }
 
 body.catalog-product-view .tabs > h4 {
-    margin-bottom: 20px !important;
+    margin: 0 0 22px !important;
     font-size: 20px !important;
 }
 
 body.catalog-product-view .tab-header {
-    gap: 28px !important;
-    margin-bottom: 20px !important;
+    display: flex !important;
+    align-items: flex-end !important;
+    gap: 48px !important;
+    margin-bottom: 0 !important;
     padding-bottom: 12px !important;
+    border-bottom: 1px solid #E5E7EB !important;
+    overflow-x: auto !important;
+    scrollbar-width: none;
+}
+
+body.catalog-product-view .tab-header::-webkit-scrollbar {
+    display: none;
 }
 
 body.catalog-product-view .tab-header button {
     font-size: 15px !important;
-    padding: 0 0 10px !important;
+    padding: 0 0 14px !important;
+    color: #6C8798 !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    white-space: nowrap !important;
+}
+
+body.catalog-product-view .tab-header button.active {
+    color: #1A3764 !important;
+    box-shadow: inset 0 -2px 0 0 #1A3764 !important;
 }
 
 body.catalog-product-view .tab-content {
+    padding-top: 24px !important;
     font-size: 15px !important;
     line-height: 1.75 !important;
 }
@@ -5063,7 +5133,7 @@ $vendorUrl = $baseUrl. 'shop/' . $vendor_shop_Id; // /shop/<vendor_id>/ ?>
                        title="Add to wishlist"
                        data-post='<?= /* @noEscape */ $addToWishlistParams ?>'
                        aria-label="Add to wishlist">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8">
                             <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/>
                         </svg>
                     </a>

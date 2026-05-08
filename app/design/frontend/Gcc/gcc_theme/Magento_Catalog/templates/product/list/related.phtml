@@ -139,6 +139,11 @@ $wrapperClass = $carouselId === 'related-carousel'
 
 .gcc-carousel-shell {
     margin-top: 28px;
+    padding: 28px 32px 32px;
+    border: 0;
+    border-radius: 20px;
+    background: var(--pdp-surface, #fff);
+    box-shadow: none;
 }
 
 .gcc-carousel-shell--related {
@@ -453,6 +458,8 @@ $wrapperClass = $carouselId === 'related-carousel'
 @media (max-width: 767px) {
     .gcc-carousel-shell {
         margin-top: 20px;
+        padding: 18px 16px 20px;
+        border-radius: 16px;
     }
 
     .gcc-carousel-shell--related {
@@ -530,6 +537,10 @@ $wrapperClass = $carouselId === 'related-carousel'
 }
 
 @media (max-width: 480px) {
+    .gcc-carousel-shell {
+        padding: 16px 12px 18px;
+    }
+
     .gcc-carousel__title {
         font-size: 16px;
     }
