@@ -12,3 +12,20 @@ app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy.p
  app/code/Gcc/VendorDashboardOverride/view/vendors/templates/page/toplinks copy 2.phtml
  magento_cron.bat
 app/etc/config.php
+
+# Custom SearchExtended temp/custom files
+app/code/Custom/SearchExtended/Block/ProductFilters.php
+app/code/Custom/SearchExtended/view/frontend/templates/filters.phtml
+app/code/Custom/SearchExtended/view/frontend/templates/index/products.phtml
+
+# Magento CatalogSearch backup/copy layout files
+app/design/frontend/Gcc/gcc_theme/Magento_CatalogSearch/layout/catalogsearch_result_index copy 2.xml
+app/design/frontend/Gcc/gcc_theme/Magento_CatalogSearch/layout/catalogsearch_result_index copy 3.xml
+app/design/frontend/Gcc/gcc_theme/Magento_CatalogSearch/layout/catalogsearch_result_index copy 4.xml
+
+# Custom filter template backup files
+app/design/frontend/Gcc/gcc_theme/Magento_CatalogSearch/templates/custom-filters copy 3.phtml
+app/design/frontend/Gcc/gcc_theme/Magento_CatalogSearch/templates/custom-filters_vru_custom.phtml
+
+# Backup LayeredNavigation directory
+app/design/frontend/Gcc/gcc_theme/Magento_LayeredNavigation_bk/

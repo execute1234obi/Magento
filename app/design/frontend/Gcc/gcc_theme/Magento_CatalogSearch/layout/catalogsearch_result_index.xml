@@ -8,6 +8,10 @@
         <!-- REMOVE DEFAULT -->
         <referenceBlock name="catalog.topnav" remove="true"/>
         <referenceBlock name="page.main.title" remove="true"/>
+        <!-- <move element="catalogsearch.leftnav" destination="content" before="mst.search.result" />
+        
+        <move element="mst.navigation" destination="content" before="mst.search.result" /> -->
+        <!-- <attribute name="class" value="page-with-filter"/> -->
         <!-- <referenceBlock name="catalogsearch.leftnav" remove="true"/> -->
           <!-- FULL WIDTH HEADER -->
         <referenceContainer name="content">
@@ -15,46 +19,41 @@
                    name="gcc.search.header"
                    template="Magento_CatalogSearch::search-header.phtml"
                    before="-"/>
-        </referenceContainer>
-   
+   </referenceContainer>
+   <referenceBlock name="search_filters">
+    <block class="Magento\LayeredNavigation\Block\Navigation\Search"
+           name="custom.catalogsearch.leftnav"
+           as="custom_catalog_filters"
+           template="Magento_LayeredNavigation::layer/view.phtml">
+
+        <block class="Magento\Framework\View\Element\Template" name="product_price_renderer" as="price_renderer" template="Magento_LayeredNavigation::layer/filter/price.phtml"/>
+
+        <block class="Magento\LayeredNavigation\Block\Navigation\State"
+               name="custom.catalogsearch.navigation.state"
+               as="state"/>
+
+        <block class="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"
+               name="custom.catalogsearch.navigation.renderer"
+               as="renderer"
+               template="Magento_LayeredNavigation::layer/filter.phtml">
+
+            <arguments>
+                <argument name="product_layer_view_model" xsi:type="object">
+                    Magento\LayeredNavigation\ViewModel\Layer\Filter
+                </argument>
+            </arguments>
+        </block>
+    </block>
+</referenceBlock>
         <!-- FILTERS INSIDE THE MAIN SEARCH RESULT BLOCK -->
         <referenceBlock name="mst.search.result">
-
-          <!-- HEADER -->
-            <!-- <block class="Magento\Framework\View\Element\Template"
-                   name="gcc.search.header"
-                   template="Magento_CatalogSearch::search-header.phtml"
-                   before="-"/> -->
-                 <block class="Magento\LayeredNavigation\Block\Navigation\Search"
-       name="catalogsearch.leftnav"
-       template="Magento_LayeredNavigation::layer/view.phtml"
-       before="-">
-
-    <block class="Magento\LayeredNavigation\Block\Navigation\State"
-           name="catalogsearch.navigation.state"
-           as="state"/>
-
-    <block class="Magento\LayeredNavigation\Block\Navigation\FilterRenderer"
-           name="catalogsearch.navigation.renderer"
-           as="renderer"
-           template="Magento_LayeredNavigation::layer/filter.phtml">
-
-        <arguments>
-            <argument name="product_layer_view_model" xsi:type="object">
-                Magento\LayeredNavigation\ViewModel\Layer\Filter
-            </argument>
-        </arguments>
-
-    </block>
-
-</block>
-            <block class="Custom\SearchExtended\Block\Index\Vendors"
+          <block class="Custom\SearchExtended\Block\Index\Vendors"
                    name="search_filters"
                    as="search_filters"
                    template="Magento_CatalogSearch::custom-filters.phtml"
                    cacheable="false"/>
         </referenceBlock>
-
+      
         <!-- NEWSLETTER -->
         <referenceContainer name="main">
             <container name="gcc.search-newsletter"
@@ -66,6 +65,5 @@
                        template="Magento_Theme::html/newsletter.phtml"/>
             </container>
         </referenceContainer>
-
     </body>
 </page>
