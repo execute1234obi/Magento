@@ -122,18 +122,18 @@ class HasPrice extends AbstractModifier
         $disabled = $this->arrayManager->get($weightPath . '/arguments/data/config/disabled', $meta);
         if ($weightPath) {
 			 // 🔴 ADD THIS CODE HERE (currency symbol remove)
-    $meta = $this->arrayManager->merge(
-        $weightPath . '/arguments/data/config',
-        $meta,
-        [
-            'imports' => [
-                'currency' => '',
-                '__disableTmpl' => ['currency' => false],
-            ],
-            'addbefore' => '',
-            'addafter'  => ''
-        ]
-    );
+    // $meta = $this->arrayManager->merge(
+    //     $weightPath . '/arguments/data/config',
+    //     $meta,
+    //     [
+    //         'imports' => [
+    //             'currency' => '',
+    //             '__disableTmpl' => ['currency' => false],
+    //         ],
+    //         'addbefore' => '',
+    //         'addafter'  => ''
+    //     ]
+    // );
             $meta = $this->arrayManager->merge(
                 $weightPath . static::META_CONFIG_PATH,
                 $meta,

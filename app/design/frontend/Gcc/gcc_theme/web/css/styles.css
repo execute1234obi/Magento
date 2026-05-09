@@ -435,3 +435,23 @@ body.catalogsearch-result-index .search-page-header .gcc-search-breadcrumbs{
 .account.customer-message-trash.page-layout-2columns-left .page-main {
     padding-top: 150px!important;
 }
+
+.vnecoms-unread-message-count {
+    float: right;
+    background-color: #1A3764!important;
+    color: #fff;
+    display: inline;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    padding: 0.2em 0.6em 0.3em;
+    text-align: center;
+    vertical-align: baseline;
+    white-space: nowrap;
+    border-radius: 0.25em;
+    -moz-border-radius: 0.25em;
+    -webkit-border-radius: 0.25em;
+    width: 20px!important;
+    height: 15px!important;
+}
+.vnecoms-message-count-right{float: right; background-color: #1A3764!important;color: #fff;display: inline;font-size: 75%;font-weight: 700;line-height: 1;padding: 0.2em 0.6em 0.3em;text-align: center;vertical-align: baseline;white-space: nowrap;border-radius: 0.25em; -moz-border-radius: 0.25em; -webkit-border-radius: 0.25em;}

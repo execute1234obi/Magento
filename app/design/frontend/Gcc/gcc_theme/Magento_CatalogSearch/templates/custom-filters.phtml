@@ -69,6 +69,59 @@
     padding: 2px 8px;
     border-radius: 12px;
 }
+/*for default magento filter container */
+/* FULL FILTER BLOCK */
+#default-magento-filter .filter-options {
+    display: block !important;
+    width: 100%;
+}
+
+/* EACH FILTER SECTION */
+#default-magento-filter .filter-options-item {
+    display: block !important;
+    width: 100%;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+/* TITLE */
+#default-magento-filter .filter-options-title {
+    display: block !important;
+    width: 100%;
+    padding: 12px 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* CONTENT */
+#default-magento-filter .filter-options-content {
+    display: none;
+    width: 100%;
+    padding: 10px 15px;
+}
+
+/* ITEMS */
+#default-magento-filter .items {
+    display: block !important;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+#default-magento-filter .item {
+    display: block !important;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+#default-magento-filter .item a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+}
 </style>
 
 <?php
@@ -142,65 +195,72 @@ style="color:red; font-weight:600; font-size:13px;">
             </select>
         </div>
     </div>
-</div>
-<div id="default-magento-filter">
+    <div id="default-magento-filter">
 
 <?php
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        //$layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
-        $request = $block->getRequest();
-$price = $request->getParam('price');
+//         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+//         //$layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
+//         $request = $block->getRequest();
+// $price = $request->getParam('price');
 
-// 👇 CONDITION START
-if ($price) {
+// // 👇 CONDITION START
+// if ($price) {
 
-    // If price filter exists → use SEARCH layer
-    $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
+//     // If price filter exists → use SEARCH layer
+//     $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
 
-} else {
+// } else {
 
-    // default category/search safe layer
-    $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Resolver::class)->get();
-}
-        $filterableAttributes = $objectManager->get(\Magento\Catalog\Model\Layer\Search\FilterableAttributeList::class);
-        $filterList = $objectManager->create(\Magento\Catalog\Model\Layer\FilterList::class, ['filterableAttributes' => $filterableAttributes]);
+//     // default category/search safe layer
+//     $layer = $objectManager->get(\Magento\Catalog\Model\Layer\Resolver::class)->get();
+// }
+//         $filterableAttributes = $objectManager->get(\Magento\Catalog\Model\Layer\Search\FilterableAttributeList::class);
+//         $filterList = $objectManager->create(\Magento\Catalog\Model\Layer\FilterList::class, ['filterableAttributes' => $filterableAttributes]);
 
-        $blockNav = $block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation::class)
-            ->setLayer($layer)
-            ->setFilterList($filterList)
-            ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');foreach ($blockNav->getFilters() as $filter) {
-    if ($filter->getItemsCount() || $block->getRequest()->getParam($filter->getRequestVar())) { 
-        // Upar wali line ensure karegi ki agar filter select ho gaya hai tab bhi div render ho
+//         $blockNav = $block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation::class)
+//             ->setLayer($layer)
+//             ->setFilterList($filterList)
+//             ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');foreach ($blockNav->getFilters() as $filter) {
+//     if ($filter->getItemsCount() || $block->getRequest()->getParam($filter->getRequestVar())) { 
+//         // Upar wali line ensure karegi ki agar filter select ho gaya hai tab bhi div render ho
         
-        echo '<div class="filter-group-item">';
-        echo '<h3>' . $block->escapeHtml(__($filter->getName())) . '</h3>';
-        echo '<div class="filter-items-container"><ul>';
+//         echo '<div class="filter-group-item">';
+//         echo '<h3>' . $block->escapeHtml(__($filter->getName())) . '</h3>';
+//         echo '<div class="filter-items-container"><ul>';
         
-        $currentValue = $block->getRequest()->getParam($filter->getRequestVar());
+//         $currentValue = $block->getRequest()->getParam($filter->getRequestVar());
 
-        foreach ($filter->getItems() as $item) {
-            // Check karein ki kya ye item currently selected hai
-            $isSelected = ($currentValue == $item->getValueString()) ? 'active-filter-link' : '';
+//         foreach ($filter->getItems() as $item) {
+//             // Check karein ki kya ye item currently selected hai
+//             $isSelected = ($currentValue == $item->getValueString()) ? 'active-filter-link' : '';
             
-            echo '<li class="filter-item ' . $isSelected . '">';
-            echo '<a href="' . $block->escapeUrl($item->getUrl()) . '">';
+//             echo '<li class="filter-item ' . $isSelected . '">';
+//             echo '<a href="' . $block->escapeUrl($item->getUrl()) . '">';
             
-            echo '<span class="label">' . $item->getLabel() . '</span>'; 
+//             echo '<span class="label">' . $item->getLabel() . '</span>'; 
             
-            echo '</a></li>';
-        }
+//             echo '</a></li>';
+//         }
         
-        // Agar filter selected hai, toh ek "Clear" option dikhayye taaki user use hata sake
-        if ($currentValue) {
-            // Remove filter URL nikalne ke liye
-            $removeUrl = $block->escapeUrl($block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation\State::class)->getClearFiltersUrl());
-            echo '<li class="filter-item clear-filter"><a href="'.$removeUrl.'" style="color:red; font-size:12px;">× Clear Filter</a></li>';
-        }
+//         // Agar filter selected hai, toh ek "Clear" option dikhayye taaki user use hata sake
+//         if ($currentValue) {
+//             // Remove filter URL nikalne ke liye
+//             $removeUrl = $block->escapeUrl($block->getLayout()->createBlock(\Magento\LayeredNavigation\Block\Navigation\State::class)->getClearFiltersUrl());
+//             echo '<li class="filter-item clear-filter"><a href="'.$removeUrl.'" style="color:red; font-size:12px;">× Clear Filter</a></li>';
+//         }
 
-        echo '</ul></div></div>';
-    }
-}?>
+//         echo '</ul></div></div>';
+//     }
+// }
+// 
+//echo "vru";
+//echo $block->getLayout()->renderElement('custom.catalogsearch.leftnav');
+
+?>  
+<?= $block->getChildHtml('custom_catalog_filters') ?>
 </div>
+</div>
+
 <script>
 require(['jquery', 'domReady!'], function($){
 
@@ -280,12 +340,12 @@ require(['jquery', 'domReady!'], function($){
        TAB COUNT FIX (IMPORTANT FIX)
        REAL FILTER COUNT FROM URL
     ============================== */
-function updateVendorTabCount() {
+function updateTabCounts() {
 
-    var count = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
-
+   
+                   
     $('.mst-search__result-tabs li').each(function () {
-
+     var count = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
         var $tab = $(this);
         var label = $tab.find('.mst-search__tab-label').text().trim().toLowerCase();
 
