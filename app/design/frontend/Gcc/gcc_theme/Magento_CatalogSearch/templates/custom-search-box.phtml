@@ -57,38 +57,42 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   .search-container {
     width:100%;
     max-width:1280px;
-    margin:18px auto 12px;
-    padding:0 1rem;
+    padding:0 24px;
+    margin:16px auto 14px;
   }
-  .search-wrap { margin-bottom:0; }
+  .search-wrap { position:relative; margin-bottom:0; }
   .search-bar {
     position:relative; display:flex; align-items:center;
-    width:100%; height:56px; border:1px solid #d7dfeb; border-radius:14px;
-    background:#ffffff; box-shadow:0 1px 2px rgba(15,23,42,.04);
-    transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease;
+    width:100%; height:56px; border-radius:12px;
+    background:#ffffff; border:0;
+    box-shadow:inset 0 0 0 1px #D1D5DB;
+    overflow:hidden;
+    transition:border-color .2s ease,background-color .2s ease;
   }
-  .search-bar:hover { border-color:#bfd0e6; }
+  .search-bar:hover { box-shadow:inset 0 0 0 1px #D1D5DB; }
   .search-bar:focus-within {
-    border-color:#9fb8db; box-shadow:0 0 0 3px rgba(59,130,246,.12); background:#fbfdff;
+    box-shadow:inset 0 0 0 1px #D1D5DB; background:#fff;
   }
 
   .search-icon {
-    position:absolute; left:18px; width:18px; height:18px;
-    stroke:#7f8a9b; stroke-width:2; fill:none;
+    position:absolute; left:18px; width:20px; height:20px;
+    stroke:#1A3764; stroke-width:2.1; fill:none;
   }
 
   .search-input {
     width:100% !important; height:100% !important;
-    padding:0 74px 0 48px !important;
+    padding:0 76px 0 50px !important;
     border:0; background:transparent; outline:none;
-    font-size:15px; color:#0f172a;
+    font-size:16px; color:#2f343b;
+    appearance:none;
+    -webkit-appearance:none;
   }
-  .search-input::placeholder { color:#9aa3b2; }
+  .search-input::placeholder { color:#c2c7d0; }
 
   .shortcut {
     position:absolute; right:18px; top:50%;
     transform:translateY(-50%);
-    color:#98a1af; font-weight:600; letter-spacing:.02em; font-size:13px;
+    color:#98a2b3; font-weight:600; letter-spacing:.02em; font-size:14px;
   }
 
   /* ===== RTL Support ===== */
@@ -101,13 +105,13 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   body[dir="rtl"] .search-input {
     direction: rtl !important;
     text-align: right !important;
-    padding-right: 48px !important;
-    padding-left: 74px !important;
+    padding-right: 50px !important;
+    padding-left: 76px !important;
   }
 
   html[lang="ar"] .search-icon,
   body[dir="rtl"] .search-icon {
-    right: 16px !important;
+    right: 18px !important;
     left: auto !important;
   }
 
@@ -118,11 +122,31 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
   }
 
   /* ===== Autocomplete Panel ===== */
-  .search-wrap .mst-search-autocomplete__wrapper {
-    z-index:9999 !important; width:100%;
-    border-radius:12px; background:#fff;
-    box-shadow:0 10px 30px rgba(17,24,39,.12);
+  .mst-searchautocomplete__autocomplete,
+  .mst-searchautocomplete__autocomplete_active,
+  .search-wrap .mst-search-autocomplete__wrapper,
+  .search-wrap .mst-searchautocomplete__autocomplete {
+    position:absolute !important;
+    top:calc(100% + 8px);
+    left:0;
+    right:0;
+    display:none !important;
+    z-index:9999 !important;
+    width:100% !important;
+    max-width:100% !important;
+    margin:0 auto !important;
+    border-radius:12px;
+    background:transparent !important;
+    border:0 !important;
+    box-shadow:none !important;
     overflow:visible !important;
+    outline:none !important;
+  }
+  .mst-searchautocomplete__autocomplete.is-visible,
+  .mst-searchautocomplete__autocomplete_active.is-visible,
+  .search-wrap .mst-search-autocomplete__wrapper.is-visible,
+  .search-wrap .mst-searchautocomplete__autocomplete.is-visible {
+    display:block !important;
   }
   .mst-search-autocomplete__typeahead-overlay { z-index:9998 !important; }
 
@@ -202,13 +226,13 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
           type="text"
           name="q"
           value="<?= $block->escapeHtml($this->getRequest()->getParam('q')) ?>"
-          placeholder="<?= __('Search for vendors or products') ?>..."
-          aria-label="<?= __('Search for vendors or products') ?>..."
+          placeholder="<?= __('Find Global Vendors & Products in the GCC') ?>"
+          aria-label="<?= __('Find Global Vendors & Products in the GCC') ?>"
           autocomplete="off"
         />
 
         <!-- shortcut hint -->
-        <span id="shortcutHint" class="shortcut">⌘K</span>
+        <span id="shortcutHint" class="shortcut">Ctrl K</span>
       </div>
     </form>
   </div>
@@ -218,8 +242,8 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
 <script>
 require(['jquery'], function ($) {
 
-  const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
-  $('#shortcutHint').text(isMac ? '⌘K' : 'Ctrl K');
+  const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
+  $('#shortcutHint').text(isMac ? '\u2318K' : 'Ctrl K');
 
   // ✅ THE "FORCE SUBMIT" FIX (Delegated Event)
   // Hum document par event sun rahe hain taaki Mirasvit ise ignore na kar sake
@@ -248,6 +272,43 @@ require(['jquery'], function ($) {
         }
     }
   });
+
+  function hasAutocompleteResults(wrapper) {
+    if (!wrapper) {
+      return false;
+    }
+
+    const resultNodes = wrapper.querySelectorAll(
+      '.ms-grid, .mst-search-autocomplete__item, [class*="__item"], [class*="__block"]'
+    );
+
+    return Array.from(resultNodes).some((node) => (node.textContent || '').trim().length > 0);
+  }
+
+  function syncAutocompleteVisibility() {
+    const searchWrap = document.querySelector('.search-wrap');
+    const wrapper = document.querySelector('.search-wrap .mst-search-autocomplete__wrapper');
+    const autocomplete = document.querySelector('.search-wrap .mst-searchautocomplete__autocomplete');
+    const input = document.getElementById('search');
+
+    if (!searchWrap || !input) {
+      return;
+    }
+
+    const hasQuery = input.value.trim().length > 0;
+    const hasResults = hasAutocompleteResults(wrapper) || hasAutocompleteResults(autocomplete);
+    const shouldShow = hasQuery && hasResults;
+
+    if (wrapper) {
+      wrapper.classList.toggle('is-visible', shouldShow);
+      wrapper.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    }
+    if (autocomplete) {
+      autocomplete.classList.toggle('is-visible', shouldShow);
+      autocomplete.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    }
+    searchWrap.classList.toggle('has-query', hasQuery);
+  }
 
   // Shortcut key (Ctrl+K / Cmd+K)
   $(document).on('keydown', function(e) {
@@ -284,13 +345,17 @@ require(['jquery'], function ($) {
     host.innerHTML = ''; host.appendChild(grid);
   }
 
-  const enhanceAll = () => { $('.mst-search-autocomplete__wrapper').each(function(){ buildTwoColumns(this); }); };
-  $('#search').on('focus input keyup', () => setTimeout(enhanceAll, 50));
+  const enhanceAll = () => {
+    $('.mst-search-autocomplete__wrapper').each(function(){ buildTwoColumns(this); });
+    syncAutocompleteVisibility();
+  };
+  $('#search').on('focus input keyup change', () => setTimeout(enhanceAll, 50));
   new MutationObserver(enhanceAll).observe(document.body, { childList: true, subtree: true });
 
   // Hide Overlay
   const hideAuto = () => $('.mst-search-autocomplete__typeahead-overlay').hide();
   new MutationObserver(hideAuto).observe(document.body, { childList: true, subtree: true });
   hideAuto();
+  syncAutocompleteVisibility();
 });
 </script>

@@ -1,24 +1,110 @@
-<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_420px] gap-6">
+<div class="checkout-payment-layout">
+    <section class="checkout-section-card checkout-section-card--payment">
+        <div class="checkout-section-card__header checkout-section-card__header--split">
+            <div class="checkout-section-card__title">
+                <!-- ko i18n: 'Payment Method' --><!-- /ko -->
+            </div>
 
-    <!-- LEFT SECTION -->
-    <div class="lg:col-span-2 bg-white rounded-2xl shadow p-6">
-
-        <!-- Step Title -->
-        <div class="text-xl font-semibold mb-4">
-
-            <!-- ko i18n: 'Payment Method' --><!-- /ko -->
+            <div class="checkout-section-card__subtitle">
+                <!-- ko i18n: 'Secure checkout' --><!-- /ko -->
+            </div>
         </div>
 
-        <!-- Payment Methods -->
-        <div data-bind="foreach: getRegion('payment-methods-list')" class="space-y-3">
-            <!-- ko template: getTemplate() --><!-- /ko -->
+        <div class="checkout-section-card__body">
+            <div class="billing-address-card" style="margin-bottom: 24px;">
+                <div class="billing-address-card__title">
+                    <!-- ko i18n: 'Billing address' --><!-- /ko -->
+                </div>
+
+                <div class="billing-address-card__body">
+                    <label class="billing-address-card__same">
+                        <input type="checkbox" checked="checked" disabled="disabled" />
+                        <span class="billing-address-card__same-label">
+                            <!-- ko i18n: 'Billing address same as account address' --><!-- /ko -->
+                        </span>
+                    </label>
+
+                    <!-- ko with: billingAddress -->
+                    <div class="billing-address-card__grid">
+                        <div class="billing-address-card__field billing-address-card__field--full">
+                            <label class="billing-address-card__label" for="billing-address-full-name">
+                                <!-- ko i18n: 'Full Name' --><!-- /ko -->
+                            </label>
+                            <input id="billing-address-full-name"
+                                   class="billing-address-card__input"
+                                   type="text"
+                                   readonly="readonly"
+                                   data-bind="value: fullName"
+                                   autocomplete="name" />
+                        </div>
+
+                        <div class="billing-address-card__field billing-address-card__field--full">
+                            <label class="billing-address-card__label" for="billing-address-line">
+                                <!-- ko i18n: 'Address Line' --><!-- /ko -->
+                            </label>
+                            <input id="billing-address-line"
+                                   class="billing-address-card__input"
+                                   type="text"
+                                   readonly="readonly"
+                                   data-bind="value: addressLine"
+                                   autocomplete="street-address" />
+                        </div>
+
+                        <div class="billing-address-card__field">
+                            <label class="billing-address-card__label" for="billing-address-country">
+                                <!-- ko i18n: 'Country' --><!-- /ko -->
+                            </label>
+                            <input id="billing-address-country"
+                                   class="billing-address-card__input"
+                                   type="text"
+                                   readonly="readonly"
+                                   data-bind="value: country"
+                                   autocomplete="country-name" />
+                        </div>
+
+                        <div class="billing-address-card__field">
+                            <label class="billing-address-card__label" for="billing-address-city">
+                                <!-- ko i18n: 'City' --><!-- /ko -->
+                            </label>
+                            <input id="billing-address-city"
+                                   class="billing-address-card__input"
+                                   type="text"
+                                   readonly="readonly"
+                                   data-bind="value: city"
+                                   autocomplete="address-level2" />
+                        </div>
+
+                        <div class="billing-address-card__field">
+                            <label class="billing-address-card__label" for="billing-address-postal">
+                                <!-- ko i18n: 'Postal Code' --><!-- /ko -->
+                            </label>
+                            <input id="billing-address-postal"
+                                   class="billing-address-card__input"
+                                   type="text"
+                                   readonly="readonly"
+                                   data-bind="value: postcode"
+                                   autocomplete="postal-code" />
+                        </div>
+
+                        <div class="billing-address-card__field">
+                            <label class="billing-address-card__label" for="billing-address-phone">
+                                <!-- ko i18n: 'Phone Number' --><!-- /ko -->
+                            </label>
+                            <input id="billing-address-phone"
+                                   class="billing-address-card__input"
+                                   type="text"
+                                   readonly="readonly"
+                                   data-bind="value: phone"
+                                   autocomplete="tel" />
+                        </div>
+                    </div>
+                    <!-- /ko -->
+                </div>
+            </div>
+
+            <div data-bind="foreach: getRegion('payment-methods-list')" class="checkout-payment-methods">
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            </div>
         </div>
-
-        <!-- Payment Details -->
-        <div data-bind="foreach: getRegion('payment-methods-items')">
-            <!-- ko template: getTemplate() --><!-- /ko -->
-        </div>
-
-    </div>
-
+    </section>
 </div>
