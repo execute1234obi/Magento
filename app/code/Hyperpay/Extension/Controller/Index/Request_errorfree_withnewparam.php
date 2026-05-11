@@ -149,31 +149,35 @@ class Request extends \Magento\Framework\App\Action\Action
 {
     $payment   = $order->getPayment();
     $method    = $payment->getData('method');
-
     $email     = $order->getBillingAddress()->getEmail();
     $orderId   = $order->getIncrementId();
     $amount    = $order->getBaseGrandTotal();
+    $total     = $this->_helper->convertPrice($payment, $amount);
 
-    $total = $this->_helper->convertPrice($payment, $amount);
-
-    $grandTotal = $this->_adapter->getEnv()
-        ? (int)$total
-        : number_format($total, 2, '.', '');
-
-    $currency    = $this->_adapter->getSupportedCurrencyCode($method);
-    $paymentType = $this->_adapter->getPaymentType($method);
-    $entityId    = $this->_adapter->getEntity($method);
-
-    /* ---------------- BASE URL FIX ---------------- */
-    $baseUrl = rtrim($this->_adapter->getUrl(), '/');
-
-    if (str_ends_with($baseUrl, '/v1')) {
-        $url = $baseUrl . '/checkouts';
+    // Format amount depending on environment
+    if ($this->_adapter->getEnv()) {
+        $grandTotal = (int)$total;
     } else {
-        $url = $baseUrl . '/v1/checkouts';
+        $grandTotal = number_format($total, 2, '.', '');
     }
 
-    /* ---------------- REQUEST PARAMS ---------------- */
+    $currency     = $this->_adapter->getSupportedCurrencyCode($method);
+    $paymentType  = $this->_adapter->getPaymentType($method);
+    $entityId     = $this->_adapter->getEntity($method);
+    // $baseUrl      = rtrim($this->_adapter->getUrl(), '/'); // ensure trailing slash
+    // $url          = $baseUrl . '/v1/checkouts';
+    $baseUrl = $this->_adapter->getUrl();
+
+// remove trailing slash only
+$baseUrl = rtrim($baseUrl, '/');
+
+// ensure no duplicate /v1
+if (str_ends_with($baseUrl, '/v1')) {
+    $url = $baseUrl . '/checkouts';
+} else {
+    $url = $baseUrl . '/v1/checkouts';
+}
+    // Build parameters as array (safer than string concatenation)
     $params = [
         'entityId'              => $entityId,
         'notificationUrl'       => $status,
@@ -186,19 +190,18 @@ class Request extends \Magento\Framework\App\Action\Action
         'merchantTransactionId' => $orderId,
     ];
 
-    /* ---------------- OPTIONAL RISK ---------------- */
-    if ($this->_adapter->getRiskChannelId()) {
+    // Add optional risk parameters
+    if (!empty($this->_adapter->getRiskChannelId())) {
         $params['risk.channelId'] = $this->_adapter->getRiskChannelId();
         $params['risk.serviceId'] = 'I';
         $params['risk.amount']    = $grandTotal;
         $params['risk.parameters[USER_DATA1]'] = 'Mobile';
     }
 
-    /* ---------------- METHOD SPECIFIC ---------------- */
+    // Method‑specific parameters
     if ($method === 'HyperPay_SadadNcb') {
         $params['bankAccount.country'] = 'SA';
     }
-
     if ($method === 'HyperPay_stc') {
         $params['customParameters[branch_id]']  = '1';
         $params['customParameters[teller_id]']  = '1';
@@ -206,57 +209,66 @@ class Request extends \Magento\Framework\App\Action\Action
         $params['customParameters[locale]']     = substr($this->_resolver->getLocale(), 0, -3);
         $params['customParameters[bill_number]'] = $orderId;
     }
-
-    /* ⚠️ REMOVE forced 3DS params (IMPORTANT FIX) */
-    // DO NOT send:
-    // customParameters[3DS2_enrolled]
-    // customParameters[3DS2_flow]
-
-    /* ---------------- ADDRESS (SAFE FIX) ---------------- */
-    $addressParams = $this->_helper->getBillingAndShippingAddress($order);
-
-    if (is_array($addressParams)) {
-        foreach ($addressParams as $key => $value) {
-            if (!empty($value) && is_string($value)) {
-                $params[$key] = $value;
-            }
-        }
+    if ($method === 'HyperPay_Click_to_pay') {
+        $params['customParameters[3DS2_enrolled]'] = 'true';
+    }
+    if ($this->_adapter->getEnv() && $method === 'HyperPay_ApplePay') {
+        $params['customParameters[3Dsimulator.forceEnrolled]'] = 'true';
     }
 
-    /* ---------------- CURL ---------------- */
-    $headers = [
-        'Authorization: Bearer ' . $this->_adapter->getAccessToken()
-    ];
+    // Add billing/shipping addresses
+    $addressParams = $this->_helper->getBillingAndShippingAddress($order);
+    if (!empty($addressParams)) {
+        $params = array_merge($params, $addressParams);
+    }
 
+    // Prepare headers
+    $accesstoken = $this->_adapter->getAccessToken();
+    $headers     = ['Authorization: Bearer ' . $accesstoken];
+
+// echo "<pre>";
+// echo "BASE URL: " . $baseUrl . "\n";
+// echo "FINAL URL: " . $url . "\n";
+// echo "REQUEST PARAMS: \n";
+// print_r($params);
+
+    // Execute cURL request
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // set true in production
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
     $responseData = curl_exec($ch);
-
     if (curl_errno($ch)) {
         throw new \Exception(curl_error($ch));
     }
-
     curl_close($ch);
 
     $decodedData = json_decode($responseData, true);
 
-    /* ---------------- ERROR HANDLING ---------------- */
-    if (empty($decodedData['id'])) {
-        $code = $decodedData['result']['code'] ?? 'NO_CODE';
-        $desc = $decodedData['result']['description'] ?? $responseData;
+// DEBUG LOG (IMPORTANT)
+// echo "<pre>";
+// echo "RAW RESPONSE:\n";
+// print_r($responseData);
 
-        throw new \Exception("HyperPay Error [$code]: $desc");
-    }
+// echo "\n\nDECODED RESPONSE:\n";
+// print_r($decodedData);
+// exit();
+if (empty($decodedData['id'])) {
 
-    /* ---------------- SUCCESS ---------------- */
+    $code = $decodedData['result']['code'] ?? 'NO_CODE';
+    $desc = $decodedData['result']['description'] ?? $responseData;
+
+    throw new \Exception("HyperPay Error [$code]: $desc");
+}
+
     return $baseUrl . '/paymentWidgets.js?checkoutId=' . $decodedData['id'];
 }
+
+
     private function checkIfExist($order, $entityId, $auth, $id, $baseUrl)
     {
         $url = $baseUrl . "query";

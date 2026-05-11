@@ -1,33 +1,4 @@
-/* ✅ Existing CSS intact, only required changes added */
 body.catalog-product-index .page-actions,
-body.vendors-catalog-product-index .page-actions,
-body[class*="catalog-product-index"] .page-actions {
-    display: flex !important;
-    justify-content: space-between !important; /* Add Product right, बाकी actions left */
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin: 0 0 18px;
-    padding: 18px 20px;
-    border: 1px solid #e2ebf7;
-    border-radius: 16px;
-    background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
-    box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05);
-}
-
-body.catalog-product-index .page-actions .page-actions-buttons,
-body.vendors-catalog-product-index .page-actions .page-actions-buttons,
-body[class*="catalog-product-index"] .page-actions .page-actions-buttons {
-    display: flex !important;
-    justify-content: flex-start !important; /* Search, Filters, Select बाईं ओर */
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-
-
-/* body.catalog-product-index .page-actions,
 body.vendors-catalog-product-index .page-actions,
 body[class*="catalog-product-index"] .page-actions {
     display: flex;
@@ -41,7 +12,7 @@ body[class*="catalog-product-index"] .page-actions {
     border-radius: 16px;
     background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
     box-shadow: 0 8px 24px rgba(17, 44, 98, 0.05);
-} */
+}
 
 body.catalog-product-index .page-actions::before,
 body.catalog-product-index .page-actions::after,
@@ -52,7 +23,7 @@ body[class*="catalog-product-index"] .page-actions::after {
     display: none;
 }
 
-/* body.catalog-product-index .page-actions .page-actions-buttons,
+body.catalog-product-index .page-actions .page-actions-buttons,
 body.vendors-catalog-product-index .page-actions .page-actions-buttons,
 body[class*="catalog-product-index"] .page-actions .page-actions-buttons {
     display: flex;
@@ -60,7 +31,7 @@ body[class*="catalog-product-index"] .page-actions .page-actions-buttons {
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
-} */
+}
 
 body.catalog-product-index .page-actions .page-actions-buttons > *,
 body.vendors-catalog-product-index .page-actions .page-actions-buttons > *,
@@ -384,9 +355,9 @@ body[class*="catalog-product-index"] .data-grid-filters-action-wrap .action-defa
 body.catalog-product-index .admin__data-grid-pager-wrap,
 body.vendors-catalog-product-index .admin__data-grid-pager-wrap,
 body[class*="catalog-product-index"] .admin__data-grid-pager-wrap {
-    display: flex !important;
+    display: flex;
     align-items: center;
-    justify-content: flex-end!important;
+    justify-content: flex-end;
     gap: 12px;
     margin: 0;
 }

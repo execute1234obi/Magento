@@ -1,0 +1,181 @@
+<style>
+/* Sidebar ka structure maintain karne ke liye */
+.sidebar-main {
+    min-width: 280px; /* Isse content shift nahi hoga */
+}
+
+.filter-options-title{
+    padding:15px;
+    border-bottom:1px solid #ddd;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.filter-options-title.active{
+    color:#1f3f75;
+}
+
+.filter-options-content{
+    padding:10px 15px;
+}
+
+/* Custom Styles */
+.sidebar {
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #e7edf5;
+    border-radius: 20px;
+    margin-bottom: 20px;
+}
+
+#default-magento-filter {
+    margin-top: 20px;
+}
+</style>
+
+<?php
+/** @var \Custom\SearchExtended\Block\Index\Vendors $block */
+$filters = $block->getFilterData() ?: [];
+$selected = $block->getSelectedFilters() ?: [];
+$searchQuery = trim((string) $block->getRequest()->getParam('q'));
+
+$filters['countries'] = array_filter($filters['countries'] ?? []);
+$filters['verified'] = array_filter($filters['verified'] ?? []);
+$filters['business_types'] = array_filter($filters['business_types'] ?? []);
+?>
+
+<div class="layout" id="custom-sidebar-wrapper">
+    <div class="filter-title1" style="font-size: 22px; font-weight: 700; color: #1f3f75; margin-bottom: 15px;">
+        <?= __('Filter') ?>
+    </div>
+
+    <div class="sidebar" id="vendor-sidebar-content">
+        <div class="filter-group">
+            <label style="font-weight:700;"><?= __('Country') ?></label>
+            <select id="country" class="filter-select">
+                <option value=""><?= __('Please Select') ?></option>
+                <?php foreach ($filters['countries'] as $code => $name): ?>
+                    <option value="<?= $block->escapeHtmlAttr($code) ?>" <?= ($selected['country'] == $code) ? 'selected' : '' ?>>
+                        <?= $block->escapeHtml($name) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="filter-group" style="margin-top:15px;">
+            <label style="font-weight:700;"><?= __('Verified Seller') ?></label>
+            <select id="verified-seller" class="filter-select">
+                <option value=""><?= __('Please Select') ?></option>
+                <?php foreach ($filters['verified'] as $key => $label): ?>
+                    <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['verified'] == $key) ? 'selected' : '' ?>>
+                        <?= $block->escapeHtml($label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="filter-group" style="margin-top:15px;">
+            <label style="font-weight:700;"><?= __('Business Type') ?></label>
+            <select id="business-type" class="filter-select">
+                <option value=""><?= __('Please Select') ?></option>
+                <?php foreach ($filters['business_types'] as $key => $label): ?>
+                    <option value="<?= $block->escapeHtmlAttr($key) ?>" <?= ($selected['business_type'] == $key) ? 'selected' : '' ?>>
+                        <?= $block->escapeHtml($label) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+</div>
+<div id="default-magento-filter">
+
+<?php
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+$layer = $objectManager->get(\Magento\Catalog\Model\Layer\Search::class);
+
+$filterableAttributes = $objectManager->get(
+    \Magento\Catalog\Model\Layer\Search\FilterableAttributeList::class
+);
+
+$filterList = $objectManager->create(
+    \Magento\Catalog\Model\Layer\FilterList::class,
+    ['filterableAttributes' => $filterableAttributes]
+);
+
+$blockNav = $block->getLayout()
+    ->createBlock(\Magento\LayeredNavigation\Block\Navigation::class)
+    ->setLayer($layer)
+    ->setFilterList($filterList)
+    ->setTemplate('Magento_LayeredNavigation::layer/view.phtml');
+
+$filters = $blockNav->getFilters();
+
+foreach ($filters as $filter) {
+
+    echo '<h3>' . $filter->getName() . '</h3>';
+
+    foreach ($filter->getItems() as $item) {
+
+        echo 'Label: ' . $item->getLabel() . '<br>';
+        echo 'Count: ' . $item->getCount() . '<br>';
+        echo 'URL: ' . $item->getUrl() . '<br><br>';
+    }
+}
+
+?>
+
+</div>
+<script>
+require(['jquery', 'domReady!'], function($){
+
+    // Move everything into the main sidebar container
+    if($('.sidebar-main').length && $('#custom-sidebar-wrapper').length){
+        $('.sidebar-main').prepend($('#custom-sidebar-wrapper'));
+    }
+
+    function toggleFiltersByTab(){
+        // Aapke active tab ka class '_active' hai ya 'active' check karein
+        var activeTab = $('.mst-search__result-tabs ._active, .mst-search__result-tabs .active, .mst-search__result-tabs li[aria-selected="true"]');
+        var activeText = activeTab.text().trim().toLowerCase();
+
+        var $vendorFilters = $('#vendor-sidebar-content');
+        var $magentoFilters = $('#default-magento-filter');
+        var $defaultMagentoBlock = $('.sidebar-main .block.filter'); // Native block
+
+        if(activeText.indexOf('vendor') !== -1){
+            // VENDOR TAB: Show our dropdowns, hide default
+            $vendorFilters.show();
+            $magentoFilters.hide();
+            $defaultMagentoBlock.hide();
+        } else {
+            // PRODUCT/OTHER TABS: Hide our dropdowns, show default
+            $vendorFilters.hide();
+            $magentoFilters.show();
+            $defaultMagentoBlock.show();
+        }
+    }
+
+    // Page Load par check karein
+    setTimeout(toggleFiltersByTab, 500);
+
+    // Tab click par check karein
+    $(document).on('click', '.mst-search__result-tabs li, .mst-search__result-tabs a', function(){
+        setTimeout(toggleFiltersByTab, 300);
+    });
+
+    // Dropdown Change Logic
+    $('#country, #verified-seller, #business-type').on('change', function(){
+        var query    = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
+        var url = window.location.origin + window.location.pathname +
+            '?q=' + encodeURIComponent(query) +
+            '&svendor_country_id=' + encodeURIComponent($('#country').val()) +
+            '&svendor_is_verified=' + encodeURIComponent($('#verified-seller').val()) +
+            '&svendor_business_type=' + encodeURIComponent($('#business-type').val());
+        window.location.href = url;
+    });
+
+});
+</script>
