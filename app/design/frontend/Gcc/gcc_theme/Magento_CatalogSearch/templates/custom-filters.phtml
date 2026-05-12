@@ -123,6 +123,49 @@
     text-decoration: none;
 }
 
+body.catalogsearch-result-index #custom-sidebar-wrapper {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper.is-loading {
+    pointer-events: none;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper.is-loading .filter-title1,
+body.catalogsearch-result-index #custom-sidebar-wrapper.is-loading .sidebar,
+body.catalogsearch-result-index #custom-sidebar-wrapper.is-loading #default-magento-filter {
+    opacity: 0.32;
+    filter: blur(1px);
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper.is-loading::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(4px);
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper.is-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 21;
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    margin-left: -22px;
+    border-radius: 50%;
+    border: 4px solid rgba(31, 63, 117, 0.16);
+    border-top-color: #1f3f75;
+    animation: gccFilterSpin 0.8s linear infinite;
+}
+
 body.catalogsearch-result-index #custom-sidebar-wrapper .sidebar,
 body.catalogsearch-result-index #custom-sidebar-wrapper #vendor-sidebar-content {
     padding: 24px 22px 26px !important;
@@ -235,6 +278,286 @@ body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select::-ms-expa
         padding: 0 44px 0 16px;
         background-position: right 16px center !important;
         font-size: 15px !important;
+    }
+}
+
+@keyframes gccFilterSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+body.catalogsearch-result-index .gcc-search-layout,
+body.catalogsearch-result-index .gcc-main-products-area,
+body.catalogsearch-result-index .gcc-products-wrapper,
+body.catalogsearch-result-index .search-products-wrapper,
+body.catalogsearch-result-index .gcc-search-results,
+body.catalogsearch-result-index .gcc-search-results__main,
+body.catalogsearch-result-index .mst-search__result-index {
+    position: relative;
+}
+
+body.catalogsearch-result-index .gcc-search-layout.is-skeleton-loading,
+body.catalogsearch-result-index .gcc-main-products-area.is-skeleton-loading,
+body.catalogsearch-result-index .gcc-products-wrapper.is-skeleton-loading,
+body.catalogsearch-result-index .search-products-wrapper.is-skeleton-loading,
+body.catalogsearch-result-index .gcc-search-results.is-skeleton-loading,
+body.catalogsearch-result-index .gcc-search-results__main.is-skeleton-loading,
+body.catalogsearch-result-index .mst-search__result-index.is-skeleton-loading {
+    pointer-events: none;
+}
+
+body.catalogsearch-result-index .gcc-search-layout.is-skeleton-loading > :not(.gcc-search-skeleton),
+body.catalogsearch-result-index .gcc-main-products-area.is-skeleton-loading > :not(.gcc-search-skeleton),
+body.catalogsearch-result-index .gcc-products-wrapper.is-skeleton-loading > :not(.gcc-search-skeleton),
+body.catalogsearch-result-index .search-products-wrapper.is-skeleton-loading > :not(.gcc-search-skeleton),
+body.catalogsearch-result-index .gcc-search-results.is-skeleton-loading > :not(.gcc-search-skeleton),
+body.catalogsearch-result-index .gcc-search-results__main.is-skeleton-loading > :not(.gcc-search-skeleton),
+body.catalogsearch-result-index .mst-search__result-index.is-skeleton-loading > :not(.gcc-search-skeleton) {
+    opacity: 0.08;
+    filter: blur(8px);
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: block;
+    padding: 28px 0 32px;
+    border-radius: 32px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(5px);
+    overflow: hidden;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__inner {
+    display: grid;
+    grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+    gap: 40px;
+    max-width: 1320px;
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__column {
+    min-width: 0;
+}
+
+body.catalogsearch-result-index .gcc-skeleton-shimmer {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #e7edf5 25%, #f6f8fc 37%, #e7edf5 63%);
+    background-size: 400% 100%;
+    animation: gccSkeletonWave 1.4s ease-in-out infinite;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__heading {
+    width: 96px;
+    height: 24px;
+    border-radius: 999px;
+    margin-bottom: 24px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__filter-card {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 24px;
+    border: 1px solid #e3ebf4;
+    border-radius: 24px;
+    background: #fbfcfe;
+    box-shadow: 0 12px 30px rgba(31, 63, 117, 0.04);
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__label {
+    width: 120px;
+    height: 18px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__input {
+    height: 56px;
+    border-radius: 14px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__main {
+    min-width: 0;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__tabs {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin: 6px 0 28px;
+    padding: 0 0 16px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__tab {
+    width: 110px;
+    height: 24px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__tab-badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__vendor-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__vendor-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid #e3ebf4;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(31, 63, 117, 0.04);
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 18px;
+    flex: 0 0 auto;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__vendor-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__vendor-title {
+    width: 150px;
+    height: 20px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__vendor-subtitle {
+    width: 220px;
+    height: 14px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__vendor-button {
+    width: 170px;
+    height: 46px;
+    border-radius: 14px;
+    flex: 0 0 auto;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__product-card {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    border: 1px solid #e3ebf4;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(31, 63, 117, 0.04);
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__image {
+    height: 180px;
+    border-radius: 18px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__product-title {
+    width: 100%;
+    height: 20px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__product-title--short {
+    width: 78%;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__price {
+    width: 120px;
+    height: 16px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__brand-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__brand-logo {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__brand-name {
+    width: 110px;
+    height: 16px;
+    border-radius: 999px;
+}
+
+body.catalogsearch-result-index .gcc-search-skeleton__button {
+    width: 100%;
+    height: 44px;
+    border-radius: 14px;
+    margin-top: 4px;
+}
+
+@media (max-width: 1024px) {
+    body.catalogsearch-result-index .gcc-search-skeleton__inner {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    body.catalogsearch-result-index .gcc-search-skeleton__product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 767px) {
+    body.catalogsearch-result-index .gcc-search-skeleton {
+        border-radius: 24px;
+        padding: 20px 0 24px;
+    }
+
+    body.catalogsearch-result-index .gcc-search-skeleton__inner {
+        padding: 0 16px;
+    }
+
+    body.catalogsearch-result-index .gcc-search-skeleton__product-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.catalogsearch-result-index .gcc-search-skeleton__vendor-card {
+        flex-wrap: wrap;
+    }
+
+    body.catalogsearch-result-index .gcc-search-skeleton__vendor-button {
+        width: 100%;
     }
 }
 </style>
@@ -378,6 +701,292 @@ style="color:red; font-weight:600; font-size:13px;">
 
 <script>
 require(['jquery', 'domReady!'], function($){
+    var searchSkeletonTimer = null;
+    var searchSkeletonFallbackTimer = null;
+    var searchSkeletonObserver = null;
+    var searchSkeletonStartedAt = 0;
+    var searchSkeletonMinMs = 200;
+    var searchSkeletonHideDelay = 140;
+    var searchSkeletonFallbackMs = 12000;
+    var searchSkeletonActive = false;
+    var searchSkeletonPersistUntilUnload = false;
+
+    function getSearchSkeletonTarget() {
+        var selectors = [
+            '.gcc-search-layout',
+            '.gcc-search-results',
+            '.gcc-main-products-area',
+            '.gcc-products-wrapper',
+            '.search-products-wrapper',
+            '.gcc-search-results__main',
+            '.mst-search__result-index'
+        ];
+
+        for (var i = 0; i < selectors.length; i++) {
+            var $target = $(selectors[i]).filter(':visible').first();
+
+            if ($target.length) {
+                return $target;
+            }
+        }
+
+        return $();
+    }
+
+    function getSearchSkeletonContentTarget() {
+        var selectors = [
+            '.gcc-main-products-area',
+            '.gcc-products-wrapper',
+            '.search-products-wrapper',
+            '.gcc-search-results__main',
+            '.mst-search__result-index'
+        ];
+
+        for (var i = 0; i < selectors.length; i++) {
+            var $target = $(selectors[i]).filter(':visible').first();
+
+            if ($target.length) {
+                return $target;
+            }
+        }
+
+        return $();
+    }
+
+    function getSearchModeFromTab($tab) {
+        var label = $tab.find('.mst-search__tab-label').text().trim().toLowerCase();
+
+        if (!label) {
+            label = $tab.text().replace(/\d+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+        }
+
+        return label.indexOf('product') !== -1 ? 'products' : 'vendor';
+    }
+
+    function buildSearchSkeletonFilterGroup() {
+        return [
+            '<div class="gcc-search-skeleton__filter-group">',
+                '<div class="gcc-search-skeleton__label gcc-skeleton-shimmer"></div>',
+                '<div class="gcc-search-skeleton__input gcc-skeleton-shimmer"></div>',
+            '</div>'
+        ].join('');
+    }
+
+    function buildSearchSkeletonVendorCard() {
+        return [
+            '<article class="gcc-search-skeleton__vendor-card">',
+                '<div class="gcc-search-skeleton__avatar gcc-skeleton-shimmer"></div>',
+                '<div class="gcc-search-skeleton__vendor-content">',
+                    '<div class="gcc-search-skeleton__vendor-title gcc-skeleton-shimmer"></div>',
+                    '<div class="gcc-search-skeleton__vendor-subtitle gcc-skeleton-shimmer"></div>',
+                '</div>',
+                '<div class="gcc-search-skeleton__vendor-button gcc-skeleton-shimmer"></div>',
+            '</article>'
+        ].join('');
+    }
+
+    function buildSearchSkeletonProductCard() {
+        return [
+            '<article class="gcc-search-skeleton__product-card">',
+                '<div class="gcc-search-skeleton__image gcc-skeleton-shimmer"></div>',
+                '<div class="gcc-search-skeleton__product-title gcc-skeleton-shimmer"></div>',
+                '<div class="gcc-search-skeleton__product-title gcc-search-skeleton__product-title--short gcc-skeleton-shimmer"></div>',
+                '<div class="gcc-search-skeleton__price gcc-skeleton-shimmer"></div>',
+                '<div class="gcc-search-skeleton__brand-row">',
+                    '<div class="gcc-search-skeleton__brand-logo gcc-skeleton-shimmer"></div>',
+                    '<div class="gcc-search-skeleton__brand-name gcc-skeleton-shimmer"></div>',
+                '</div>',
+                '<div class="gcc-search-skeleton__button gcc-skeleton-shimmer"></div>',
+            '</article>'
+        ].join('');
+    }
+
+    function buildSearchSkeletonMarkup(mode) {
+        var isProducts = mode === 'products';
+        var mainMarkup = isProducts ? [
+            '<div class="gcc-search-skeleton__column gcc-search-skeleton__main">',
+                '<div class="gcc-search-skeleton__tabs">',
+                    '<div class="gcc-search-skeleton__tab gcc-skeleton-shimmer"></div>',
+                    '<div class="gcc-search-skeleton__tab gcc-skeleton-shimmer"></div>',
+                    '<div class="gcc-search-skeleton__tab-badge gcc-skeleton-shimmer"></div>',
+                '</div>',
+                '<div class="gcc-search-skeleton__product-grid">',
+                    buildSearchSkeletonProductCard(),
+                    buildSearchSkeletonProductCard(),
+                    buildSearchSkeletonProductCard(),
+                '</div>',
+            '</div>'
+        ].join('') : [
+            '<div class="gcc-search-skeleton__column gcc-search-skeleton__main">',
+                '<div class="gcc-search-skeleton__tabs">',
+                    '<div class="gcc-search-skeleton__tab gcc-skeleton-shimmer"></div>',
+                    '<div class="gcc-search-skeleton__tab gcc-skeleton-shimmer"></div>',
+                    '<div class="gcc-search-skeleton__tab-badge gcc-skeleton-shimmer"></div>',
+                '</div>',
+                '<div class="gcc-search-skeleton__vendor-list">',
+                    buildSearchSkeletonVendorCard(),
+                    buildSearchSkeletonVendorCard(),
+                '</div>',
+            '</div>'
+        ].join('');
+
+        return [
+            '<div class="gcc-search-skeleton" aria-hidden="true" data-mode="' + mode + '">',
+                '<div class="gcc-search-skeleton__inner">',
+                    '<div class="gcc-search-skeleton__column gcc-search-skeleton__sidebar">',
+                        '<div class="gcc-search-skeleton__heading gcc-skeleton-shimmer"></div>',
+                        '<div class="gcc-search-skeleton__filter-card">',
+                            buildSearchSkeletonFilterGroup(),
+                            buildSearchSkeletonFilterGroup(),
+                            buildSearchSkeletonFilterGroup(),
+                        '</div>',
+                    '</div>',
+                    mainMarkup,
+                '</div>',
+            '</div>'
+        ].join('');
+    }
+
+    function ensureSearchSkeleton(mode) {
+        var $target = getSearchSkeletonTarget();
+
+        if (!$target.length) {
+            return $();
+        }
+
+        var $overlay = $target.children('.gcc-search-skeleton');
+
+        if ($overlay.length) {
+            if ($overlay.attr('data-mode') !== mode) {
+                $overlay.replaceWith(buildSearchSkeletonMarkup(mode));
+            }
+        } else {
+            $target.append(buildSearchSkeletonMarkup(mode));
+        }
+
+        return $target.children('.gcc-search-skeleton').first();
+    }
+
+    function clearSearchSkeletonObserver() {
+        if (searchSkeletonObserver) {
+            searchSkeletonObserver.disconnect();
+            searchSkeletonObserver = null;
+        }
+    }
+
+    function hideSearchSkeletonNow() {
+        clearTimeout(searchSkeletonTimer);
+        clearTimeout(searchSkeletonFallbackTimer);
+        clearSearchSkeletonObserver();
+        searchSkeletonActive = false;
+        searchSkeletonPersistUntilUnload = false;
+        searchSkeletonStartedAt = 0;
+
+        var $target = getSearchSkeletonTarget();
+
+        if (!$target.length) {
+            return;
+        }
+
+        $target.removeClass('is-skeleton-loading').removeAttr('aria-busy');
+        $target.children('.gcc-search-skeleton').remove();
+    }
+
+    function scheduleSearchSkeletonHide() {
+        if (!searchSkeletonActive) {
+            return;
+        }
+
+        if (searchSkeletonPersistUntilUnload) {
+            return;
+        }
+
+        clearTimeout(searchSkeletonTimer);
+
+        var elapsed = Date.now() - searchSkeletonStartedAt;
+        var wait = Math.max(searchSkeletonHideDelay, searchSkeletonMinMs - elapsed);
+
+        searchSkeletonTimer = setTimeout(function () {
+            hideSearchSkeletonNow();
+        }, wait);
+    }
+
+    function startSearchSkeletonObserver() {
+        var $contentTarget = getSearchSkeletonContentTarget();
+
+        clearSearchSkeletonObserver();
+
+        if (!$contentTarget.length || typeof MutationObserver === 'undefined') {
+            return;
+        }
+
+        searchSkeletonObserver = new MutationObserver(function () {
+            scheduleSearchSkeletonHide();
+        });
+
+        searchSkeletonObserver.observe($contentTarget[0], {
+            attributes: true,
+            childList: true,
+            characterData: true,
+            subtree: true
+        });
+    }
+
+    function setSearchSkeleton(isLoading, mode, persistUntilUnload) {
+        var $target = getSearchSkeletonTarget();
+
+        if (!$target.length) {
+            return;
+        }
+
+        if (isLoading) {
+            searchSkeletonActive = true;
+            searchSkeletonPersistUntilUnload = !!persistUntilUnload;
+            searchSkeletonStartedAt = Date.now();
+
+            clearTimeout(searchSkeletonTimer);
+            clearTimeout(searchSkeletonFallbackTimer);
+            clearSearchSkeletonObserver();
+
+            $target.addClass('is-skeleton-loading').attr('aria-busy', 'true');
+            ensureSearchSkeleton(mode);
+
+            if (searchSkeletonPersistUntilUnload) {
+                return;
+            }
+
+            startSearchSkeletonObserver();
+
+            searchSkeletonFallbackTimer = setTimeout(function () {
+                hideSearchSkeletonNow();
+            }, searchSkeletonFallbackMs);
+            return;
+        }
+
+        scheduleSearchSkeletonHide();
+    }
+
+    function navigateWithSearchSkeleton(url, mode) {
+        setSearchSkeleton(true, mode, true);
+
+        var $target = getSearchSkeletonTarget();
+
+        if ($target.length) {
+            $target[0].offsetHeight;
+        }
+
+        if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(function () {
+                window.requestAnimationFrame(function () {
+                    window.location.href = url;
+                });
+            });
+        } else {
+            window.setTimeout(function () {
+                window.location.href = url;
+            }, 48);
+        }
+    }
 
     /* ==============================
        MOVE SIDEBAR
@@ -414,13 +1023,27 @@ require(['jquery', 'domReady!'], function($){
     setTimeout(toggleFiltersByTab, 500);
 
     $(document).on('click', '.mst-search__result-tabs li, .mst-search__result-tabs a', function(){
-        setTimeout(toggleFiltersByTab, 300);
+        var $tab = $(this).closest('li');
+        var mode = getSearchModeFromTab($tab.length ? $tab : $(this));
+
+        var $link = $(this).is('a') ? $(this) : $(this).find('a').first();
+        var href = ($link.attr('href') || '').trim();
+        var persistUntilUnload = href && href !== '#';
+
+        setSearchSkeleton(true, mode, persistUntilUnload);
+
+        setTimeout(function(){
+            toggleFiltersByTab();
+        }, 300);
     });
 
     /* ==============================
        FILTER REDIRECT
     ============================== */
     $('#country, #verified-seller, #business-type').on('change', function(){
+        var $activeTab = $('.mst-search__result-tabs ._active, .mst-search__result-tabs .active, .mst-search__result-tabs li[aria-selected="true"]').first();
+        var $modeTab = $activeTab.length ? ($activeTab.is('li') ? $activeTab : $activeTab.closest('li')) : $activeTab;
+        var mode = getSearchModeFromTab($modeTab);
 
         var query = '<?= $block->escapeJs($block->getRequest()->getParam('q', '')) ?>';
 
@@ -430,7 +1053,13 @@ require(['jquery', 'domReady!'], function($){
             '&svendor_is_verified=' + encodeURIComponent($('#verified-seller').val()) +
             '&svendor_business_type=' + encodeURIComponent($('#business-type').val());
 
-        window.location.href = url;
+        navigateWithSearchSkeleton(url, mode);
+    });
+
+    $(window).on('pageshow', function (event) {
+        if (event.originalEvent && event.originalEvent.persisted) {
+            hideSearchSkeletonNow();
+        }
     });
 
     /* ==============================
