@@ -59,14 +59,20 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
     max-width:1280px;
     padding:0 24px;
     margin:16px auto 14px;
+    overflow:visible;
   }
-  .search-wrap { position:relative; margin-bottom:0; }
+  .search-wrap {
+    position:relative;
+    margin-bottom:0;
+    overflow:visible;
+    z-index:60;
+  }
   .search-bar {
     position:relative; display:flex; align-items:center;
     width:100%; height:56px; border-radius:12px;
     background:#ffffff; border:0;
     box-shadow:inset 0 0 0 1px #D1D5DB;
-    overflow:hidden;
+    overflow:visible;
     transition:border-color .2s ease,background-color .2s ease;
   }
   .search-bar:hover { box-shadow:inset 0 0 0 1px #D1D5DB; }
@@ -123,9 +129,7 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
 
   /* ===== Autocomplete Panel ===== */
   .mst-searchautocomplete__autocomplete,
-  .mst-searchautocomplete__autocomplete_active,
-  .search-wrap .mst-search-autocomplete__wrapper,
-  .search-wrap .mst-searchautocomplete__autocomplete {
+  .mst-searchautocomplete__autocomplete_active {
     position:absolute !important;
     top:calc(100% + 8px);
     left:0;
@@ -135,24 +139,29 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
     width:100% !important;
     max-width:100% !important;
     margin:0 auto !important;
-    border-radius:12px;
-    background:transparent !important;
-    border:0 !important;
-    box-shadow:none !important;
-    overflow:visible !important;
+    border-radius:18px;
+    background:#ffffff !important;
+    border:1px solid #e5eaf2 !important;
+    box-shadow:0 24px 48px rgba(15, 23, 42, 0.12) !important;
+    overflow:hidden !important;
     outline:none !important;
   }
+  .mst-searchautocomplete__autocomplete._active,
   .mst-searchautocomplete__autocomplete.is-visible,
-  .mst-searchautocomplete__autocomplete_active.is-visible,
-  .search-wrap .mst-search-autocomplete__wrapper.is-visible,
-  .search-wrap .mst-searchautocomplete__autocomplete.is-visible {
+  .mst-searchautocomplete__autocomplete_active._active,
+  .mst-searchautocomplete__autocomplete_active.is-visible {
     display:block !important;
+  }
+  .mst-searchautocomplete__autocomplete .mst-searchautocomplete__wrapper,
+  .mst-searchautocomplete__autocomplete .mst-searchautocomplete__results {
+    background:#ffffff;
   }
   .mst-search-autocomplete__typeahead-overlay { z-index:9998 !important; }
 
   .ms-grid {
     display:grid; grid-template-columns:1fr 1fr; gap:16px; padding:12px;
     box-sizing:border-box; max-height:80vh; overflow:hidden;
+    background:#ffffff;
   }
   .ms-col, .ms-full {
     background:#fff; border:1px solid #eef1f5; border-radius:10px;
@@ -252,8 +261,8 @@ require(['jquery'], function ($) {
         const value = $(this).val().trim();
         
         // 1. Agar list khuli hai aur arrow keys se kuch select kiya hai, toh plugin ko kaam karne dein
-        const isAutocompleteOpen = $('.mst-search-autocomplete__wrapper:visible').length > 0;
-        const hasSelection = $('.mst-search-autocomplete__item.-active').length > 0;
+        const isAutocompleteOpen = $('.mst-searchautocomplete__wrapper:visible').length > 0;
+        const hasSelection = $('.mst-searchautocomplete__item._active').length > 0;
 
         if (isAutocompleteOpen && hasSelection) {
             return true; 
@@ -287,7 +296,7 @@ require(['jquery'], function ($) {
 
   function syncAutocompleteVisibility() {
     const searchWrap = document.querySelector('.search-wrap');
-    const wrapper = document.querySelector('.search-wrap .mst-search-autocomplete__wrapper');
+    const wrapper = document.querySelector('.search-wrap .mst-searchautocomplete__wrapper');
     const autocomplete = document.querySelector('.search-wrap .mst-searchautocomplete__autocomplete');
     const input = document.getElementById('search');
 
@@ -296,8 +305,9 @@ require(['jquery'], function ($) {
     }
 
     const hasQuery = input.value.trim().length > 0;
+    const isFocused = searchWrap.contains(document.activeElement);
     const hasResults = hasAutocompleteResults(wrapper) || hasAutocompleteResults(autocomplete);
-    const shouldShow = hasQuery && hasResults;
+    const shouldShow = hasResults && (hasQuery || isFocused);
 
     if (wrapper) {
       wrapper.classList.toggle('is-visible', shouldShow);
@@ -346,7 +356,7 @@ require(['jquery'], function ($) {
   }
 
   const enhanceAll = () => {
-    $('.mst-search-autocomplete__wrapper').each(function(){ buildTwoColumns(this); });
+    $('.mst-searchautocomplete__wrapper').each(function(){ buildTwoColumns(this); });
     syncAutocompleteVisibility();
   };
   $('#search').on('focus input keyup change', () => setTimeout(enhanceAll, 50));
