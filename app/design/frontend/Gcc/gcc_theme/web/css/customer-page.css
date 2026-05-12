@@ -1,0 +1,9 @@
+@media (max-width: 575.98px) {
+  /* Customer page vendor nearby subtitle */
+  section.bg-blue-50 .text-center > p.text-gray-600.text-3xl.mt-5,
+  section.bg-blue-50 .text-gray-600.text-3xl.mt-5,
+  .section-subtitle {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+}

@@ -41,7 +41,7 @@
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
-<item name="beforeMethods" xsi:type="array">
+                                                    <item name="beforeMethods" xsi:type="array">
     <item name="children" xsi:type="array">
 
         <item name="cart_items_custom" xsi:type="array">
@@ -93,7 +93,6 @@
 
     </item>
 </item>
-                                                   
                                                                                                       
                                                   </item>
                                                 </item>
