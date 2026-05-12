@@ -1,4 +1,6 @@
 ﻿<?php
+//echo "vru";
+//die();
 $vendorProductFallbackAddUrl = '';
 $vendorProductFallbackAddSet = 0;
 $vendorProductFallbackAddType = '';
@@ -32,6 +34,7 @@ try {
     });
 
     foreach ($types as $typeId => $type) {
+       
         if (in_array($typeId, $productTypeRestrictions)) {
             continue;
         }
@@ -68,7 +71,7 @@ try {
 <link rel="stylesheet" type="text/css"
       href="<?= $block->getViewFileUrl('Gcc_VendorStyles::css/vendor-product-grid.css'); ?>" />
 <?php if ($vendorProductFallbackAddUrl): ?>
-<div id="vendor-product-fallback-actions" hidden>
+<!-- <div id="vendor-product-fallback-actions" hidden>
     <div class="vendor-product-grid-page-actions vendor-product-grid-page-actions--fallback">
         <div class="page-actions-buttons">
             <a class="vendor-product-grid-fallback-add" href="<?= $block->escapeUrl($vendorProductFallbackAddUrl); ?>">
@@ -77,7 +80,7 @@ try {
             </a>
         </div>
     </div>
-</div>
+</div> -->
 <?php endif; ?>
 <style>
 body.subaccount-user-index main.page-content,
@@ -2054,6 +2057,7 @@ body[class*="catalog-product-index"] .vendor-product-grid-reference-actions {
     justify-content: flex-end;
     flex: 0 0 auto;
     min-width: 0;
+    align-items: center;/*added by vru */
 }
 
 body.catalog-product-index .vendor-product-grid-reference-head .page-actions,
@@ -3675,6 +3679,7 @@ body[class*="catalog-product-index"] table.data-grid .badge.bg-red {
         display: none !important;
     }
 }
+
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
