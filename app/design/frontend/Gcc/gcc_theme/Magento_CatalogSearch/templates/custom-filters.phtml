@@ -122,6 +122,121 @@
     width: 100%;
     text-decoration: none;
 }
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .sidebar,
+body.catalogsearch-result-index #custom-sidebar-wrapper #vendor-sidebar-content {
+    padding: 24px 22px 26px !important;
+    background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%) !important;
+    border: 1px solid #dfe7f3 !important;
+    border-radius: 24px !important;
+    box-shadow: 0 18px 40px rgba(31, 63, 117, 0.06) !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-title1 {
+    margin: 0 0 18px !important;
+    color: #1f3f75 !important;
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 0 0 22px !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-group:last-child {
+    margin-bottom: 0 !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-group label {
+    margin: 0 !important;
+    color: #243041 !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select {
+    width: 100%;
+    min-height: 58px;
+    box-sizing: border-box;
+    padding: 0 56px 0 20px;
+    border: 1px solid #dbe5f1 !important;
+    border-radius: 14px !important;
+    background-color: #ffffff !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M4 6l4 4 4-4' stroke='%231F3F75' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 20px center !important;
+    background-size: 14px 14px !important;
+    color: #9aa3b2 !important;
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    line-height: 1.2 !important;
+    outline: none !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select:has(option[value=""]:checked) {
+    color: #9aa3b2 !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select:has(option:not([value=""]):checked) {
+    color: #243041 !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select option {
+    color: #243041;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select:hover {
+    border-color: #bfd0ea !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select:focus {
+    border-color: #1f3f75 !important;
+    box-shadow: 0 0 0 4px rgba(31, 63, 117, 0.10) !important;
+}
+
+body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select::-ms-expand {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    body.catalogsearch-result-index #custom-sidebar-wrapper .sidebar,
+    body.catalogsearch-result-index #custom-sidebar-wrapper #vendor-sidebar-content {
+        padding: 20px 16px 22px !important;
+        border-radius: 20px !important;
+    }
+
+    body.catalogsearch-result-index #custom-sidebar-wrapper .filter-title1 {
+        margin-bottom: 14px !important;
+        font-size: 22px !important;
+    }
+
+    body.catalogsearch-result-index #custom-sidebar-wrapper .filter-group {
+        gap: 8px;
+        margin-bottom: 18px !important;
+    }
+
+    body.catalogsearch-result-index #custom-sidebar-wrapper .filter-group label {
+        font-size: 16px !important;
+    }
+
+    body.catalogsearch-result-index #custom-sidebar-wrapper .filter-select {
+        min-height: 52px;
+        padding: 0 44px 0 16px;
+        background-position: right 16px center !important;
+        font-size: 15px !important;
+    }
+}
 </style>
 
 <?php
