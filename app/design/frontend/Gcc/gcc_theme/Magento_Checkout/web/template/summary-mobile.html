@@ -4,17 +4,24 @@
             <div class="summary-title">
                 <!-- ko i18n: 'Order Summary' --><!-- /ko -->
             </div>
-
-            <div class="summary-reference"
-                 data-bind="visible: window.checkoutConfig && window.checkoutConfig.quoteData && window.checkoutConfig.quoteData.entity_id,
-                            text: (window.checkoutConfig && window.checkoutConfig.quoteData && window.checkoutConfig.quoteData.entity_id) ? ('#' + window.checkoutConfig.quoteData.entity_id) : ''">
-            </div>
         </div>
 
         <div class="summary-totals-wrap">
-            <!-- ko foreach: elems() -->
-                <!-- ko template: getTemplate() --><!-- /ko -->
-            <!-- /ko -->
+            <div class="summary-totals-wrap__group summary-totals-wrap__group--totals">
+                <!-- ko foreach: getRegion('totals') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- /ko-->
+            </div>
+
+            <div class="summary-totals-wrap__group summary-totals-wrap__group--extras">
+                <!-- ko foreach: getRegion('discount') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- /ko-->
+
+                <!-- ko foreach: getRegion('credit') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- /ko-->
+            </div>
         </div>
     </div>
 

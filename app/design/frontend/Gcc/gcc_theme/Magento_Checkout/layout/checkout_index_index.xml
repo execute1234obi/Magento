@@ -60,43 +60,45 @@
                                                         </item>
                                                     </item>
                                                 </item>
-                                                <item name="cart_items" xsi:type="array">
-                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/cart-items</item>
-                                                    <item name="sortOrder" xsi:type="string">1</item>
-                                                    <item name="config" xsi:type="array">
-                                                        <item name="template" xsi:type="string">Magento_Checkout/summary/cart-items-mobile</item>
-                                                    </item>
-                                                    <item name="children" xsi:type="array">
-                                                        <item name="details" xsi:type="array">
-                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details</item>
-                                                            <item name="children" xsi:type="array">
-                                                                <item name="thumbnail" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details/thumbnail</item>
-                                                                    <item name="displayArea" xsi:type="string">before_details</item>
-                                                                </item>
-                                                                <item name="subtotal" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details/subtotal</item>
-                                                                    <item name="displayArea" xsi:type="string">after_details</item>
-                                                                </item>
-                                                            </item>
-                                                        </item>
-                                                    </item>
-                                                </item>
 
                                                 <item name="discount" xsi:type="array">
                                                     <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/discount</item>
                                                     <item name="sortOrder" xsi:type="string">3</item>
+                                                    <item name="displayArea" xsi:type="string">discount</item>
                                                 </item>
 
                                                 <item name="credit" xsi:type="array">
                                                     <item name="component" xsi:type="string">Vnecoms_Credit/js/view/payment/credit</item>
                                                     <item name="sortOrder" xsi:type="string">4</item>
+                                                    <item name="displayArea" xsi:type="string">credit</item>
                                                     <item name="children" xsi:type="array">
                                                         <item name="errors" xsi:type="array">
                                                             <item name="component" xsi:type="string">Vnecoms_Credit/js/view/payment/credit-messages</item>
                                                             <item name="displayArea" xsi:type="string">messages</item>
                                                         </item>
                                                     </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                                <item name="items" xsi:type="array">
+                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/cart-items</item>
+                                    <item name="displayArea" xsi:type="string">items</item>
+                                    <item name="config" xsi:type="array">
+                                        <item name="template" xsi:type="string">Magento_Checkout/summary/cart-items-mobile</item>
+                                    </item>
+                                    <item name="children" xsi:type="array">
+                                        <item name="details" xsi:type="array">
+                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details</item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="thumbnail" xsi:type="array">
+                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details/thumbnail</item>
+                                                    <item name="displayArea" xsi:type="string">before_details</item>
+                                                </item>
+                                                <item name="subtotal" xsi:type="array">
+                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/item/details/subtotal</item>
+                                                    <item name="displayArea" xsi:type="string">after_details</item>
                                                 </item>
                                             </item>
                                         </item>
