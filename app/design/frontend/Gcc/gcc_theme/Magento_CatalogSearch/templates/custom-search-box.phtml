@@ -134,7 +134,7 @@ $isArabic = (is_string($storeCode) && strpos($storeCode, 'ar') !== false);
     top:calc(100% + 8px);
     left:0;
     right:0;
-    display:none !important;
+    /*display:none !important;*/
     z-index:9999 !important;
     width:100% !important;
     max-width:100% !important;
@@ -282,17 +282,17 @@ require(['jquery'], function ($) {
     }
   });
 
-  function hasAutocompleteResults(wrapper) {
-    if (!wrapper) {
-      return false;
-    }
+  // function hasAutocompleteResults(wrapper) {
+  //   if (!wrapper) {
+  //     return false;
+  //   }
 
-    const resultNodes = wrapper.querySelectorAll(
-      '.ms-grid, .mst-search-autocomplete__item, [class*="__item"], [class*="__block"]'
-    );
+  //   const resultNodes = wrapper.querySelectorAll(
+  //     '.ms-grid, .mst-search-autocomplete__item, [class*="__item"], [class*="__block"]'
+  //   );
 
-    return Array.from(resultNodes).some((node) => (node.textContent || '').trim().length > 0);
-  }
+  //   return Array.from(resultNodes).some((node) => (node.textContent || '').trim().length > 0);
+  // }
 
   function syncAutocompleteVisibility() {
     const searchWrap = document.querySelector('.search-wrap');
@@ -300,24 +300,24 @@ require(['jquery'], function ($) {
     const autocomplete = document.querySelector('.search-wrap .mst-searchautocomplete__autocomplete');
     const input = document.getElementById('search');
 
-    if (!searchWrap || !input) {
-      return;
-    }
+   // if (!searchWrap || !input) {
+     // return;
+    //}
 
     const hasQuery = input.value.trim().length > 0;
     const isFocused = searchWrap.contains(document.activeElement);
     const hasResults = hasAutocompleteResults(wrapper) || hasAutocompleteResults(autocomplete);
     const shouldShow = hasResults && (hasQuery || isFocused);
 
-    if (wrapper) {
-      wrapper.classList.toggle('is-visible', shouldShow);
-      wrapper.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
-    }
-    if (autocomplete) {
-      autocomplete.classList.toggle('is-visible', shouldShow);
-      autocomplete.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
-    }
-    searchWrap.classList.toggle('has-query', hasQuery);
+    //if (wrapper) {
+      //wrapper.classList.toggle('is-visible', shouldShow);
+      //wrapper.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    //}
+    //if (autocomplete) {
+      //autocomplete.classList.toggle('is-visible', shouldShow);
+     // autocomplete.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    //}
+    //searchWrap.classList.toggle('has-query', hasQuery);
   }
 
   // Shortcut key (Ctrl+K / Cmd+K)
@@ -359,13 +359,15 @@ require(['jquery'], function ($) {
     $('.mst-searchautocomplete__wrapper').each(function(){ buildTwoColumns(this); });
     syncAutocompleteVisibility();
   };
-  $('#search').on('focus input keyup change', () => setTimeout(enhanceAll, 50));
+  //$('#search').on('focus input keyup change', () => setTimeout(enhanceAll, 50));
+
+  $('#search').on('focus input keyup', () => setTimeout(enhanceAll, 50));
   new MutationObserver(enhanceAll).observe(document.body, { childList: true, subtree: true });
 
   // Hide Overlay
   const hideAuto = () => $('.mst-search-autocomplete__typeahead-overlay').hide();
   new MutationObserver(hideAuto).observe(document.body, { childList: true, subtree: true });
   hideAuto();
-  syncAutocompleteVisibility();
+  //syncAutocompleteVisibility();
 });
 </script>

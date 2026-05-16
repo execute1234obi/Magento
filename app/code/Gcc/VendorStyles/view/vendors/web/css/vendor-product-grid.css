@@ -2,8 +2,9 @@
 body.catalog-product-index .page-actions,
 body.vendors-catalog-product-index .page-actions,
 body[class*="catalog-product-index"] .page-actions {
-    display: flex !important;
-    justify-content: space-between !important; /* Add Product right, बाकी actions left */
+    /* display: flex !important; */
+    /* justify-content: space-between !important; */
+     /* Add Product right, बाकी actions left */
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
@@ -1053,4 +1054,13 @@ body[class*="catalog-product-index"] .admin__data-grid-filters-footer .action-te
     body[class*="catalog-product-index"] .vendor-product-grid-footer .admin__data-grid-pager {
         margin-left: 0;
     }
+}
+/*added by Vru for add product button positioning*/
+body.catalog-product-index .admin__data-grid-pager {
+    display: none !important;
+}
+body[class*="catalog-product-index"] .admin__data-grid-pager-wrap .selectmenu,
+body[class*="catalog-product-index"] .admin__data-grid-pager-wrap .admin__control-support-text,
+body[class*="catalog-product-index"] .admin__data-grid-pager-wrap .admin__data-grid-pager {
+    display: none !important;
 }
