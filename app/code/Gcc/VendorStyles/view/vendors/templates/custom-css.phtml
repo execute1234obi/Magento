@@ -3680,7 +3680,32 @@ body[class*="catalog-product-index"] table.data-grid .badge.bg-red {
         display: none !important;
     }
 }
+/* Overlap content container ko full width dene aur auto wrap karne ke liye */
+.vendor-product-grid-filter-panel .admin__data-grid-filters {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    width: 100% !important;
+    gap: 15px !important;
+    position: relative !important;
+}
 
+/* Har ek filter field/dropdown element ko proper layout inline block dene ke liye */
+.vendor-product-grid-filter-panel .admin__data-grid-filters .admin__form-field {
+    flex: 1 1 200px !important; /* Yeh crash inputs ko single inline lines me distribute karega */
+    max-width: 100% !important;
+    position: relative !important;
+    left: unset !important;
+    right: unset !important;
+    transform: none !important;
+}
+/*for pager */
+.gcc-hidden-native-pager {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -3901,109 +3926,211 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function ensureVendorProductFilterPanel(filterWrap) {
-        var header;
-        var filterBody;
-        var filterViewport;
-        var filters;
-        var footer;
-        var title;
-        var actions;
-        var clearButton;
-        var legend;
-        var cancelButton;
-        var applyButton;
-        var cancelLabel;
-        var applyLabel;
+    // function ensureVendorProductFilterPanel(filterWrap) {
+    //     var header;
+    //     var filterBody;
+    //     var filterViewport;
+    //     var filters;
+    //     var footer;
+    //     var title;
+    //     var actions;
+    //     var clearButton;
+    //     var legend;
+    //     var cancelButton;
+    //     var applyButton;
+    //     var cancelLabel;
+    //     var applyLabel;
 
-        if (!filterWrap) {
-            return;
-        }
+    //     if (!filterWrap) {
+    //         return;
+    //     }
 
-        filterWrap.classList.add('vendor-product-grid-filter-panel');
-        header = filterWrap.querySelector('.vendor-product-grid-filter-panel__head');
+    //     filterWrap.classList.add('vendor-product-grid-filter-panel');
+    //     header = filterWrap.querySelector('.vendor-product-grid-filter-panel__head');
 
-        if (!header) {
-            header = document.createElement('div');
-            header.className = 'vendor-product-grid-filter-panel__head';
+    //     if (!header) {
+    //         header = document.createElement('div');
+    //         header.className = 'vendor-product-grid-filter-panel__head';
 
-            title = document.createElement('h3');
-            title.className = 'vendor-product-grid-filter-panel__title';
-            title.textContent = 'Filter';
-            header.appendChild(title);
+    //         title = document.createElement('h3');
+    //         title.className = 'vendor-product-grid-filter-panel__title';
+    //         title.textContent = 'Filter';
+    //         header.appendChild(title);
 
-            actions = document.createElement('div');
-            actions.className = 'vendor-product-grid-filter-panel__actions';
+    //         actions = document.createElement('div');
+    //         actions.className = 'vendor-product-grid-filter-panel__actions';
 
-            clearButton = document.createElement('button');
-            clearButton.type = 'button';
-            clearButton.className = 'vendor-product-grid-filter-panel__clear';
-            clearButton.textContent = 'Clear Filter';
-            clearButton.addEventListener('click', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
+    //         clearButton = document.createElement('button');
+    //         clearButton.type = 'button';
+    //         clearButton.className = 'vendor-product-grid-filter-panel__clear';
+    //         clearButton.textContent = 'Clear Filter';
+    //         clearButton.addEventListener('click', function (event) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //             clearVendorProductGridFilters();
+    //         });
+    //         actions.appendChild(clearButton);
+    //         header.appendChild(actions);
+
+    //         filterWrap.insertBefore(header, filterWrap.firstChild);
+    //     }
+
+    //     filters = filterWrap.querySelector('.admin__data-grid-filters');
+    //     footer = filterWrap.querySelector('.admin__data-grid-filters-footer');
+    //     filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
+    //     filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
+
+    //     if (!filterBody) {
+    //         filterBody = document.createElement('div');
+    //         filterBody.className = 'vendor-product-grid-filter-panel__body';
+    //     }
+
+    //     if (!filterViewport) {
+    //         filterViewport = document.createElement('div');
+    //         filterViewport.className = 'vendor-product-grid-filter-panel__viewport';
+    //     }
+
+    //     if (filterViewport.parentNode !== filterBody) {
+    //         filterBody.appendChild(filterViewport);
+    //     }
+
+    //     if (footer) {
+    //         filterWrap.insertBefore(filterBody, footer);
+    //     } else if (filterBody.parentNode !== filterWrap) {
+    //         filterWrap.appendChild(filterBody);
+    //     }
+
+    //     if (filters && filters.parentNode !== filterViewport) {
+    //         filterViewport.appendChild(filters);
+    //     }
+
+    //     arrangeVendorProductFilterSections(filterWrap, filterViewport);
+    //     markVendorProductFilterRangeGroups(filterWrap);
+    //     bindVendorProductFilterScroll(filterBody);
+
+    //     legend = filterWrap.querySelector('.admin__filters-legend');
+
+    //     if (legend) {
+    //         legend.textContent = 'Filter';
+    //         legend.style.display = 'none';
+    //     }
+
+    //     cancelButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-tertiary, [data-action="grid-filter-cancel"]');
+    //     applyButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-secondary, [data-action="grid-filter-apply"]');
+
+    //     if (cancelButton) {
+    //         cancelLabel = cancelButton.querySelector('span') || cancelButton;
+    //         cancelLabel.textContent = 'Cancel';
+    //     }
+
+    //     if (applyButton) {
+    //         applyLabel = applyButton.querySelector('span') || applyButton;
+    //         applyLabel.textContent = 'Apply Filter';
+    //     }
+    // }
+    //added by vru
+function ensureVendorProductFilterPanel(filterWrap) {
+    if (!filterWrap) return;
+
+    // 1. Core container layout class
+    filterWrap.classList.add('vendor-product-grid-filter-panel');
+
+    // 2. Clear Header Handling safely
+    var header = filterWrap.querySelector('.vendor-product-grid-filter-panel__head');
+    if (!header) {
+        header = document.createElement('div');
+        header.className = 'vendor-product-grid-filter-panel__head';
+
+        var title = document.createElement('h3');
+        title.className = 'vendor-product-grid-filter-panel__title';
+        title.textContent = 'Filter';
+        header.appendChild(title);
+
+        var actions = document.createElement('div');
+        actions.className = 'vendor-product-grid-filter-panel__actions';
+
+        var clearButton = document.createElement('button');
+        clearButton.type = 'button';
+        clearButton.className = 'vendor-product-grid-filter-panel__clear';
+        clearButton.textContent = 'Clear Filter';
+        
+        clearButton.addEventListener('click', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (typeof clearVendorProductGridFilters === 'function') {
                 clearVendorProductGridFilters();
-            });
-            actions.appendChild(clearButton);
-            header.appendChild(actions);
-
-            filterWrap.insertBefore(header, filterWrap.firstChild);
-        }
-
-        filters = filterWrap.querySelector('.admin__data-grid-filters');
-        footer = filterWrap.querySelector('.admin__data-grid-filters-footer');
-        filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
-        filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
-
-        if (!filterBody) {
-            filterBody = document.createElement('div');
-            filterBody.className = 'vendor-product-grid-filter-panel__body';
-        }
-
-        if (!filterViewport) {
-            filterViewport = document.createElement('div');
-            filterViewport.className = 'vendor-product-grid-filter-panel__viewport';
-        }
-
-        if (filterViewport.parentNode !== filterBody) {
-            filterBody.appendChild(filterViewport);
-        }
-
-        if (footer) {
-            filterWrap.insertBefore(filterBody, footer);
-        } else if (filterBody.parentNode !== filterWrap) {
-            filterWrap.appendChild(filterBody);
-        }
-
-        if (filters && filters.parentNode !== filterViewport) {
-            filterViewport.appendChild(filters);
-        }
-
-        arrangeVendorProductFilterSections(filterWrap, filterViewport);
-        markVendorProductFilterRangeGroups(filterWrap);
-        bindVendorProductFilterScroll(filterBody);
-
-        legend = filterWrap.querySelector('.admin__filters-legend');
-
-        if (legend) {
-            legend.textContent = 'Filter';
-            legend.style.display = 'none';
-        }
-
-        cancelButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-tertiary, [data-action="grid-filter-cancel"]');
-        applyButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-secondary, [data-action="grid-filter-apply"]');
-
-        if (cancelButton) {
-            cancelLabel = cancelButton.querySelector('span') || cancelButton;
-            cancelLabel.textContent = 'Cancel';
-        }
-
-        if (applyButton) {
-            applyLabel = applyButton.querySelector('span') || applyButton;
-            applyLabel.textContent = 'Apply Filter';
-        }
+            }
+        });
+        
+        actions.appendChild(clearButton);
+        header.appendChild(actions);
+        filterWrap.insertBefore(header, filterWrap.firstChild);
     }
 
+    // 3. TARGET THE CONTAINER INNER WRAPPERS CAREFULLY
+    var filters = filterWrap.querySelector('.admin__data-grid-filters');
+    var filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
+    var filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
+
+    // Agar wrapper elements missing hain toh unhe create karein par nested structural format me rakhein
+    if (!filterBody) {
+        filterBody = document.createElement('div');
+        filterBody.className = 'vendor-product-grid-filter-panel__body';
+    }
+
+    if (!filterViewport) {
+        filterViewport = document.createElement('div');
+        filterViewport.className = 'vendor-product-grid-filter-panel__viewport';
+    }
+
+    // Append to parent hierarchy properly
+    if (filterViewport.parentNode !== filterBody) {
+        filterBody.appendChild(filterViewport);
+    }
+
+    var footer = filterWrap.querySelector('.admin__data-grid-filters-footer');
+    if (footer && footer.parentNode) {
+        if (filterBody.parentNode !== footer.parentNode) {
+            footer.parentNode.insertBefore(filterBody, footer);
+        }
+    } else if (filterBody.parentNode !== filterWrap) {
+        filterWrap.appendChild(filterBody);
+    }
+
+    // CRITICAL FIX FOR OVERLAPPING: 
+    // Filters component ko append karte waqt default magento structure classes remove nahi honi chahiye
+    if (filters && filters.parentNode !== filterViewport) {
+        filterViewport.appendChild(filters);
+    }
+
+    // 4. Helper Layout Adjustments (Calling functions safely)
+    if (typeof arrangeVendorProductFilterSections === 'function') {
+        arrangeVendorProductFilterSections(filterWrap, filterViewport);
+    }
+    if (typeof markVendorProductFilterRangeGroups === 'function') {
+        markVendorProductFilterRangeGroups(filterWrap);
+    }
+    if (typeof bindVendorProductFilterScroll === 'function') {
+        bindVendorProductFilterScroll(filterBody);
+    }
+
+    // 5. Labels and Button Layout Fixes
+    var legend = filterWrap.querySelector('.admin__filters-legend');
+    if (legend) legend.style.display = 'none';
+
+    var cancelButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-tertiary, [data-action="grid-filter-cancel"]');
+    var applyButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-secondary, [data-action="grid-filter-apply"]');
+
+    if (cancelButton) {
+        var cancelLabel = cancelButton.querySelector('span') || cancelButton;
+        cancelLabel.textContent = 'Cancel';
+    }
+
+    if (applyButton) {
+        var applyLabel = applyButton.querySelector('span') || applyButton;
+        applyLabel.textContent = 'Apply Filter';
+    }
+}
     function clearVendorProductGridFilters() {
         var filterWrap = findVendorProductFilterWrap();
         var applyButton;
@@ -4773,7 +4900,73 @@ document.addEventListener('DOMContentLoaded', function () {
         return (value || '').replace(/\s+/g, ' ').trim();
     }
     //added by vru 
- function normalizeVendorProductReferenceHeader() {
+
+    function getResultsCount(header, scope) {
+
+    var count = NaN;
+    var text = '';
+    var countNode = null;
+
+    scope = scope || document;
+
+    /* Magento pager count */
+    countNode = scope.querySelector(
+        '.data-grid-pager .admin__control-support-text'
+    );
+
+    if (countNode) {
+
+        text = (countNode.textContent || '').trim();
+
+        /*
+            Example:
+            "1-20 of 124"
+            "124 records found"
+        */
+
+        var matches = text.match(/\d+/g);
+
+        if (matches && matches.length) {
+
+            /* take LAST number */
+            count = parseInt(
+                matches[matches.length - 1],
+                10
+            );
+        }
+    }
+
+    /* UI component fallback */
+    if (
+        (isNaN(count) || count < 0) &&
+        typeof pagingComponent !== 'undefined' &&
+        pagingComponent &&
+        pagingComponent.totalRecords
+    ) {
+
+        count = parseInt(
+            pagingComponent.totalRecords,
+            10
+        );
+    }
+
+    /* visible rows fallback */
+    if (isNaN(count) || count < 0) {
+
+        count = getVisibleGridRowCount(scope);
+    }
+
+    return count >= 0 ? count : 0;
+}
+
+// Fallback safety helper function
+function getVisibleGridRowCount(scope) {
+    if (!scope) return 0;
+    var rows = scope.querySelectorAll('table.data-grid tbody tr:not(.data-grid-tr-no-records)');
+    return rows ? rows.length : 0;
+}
+
+function normalizeVendorProductReferenceHeader() {
     var gridWrap;
     var scope;
     var header;
@@ -4804,35 +4997,30 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     scope = findVendorProductGridScope(gridWrap) || gridWrap.parentElement;
-
     if (!scope) {
         return;
     }
 
     header = scope.querySelector('.admin__data-grid-header');
-
     referenceHeader = scope.querySelector('.vendor-product-grid-reference-header');
 
+    // If Magento re-rendered the header and deleted our section, create it again safely
     if (!referenceHeader) {
-
         referenceHeader = document.createElement('div');
         referenceHeader.className = 'vendor-product-grid-reference-header';
 
         referenceToolbar = document.createElement('div');
         referenceToolbar.className = 'vendor-product-grid-reference-toolbar';
-
         referenceHeader.appendChild(referenceToolbar);
 
         /* RESULT SECTION */
         referenceResults = document.createElement('div');
         referenceResults.className = 'vendor-product-grid-reference-results';
-
         referenceToolbar.appendChild(referenceResults);
 
         /* CONTROL SECTION */
         referenceControls = document.createElement('div');
         referenceControls.className = 'vendor-product-grid-reference-controls';
-
         referenceToolbar.appendChild(referenceControls);
 
         if (header && header.parentNode) {
@@ -4840,137 +5028,122 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             scope.insertBefore(referenceHeader, gridWrap);
         }
-
     } else {
-
-        referenceToolbar = referenceHeader.querySelector(
-            '.vendor-product-grid-reference-toolbar'
-        );
-
-        referenceResults = referenceHeader.querySelector(
-            '.vendor-product-grid-reference-results'
-        );
-
-        referenceControls = referenceHeader.querySelector(
-            '.vendor-product-grid-reference-controls'
-        );
+        referenceToolbar = referenceHeader.querySelector('.vendor-product-grid-reference-toolbar');
+        referenceResults = referenceHeader.querySelector('.vendor-product-grid-reference-results');
+        referenceControls = referenceHeader.querySelector('.vendor-product-grid-reference-controls');
     }
 
-    /* RESULT COUNT */
-    resultCount = getVendorProductGridResultCount(header || scope, scope);
-
-    if (referenceResults) {
-        referenceResults.textContent = resultCount
-            ? resultCount + ' Results'
-            : '';
-    }
-    
-
-    /* SEARCH */
-    searchWrap = findVendorProductHeaderControl(
-        scope,
-        '.data-grid-search-control-wrap'
-    );
-
-    if (searchWrap) {
-
-        searchWrap.classList.add(
-            'vendor-product-grid-reference-control',
-            'vendor-product-grid-reference-control--search'
-        );
-
-        if (
-            referenceControls &&
-            searchWrap.parentNode !== referenceControls
-        ) {
-            referenceControls.appendChild(searchWrap);
-        }
-
-        var searchInput = searchWrap.querySelector(
-            '.data-grid-search-control'
-        );
-
+    /* SEARCH CONTROL */
+    searchWrap = findVendorProductHeaderControl(scope, '.data-grid-search-control-wrap');
+    if (searchWrap && referenceControls && searchWrap.parentNode !== referenceControls) {
+        searchWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--search');
+        referenceControls.appendChild(searchWrap);
+        
+        var searchInput = searchWrap.querySelector('.data-grid-search-control');
         if (searchInput) {
-            searchInput.setAttribute(
-                'placeholder',
-                'Search Product'
-            );
-
-            searchInput.setAttribute(
-                'aria-label',
-                'Search Product'
-            );
+            searchInput.setAttribute('placeholder', 'Search Product');
+            searchInput.setAttribute('aria-label', 'Search Product');
         }
     }
 
     /* FILTER BUTTON */
-    filterWrap = findVendorProductHeaderControl(
-        scope,
-        '.data-grid-filters-actions-wrap'
-    );
-
-    if (filterWrap) {
-
-        filterWrap.classList.add(
-            'vendor-product-grid-reference-control',
-            'vendor-product-grid-reference-control--filter'
-        );
-
-        if (
-            referenceControls &&
-            filterWrap.parentNode !== referenceControls
-        ) {
-            referenceControls.appendChild(filterWrap);
-        }
+    filterWrap = findVendorProductHeaderControl(scope, '.data-grid-filters-actions-wrap');
+    if (filterWrap && referenceControls && filterWrap.parentNode !== referenceControls) {
+        filterWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--filter');
+        referenceControls.appendChild(filterWrap);
     }
 
-    filterButton = referenceControls
-        ? referenceControls.querySelector(
-            '.data-grid-filters-action-wrap .action-default'
-        )
-        : null;
-
-    if (filterButton) {
+    filterButton = referenceControls ? referenceControls.querySelector('.data-grid-filters-action-wrap .action-default') : null;
+    if (filterButton && filterButton.textContent.trim() !== 'Filters') {
         filterButton.textContent = 'Filters';
     }
+    /* ACTION DROPDOWN */
+        var actionSelectWrap = Array.from(
+            document.querySelectorAll('.action-select-wrap')
+        ).find(function (el) {
 
-   /* ACTIVE FILTERS */
-var activeFiltersWrap = scope.querySelector(
-    '.admin__data-grid-filters-current'
+            var buttonText = el.querySelector('.action-select span');
+
+            return buttonText &&
+                buttonText.textContent.trim() === 'Actions';
+        });
+        Array.prototype.forEach.call(
+            referenceControls.querySelectorAll('.action-select-wrap'),
+    function (item) {
+
+        var text = item.textContent.trim();
+
+        if (text.indexOf('Select') !== -1 && text.indexOf('Actions') === -1) {
+            item.style.display = 'none';
+        }
+    }
+);
+if (
+    actionSelectWrap &&
+    referenceControls &&
+    actionSelectWrap.parentNode !== referenceControls
+) {
+    actionSelectWrap.classList.add(
+        'vendor-product-grid-reference-control',
+        'vendor-product-grid-reference-control--actions'
+    );
+
+    referenceControls.appendChild(actionSelectWrap);
+}
+    /* ACTIVE FILTERS (CURRENT FILTER CHIPS) */
+   var actionSelectWrap = scope.querySelector(
+    '.admin__data-grid-header .action-select-wrap'
 );
 
-if (activeFiltersWrap) {
-
-    activeFiltersWrap.classList.add(
-        'vendor-product-grid-reference-active-filters'
+if (
+    actionSelectWrap &&
+    referenceControls &&
+    actionSelectWrap.parentNode !== referenceControls
+) {
+    actionSelectWrap.classList.add(
+        'vendor-product-grid-reference-control',
+        'vendor-product-grid-reference-control--actions'
     );
 
-    if (
-        referenceControls &&
-        activeFiltersWrap.parentNode !== referenceControls
-    ) {
-        referenceControls.appendChild(activeFiltersWrap);
+    referenceControls.appendChild(actionSelectWrap);
+}
+
+    /* UPDATE RESULTS AT THE VERY END */
+    if (referenceResults) {
+        var countSpan = referenceResults.querySelector('.dynamic-result-count-span');
+        if (!countSpan) {
+            countSpan = document.createElement('span');
+            countSpan.className = 'dynamic-result-count-span';
+            referenceResults.appendChild(countSpan);
+        }
+        
+        resultCount = parseInt(getResultsCount(header || scope, scope), 10);
+        countSpan.textContent = (isNaN(resultCount) || resultCount < 0 ? 0 : resultCount) + ' Results';
     }
 
-    /* MOVE DEFAULT CLEAR ALL INSIDE ACTIVE FILTER ACTIONS */
-    clearButton = scope.querySelector(
-        '.action-tertiary.action-clear'
-    );
+    // ─── CRITICAL AUTOMATION FIX ──────────────────────────────────────
+    // Jab bhi filter change hoga ya data reload hoga, yeh code automatic runs trigger karega
+    if (!scope.hasProductFilterObserver) {
+        scope.hasProductFilterObserver = true;
+        
+        var observer = new MutationObserver(function (mutations) {
+            // Thoda sa delay taaki Magento apna HTML final kar le
+            setTimeout(function() {
+                normalizeVendorProductReferenceHeader();
+            }, 100);
+        });
 
-    var activeFilterActions = activeFiltersWrap.querySelector(
-        '.admin__current-filters-actions-wrap'
-    );
-
-    if (
-        clearButton &&
-        activeFilterActions &&
-        clearButton.parentNode !== activeFilterActions
-    ) {
-        activeFilterActions.appendChild(clearButton);
+        // Grid contents aur header updates dono ko dynamic look me monitor karein
+        if (header) {
+            observer.observe(header, { childList: true, subtree: true });
+        }
+        if (gridWrap) {
+            observer.observe(gridWrap, { childList: true, subtree: true });
+        }
     }
 }
-}
-    
+
 
 //     
 //     function normalizeVendorProductGridHeader() {
@@ -5570,7 +5743,7 @@ if (activeFiltersWrap) {
             syncTimer = setTimeout(function () {
                 normalizeVendorProductPageActions();
                 normalizeVendorProductReferenceHeader();
-                normalizeVendorProductGridHeader();
+                //normalizeVendorProductGridHeader();
                 ensureVendorProductFilterDrawer();
                 ensureVendorProductSelectionColumn();
                 normalizeVendorProductNameCells();
@@ -5592,6 +5765,11 @@ if (activeFiltersWrap) {
         });
 
         window.addEventListener('resize', scheduleSync);
+        //added by vru
+        window.addEventListener('load', function () {
+
+    setTimeout(scheduleSync, 1000);
+});
     }
 
     initVendorProductGridFooter();
@@ -6299,606 +6477,564 @@ body[class*="subaccount-user-index"] table.data-grid .gcc-subaccount-user-action
 }
 </style>
 <script>
-// document.addEventListener('DOMContentLoaded', function () {
-//     var syncTimer;
-//     var observer;
-//     var pagingComponent = null;
+document.addEventListener('DOMContentLoaded', function () {
+    var syncTimer;
+    var observer;
+    var pagingComponent = null;
 
-//     function isSubaccountUserPage() {
-//         return document.body && (
-//             document.body.classList.contains('subaccount-user-index') ||
-//             document.body.className.indexOf('subaccount-user-index') !== -1
-//         );
-//     }
-
+    function isSubaccountUserPage() {
+        return document.body && (
+            document.body.classList.contains('subaccount-user-index') ||
+            document.body.className.indexOf('subaccount-user-index') !== -1
+        );
+    }
   
-
-//     function getMessagesNode() {
-//         return Array.prototype.slice.call(document.querySelectorAll(
-//             'main.page-content > #messages, main.page-content > .messages, #messages, .messages'
-//         ));
-//     }
-
-//     function syncMessagesVisibility() {
-//         var messages = getMessagesNode();
-//         var hasVisibleMessages = false;
-
-//         if (!messages.length) {
-//             return;
-//         }
-
-//         messages.forEach(function (messageNode) {
-//             if (!messageNode) {
-//                 return;
-//             }
-
-//             if (!normalizeText(messageNode.textContent)) {
-//                 messageNode.style.display = 'none';
-//                 return;
-//             }
-
-//             messageNode.style.display = '';
-//             hasVisibleMessages = true;
-//         });
-
-//         return hasVisibleMessages;
-//     }
-
-//     function loadPagingComponent(scheduleSync) {
-//         if (!window.require) {
-//             return;
-//         }
-
-//         try {
-//             window.require(['uiRegistry'], function (registry) {
-//                 registry.get(function (item) {
-//                     return item &&
-//                         item.index === 'listing_paging' &&
-//                         item.name &&
-//                         item.name.indexOf('vendors_subaccount_user_grid') !== -1;
-//                 }, function (component) {
-//                     pagingComponent = component;
-//                     scheduleSync();
-//                 });
-//             });
-//         } catch (error) {
-//             return;
-//         }
-//     }
-
-//     function findGridWrap() {
-//         return Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap')).find(function (candidate) {
-//             return candidate &&
-//                 candidate.getAttribute('data-role') !== 'sticky-el-root' &&
-//                 candidate.querySelector('table.data-grid');
-//         }) || null;
-//     }
-
-//     function getGridScope(gridWrap) {
-//         var current = gridWrap ? gridWrap.parentElement : null;
-
-//         while (current && current !== document.body) {
-//             if (
-//                 current.querySelector('.admin__data-grid-header') &&
-//                 current.querySelector('.admin__data-grid-wrap table.data-grid')
-//             ) {
-//                 return current;
-//             }
-
-//             current = current.parentElement;
-//         }
-
-//         return gridWrap ? gridWrap.parentElement : null;
-//     }
-
-//     function findGridHeader(scope, gridWrap) {
-//         var sibling = gridWrap ? gridWrap.previousElementSibling : null;
-
-//         while (sibling) {
-//             if (sibling.classList && sibling.classList.contains('admin__data-grid-header')) {
-//                 return sibling;
-//             }
-
-//             sibling = sibling.previousElementSibling;
-//         }
-
-//         return scope ? scope.querySelector('.admin__data-grid-header') : null;
-//     }
-
-//     function findPagerWrap(scope) {
-//         return scope ? scope.querySelector('.admin__data-grid-pager-wrap') : null;
-//     }
-
-//     function getResultsCount(header, scope) {
-//         var count = pagingComponent ? parseGridCountValue(pagingComponent.totalRecords) : NaN;
-//         var text;
-//         var rowCount;
-//         var countNode;
-//         var searchScope = scope || (header ? header.parentElement : null);
-
-//         if (!isNaN(count) && count > 0) {
-//             rowCount = getVisibleGridRowCount(searchScope);
-
-//             return rowCount > count ? rowCount : count;
-//         }
-
-//         if (header) {
-//             countNode = header.querySelector('.col-xs-3 .admin__control-support-text');
-
-//             if (countNode) {
-//                 text = normalizeText(countNode.textContent);
-//                 count = parseGridCountFromText(text);
-
-//                 if (!isNaN(count) && count > 0) {
-//                     rowCount = getVisibleGridRowCount(searchScope);
-
-//                     return rowCount > count ? rowCount : count;
-//                 }
-//             }
-
-//             text = normalizeText(header.textContent || '');
-//             count = parseGridCountFromText(text);
-
-//             if (!isNaN(count) && count > 0) {
-//                 rowCount = getVisibleGridRowCount(searchScope);
-
-//                 return rowCount > count ? rowCount : count;
-//             }
-//         }
-
-//         if (searchScope) {
-//             rowCount = getVisibleGridRowCount(searchScope);
-
-//             if (rowCount) {
-//                 return rowCount;
-//             }
-//         }
-
-//         return 0;
-//     }
-
-//     function getGridState(pagerWrap) {
-//         var pager = pagerWrap ? pagerWrap.querySelector('.admin__data-grid-pager') : null;
-//         var currentInput = pager ? pager.querySelector('.admin__control-text') : null;
-//         var pagesLabel = pager ? pager.querySelector('.admin__control-support-text') : null;
-//         var previousButton = pager ? pager.querySelector('.action-previous') : null;
-//         var nextButton = pager ? pager.querySelector('.action-next') : null;
-//         var current = pagingComponent ? parseInt(pagingComponent.current, 10) : NaN;
-//         var pages = pagingComponent ? parseInt(pagingComponent.pages, 10) : NaN;
-//         var pageMatches = pagesLabel && pagesLabel.textContent ? pagesLabel.textContent.match(/\d+/g) : null;
-//         var fallbackPages = pageMatches && pageMatches.length ? parseInt(pageMatches[pageMatches.length - 1], 10) : 1;
-//         var fallbackCurrent = currentInput ? parseInt(currentInput.value, 10) || 1 : 1;
-
-//         return {
-//             current: !isNaN(current) ? current : fallbackCurrent,
-//             pages: !isNaN(pages) ? pages : fallbackPages,
-//             setPage: function (page) {
-//                 if (pagingComponent && typeof pagingComponent.setPage === 'function') {
-//                     pagingComponent.setPage(page);
-//                     return;
-//                 }
-
-//                 if (currentInput) {
-//                     currentInput.value = page;
-//                     currentInput.dispatchEvent(new Event('input', { bubbles: true }));
-//                     currentInput.dispatchEvent(new Event('change', { bubbles: true }));
-//                     currentInput.dispatchEvent(new Event('blur', { bubbles: true }));
-//                 }
-//             },
-//             prev: function () {
-//                 if (pagingComponent && typeof pagingComponent.prev === 'function') {
-//                     pagingComponent.prev();
-//                     return;
-//                 }
-
-//                 if (previousButton) {
-//                     previousButton.click();
-//                 }
-//             },
-//             next: function () {
-//                 if (pagingComponent && typeof pagingComponent.next === 'function') {
-//                     pagingComponent.next();
-//                     return;
-//                 }
-
-//                 if (nextButton) {
-//                     nextButton.click();
-//                 }
-//             }
-//         };
-//     }
-
-//     function getPages(current, total) {
-//         var pages = [];
-//         var start;
-//         var end;
-//         var page;
-
-//         if (total <= 4) {
-//             for (page = 1; page <= total; page++) {
-//                 pages.push(page);
-//             }
-
-//             return pages;
-//         }
-
-//         pages.push(1);
-
-//         if (current > 3) {
-//             pages.push('ellipsis-start');
-//         }
-
-//         start = Math.max(2, current - 1);
-//         end = Math.min(total - 1, current + 1);
-
-//         if (current <= 2) {
-//             end = Math.min(total - 1, 2);
-//         }
-
-//         if (current >= total - 1) {
-//             start = Math.max(2, total - 1);
-//         }
-
-//         for (page = start; page <= end; page++) {
-//             pages.push(page);
-//         }
-
-//         if (current < total - 2) {
-//             pages.push('ellipsis-end');
-//         }
-
-//         pages.push(total);
-
-//         return pages;
-//     }
-
-//     function renderPages(state, container) {
-//         var current = Number(state.current || 1);
-//         var total = Number(state.pages || 1);
-
-//         container.innerHTML = '';
-
-//         function createButton(label, className, handler, disabled) {
-//             var button = document.createElement('button');
-
-//             button.type = 'button';
-//             button.className = className;
-//             button.textContent = label;
-
-//             if (disabled) {
-//                 button.disabled = true;
-//             } else if (typeof handler === 'function') {
-//                 button.addEventListener('click', handler);
-//             }
-
-//             container.appendChild(button);
-//         }
-
-//         createButton('\u2039', 'gcc-subaccount-user-grid-page-nav gcc-subaccount-user-grid-page-nav--prev', function () {
-//             state.prev();
-//         }, current <= 1);
-
-//         getPages(current, total).forEach(function (item) {
-//             var button;
-//             var ellipsis;
-
-//             if (typeof item === 'number') {
-//                 button = document.createElement('button');
-//                 button.type = 'button';
-//                 button.className = 'gcc-subaccount-user-grid-page-btn' + (item === current ? ' is-active' : '');
-//                 button.textContent = item;
-
-//                 if (item === current) {
-//                     button.disabled = true;
-//                 } else {
-//                     button.addEventListener('click', function () {
-//                         state.setPage(item);
-//                     });
-//                 }
-
-//                 container.appendChild(button);
-//                 return;
-//             }
-
-//             ellipsis = document.createElement('span');
-//             ellipsis.className = 'gcc-subaccount-user-grid-page-ellipsis';
-//             ellipsis.textContent = '...';
-//             container.appendChild(ellipsis);
-//         });
-
-//         createButton('\u203A', 'gcc-subaccount-user-grid-page-nav gcc-subaccount-user-grid-page-nav--next', function () {
-//             state.next();
-//         }, current >= total);
-//     }
-
-//     function ensureTopBar(header, scope) {
-//         var topBar = scope.querySelector('.gcc-subaccount-user-grid-toolbar');
-//         var resultsWrap;
-//         var controlsWrap;
-//         var searchWrap;
-//         var filterWrap;
-//         var searchInput;
-//         var filterButton;
-//         var resultText;
-//         var hasContent;
-
-//         if (!topBar) {
-//             topBar = document.createElement('div');
-//             topBar.className = 'gcc-subaccount-user-grid-toolbar';
-
-//             resultsWrap = document.createElement('div');
-//             resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
-//             topBar.appendChild(resultsWrap);
-
-//             controlsWrap = document.createElement('div');
-//             controlsWrap.className = 'gcc-subaccount-user-grid-toolbar__controls';
-//             topBar.appendChild(controlsWrap);
-
-//             header.parentNode.insertBefore(topBar, header);
-//         } else {
-//             resultsWrap = topBar.querySelector('.gcc-subaccount-user-grid-toolbar__results');
-//             controlsWrap = topBar.querySelector('.gcc-subaccount-user-grid-toolbar__controls');
-//         }
-
-//         if (!resultsWrap) {
-//             resultsWrap = document.createElement('div');
-//             resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
-//             topBar.appendChild(resultsWrap);
-//         }
-
-//         if (!controlsWrap) {
-//             controlsWrap = document.createElement('div');
-//             controlsWrap.className = 'gcc-subaccount-user-grid-toolbar__controls';
-//             topBar.appendChild(controlsWrap);
-//         }
-
-//         resultText = getResultsCount(header, scope) + ' Results';
-//         resultsWrap.textContent = resultText;
-
-//         searchWrap = header.querySelector('.data-grid-search-control-wrap');
-//         filterWrap = header.querySelector('.data-grid-filters-actions-wrap');
-
-//         if (searchWrap && searchWrap.parentNode !== controlsWrap) {
-//             controlsWrap.appendChild(searchWrap);
-//         }
-
-//         if (filterWrap && filterWrap.parentNode !== controlsWrap) {
-//             controlsWrap.appendChild(filterWrap);
-//         }
-
-//         searchInput = topBar.querySelector('.data-grid-search-control');
-
-//         if (searchInput) {
-//             searchInput.setAttribute('placeholder', 'Search User');
-//             searchInput.setAttribute('aria-label', 'Search User');
-//         }
-
-//         filterButton = topBar.querySelector('.data-grid-filters-action-wrap .action-default');
-
-//         if (filterButton) {
-//             filterButton.textContent = 'Filters';
-//         }
-
-//         hasContent = !!normalizeText(resultsWrap.textContent) && controlsWrap.children.length > 0;
-//         topBar.classList.toggle('gcc-subaccount-user-grid-toolbar--hidden', !hasContent);
-
-//         if (hasContent) {
-//             header.classList.add('gcc-subaccount-user-grid-header-shell');
-//             header.style.display = 'none';
-//         } else {
-//             header.classList.remove('gcc-subaccount-user-grid-header-shell');
-//             header.style.display = '';
-//         }
-//     }
-
-//     function ensurePagerFooter(scope, gridWrap) {
-//         var footer = scope.querySelector('.gcc-subaccount-user-grid-footer');
-//         var nativePager = findPagerWrap(scope);
-//         var state;
-//         var stateKey;
-//         var leftWrap;
-//         var rightWrap;
-//         var label;
-//         var select;
-//         var options = [];
-//         var optionMap = {};
-//         var sizeComponent = pagingComponent && pagingComponent.sizes ? pagingComponent.sizes : null;
-//         var selectedPageSize = sizeComponent && !isNaN(parseInt(sizeComponent.value, 10))
-//             ? parseInt(sizeComponent.value, 10)
-//             : pagingComponent && !isNaN(parseInt(pagingComponent.pageSize, 10))
-//                 ? parseInt(pagingComponent.pageSize, 10)
-//                 : 10;
-//         var option;
-//         var i;
-//         var item;
-//         var pageSizeValue;
-
-//         if (!gridWrap) {
-//             return;
-//         }
-
-//         if (nativePager) {
-//             nativePager.style.display = 'none';
-//         }
-
-//         state = getGridState(null);
-
-//         if (sizeComponent && sizeComponent.optionsArray && sizeComponent.optionsArray.length) {
-//             for (i = 0; i < sizeComponent.optionsArray.length; i++) {
-//                 item = sizeComponent.optionsArray[i];
-//                 pageSizeValue = parseInt(item.value, 10);
-
-//                 if (!isNaN(pageSizeValue) && !optionMap[pageSizeValue]) {
-//                     optionMap[pageSizeValue] = true;
-//                     options.push({
-//                         value: pageSizeValue,
-//                         label: item.label || item.value || pageSizeValue
-//                     });
-//                 }
-//             }
-//         }
-
-//         if (!options.length) {
-//             [10, 20, 50, 100].forEach(function (value) {
-//                 options.push({
-//                     value: value,
-//                     label: value
-//                 });
-//             });
-//         }
-
-//         if (!optionMap[selectedPageSize]) {
-//             options.unshift({
-//                 value: selectedPageSize,
-//                 label: selectedPageSize
-//             });
-//         }
-
-//         stateKey = [
-//             state.current,
-//             state.pages,
-//             selectedPageSize,
-//             options.map(function (entry) {
-//                 return entry.value;
-//             }).join(',')
-//         ].join(':');
-
-//         if (!footer) {
-//             footer = document.createElement('div');
-//             footer.className = 'admin__data-grid-pager-wrap gcc-subaccount-user-grid-pager-wrap gcc-subaccount-user-grid-footer';
-//             gridWrap.insertAdjacentElement('afterend', footer);
-//         } else if (footer.parentNode !== scope || gridWrap.nextElementSibling !== footer) {
-//             gridWrap.insertAdjacentElement('afterend', footer);
-//         }
-
-//         if (footer.dataset.gccSubaccountPagerState !== stateKey || !footer.childElementCount) {
-//             footer.innerHTML = '';
-
-//             leftWrap = document.createElement('div');
-//             leftWrap.className = 'gcc-subaccount-user-grid-footer__per-page';
-
-//             label = document.createElement('span');
-//             label.className = 'gcc-subaccount-user-grid-footer__label';
-//             label.textContent = 'Show';
-
-//             select = document.createElement('select');
-//             select.className = 'gcc-subaccount-user-grid-footer__select';
-//             select.setAttribute('aria-label', 'Rows per page');
-
-//             options.forEach(function (entry) {
-//                 option = document.createElement('option');
-//                 option.value = entry.value;
-//                 option.textContent = entry.label;
-//                 if (entry.value === selectedPageSize) {
-//                     option.selected = true;
-//                 }
-//                 select.appendChild(option);
-//             });
-
-//             select.value = String(selectedPageSize);
-//             select.addEventListener('change', function () {
-//                 var value = parseInt(select.value, 10);
-
-//                 if (isNaN(value)) {
-//                     return;
-//                 }
-
-//                 if (pagingComponent && pagingComponent.sizes && typeof pagingComponent.sizes.setSize === 'function') {
-//                     pagingComponent.sizes.setSize(value);
-//                 } else if (pagingComponent) {
-//                     pagingComponent.pageSize = value;
-
-//                     if (typeof pagingComponent.onPageSizeChange === 'function') {
-//                         pagingComponent.onPageSizeChange();
-//                     }
-//                 }
-
-//                 scheduleSync();
-//             });
-
-//             leftWrap.appendChild(label);
-//             leftWrap.appendChild(select);
-
-//             rightWrap = document.createElement('div');
-//             rightWrap.className = 'admin__data-grid-pager gcc-subaccount-user-grid-footer__pages gcc-subaccount-user-grid-page-list';
-
-//             footer.appendChild(leftWrap);
-//             footer.appendChild(rightWrap);
-
-//             renderPages(state, rightWrap);
-//             footer.dataset.gccSubaccountPagerState = stateKey;
-//         } else {
-//             select = footer.querySelector('.gcc-subaccount-user-grid-footer__select');
-
-//             if (select && select.value !== String(selectedPageSize)) {
-//                 select.value = String(selectedPageSize);
-//             }
-
-//             rightWrap = footer.querySelector('.gcc-subaccount-user-grid-page-list');
-
-//             if (rightWrap) {
-//                 renderPages(state, rightWrap);
-//             }
-//         }
-//     }
-
-//     function sync() {
-//         var gridWrap;
-//         var scope;
-//         var header;
-
-//         if (!isSubaccountUserPage()) {
-//             return;
-//         }
-
-//         syncMessagesVisibility();
-
-//         gridWrap = findGridWrap();
-
-//         if (!gridWrap) {
-//             return;
-//         }
-
-//         scope = getGridScope(gridWrap);
-//         header = findGridHeader(scope, gridWrap);
-
-//         if (!scope || !header) {
-//             return;
-//         }
-
-//         ensureTopBar(header, scope);
-//         ensurePagerFooter(scope, gridWrap);
-//     }
-
-//     function scheduleSync() {
-//         clearTimeout(syncTimer);
-//         syncTimer = setTimeout(sync, 50);
-//     }
-
-//     function startObserver() {
-//         if (observer || !document.body) {
-//             return;
-//         }
-
-//         observer = new MutationObserver(scheduleSync);
-//         observer.observe(document.body, {
-//             childList: true,
-//             subtree: true,
-//             characterData: true
-//         });
-
-//         window.addEventListener('resize', scheduleSync);
-//         window.addEventListener('load', scheduleSync);
-//     }
-
-//     if (!isSubaccountUserPage()) {
-//         return;
-//     }
-
-//     loadPagingComponent(scheduleSync);
-//     scheduleSync();
-//     setTimeout(scheduleSync, 300);
-//     setTimeout(scheduleSync, 900);
-//     startObserver();
-// });
+    function getMessagesNode() {
+        return Array.prototype.slice.call(document.querySelectorAll(
+            'main.page-content > #messages, main.page-content > .messages, #messages, .messages'
+        ));
+    }
+
+    function syncMessagesVisibility() {
+        var messages = getMessagesNode();
+        var hasVisibleMessages = false;
+
+        if (!messages.length) {
+            return;
+        }
+
+        messages.forEach(function (messageNode) {
+            if (!messageNode) {
+                return;
+            }
+
+            if (!normalizeText(messageNode.textContent)) {
+                messageNode.style.display = 'none';
+                return;
+            }
+
+            messageNode.style.display = '';
+            hasVisibleMessages = true;
+        });
+
+        return hasVisibleMessages;
+    }
+
+    function loadPagingComponent(scheduleSync) {
+        if (!window.require) {
+            return;
+        }
+
+        try {
+            window.require(['uiRegistry'], function (registry) {
+                registry.get(function (item) {
+                    return item &&
+                        item.index === 'listing_paging' &&
+                        item.name &&
+                        item.name.indexOf('vendors_subaccount_user_grid') !== -1;
+                }, function (component) {
+                    pagingComponent = component;
+                    scheduleSync();
+                });
+            });
+        } catch (error) {
+            return;
+        }
+    }
+
+    function findGridWrap() {
+        return Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap')).find(function (candidate) {
+            return candidate &&
+                candidate.getAttribute('data-role') !== 'sticky-el-root' &&
+                candidate.querySelector('table.data-grid');
+        }) || null;
+    }
+
+    function getGridScope(gridWrap) {
+        var current = gridWrap ? gridWrap.parentElement : null;
+
+        while (current && current !== document.body) {
+            if (
+                current.querySelector('.admin__data-grid-header') &&
+                current.querySelector('.admin__data-grid-wrap table.data-grid')
+            ) {
+                return current;
+            }
+
+            current = current.parentElement;
+        }
+
+        return gridWrap ? gridWrap.parentElement : null;
+    }
+
+    function findGridHeader(scope, gridWrap) {
+        var sibling = gridWrap ? gridWrap.previousElementSibling : null;
+
+        while (sibling) {
+            if (sibling.classList && sibling.classList.contains('admin__data-grid-header')) {
+                return sibling;
+            }
+
+            sibling = sibling.previousElementSibling;
+        }
+
+        return scope ? scope.querySelector('.admin__data-grid-header') : null;
+    }
+
+    function findPagerWrap(scope) {
+        return scope ? scope.querySelector('.admin__data-grid-pager-wrap') : null;
+    }
+
+   
+    function getGridState(pagerWrap) {
+        var pager = pagerWrap ? pagerWrap.querySelector('.admin__data-grid-pager') : null;
+        var currentInput = pager ? pager.querySelector('.admin__control-text') : null;
+        var pagesLabel = pager ? pager.querySelector('.admin__control-support-text') : null;
+        var previousButton = pager ? pager.querySelector('.action-previous') : null;
+        var nextButton = pager ? pager.querySelector('.action-next') : null;
+        var current = pagingComponent ? parseInt(pagingComponent.current, 10) : NaN;
+        var pages = pagingComponent ? parseInt(pagingComponent.pages, 10) : NaN;
+        var pageMatches = pagesLabel && pagesLabel.textContent ? pagesLabel.textContent.match(/\d+/g) : null;
+        var fallbackPages = pageMatches && pageMatches.length ? parseInt(pageMatches[pageMatches.length - 1], 10) : 1;
+        var fallbackCurrent = currentInput ? parseInt(currentInput.value, 10) || 1 : 1;
+
+        return {
+            current: !isNaN(current) ? current : fallbackCurrent,
+            pages: !isNaN(pages) ? pages : fallbackPages,
+            setPage: function (page) {
+                if (pagingComponent && typeof pagingComponent.setPage === 'function') {
+                    pagingComponent.setPage(page);
+                    return;
+                }
+
+                if (currentInput) {
+                    currentInput.value = page;
+                    currentInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    currentInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    currentInput.dispatchEvent(new Event('blur', { bubbles: true }));
+                }
+            },
+            prev: function () {
+                if (pagingComponent && typeof pagingComponent.prev === 'function') {
+                    pagingComponent.prev();
+                    return;
+                }
+
+                if (previousButton) {
+                    previousButton.click();
+                }
+            },
+            next: function () {
+                if (pagingComponent && typeof pagingComponent.next === 'function') {
+                    pagingComponent.next();
+                    return;
+                }
+
+                if (nextButton) {
+                    nextButton.click();
+                }
+            }
+        };
+    }
+
+    function getPages(current, total) {
+        var pages = [];
+        var start;
+        var end;
+        var page;
+
+        if (total <= 4) {
+            for (page = 1; page <= total; page++) {
+                pages.push(page);
+            }
+
+            return pages;
+        }
+
+        pages.push(1);
+
+        if (current > 3) {
+            pages.push('ellipsis-start');
+        }
+
+        start = Math.max(2, current - 1);
+        end = Math.min(total - 1, current + 1);
+
+        if (current <= 2) {
+            end = Math.min(total - 1, 2);
+        }
+
+        if (current >= total - 1) {
+            start = Math.max(2, total - 1);
+        }
+
+        for (page = start; page <= end; page++) {
+            pages.push(page);
+        }
+
+        if (current < total - 2) {
+            pages.push('ellipsis-end');
+        }
+
+        pages.push(total);
+
+        return pages;
+    }
+
+    function renderPages(state, container) {
+        var current = Number(state.current || 1);
+        var total = Number(state.pages || 1);
+
+        container.innerHTML = '';
+
+        function createButton(label, className, handler, disabled) {
+            var button = document.createElement('button');
+
+            button.type = 'button';
+            button.className = className;
+            button.textContent = label;
+
+            if (disabled) {
+                button.disabled = true;
+            } else if (typeof handler === 'function') {
+                button.addEventListener('click', handler);
+            }
+
+            container.appendChild(button);
+        }
+
+        createButton('\u2039', 'gcc-subaccount-user-grid-page-nav gcc-subaccount-user-grid-page-nav--prev', function () {
+            state.prev();
+        }, current <= 1);
+
+        getPages(current, total).forEach(function (item) {
+            var button;
+            var ellipsis;
+
+            if (typeof item === 'number') {
+                button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'gcc-subaccount-user-grid-page-btn' + (item === current ? ' is-active' : '');
+                button.textContent = item;
+
+                if (item === current) {
+                    button.disabled = true;
+                } else {
+                    button.addEventListener('click', function () {
+                        state.setPage(item);
+                    });
+                }
+
+                container.appendChild(button);
+                return;
+            }
+
+            ellipsis = document.createElement('span');
+            ellipsis.className = 'gcc-subaccount-user-grid-page-ellipsis';
+            ellipsis.textContent = '...';
+            container.appendChild(ellipsis);
+        });
+
+        createButton('\u203A', 'gcc-subaccount-user-grid-page-nav gcc-subaccount-user-grid-page-nav--next', function () {
+            state.next();
+        }, current >= total);
+    }
+
+    //added by vru 
+function ensureTopBar(header, scope) {
+    // 1. Validation check sabse upar hona chahiye crash se bachne ke liye
+    // if (!header || !scope) {
+    //     return;
+    // }
+
+    // var topBar = scope.querySelector('.gcc-subaccount-user-grid-toolbar');
+    // var resultsWrap;
+    // var resultTextSpan;
+
+    // if (!topBar) {
+    //     topBar = document.createElement('div');
+    //     topBar.className = 'gcc-subaccount-user-grid-toolbar';
+
+    //     resultsWrap = document.createElement('div');
+    //     resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
+
+    //     topBar.appendChild(resultsWrap);
+    //     header.parentNode.insertBefore(topBar, header);
+    // } else {
+    //     resultsWrap = topBar.querySelector('.gcc-subaccount-user-grid-toolbar__results');
+    // }
+
+    // if (!resultsWrap) {
+    //     resultsWrap = document.createElement('div');
+    //     resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
+    //     topBar.appendChild(resultsWrap);
+    // }
+
+    // // 2. SAFE TEXT UPDATE: Pure element ko overwrite karne ke badle sirf text span ko target karein
+    // resultTextSpan = resultsWrap.querySelector('.results-count-text');
+    // if (!resultTextSpan) {
+    //     resultTextSpan = document.createElement('span');
+    //     resultTextSpan.className = 'results-count-text';
+    //     resultsWrap.appendChild(resultTextSpan);
+    // }
+
+    // var resultCount = parseInt(getResultsCount(header, scope), 10);
+    // if (isNaN(resultCount) || resultCount < 0) {
+    //     resultCount = 0;
+    // }
+
+    // // Ab sirf span ke andar ka text change hoga, filter options safe rahenge
+    // resultTextSpan.textContent = resultCount + ' Results';
+
+    // /* KEEP ORIGINAL HEADER */
+    // header.style.display = '';
+
+    // /* ADD CUSTOM CLASS FOR STYLING */
+    // header.classList.add('gcc-subaccount-user-grid-header-shell');
+
+    // /* SEARCH INPUT */
+    // var searchInput = header.querySelector('.data-grid-search-control');
+    // if (searchInput) {
+    //     searchInput.setAttribute('placeholder', 'Search User');
+    //     searchInput.setAttribute('aria-label', 'Search User');
+    // }
+
+    // /* FILTER BUTTON */
+    // var filterButton = header.querySelector('.data-grid-filters-action-wrap .action-default');
+    // if (filterButton) {
+    //     // textContent badalne se agar filter icon ya arrow gayab ho raha tha, toh use bachaega
+    //     if (filterButton.textContent.trim() !== 'Filters') {
+    //         filterButton.textContent = 'Filters';
+    //     }
+    // }
+}
+    function ensurePagerFooter(scope, gridWrap) {
+        var footer = scope.querySelector('.gcc-subaccount-user-grid-footer');
+        var nativePager = findPagerWrap(scope);
+        var state;
+        var stateKey;
+        var leftWrap;
+        var rightWrap;
+        var label;
+        var select;
+        var options = [];
+        var optionMap = {};
+        var sizeComponent = pagingComponent && pagingComponent.sizes ? pagingComponent.sizes : null;
+        var selectedPageSize = sizeComponent && !isNaN(parseInt(sizeComponent.value, 10))
+            ? parseInt(sizeComponent.value, 10)
+            : pagingComponent && !isNaN(parseInt(pagingComponent.pageSize, 10))
+                ? parseInt(pagingComponent.pageSize, 10)
+                : 10;
+        var option;
+        var i;
+        var item;
+        var pageSizeValue;
+
+        if (!gridWrap) {
+            return;
+        }
+
+        if (nativePager) {
+            //nativePager.style.display = 'none';
+            nativePager.classList.add(
+    'gcc-hidden-native-pager'
+);
+        }
+
+        state = getGridState(null);
+        if (
+    state.pages <= 1 &&
+    pagingComponent &&
+    !scope.dataset.vendorPagerRetry
+) {
+
+    scope.dataset.vendorPagerRetry = 'true';
+
+    setTimeout(function () {
+
+        syncVendorProductGridFooter();
+
+        delete scope.dataset.vendorPagerRetry;
+
+    }, 500);
+}
+        if (sizeComponent && sizeComponent.optionsArray && sizeComponent.optionsArray.length) {
+            for (i = 0; i < sizeComponent.optionsArray.length; i++) {
+                item = sizeComponent.optionsArray[i];
+                pageSizeValue = parseInt(item.value, 10);
+
+                if (!isNaN(pageSizeValue) && !optionMap[pageSizeValue]) {
+                    optionMap[pageSizeValue] = true;
+                    options.push({
+                        value: pageSizeValue,
+                        label: item.label || item.value || pageSizeValue
+                    });
+                }
+            }
+        }
+
+        if (!options.length) {
+            [10, 20, 50, 100].forEach(function (value) {
+                options.push({
+                    value: value,
+                    label: value
+                });
+            });
+        }
+
+        if (!optionMap[selectedPageSize]) {
+            options.unshift({
+                value: selectedPageSize,
+                label: selectedPageSize
+            });
+        }
+
+        stateKey = [
+            state.current,
+            state.pages,
+            selectedPageSize,
+            options.map(function (entry) {
+                return entry.value;
+            }).join(',')
+        ].join(':');
+
+        if (!footer) {
+            footer = document.createElement('div');
+            footer.className = 'admin__data-grid-pager-wrap gcc-subaccount-user-grid-pager-wrap gcc-subaccount-user-grid-footer';
+            gridWrap.insertAdjacentElement('afterend', footer);
+        } else if (footer.parentNode !== scope || gridWrap.nextElementSibling !== footer) {
+            gridWrap.insertAdjacentElement('afterend', footer);
+        }
+
+        if (footer.dataset.gccSubaccountPagerState !== stateKey || !footer.childElementCount) {
+            footer.innerHTML = '';
+
+            leftWrap = document.createElement('div');
+            leftWrap.className = 'gcc-subaccount-user-grid-footer__per-page';
+
+            label = document.createElement('span');
+            label.className = 'gcc-subaccount-user-grid-footer__label';
+            label.textContent = 'Show';
+
+            select = document.createElement('select');
+            select.className = 'gcc-subaccount-user-grid-footer__select';
+            select.setAttribute('aria-label', 'Rows per page');
+
+            options.forEach(function (entry) {
+                option = document.createElement('option');
+                option.value = entry.value;
+                option.textContent = entry.label;
+                if (entry.value === selectedPageSize) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            select.value = String(selectedPageSize);
+            select.addEventListener('change', function () {
+                var value = parseInt(select.value, 10);
+
+                if (isNaN(value)) {
+                    return;
+                }
+
+                if (pagingComponent && pagingComponent.sizes && typeof pagingComponent.sizes.setSize === 'function') {
+                    pagingComponent.sizes.setSize(value);
+                } else if (pagingComponent) {
+                    pagingComponent.pageSize = value;
+
+                    if (typeof pagingComponent.onPageSizeChange === 'function') {
+                        pagingComponent.onPageSizeChange();
+                    }
+                }
+
+                scheduleSync();
+            });
+
+            leftWrap.appendChild(label);
+            leftWrap.appendChild(select);
+
+            rightWrap = document.createElement('div');
+            rightWrap.className = 'admin__data-grid-pager gcc-subaccount-user-grid-footer__pages gcc-subaccount-user-grid-page-list';
+
+            footer.appendChild(leftWrap);
+            footer.appendChild(rightWrap);
+
+            renderPages(state, rightWrap);
+            footer.dataset.gccSubaccountPagerState = stateKey;
+        } else {
+            select = footer.querySelector('.gcc-subaccount-user-grid-footer__select');
+
+            if (select && select.value !== String(selectedPageSize)) {
+                select.value = String(selectedPageSize);
+            }
+
+            rightWrap = footer.querySelector('.gcc-subaccount-user-grid-page-list');
+
+            if (rightWrap) {
+                renderPages(state, rightWrap);
+            }
+        }
+
+    }
+
+    function sync() {
+        var gridWrap;
+        var scope;
+        var header;
+
+        if (!isSubaccountUserPage()) {
+            return;
+        }
+
+        syncMessagesVisibility();
+
+        gridWrap = findGridWrap();
+
+        if (!gridWrap) {
+            return;
+        }
+
+        scope = getGridScope(gridWrap);
+        header = findGridHeader(scope, gridWrap);
+
+        if (!scope || !header) {
+            return;
+        }
+
+        ensureTopBar(header, scope);
+        ensurePagerFooter(scope, gridWrap);
+    }
+
+    function scheduleSync() {
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(sync, 50);
+    }
+
+    function startObserver() {
+        if (observer || !document.body) {
+            return;
+        }
+
+        observer = new MutationObserver(scheduleSync);
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
+
+        window.addEventListener('resize', scheduleSync);
+        window.addEventListener('load', scheduleSync);
+    }
+
+    if (!isSubaccountUserPage()) {
+        return;
+    }
+
+    loadPagingComponent(scheduleSync);
+    scheduleSync();
+    setTimeout(scheduleSync, 300);
+    setTimeout(scheduleSync, 900);
+    startObserver();
+});
 </script>
