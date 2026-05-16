@@ -10,6 +10,11 @@ define([
 
     return Component.extend({
         isLoading: totals.isLoading,
+        summaryReference: ko.pureComputed(function () {
+            var quoteId = quote.getQuoteId ? quote.getQuoteId() : '';
+
+            return quoteId ? ('#' + quoteId) : '';
+        }),
 
         initialize: function () {
             var selectedMethod = quote.paymentMethod();

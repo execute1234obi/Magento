@@ -1,7 +1,14 @@
 <div class="summary-stack">
     <div class="order-summary-card">
-        <div class="summary-title">
-            <!-- ko i18n: 'Order Summary' --><!-- /ko -->
+        <div class="order-summary-card__header">
+            <div class="summary-title">
+                <!-- ko i18n: 'Order Summary' --><!-- /ko -->
+            </div>
+
+            <div class="summary-reference"
+                 data-bind="visible: window.checkoutConfig && window.checkoutConfig.quoteData && window.checkoutConfig.quoteData.entity_id,
+                            text: (window.checkoutConfig && window.checkoutConfig.quoteData && window.checkoutConfig.quoteData.entity_id) ? ('#' + window.checkoutConfig.quoteData.entity_id) : ''">
+            </div>
         </div>
 
         <div class="summary-totals-wrap">
