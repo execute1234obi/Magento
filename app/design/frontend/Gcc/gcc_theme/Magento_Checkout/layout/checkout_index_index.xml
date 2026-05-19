@@ -15,16 +15,36 @@
                 <argument name="jsLayout" xsi:type="array">
                     <item name="components" xsi:type="array">
                         <item name="checkout" xsi:type="array">
+                            <item name="component" xsi:type="string">uiComponent</item>
                             <item name="config" xsi:type="array">
                                 <item name="template" xsi:type="string">Magento_Checkout/onepage-mobile</item>
                             </item>
                             <item name="children" xsi:type="array">
+                                <item name="errors" xsi:type="array">
+                                    <item name="component" xsi:type="string">Magento_Ui/js/view/messages</item>
+                                    <item name="displayArea" xsi:type="string">messages</item>
+                                </item>
+                                <item name="authentication" xsi:type="array">
+                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/authentication</item>
+                                    <item name="displayArea" xsi:type="string">authentication</item>
+                                    <item name="children" xsi:type="array">
+                                        <item name="errors" xsi:type="array">
+                                            <item name="sortOrder" xsi:type="string">0</item>
+                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/authentication-messages</item>
+                                            <item name="displayArea" xsi:type="string">messages</item>
+                                        </item>
+                                    </item>
+                                </item>
                                 <item name="sidebar" xsi:type="array">
+                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/sidebar</item>
+                                    <item name="displayArea" xsi:type="string">sidebar</item>
                                     <item name="config" xsi:type="array">
                                         <item name="template" xsi:type="string">Magento_Checkout/sidebar-mobile</item>
                                     </item>
                                     <item name="children" xsi:type="array">
                                         <item name="summary" xsi:type="array">
+                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary</item>
+                                            <item name="displayArea" xsi:type="string">summary</item>
                                             <item name="config" xsi:type="array">
                                                 <item name="template" xsi:type="string">Magento_Checkout/summary-mobile</item>
                                             </item>
@@ -36,35 +56,29 @@
                                                     <item name="config" xsi:type="array">
                                                         <item name="template" xsi:type="string">Magento_Checkout/summary/totals</item>
                                                     </item>
-                                                    <item name="children" xsi:type="array">
-                                                        <!-- sort order for this totals is configured on admin panel-->
-                                                        <!-- Stores->Configuration->SALES->Sales->General->Checkout Totals Sort Order -->
-                                                        <item name="subtotal" xsi:type="array">
-                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/subtotal</item>
-                                                            <item name="config" xsi:type="array">
-                                                                <item name="title" xsi:type="string" translate="true">Cart Subtotal</item>
+                                                        <item name="children" xsi:type="array">
+                                                            <!-- sort order for this totals is configured on admin panel-->
+                                                            <!-- Stores->Configuration->SALES->Sales->General->Checkout Totals Sort Order -->
+                                                            <item name="subtotal" xsi:type="array">
+                                                                <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/subtotal</item>
+                                                                <item name="config" xsi:type="array">
+                                                                    <item name="title" xsi:type="string" translate="true">Cart Subtotal</item>
+                                                                </item>
                                                             </item>
-                                                        </item>
-                                                        <item name="shipping" xsi:type="array">
-                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/shipping</item>
-                                                            <item name="config" xsi:type="array">
-                                                                <item name="title" xsi:type="string" translate="true">Shipping</item>
-                                                                <item name="notCalculatedMessage" xsi:type="string" translate="true">Not yet calculated</item>
+                                                            <item name="shipping" xsi:type="array">
+                                                                <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/shipping</item>
+                                                                <item name="config" xsi:type="array">
+                                                                    <item name="title" xsi:type="string" translate="true">Shipping</item>
+                                                                    <item name="notCalculatedMessage" xsi:type="string" translate="true">Not yet calculated</item>
+                                                                </item>
                                                             </item>
-                                                        </item>
-                                                        <item name="grand-total" xsi:type="array">
-                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/grand-total</item>
-                                                            <item name="config" xsi:type="array">
-                                                                <item name="title" xsi:type="string" translate="true">Order Total</item>
-                                                            </item>
+                                                            <item name="grand-total" xsi:type="array">
+                                                                <item name="component" xsi:type="string">Magento_Checkout/js/view/summary/grand-total</item>
+                                                                <item name="config" xsi:type="array">
+                                                                    <item name="title" xsi:type="string" translate="true">Order Total</item>
+                                                                </item>
                                                         </item>
                                                     </item>
-                                                </item>
-
-                                                <item name="discount" xsi:type="array">
-                                                    <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/discount</item>
-                                                    <item name="sortOrder" xsi:type="string">3</item>
-                                                    <item name="displayArea" xsi:type="string">discount</item>
                                                 </item>
 
                                                 <item name="credit" xsi:type="array">
@@ -105,17 +119,115 @@
                                     </item>
                                 </item>
                                 <item name="steps" xsi:type="array">
+                                    <item name="component" xsi:type="string">uiComponent</item>
+                                    <item name="displayArea" xsi:type="string">steps</item>
                                     <item name="children" xsi:type="array">
                                         <item name="billing-step" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="sortOrder" xsi:type="string">2</item>
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
+                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/payment</item>
                                                     <item name="config" xsi:type="array">
+                                                        <item name="title" xsi:type="string" translate="true">Payment</item>
+                                                        <item name="sortOrder" xsi:type="string">20</item>
                                                         <item name="template" xsi:type="string">Magento_Checkout/payment-mobile</item>
+                                                    </item>
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="renders" xsi:type="array">
+                                                            <item name="component" xsi:type="string">uiComponent</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <!-- merge payment method renders here -->
+                                                            </item>
+                                                        </item>
+                                                        <item name="additional-payment-validators" xsi:type="array">
+                                                            <item name="component" xsi:type="string">uiComponent</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <!-- merge payment validators here -->
+                                                                <item name="email-validator" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/payment/email-validator</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="customer-email" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/form/element/email</item>
+                                                            <item name="displayArea" xsi:type="string">customer-email</item>
+                                                            <item name="tooltip" xsi:type="array">
+                                                                <item name="description" xsi:type="string" translate="true">We'll send your order confirmation here.</item>
+                                                            </item>
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="before-login-form" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">uiComponent</item>
+                                                                    <item name="displayArea" xsi:type="string">before-login-form</item>
+                                                                    <item name="children" xsi:type="array">
+                                                                        <!-- before login form fields -->
+                                                                    </item>
+                                                                </item>
+                                                                <item name="additional-login-form-fields" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">uiComponent</item>
+                                                                    <item name="displayArea" xsi:type="string">additional-login-form-fields</item>
+                                                                    <item name="children" xsi:type="array">
+                                                                        <!-- additional login form fields -->
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="place-order-captcha" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/checkout/placeOrderCaptcha</item>
+                                                            <item name="displayArea" xsi:type="string">place-order-captcha</item>
+                                                            <item name="formId" xsi:type="string">payment_processing_request</item>
+                                                            <item name="configSource" xsi:type="string">checkoutConfig</item>
+                                                        </item>
+                                                        <item name="beforeMethods" xsi:type="array">
+                                                            <item name="component" xsi:type="string">uiComponent</item>
+                                                            <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <!-- merge additional data before payment methods here -->
+                                                            </item>
+                                                            <item name="validation" xsi:type="array">
+                                                                <item name="validate-select" xsi:type="string">true</item>
+                                                            </item>
+                                                            <item name="filterBy" xsi:type="array">
+                                                                <item name="target" xsi:type="string">${ $.provider }:${ $.parentScope }.country_id</item>
+                                                                <item name="field" xsi:type="string">country_id</item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="payments-list" xsi:type="array">
+                                                            <item name="component" xsi:type="string">Magento_Checkout/js/view/payment/list</item>
+                                                            <item name="displayArea" xsi:type="string">payment-methods-list</item>
+                                                            <item name="config" xsi:type="array">
+                                                                <item name="deps" xsi:type="array">
+                                                                    <item name="0" xsi:type="string">checkout.steps.billing-step.payment.renders</item>
+                                                                    <item name="1" xsi:type="string">checkout.steps.billing-step.payment.additional-payment-validators</item>
+                                                                </item>
+                                                            </item>
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="before-place-order" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">uiComponent</item>
+                                                                    <item name="displayArea" xsi:type="string">before-place-order</item>
+                                                                    <item name="dataScope" xsi:type="string">before-place-order</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="template" xsi:type="string">Magento_Checkout/payment/before-place-order</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="afterMethods" xsi:type="array">
+                                                            <item name="component" xsi:type="string">uiComponent</item>
+                                                            <item name="displayArea" xsi:type="string">afterMethods</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <!-- merge additional data after payment methods here -->
+                                                            </item>
+                                                        </item>
                                                     </item>
                                                 </item>
                                             </item>
                                         </item>
                                     </item>
+                                </item>
+                                <item name="checkoutProvider" xsi:type="array">
+                                    <item name="component" xsi:type="string">uiComponent</item>
                                 </item>
                             </item>
                         </item>
