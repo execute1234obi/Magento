@@ -217,7 +217,7 @@ else
 
     <div id="userMenuProfile" class="hidden absolute mt-3 dropdown-start"
          role="menu"
-         style="border:1px solid #E2E8F0; z-index:999; top:100%; right:0; left:auto;">
+         style="border:1px solid #E2E8F0; z-index:9999; top:100%; right:0; left:auto;">
       <div class="profile-dropdown__header">
         <div class="profile-dropdown__avatar<?= empty($vendorLogoUrl) ? ' profile-dropdown__avatar--initials' : '' ?>">
           <?php if (!empty($vendorLogoUrl)): ?>
@@ -738,121 +738,178 @@ header .sign-in-btn {
     color: #3B82F6 !important; /* Optional hover color */
 }
 
+/* Ensure all header dropdowns always render above page content on every page */
+#vendorMenu,
+#customerMenu,
+#userMenuProfile,
+#languageMenu {
+    background: #ffffff !important;
+    z-index: 9999 !important;
+    isolation: isolate;
+}
+
+#vendorMenu,
+#customerMenu {
+    box-shadow: 0 8px 24px rgba(15,23,42,.15), 0 2px 6px rgba(15,23,42,.08) !important;
+}
+
 #userMenuProfile{
-    width:300px !important;
+    width:240px !important;
     max-width:calc(100vw - 12px) !important;
     padding:0 !important;
     border:1px solid #e5e7eb !important;
     border-radius:18px !important;
     background:#ffffff !important;
-    box-shadow:0 16px 32px rgba(15,23,42,.10) !important;
+    box-shadow:0 8px 24px rgba(15,23,42,.15), 0 2px 6px rgba(15,23,42,.08) !important;
     overflow:hidden;
+    position:absolute !important;
+    isolation:isolate;
 }
 
 #userMenuProfile .profile-dropdown__header{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:12px 14px 10px;
-    background:#ffffff;
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+    padding:16px !important;
+    background:#ffffff !important;
+    margin:0 !important;
+    border:none !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__avatar{
-    flex:0 0 auto;
-    width:auto;
-    height:auto;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:visible;
-    border-radius:0;
-    background:transparent;
-    border:none;
-    box-shadow:none;
-    color:#ef4444;
-    font-size:18px;
-    font-weight:800;
-    letter-spacing:.06em;
+    flex:0 0 auto !important;
+    width:auto !important;
+    height:auto !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:visible !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    color:#ef4444 !important;
+    font-size:18px !important;
+    font-weight:800 !important;
+    letter-spacing:.06em !important;
+    padding:0 !important;
+    margin:0 !important;
 }
 
 #userMenuProfile .profile-dropdown__avatar--initials{
-    background:transparent;
-    border:none;
-    color:#ef4444;
-    box-shadow:none;
+    background:transparent !important;
+    border:none !important;
+    color:#ef4444 !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__avatar img{
-    width:auto;
-    height:56px;
+    width:auto !important;
+    height:48px !important;
     max-height:none !important;
     max-width:none !important;
-    object-fit:contain;
-    display:block;
+    object-fit:contain !important;
+    display:block !important;
+    border:none !important;
+    border-radius:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__meta{
-    min-width:0;
+    min-width:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__name{
-    color:#374151;
-    font-size:15px;
-    font-weight:700;
-    line-height:1.2;
-    word-break:break-word;
+    color:#374151 !important;
+    font-size:15px !important;
+    font-weight:700 !important;
+    line-height:1.2 !important;
+    word-break:break-word !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__email{
-    margin-top:4px;
-    color:#6b7280;
-    font-size:11px;
-    font-weight:500;
-    line-height:1.35;
-    word-break:break-word;
+    margin-top:4px !important;
+    margin-bottom:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    color:#6b7280 !important;
+    font-size:11px !important;
+    font-weight:500 !important;
+    line-height:1.35 !important;
+    word-break:break-word !important;
+    padding:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__divider{
-    height:1px;
-    background:#e5e7eb;
+    height:1px !important;
+    min-height:1px !important;
+    background:#e5e7eb !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
 }
 
 #userMenuProfile .profile-dropdown__item:nth-of-type(2) + .profile-dropdown__divider{
-    height:3px;
-    background:#e5e7eb;
+    height:3px !important;
+    min-height:3px !important;
+    background:#e5e7eb !important;
 }
 
 #userMenuProfile .profile-dropdown__item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    min-height:50px;
-    padding:0 12px 0 14px;
-    color:#414651;
-    text-decoration:none;
-    transition:background-color .2s ease,color .2s ease;
+    display:flex !important;
+    align-items:center !important;
+    gap:12px !important;
+    min-height:50px !important;
+    padding:0 16px !important;
+    margin:0 !important;
+    color:#414651 !important;
+    text-decoration:none !important;
+    background:#ffffff !important;
+    border:none !important;
+    box-shadow:none !important;
+    transition:background-color .2s ease,color .2s ease !important;
+    font-family:inherit !important;
 }
 
 #userMenuProfile .profile-dropdown__item:hover{
-    background:#f9fafb;
+    background:#f9fafb !important;
+    color:#414651 !important;
 }
 
 #userMenuProfile .profile-dropdown__icon{
-    flex:0 0 18px;
-    width:18px;
-    height:18px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:0;
-    background:transparent;
-    border:none;
-    box-shadow:none;
-    color:#414651;
+    flex:0 0 18px !important;
+    width:18px !important;
+    height:18px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    color:#414651 !important;
+    padding:0 !important;
+    margin:0 !important;
 }
 
 #userMenuProfile .profile-dropdown__icon svg{
-    display:block;
+    display:block !important;
+    width:18px !important;
+    height:18px !important;
+    flex-shrink:0 !important;
 }
 
 #userMenuProfile .profile-dropdown__icon path{
@@ -860,18 +917,30 @@ header .sign-in-btn {
 }
 
 #userMenuProfile .profile-dropdown__label{
-    color:inherit;
-    font-size:14px;
-    font-weight:600;
-    line-height:1.25;
+    color:inherit !important;
+    font-size:14px !important;
+    font-weight:600 !important;
+    line-height:1.25 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__item--logout{
-    color:#414651;
+    color:#414651 !important;
 }
 
 #userMenuProfile .profile-dropdown__item--logout:hover{
-    background:#f9fafb;
+    background:#f9fafb !important;
+    color:#414651 !important;
+}
+
+#userMenuProfile .profile-dropdown__item--logout .profile-dropdown__icon{
+    background:transparent !important;
+    border:none !important;
+    color:#414651 !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__item--logout .profile-dropdown__icon{
@@ -1321,7 +1390,7 @@ header .sign-in-btn {
 
     /* Profile dropdown fits tablet screen */
     #userMenuProfile {
-        width: 320px !important;
+        width: 240px !important;
         max-width: calc(100vw - 24px) !important;
     }
 }
@@ -1345,7 +1414,7 @@ header .sign-in-btn {
     }
 
     #userMenuProfile {
-        width: 392px !important;
+        width: 240px !important;
         max-width: calc(100vw - 24px) !important;
     }
 
