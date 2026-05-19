@@ -22,7 +22,7 @@
           <referenceBlock name="mst_category_search" remove="true" />
         <referenceBlock name="mirasvit.search.category.search" remove="true" />
         <referenceContainer name="mst_category_search" remove="true" />
-
+<referenceContainer name="sidebar.additional" remove="true"/>
         <!-- REMOVE LAYERED NAVIGATION (FILTERS) -->
         <referenceBlock name="catalog.leftnav" remove="true" />
         <referenceBlock name="catalog.navigation" remove="true" />
