@@ -84,6 +84,35 @@ try {
 </div> -->
 <?php endif; ?>
 <style>
+    /*added by vru  */
+    /* Hide last 3 inventory actions */
+/* 1. Aakhri ke 3 elements ko hide karo */
+.action-menu-items > ul.action-menu > li:nth-child(3),
+.action-menu-items > ul.action-menu > li:nth-child(4),
+.action-menu-items > ul.action-menu > li:nth-child(5) {
+    display: none !important;
+}
+
+/* 2. Main menu ka overflow set karo taaki sub-menu crop na ho */
+.action-menu-items,
+.action-menu-items > ul.action-menu {
+    overflow: visible !important;
+}
+
+/* 3. By default sub-menu (Enable/Disable) ko HIDE rakho */
+.action-menu-items ul.action-submenu {
+    display: none !important;
+}
+
+/* 4. Jab "Change status" (2nd li) par click ho (ya active class aaye), tabhi show karo */
+.action-menu-items > ul.action-menu > li:nth-child(2)._active ul.action-submenu,
+.action-menu-items > ul.action-menu > li:nth-child(2):focus-within ul.action-submenu,
+.action-menu-items > ul.action-menu > li:nth-child(2):hover ul.action-submenu {
+    display: block !important;
+    position: absolute; /* Taaki layout ke bahar proper khule */
+    z-index: 999;
+}
+    /*end*/
 body.subaccount-user-index main.page-content,
 body[class*="subaccount-user-index"] main.page-content {
     background: #ffffff;

@@ -1309,3 +1309,31 @@ body.catalogsearch-result-index .toolbar.toolbar-products.pager--search[data-sea
     font-size: 14px !important;
   }
 }
+/*message view page*/
+.account.customer-message-view.page-layout-2columns-left .page-main {
+    padding-top: 150px;
+}
+/*for wishlist page*/
+.account.wishlist-index-index.page-layout-2columns-left .page-main{
+    padding-top: 150px !important;
+}
+/*for downloaded product page*/
+.account.downloadable-customer-products.page-layout-2columns-left .page-main{
+    padding-top: 150px !important;
+}
+/*for address book page*/
+.account.customer-address-index.page-layout-2columns-left .page-main{
+    padding-top: 150px !important;
+}
+/*customer information*/
+.account.customer-account-edit.page-layout-2columns-left .page-main {
+    padding-top: 150px;
+}
+/*for order history page*/
+.account.sales-order-history.page-layout-2columns-left .page-main {
+    padding-top: 150px;
+}
+/*newsletter */
+.account.newsletter-manage-index.page-layout-2columns-left .page-main {
+    padding-top: 150px;
+}
