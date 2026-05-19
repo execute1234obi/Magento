@@ -1,7 +1,10 @@
 <!-- ko if: isDisplayed() -->
-<div class="space-y-2">
-    <!-- ko foreach: elems() -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-    <!-- /ko -->
-</div>
+<table class="data table table-totals">
+    <caption class="table-caption" data-bind="i18n: 'Order Summary'"></caption>
+    <tbody>
+        <!-- ko foreach: elems() -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+    </tbody>
+</table>
 <!-- /ko -->

@@ -1,0 +1,49 @@
+<!--
+/**
+ * Copyright Â© Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<!-- ko foreach: getRegion('authentication') -->
+<!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<!-- ko foreach: getRegion('progressBar') -->
+<!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<!-- ko foreach: getRegion('messages') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
+<div class="checkout-main-layout">
+    <div class="checkout-sidebar-col">
+        <!-- ko foreach: getRegion('sidebar') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+    </div>
+
+    <div class="checkout-main-layout__content">
+        <section class="checkout-items-card">
+            <div class="checkout-items-card__header">
+                <div class="checkout-items-card__title">
+                    <!-- ko i18n: 'Items' --><!-- /ko -->
+                </div>
+            </div>
+
+            <div class="checkout-items-card__body">
+                <!-- ko foreach: getRegion('items') -->
+                    <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+            </div>
+        </section>
+
+        <div class="opc-wrapper">
+            <ol class="opc" id="checkoutSteps">
+            <!-- ko foreach: getRegion('steps') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+            </ol>
+        </div>
+    </div>
+</div>

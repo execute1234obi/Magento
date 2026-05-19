@@ -4,26 +4,22 @@ define([
     'uiComponent',
     'ko',
     'Magento_Checkout/js/model/quote',
-    'Magento_Checkout/js/model/step-navigator',
     'Magento_Checkout/js/model/payment-service',
     'Magento_Checkout/js/model/payment/method-converter',
-    'Magento_Checkout/js/action/get-payment-information',
     'Magento_Checkout/js/model/checkout-data-resolver',
-    'Magento_Customer/js/customer-data',
-    'mage/translate'
+    'Magento_Checkout/js/checkout-data',
+    'Magento_Customer/js/customer-data'
 ], function (
     $,
     _,
     Component,
     ko,
     quote,
-    stepNavigator,
     paymentService,
     methodConverter,
-    getPaymentInformation,
     checkoutDataResolver,
-    customerData,
-    $t
+    checkoutData,
+    customerData
 ) {
     'use strict';
 
@@ -67,10 +63,14 @@ define([
     }
 
     function buildBillingAddressSummary() {
-        var source = quote.billingAddress() ||
+        var source = (quote.billingAddress ? quote.billingAddress() : null) ||
+            checkoutData.getBillingAddressFromData() ||
+            checkoutData.getNewCustomerBillingAddress() ||
+            checkoutData.getShippingAddressFromData() ||
+            checkoutData.getNewCustomerShippingAddress() ||
             (window.checkoutConfig && window.checkoutConfig.billingAddressFromData) ||
             (window.checkoutConfig && window.checkoutConfig.shippingAddressFromData) ||
-            quote.shippingAddress() ||
+            (quote.shippingAddress ? quote.shippingAddress() : null) ||
             {};
 
         source = source || {};
@@ -96,15 +96,15 @@ define([
     }
 
     /** Set payment methods to collection */
-    paymentService.setPaymentMethods(methodConverter(window.checkoutConfig.paymentMethods));
+    paymentService.setPaymentMethods(methodConverter((window.checkoutConfig && window.checkoutConfig.paymentMethods) || []));
 
     return Component.extend({
         defaults: {
             template: 'Magento_Checkout/payment',
             activeMethod: ''
         },
-        isVisible: ko.observable(quote.isVirtual()),
-        quoteIsVirtual: quote.isVirtual(),
+        isVisible: ko.observable(true),
+        quoteIsVirtual: quote.isVirtual ? quote.isVirtual() : false,
         isPaymentMethodsAvailable: ko.computed(function () {
             return paymentService.getAvailablePaymentMethods().length > 0;
         }),
@@ -114,39 +114,9 @@ define([
             this._super();
             this.billingAddress = ko.pureComputed(buildBillingAddressSummary);
             checkoutDataResolver.resolvePaymentMethod();
-            stepNavigator.registerStep(
-                'payment',
-                null,
-                $t('Review & Payments'),
-                this.isVisible,
-                _.bind(this.navigate, this),
-                this.sortOrder
-            );
+            checkoutDataResolver.resolveBillingAddress();
 
             return this;
-        },
-
-        /**
-         * Navigate method.
-         */
-        navigate: function () {
-            var self = this;
-
-            if (!self.hasShippingMethod()) {
-                this.isVisible(false);
-                stepNavigator.setHash('shipping');
-            } else {
-                getPaymentInformation().done(function () {
-                    self.isVisible(true);
-                });
-            }
-        },
-
-        /**
-         * @return {Boolean}
-         */
-        hasShippingMethod: function () {
-            return window.checkoutConfig.selectedShippingMethod !== null;
         },
 
         /**
