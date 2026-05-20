@@ -1,12 +1,13 @@
 <?php
 /** @var \Vendor\QuoteRequest\Block\View $block */
 $items = $block->getQuoteItems();
+$quoteItemCount = count($items);
 $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 ?>
 
 <div class="gcc-quote-page">
     <div class="gcc-container">
-        <form id="form-validate" action="<?= $block->getUrl('quoterequest/index/submit') ?>" method="post">
+        <form id="form-validate" action="<?= $block->getUrl('quoterequest/index/submit') ?>" method="post" novalidate="novalidate">
             <div class="quote-page">
 
                 <div class="quote-breadcrumb">
@@ -286,13 +287,22 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
                                   placeholder="<?= __('Hello! I have a question regarding your shoe collection. Could you provide more details about the available styles?') ?>"></textarea>
                     </div>
 
+                    <div class="quote-validation-toast is-hidden" id="quote-validation-toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="quote-validation-toast__icon" aria-hidden="true">!</div>
+                        <div class="quote-validation-toast__body">
+                            <p class="quote-validation-toast__title" id="quote-validation-title"></p>
+                            <span class="quote-validation-toast__message" id="quote-validation-message"></span>
+                        </div>
+                        <button type="button" class="quote-validation-toast__close" aria-label="<?= __('Close') ?>">&times;</button>
+                    </div>
+
                     <div class="quote-bottom-bar">
                         <div class="bottom-left"><strong><?= __('Quotation Request:') ?></strong></div>
                         <div class="bottom-actions">
                             <span class="product-count">
-                                <?= count($items) ?> <?= count($items) === 1 ? __('Product') : __('Products') ?>
+                                <?= $quoteItemCount ?> <?= $quoteItemCount === 1 ? __('Product') : __('Products') ?>
                             </span>
-                            <button class="quote-primary-btn" type="button" id="submit-quote">
+                            <button class="quote-primary-btn" type="submit" id="submit-quote">
                                 <?= __('Confirm Quotation Requests') ?>
                             </button>
                         </div>
@@ -440,52 +450,158 @@ function csdFilter(type) {
 </script>
 
 <script>
-require(['jquery', 'js/gcc-feedback'], function($, feedback){
-    $(document).ready(function(){
-        feedback.showPendingToast();
+(function () {
+    'use strict';
 
-        /* submit */
-        $(document).on('click','#submit-quote',function(e){
-            e.preventDefault();
-            var country = $('#country').val();
-            var note    = $('.quote-textarea').val().trim();
-            var selectedProducts = $('.product-item-checkbox:checked').length;
-            // console.log('Selected:', selectedProducts);
+    var quoteItemCount = <?= (int) $quoteItemCount ?>;
+    var validationTitle = <?= /* @noEscape */ json_encode((string) __('Quotation request')) ?>;
+    var emptySelectionMessage = <?= /* @noEscape */ json_encode((string) __('Please add your product and choose a country before continuing.')) ?>;
+    var missingCountryMessage = <?= /* @noEscape */ json_encode((string) __('Please choose a country before continuing.')) ?>;
+    var missingProductsMessage = <?= /* @noEscape */ json_encode((string) __('Please add your product before continuing.')) ?>;
+    var toastHideTimer = null;
 
-            if (!country) {
-                feedback.toast(<?= /* @noEscape */ json_encode((string) __('Please select a country.')) ?>, 'warning', <?= /* @noEscape */ json_encode((string) __('Country required')) ?>);
-                return;
-            }
-            if (!note) {
-                feedback.toast(<?= /* @noEscape */ json_encode((string) __('Please write a message.')) ?>, 'warning', <?= /* @noEscape */ json_encode((string) __('Message required')) ?>);
-                return;
-            }
-             // 🔥 NEW VALIDATION
-            if (selectedProducts === 0) {
-                feedback.toast(<?= /* @noEscape */ json_encode((string) __('Please select at least one product.')) ?>, 'warning', <?= /* @noEscape */ json_encode((string) __('Select products')) ?>);
-                return;
-            }
-            $('#form-validate').submit();
-        });
+    function getCountryValue() {
+        var countryField = document.getElementById('country');
 
-        /* select all */
-        // $(document).on('change','#select-all-products',function(){
-        //     $('.product-item-checkbox').prop('checked', $(this).is(':checked'));
-        // });
+        return countryField ? String(countryField.value || '').trim() : '';
+    }
 
-        /* qty */
-        $(document).on('click','.qty-btn.plus',function(){
-            var i = $(this).siblings('.qty-input');
-            i.val(parseInt(i.val()) + 1);
-        });
-        $(document).on('click','.qty-btn.minus',function(){
-            var i = $(this).siblings('.qty-input');
-            var v = parseInt(i.val());
-            if (v > 1) i.val(v - 1);
-        });
+    function getSelectedProductCount() {
+        return document.querySelectorAll('.product-item-checkbox:checked').length;
+    }
 
+    function getMissingFields() {
+        var missingFields = [];
+
+        if (!getCountryValue()) {
+            missingFields.push('country');
+        }
+
+        if (getSelectedProductCount() === 0) {
+            missingFields.push('products');
+        }
+
+        return missingFields;
+    }
+
+    function resolveMessage(missingFields) {
+        if (!missingFields.length) {
+            return '';
+        }
+
+        if (missingFields.length === 2) {
+            return emptySelectionMessage;
+        }
+
+        if (missingFields[0] === 'country') {
+            return missingCountryMessage;
+        }
+
+        return missingProductsMessage;
+    }
+
+    function hideToast() {
+        var toast = document.getElementById('quote-validation-toast');
+
+        if (!toast) {
+            return;
+        }
+
+        toast.classList.remove('is-visible');
+        toast.classList.add('is-hidden');
+    }
+
+    function showToast(message) {
+        var toast = document.getElementById('quote-validation-toast');
+        var title = document.getElementById('quote-validation-title');
+        var text = document.getElementById('quote-validation-message');
+
+        if (!toast || !message) {
+            return;
+        }
+
+        if (title) {
+            title.textContent = validationTitle;
+        }
+
+        if (text) {
+            text.textContent = message;
+        }
+
+        window.clearTimeout(toastHideTimer);
+        toast.classList.remove('is-hidden');
+        toast.classList.add('is-visible');
+
+        toastHideTimer = window.setTimeout(function () {
+            hideToast();
+        }, 5000);
+    }
+
+    function validateForm(event) {
+        var missingFields = getMissingFields();
+
+        if (!missingFields.length) {
+            return true;
+        }
+
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        showToast(resolveMessage(missingFields));
+        return false;
+    }
+
+    function showServerValidationNotice() {
+        var params = new URLSearchParams(window.location.search);
+        var validation = params.get('validation');
+        var message;
+
+        if (!validation) {
+            return;
+        }
+
+        if (validation === 'both') {
+            message = emptySelectionMessage;
+        } else if (validation === 'country') {
+            message = missingCountryMessage;
+        } else if (validation === 'products') {
+            message = missingProductsMessage;
+        }
+
+        if (message) {
+            showToast(message);
+        }
+
+        params.delete('validation');
+        window.history.replaceState({}, document.title, window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('form-validate');
+        var submitButton = document.getElementById('submit-quote');
+        var closeButton = document.querySelector('#quote-validation-toast .quote-validation-toast__close');
+
+        if (closeButton) {
+            closeButton.addEventListener('click', hideToast);
+        }
+
+        if (quoteItemCount === 0) {
+            showToast(emptySelectionMessage);
+        }
+
+        showServerValidationNotice();
+
+        if (submitButton) {
+            submitButton.addEventListener('click', validateForm);
+        }
+
+        if (form) {
+            form.addEventListener('submit', validateForm);
+        }
     });
-});
+})();
 </script>
 <script>
 require(['jquery', 'Magento_Ui/js/modal/confirm'], function ($, confirmation) {
@@ -536,6 +652,39 @@ require(['jquery'], function($){
 
     var moreLabel = <?= /* @noEscape */ json_encode((string) __('More')); ?>;
     var lessLabel = <?= /* @noEscape */ json_encode((string) __('Show less')); ?>;
+
+    function getQtyInput($button) {
+        return $button.closest('.qty-stepper').find('.qty-input').first();
+    }
+
+    function adjustQty($button, delta) {
+        var $input = getQtyInput($button);
+        var currentValue = parseInt($input.val(), 10);
+
+        if (isNaN(currentValue) || currentValue < 1) {
+            currentValue = 1;
+        }
+
+        currentValue += delta;
+
+        if (currentValue < 1) {
+            currentValue = 1;
+        }
+
+        $input.val(currentValue).trigger('change');
+    }
+
+    $(document).off('click.gccQuoteQtyPlus', '.qty-btn.plus').on('click.gccQuoteQtyPlus', '.qty-btn.plus', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        adjustQty($(this), 1);
+    });
+
+    $(document).off('click.gccQuoteQtyMinus', '.qty-btn.minus').on('click.gccQuoteQtyMinus', '.qty-btn.minus', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        adjustQty($(this), -1);
+    });
 
     $(document).on('click', '.desc-toggle', function(e){
         e.preventDefault();
@@ -715,6 +864,87 @@ body.quoterequest-view-index .column.main,
 }
 .quote-primary-btn:hover { filter:brightness(1.08); }
 
+.quote-validation-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 100002;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: min(92vw, 420px);
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(26,55,100,.14);
+    border-left: 5px solid #1A3764;
+    background: linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+    box-shadow: 0 24px 60px rgba(15,23,42,.22);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color: #111827;
+}
+.quote-validation-toast.is-hidden {
+    display: none;
+}
+.quote-validation-toast.is-visible {
+    animation: gccToastIn .2s ease-out;
+}
+.quote-validation-toast__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg,#1A3764,#0f2f5f);
+    box-shadow: 0 8px 16px rgba(15,47,95,.18);
+}
+.quote-validation-toast__body {
+    min-width: 0;
+    flex: 1;
+}
+.quote-validation-toast__title {
+    margin: 0 0 3px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.quote-validation-toast__message {
+    display: block;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #475569;
+    word-break: break-word;
+}
+.quote-validation-toast__close {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0 4px;
+    flex: 0 0 auto;
+}
+.quote-validation-toast__close:hover {
+    color: #1A3764;
+}
+@keyframes gccToastIn {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width:575px) {
+    .quote-validation-toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: auto;
+        padding: 12px 14px;
+        border-radius: 14px;
+    }
+}
 /* Theme the core Magento confirm modal */
 .modal-popup.gcc-confirm-modal .modal-inner-wrap {
     border-radius:20px;

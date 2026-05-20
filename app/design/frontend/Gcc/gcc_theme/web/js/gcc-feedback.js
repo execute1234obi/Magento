@@ -35,6 +35,7 @@ define(['jquery'], function ($) {
             '.gcc-feedback-modal__title{margin:0 0 8px;font-size:20px;font-weight:800;line-height:1.2;color:#0f172a;}',
             '.gcc-feedback-modal__message{margin:0 0 18px;font-size:14px;line-height:1.55;color:#475569;}',
             '.gcc-feedback-modal__actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}',
+            '.gcc-feedback-modal__actions.is-single{justify-content:center;}',
             '.gcc-feedback-modal__button{border:none;border-radius:12px;min-height:44px;padding:0 18px;font-size:14px;font-weight:700;cursor:pointer;transition:transform .15s ease,filter .15s ease;}',
             '.gcc-feedback-modal__button:hover{transform:translateY(-1px);}',
             '.gcc-feedback-modal__button--secondary{background:#fff;color:#1A3764;border:1px solid rgba(26,55,100,.2);}',
@@ -215,6 +216,8 @@ define(['jquery'], function ($) {
 
     function showConfirm(message, callback, options) {
         var $modal;
+        var $actions;
+        var $cancelButton;
         var $okButton;
         var confirmTone;
         var confirmText;
@@ -227,6 +230,8 @@ define(['jquery'], function ($) {
         options = options || {};
         confirmCallback = typeof callback === 'function' ? callback : null;
         $modal = $('#' + CONFIRM_ID);
+        $actions = $modal.find('.gcc-feedback-modal__actions');
+        $cancelButton = $modal.find('[data-gcc-confirm-cancel]');
         $okButton = $modal.find('[data-gcc-confirm-ok]');
         confirmTone = options.tone || 'danger';
         confirmText = options.confirmText || 'Remove';
@@ -234,7 +239,13 @@ define(['jquery'], function ($) {
 
         $modal.find('.gcc-feedback-modal__title').text(options.title || 'Confirm action');
         $modal.find('.gcc-feedback-modal__message').text(message || '');
-        $modal.find('[data-gcc-confirm-cancel]').text(cancelText);
+        if (options.hideCancel) {
+            $cancelButton.hide();
+            $actions.addClass('is-single');
+        } else {
+            $cancelButton.show().text(cancelText);
+            $actions.removeClass('is-single');
+        }
         $okButton.text(confirmText);
         $okButton.removeClass('gcc-feedback-modal__button--primary gcc-feedback-modal__button--danger');
 
@@ -249,8 +260,23 @@ define(['jquery'], function ($) {
         $('body').addClass('gcc-feedback-lock');
 
         window.setTimeout(function () {
-            $modal.find('[data-gcc-confirm-cancel]').first().trigger('focus');
+            if (!options.hideCancel) {
+                $cancelButton.first().trigger('focus');
+                return;
+            }
+
+            $okButton.first().trigger('focus');
         }, 0);
+    }
+
+    function showAlert(message, options) {
+        options = options || {};
+        options.hideCancel = true;
+        options.tone = options.tone || 'primary';
+        options.confirmText = options.confirmText || 'OK';
+        options.cancelText = '';
+
+        showConfirm(message, null, options);
     }
 
     function setPendingToast(message, type, title) {
@@ -298,6 +324,7 @@ define(['jquery'], function ($) {
     return {
         toast: showToast,
         confirm: showConfirm,
+        alert: showAlert,
         closeConfirm: closeConfirm,
         setPendingToast: setPendingToast,
         showPendingToast: showPendingToast
