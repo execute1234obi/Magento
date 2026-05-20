@@ -1,12 +1,13 @@
 <?php
 /** @var \Vendor\QuoteRequest\Block\View $block */
 $items = $block->getQuoteItems();
+$quoteItemCount = count($items);
 $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 ?>
 
 <div class="gcc-quote-page">
     <div class="gcc-container">
-        <form id="form-validate" action="<?= $block->getUrl('quoterequest/index/submit') ?>" method="post">
+        <form id="form-validate" action="<?= $block->getUrl('quoterequest/index/submit') ?>" method="post" novalidate="novalidate">
             <div class="quote-page">
 
                 <div class="quote-breadcrumb">
@@ -179,7 +180,7 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
                     <div class="quote-card-head">
                         <div class="quote-card-title">
                             <h2><?= __('Quotation List') ?></h2>
-                            <span><?= __('(%1 products selected)', count($items)) ?></span>
+                            <span><?= __('(Select the products you wish to inquire about)') ?></span>
                         </div>
                     </div>
 
@@ -191,51 +192,87 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
 
                         <?php foreach ($items as $item): ?>
                             <?php
-                                $_product   = $item['product'];
+                                $_product = $item['product'];
+                                $baseProduct = $item['base_product'] ?? $_product;
+                                $displayProductId = (int) $baseProduct->getId();
                                 $productImage = $imageHelper->init($_product, 'product_thumbnail_image')->getUrl();
-                                $vendorId   = $_product->getData('vendor_id');
+                                $vendorId = (int) ($baseProduct->getData('vendor_id') ?: $_product->getData('vendor_id'));
                                 $vendorName = $block->getVendorCompanyName($vendorId) ?: 'No Name Available';
                                 $vendorLogo = $block->getVendorLogo($vendorId);
+                                $shortDesc = strip_tags((string) ($_product->getShortDescription() ?: $baseProduct->getShortDescription()));
+                                $variantAttributes = $item['variant_attributes'] ?? [];
+                                $verificationBlock = $block->getChildBlock('vendor.verification.block');
+                                $isVerified = $verificationBlock && $verificationBlock->isVendorVerified($vendorId);
                             ?>
-                            <div class="vendor-block">
+                            <div class="vendor-block" data-product-id="<?= $displayProductId ?>">
                                 <div class="vendor-head">
                                     <div class="vendor-left">
                                         <div class="vendor-logo">
                                             <?php if ($vendorLogo): ?>
-                                                <img src="<?= $vendorLogo ?>" alt="Vendor Logo">
+                                                <img src="<?= $vendorLogo ?>" alt="<?= $block->escapeHtmlAttr($vendorName) ?>">
+                                            <?php else: ?>
+                                                <span class="vendor-logo-initials"><?= $block->escapeHtml(mb_strtoupper(mb_substr($vendorName, 0, 1))) ?></span>
                                             <?php endif; ?>
                                         </div>
                                         <div class="vendor-name">
-                                            <strong><?= $vendorName ?></strong>
-                                            <?php
-                                            $verificationBlock = $block->getChildBlock('vendor.verification.block');
-                                            $mediaUrl = $block->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . "pub/media/";
-                                            $mediaUrl = preg_replace('#/(en|ar|default)(/|$)#i', '/', $mediaUrl);
-                                            if ($verificationBlock && $verificationBlock->isVendorVerified($vendorId)): ?>
-                                                <span class="vendor-verified" title="Verified">✔</span>
+                                            <strong><?= $block->escapeHtml($vendorName) ?></strong>
+                                            <?php if ($isVerified): ?>
+                                                <span class="vendor-verified" title="<?= __('Verified') ?>">
+                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <circle cx="8" cy="8" r="8" fill="#3B82F6"/>
+                                                        <path d="M5 8l2 2 4-4" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    </svg>
+                                                </span>
                                             <?php endif; ?>
                                         </div>
                                     </div>
-                                    <button class="vendor-trash" type="button" data-id="<?= $_product->getId() ?>">🗑</button>
+                                    <button class="vendor-trash" type="button" data-id="<?= $displayProductId ?>" title="<?= __('Remove') ?>">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                            <path d="M10 11v6M14 11v6" stroke="#ef4444" stroke-width="1.8" stroke-linecap="round"/>
+                                        </svg>
+                                    </button>
                                 </div>
                                 <div class="product-row">
                                     <div class="product-check">
                                         <input type="checkbox" name="selected_products[]"
-                                               value="<?= $_product->getId() ?>"
+                                               value="<?= $displayProductId ?>"
                                                class="quote-checkbox product-item-checkbox" checked />
                                     </div>
                                     <div class="product-thumb">
-                                        <img src="<?= $productImage ?>" alt="<?= $block->escapeHtml($_product->getName()) ?>"/>
+                                        <img src="<?= $productImage ?>" alt="<?= $block->escapeHtmlAttr($_product->getName()) ?>"/>
                                     </div>
                                     <div class="product-info">
-                                        <h3 class="product-title"><?= $_product->getName() ?></h3>
-                                        <div class="desc-label">SKU: <?= $_product->getSku() ?></div>
+                                        <h3 class="product-title"><?= $block->escapeHtml($_product->getName()) ?></h3>
+                                        <?php if ($shortDesc): ?>
+                                            <p class="product-desc-label"><?= __('Product Description') ?></p>
+                                            <div class="product-desc" id="desc-<?= $displayProductId ?>">
+                                                <span class="desc-text"
+                                                      data-short="<?= $block->escapeHtmlAttr(mb_substr($shortDesc, 0, 160)) ?>"
+                                                      data-full="<?= $block->escapeHtmlAttr($shortDesc) ?>">
+                                                    <?= $block->escapeHtml(mb_substr($shortDesc, 0, 160)) ?><?= mb_strlen($shortDesc) > 160 ? '...' : '' ?>
+                                                </span>
+                                                <?php if (mb_strlen($shortDesc) > 160): ?>
+                                                    <button type="button" class="desc-toggle" aria-expanded="false"><?= __('More') ?></button>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($variantAttributes)): ?>
+                                            <div class="product-attrs">
+                                                <?php foreach ($variantAttributes as $attribute): ?>
+                                                    <div class="attr-row">
+                                                        <span class="attr-label"><?= $block->escapeHtml($attribute['label']) ?></span>
+                                                        <span class="attr-value"><?= $block->escapeHtml($attribute['value']) ?></span>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                     <div class="product-qty">
                                         <div class="qty-stepper">
                                             <button type="button" class="qty-btn minus">−</button>
-                                            <input type="text" name="qty[<?= $_product->getId() ?>]"
-                                                   value="<?= $item['qty'] ?>" class="qty-input" readonly />
+                                            <input type="text" name="qty[<?= $displayProductId ?>]"
+                                                   value="<?= (int) $item['qty'] ?>" class="qty-input" readonly />
                                             <button type="button" class="qty-btn plus">+</button>
                                         </div>
                                     </div>
@@ -245,16 +282,27 @@ $imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
                     <?php endif; ?>
 
                     <div class="draft-inquiry">
-                        <h3><?= __('Draft inquiry') ?></h3>
+                        <h3><?= __('Draft inquiry') ?> <span class="draft-inquiry-sub"><?= __('(for the selected product vendors)') ?></span></h3>
                         <textarea name="customer_note" class="quote-textarea" rows="4"
-                                  placeholder="<?= __('Write message...') ?>"></textarea>
+                                  placeholder="<?= __('Hello! I have a question regarding your shoe collection. Could you provide more details about the available styles?') ?>"></textarea>
+                    </div>
+
+                    <div class="quote-validation-toast is-hidden" id="quote-validation-toast" role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="quote-validation-toast__icon" aria-hidden="true">!</div>
+                        <div class="quote-validation-toast__body">
+                            <p class="quote-validation-toast__title" id="quote-validation-title"></p>
+                            <span class="quote-validation-toast__message" id="quote-validation-message"></span>
+                        </div>
+                        <button type="button" class="quote-validation-toast__close" aria-label="<?= __('Close') ?>">&times;</button>
                     </div>
 
                     <div class="quote-bottom-bar">
-                        <div class="bottom-left"><strong><?= __('Summary') ?></strong></div>
-                        <div class="bottom-right">
-                            <span class="product-count"><?= count($items) ?> <?= __('Products') ?></span>
-                            <button class="quote-primary-btn" type="button" id="submit-quote">
+                        <div class="bottom-left"><strong><?= __('Quotation Request:') ?></strong></div>
+                        <div class="bottom-actions">
+                            <span class="product-count">
+                                <?= $quoteItemCount ?> <?= $quoteItemCount === 1 ? __('Product') : __('Products') ?>
+                            </span>
+                            <button class="quote-primary-btn" type="submit" id="submit-quote">
                                 <?= __('Confirm Quotation Requests') ?>
                             </button>
                         </div>
@@ -402,56 +450,190 @@ function csdFilter(type) {
 </script>
 
 <script>
-require(['jquery'], function($){
-    $(document).ready(function(){
+(function () {
+    'use strict';
 
-        /* submit */
-        $(document).on('click','#submit-quote',function(e){
-            e.preventDefault();
-            var country = $('#country').val();
-            var note    = $('.quote-textarea').val().trim();
-            var selectedProducts = $('.product-item-checkbox:checked').length;
-            // console.log('Selected:', selectedProducts);
+    var quoteItemCount = <?= (int) $quoteItemCount ?>;
+    var validationTitle = <?= /* @noEscape */ json_encode((string) __('Quotation request')) ?>;
+    var emptySelectionMessage = <?= /* @noEscape */ json_encode((string) __('Please add your product and choose a country before continuing.')) ?>;
+    var missingCountryMessage = <?= /* @noEscape */ json_encode((string) __('Please choose a country before continuing.')) ?>;
+    var missingProductsMessage = <?= /* @noEscape */ json_encode((string) __('Please add your product before continuing.')) ?>;
+    var toastHideTimer = null;
 
-            if (!country) { alert('<?= __('Please select a country.') ?>'); return; }
-            if (!note)    { alert('<?= __('Please write a message.') ?>');   return; }
-             // 🔥 NEW VALIDATION
-            if (selectedProducts === 0) {
-                alert('Please select at least one product.');
-                return;
-            }
-            $('#form-validate').submit();
-        });
+    function getCountryValue() {
+        var countryField = document.getElementById('country');
 
-        /* select all */
-        // $(document).on('change','#select-all-products',function(){
-        //     $('.product-item-checkbox').prop('checked', $(this).is(':checked'));
-        // });
-
-        /* qty */
-        $(document).on('click','.qty-btn.plus',function(){
-            var i = $(this).siblings('.qty-input');
-            i.val(parseInt(i.val()) + 1);
-        });
-        $(document).on('click','.qty-btn.minus',function(){
-            var i = $(this).siblings('.qty-input');
-            var v = parseInt(i.val());
-            if (v > 1) i.val(v - 1);
-        });
-
-        /* trash */
-      $(document).on('click','.vendor-trash',function(){
-
-    var productId = $(this).data('id');
-
-    if (confirm('Remove this product from quotation?')) {
-
-        window.location.href =
-            "<?= $block->getUrl('quoterequest/index/remove') ?>?id=" + productId;
-
+        return countryField ? String(countryField.value || '').trim() : '';
     }
 
-});
+    function getSelectedProductCount() {
+        return document.querySelectorAll('.product-item-checkbox:checked').length;
+    }
+
+    function getMissingFields() {
+        var missingFields = [];
+
+        if (!getCountryValue()) {
+            missingFields.push('country');
+        }
+
+        if (getSelectedProductCount() === 0) {
+            missingFields.push('products');
+        }
+
+        return missingFields;
+    }
+
+    function resolveMessage(missingFields) {
+        if (!missingFields.length) {
+            return '';
+        }
+
+        if (missingFields.length === 2) {
+            return emptySelectionMessage;
+        }
+
+        if (missingFields[0] === 'country') {
+            return missingCountryMessage;
+        }
+
+        return missingProductsMessage;
+    }
+
+    function hideToast() {
+        var toast = document.getElementById('quote-validation-toast');
+
+        if (!toast) {
+            return;
+        }
+
+        toast.classList.remove('is-visible');
+        toast.classList.add('is-hidden');
+    }
+
+    function showToast(message) {
+        var toast = document.getElementById('quote-validation-toast');
+        var title = document.getElementById('quote-validation-title');
+        var text = document.getElementById('quote-validation-message');
+
+        if (!toast || !message) {
+            return;
+        }
+
+        if (title) {
+            title.textContent = validationTitle;
+        }
+
+        if (text) {
+            text.textContent = message;
+        }
+
+        window.clearTimeout(toastHideTimer);
+        toast.classList.remove('is-hidden');
+        toast.classList.add('is-visible');
+
+        toastHideTimer = window.setTimeout(function () {
+            hideToast();
+        }, 5000);
+    }
+
+    function validateForm(event) {
+        var missingFields = getMissingFields();
+
+        if (!missingFields.length) {
+            return true;
+        }
+
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        showToast(resolveMessage(missingFields));
+        return false;
+    }
+
+    function showServerValidationNotice() {
+        var params = new URLSearchParams(window.location.search);
+        var validation = params.get('validation');
+        var message;
+
+        if (!validation) {
+            return;
+        }
+
+        if (validation === 'both') {
+            message = emptySelectionMessage;
+        } else if (validation === 'country') {
+            message = missingCountryMessage;
+        } else if (validation === 'products') {
+            message = missingProductsMessage;
+        }
+
+        if (message) {
+            showToast(message);
+        }
+
+        params.delete('validation');
+        window.history.replaceState({}, document.title, window.location.pathname + (params.toString() ? '?' + params.toString() : '') + window.location.hash);
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('form-validate');
+        var submitButton = document.getElementById('submit-quote');
+        var closeButton = document.querySelector('#quote-validation-toast .quote-validation-toast__close');
+
+        if (closeButton) {
+            closeButton.addEventListener('click', hideToast);
+        }
+
+        if (quoteItemCount === 0) {
+            showToast(emptySelectionMessage);
+        }
+
+        showServerValidationNotice();
+
+        if (submitButton) {
+            submitButton.addEventListener('click', validateForm);
+        }
+
+        if (form) {
+            form.addEventListener('submit', validateForm);
+        }
+    });
+})();
+</script>
+<script>
+require(['jquery', 'Magento_Ui/js/modal/confirm'], function ($, confirmation) {
+    'use strict';
+
+    $(document).on('click', '.vendor-trash', function (e) {
+        var productId = $(this).data('id');
+
+        e.preventDefault();
+
+        confirmation({
+            modalClass: 'gcc-confirm-modal',
+            title: <?= /* @noEscape */ json_encode((string) __('Remove product')) ?>,
+            content: <?= /* @noEscape */ json_encode((string) __('Remove this product from quotation?')) ?>,
+            buttons: [
+                {
+                    text: <?= /* @noEscape */ json_encode((string) __('Cancel')) ?>,
+                    class: 'action action-secondary',
+                    click: function (event) {
+                        this.closeModal(event);
+                    }
+                },
+                {
+                    text: <?= /* @noEscape */ json_encode((string) __('Remove')) ?>,
+                    class: 'action action-primary',
+                    click: function () {
+                        window.location.href =
+                            "<?= $block->getUrl('quoterequest/index/remove') ?>?id=" + productId;
+                    }
+                }
+            ]
+        });
     });
 });
 </script>
@@ -459,11 +641,68 @@ require(['jquery'], function($){
 // 🔥 INDIVIDUAL CHECKBOX CHANGE
 require(['jquery'], function($){
 
+    var productLabelSingular = <?= /* @noEscape */ json_encode((string) __('Product')); ?>;
+    var productLabelPlural = <?= /* @noEscape */ json_encode((string) __('Products')); ?>;
+
     function updateCount() {
         var count = $('.product-item-checkbox:checked').length;
-        $('.product-count').text(count + ' Products');
-        $('.quote-card-title span').text('(' + count + ' products selected)');
+        $('.product-count').text(count + ' ' + (count === 1 ? productLabelSingular : productLabelPlural));
+        $('.quote-card-title span').text('(Select the products you wish to inquire about)');
     }
+
+    var moreLabel = <?= /* @noEscape */ json_encode((string) __('More')); ?>;
+    var lessLabel = <?= /* @noEscape */ json_encode((string) __('Show less')); ?>;
+
+    function getQtyInput($button) {
+        return $button.closest('.qty-stepper').find('.qty-input').first();
+    }
+
+    function adjustQty($button, delta) {
+        var $input = getQtyInput($button);
+        var currentValue = parseInt($input.val(), 10);
+
+        if (isNaN(currentValue) || currentValue < 1) {
+            currentValue = 1;
+        }
+
+        currentValue += delta;
+
+        if (currentValue < 1) {
+            currentValue = 1;
+        }
+
+        $input.val(currentValue).trigger('change');
+    }
+
+    $(document).off('click.gccQuoteQtyPlus', '.qty-btn.plus').on('click.gccQuoteQtyPlus', '.qty-btn.plus', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        adjustQty($(this), 1);
+    });
+
+    $(document).off('click.gccQuoteQtyMinus', '.qty-btn.minus').on('click.gccQuoteQtyMinus', '.qty-btn.minus', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        adjustQty($(this), -1);
+    });
+
+    $(document).on('click', '.desc-toggle', function(e){
+        e.preventDefault();
+        var $button = $(this);
+        var $descText = $button.closest('.product-desc').find('.desc-text').first();
+        var shortText = $descText.data('short') || '';
+        var fullText = $descText.data('full') || shortText;
+        var isExpanded = $button.attr('aria-expanded') === 'true';
+
+        if (isExpanded) {
+            $descText.text(shortText + (fullText.length > shortText.length ? '...' : ''));
+            $button.text(moreLabel).attr('aria-expanded', 'false');
+            return;
+        }
+
+        $descText.text(fullText);
+        $button.text(lessLabel).attr('aria-expanded', 'true');
+    });
 
     $(document).ready(function(){
 
@@ -497,7 +736,13 @@ require(['jquery'], function($){
 <style>
 
 /* ── Page ───────────────────────────────────────────── */
-.gcc-quote-page { background:#f6f8fb; padding-top:103px; }
+body.quoterequest-view-index,
+body.quoterequest-view-index .page-wrapper,
+body.quoterequest-view-index .page-main,
+body.quoterequest-view-index .columns,
+body.quoterequest-view-index .column.main,
+.gcc-quote-page { background:#F9FAFB !important; }
+.gcc-quote-page { padding-top:103px; min-height:calc(100vh - 103px); }
 .gcc-container  { width:min(1200px,calc(100% - 48px)); margin:0 auto; }
 .quote-page     { font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#111827; }
 
@@ -526,47 +771,57 @@ require(['jquery'], function($){
 
 /* ── Select all ─────────────────────────────────────── */
 .quote-select-all {
-    display:flex; align-items:center; gap:10px; padding:12px;
-    border:1px solid #eef2f7; border-radius:10px;
-    background:#f9fafb; margin-bottom:16px; font-size:13px; color:#6b7280;
+    display:flex; align-items:center; gap:10px; padding:14px 16px;
+    border:1px solid #e5e7eb; border-radius:10px;
+    background:#f3f4f6; margin-bottom:16px; font-size:14px; color:#374151; cursor:pointer;
 }
 .quote-checkbox { width:16px; height:16px; accent-color:#2563eb; cursor:pointer; }
 
 /* ── Vendor block ───────────────────────────────────── */
-.vendor-block { border:1px solid #eef2f7; border-radius:12px; padding:14px; margin-bottom:14px; }
+.vendor-block {
+    border:1px solid #e5e7eb; border-radius:14px;
+    padding:16px 20px; margin-bottom:16px;
+    background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.06);
+}
 .vendor-head  {
     display:flex; align-items:center; justify-content:space-between;
-    padding-bottom:12px; border-bottom:1px solid #eef2f7; margin-bottom:14px;
+    padding-bottom:14px; border-bottom:1px solid #f3f4f6; margin-bottom:16px;
 }
 .vendor-left  { display:flex; align-items:center; gap:12px; }
 .vendor-logo  {
-    width:36px; height:36px; border-radius:50%; border:1px solid #e5e7eb;
-    background:#f9fafb; display:grid; place-items:center; overflow:hidden;
+    width:44px; height:44px; border-radius:50%; border:1px solid #e5e7eb;
+    background:#f3f4f6; display:grid; place-items:center; overflow:hidden; flex-shrink:0;
 }
-.vendor-logo img  { width:100%; height:100%; object-fit:cover; }
-.vendor-name      { display:flex; align-items:center; gap:8px; font-size:15px; }
-.vendor-verified  {
-    display:inline-flex; width:18px; height:18px; border-radius:50%;
-    align-items:center; justify-content:center;
-    font-size:12px; background:#e0f2fe; color:#0369a1;
+.vendor-logo img { width:100%; height:100%; object-fit:cover; }
+.vendor-logo-initials {
+    font-size:16px; font-weight:700; color:#1a3764; text-transform:uppercase;
 }
-.vendor-trash      { border:none; background:transparent; cursor:pointer; padding:6px 8px; border-radius:8px; color:#ef4444; }
+.vendor-name      { display:flex; align-items:center; gap:8px; font-size:16px; font-weight:600; }
+.vendor-verified  { display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
+.vendor-trash     { border:none; background:transparent; cursor:pointer; padding:6px 8px; border-radius:8px; }
 .vendor-trash:hover { background:#fff1f2; }
 
 /* ── Product row ────────────────────────────────────── */
 .product-row {
-    display:grid; grid-template-columns:32px 180px 1fr 160px;
-    gap:16px; align-items:center; padding:12px 6px;
+    display:grid; grid-template-columns:32px 200px 1fr 160px;
+    gap:20px; align-items:start; padding:8px 0;
 }
-.product-check { display:flex; justify-content:center; }
+.product-check { display:flex; justify-content:center; padding-top:4px; }
 .product-thumb {
-    width:180px; height:130px; border-radius:12px;
-    background:#f3f4f6; border:1px solid #eef2f7; overflow:hidden; display:grid; place-items:center;
+    width:200px; height:160px; border-radius:12px;
+    background:#f3f4f6; border:1px solid #eef2f7; overflow:hidden; display:grid; place-items:center; flex-shrink:0;
 }
-.product-thumb img { width:100%; height:100%; object-fit:contain; padding:10px; }
-.product-info  { min-width:0; }
-.product-title { font-size:16px; font-weight:650; margin:0 0 8px; }
-.desc-label    { font-size:12px; color:#6b7280; margin-bottom:6px; }
+.product-thumb img { width:100%; height:100%; object-fit:contain; padding:12px; }
+.product-info  { min-width:0; padding-top:2px; }
+.product-title { font-size:16px; font-weight:700; margin:0 0 8px; color:#111827; line-height:1.4; }
+.product-desc-label { font-size:12px; font-weight:600; color:#6b7280; margin:0 0 4px; text-transform:uppercase; letter-spacing:.04em; }
+.product-desc  { font-size:13px; color:#374151; line-height:1.6; margin:0 0 10px; display:flex; flex-direction:column; gap:6px; }
+.desc-toggle   { align-self:flex-start; border:0; background:transparent; padding:0; color:#3b82f6; font-size:13px; font-weight:600; cursor:pointer; }
+.desc-toggle:hover { text-decoration:underline; }
+.product-attrs { display:flex; gap:12px; flex-wrap:wrap; margin-top:4px; }
+.attr-row      { display:flex; flex-direction:column; gap:4px; padding:10px 12px; border:1px solid #e2e8f0; border-radius:12px; background:#f8fafc; min-width:110px; }
+.attr-label    { font-size:11px; font-weight:700; color:#64748b; text-transform:uppercase; letter-spacing:.06em; }
+.attr-value    { font-size:13px; font-weight:700; color:#0f172a; }
 
 /* ── Qty ────────────────────────────────────────────── */
 .product-qty { display:flex; justify-content:flex-end; }
@@ -580,7 +835,8 @@ require(['jquery'], function($){
 
 /* ── Draft inquiry ──────────────────────────────────── */
 .draft-inquiry { margin-top:18px; padding-top:14px; border-top:1px solid #eef2f7; }
-.draft-inquiry h3 { font-size:16px; font-weight:650; margin:0 0 10px; }
+.draft-inquiry h3 { font-size:16px; font-weight:700; margin:0 0 10px; display:flex; align-items:baseline; flex-wrap:wrap; gap:6px; }
+.draft-inquiry-sub { font-size:14px; font-weight:400; color:#9ca3af; }
 .quote-textarea {
     width:100%; border:1px solid #d1d5db; border-radius:10px;
     padding:12px 14px; font-size:14px; min-height:110px; resize:vertical; box-sizing:border-box;
@@ -589,17 +845,175 @@ require(['jquery'], function($){
 
 /* ── Bottom bar ─────────────────────────────────────── */
 .quote-bottom-bar {
-    display:flex; align-items:center; justify-content:space-between;
-    padding-top:16px; margin-top:18px; border-top:1px solid #eef2f7;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding:20px 0; margin-top:20px;
+    border-top:1px solid #e5e7eb;
+    background:#ffffff;
 }
-.bottom-left strong { font-size:18px; font-weight:750; }
-.bottom-right { display:flex; align-items:center; gap:16px; }
-.product-count { font-size:14px; font-weight:650; }
+.bottom-left strong { font-size:16px; font-weight:700; color:#111827; }
+.bottom-actions {
+    display:flex; align-items:center; justify-content:flex-end; gap:18px;
+    margin-left:auto;
+}
+.product-count {
+    font-size:18px; font-weight:700; color:#111827; white-space:nowrap;
+}
 .quote-primary-btn {
-    height:44px; padding:0 18px; border:none; border-radius:10px;
-    background:#0f2f5f; color:#fff; font-weight:650; cursor:pointer;
+    height:50px; padding:0 24px; border:none; border-radius:10px;
+    background:#0f2f5f; color:#fff; font-size:14px; font-weight:650; cursor:pointer; white-space:nowrap;
 }
-.quote-primary-btn:hover { filter:brightness(1.06); }
+.quote-primary-btn:hover { filter:brightness(1.08); }
+
+.quote-validation-toast {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 100002;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: min(92vw, 420px);
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(26,55,100,.14);
+    border-left: 5px solid #1A3764;
+    background: linear-gradient(180deg,#ffffff 0%,#f8fbff 100%);
+    box-shadow: 0 24px 60px rgba(15,23,42,.22);
+    font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color: #111827;
+}
+.quote-validation-toast.is-hidden {
+    display: none;
+}
+.quote-validation-toast.is-visible {
+    animation: gccToastIn .2s ease-out;
+}
+.quote-validation-toast__icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg,#1A3764,#0f2f5f);
+    box-shadow: 0 8px 16px rgba(15,47,95,.18);
+}
+.quote-validation-toast__body {
+    min-width: 0;
+    flex: 1;
+}
+.quote-validation-toast__title {
+    margin: 0 0 3px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.quote-validation-toast__message {
+    display: block;
+    font-size: 13px;
+    line-height: 1.45;
+    color: #475569;
+    word-break: break-word;
+}
+.quote-validation-toast__close {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    padding: 0 4px;
+    flex: 0 0 auto;
+}
+.quote-validation-toast__close:hover {
+    color: #1A3764;
+}
+@keyframes gccToastIn {
+    from { opacity: 0; transform: translateY(10px) scale(.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width:575px) {
+    .quote-validation-toast {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: auto;
+        padding: 12px 14px;
+        border-radius: 14px;
+    }
+}
+/* Theme the core Magento confirm modal */
+.modal-popup.gcc-confirm-modal .modal-inner-wrap {
+    border-radius:20px;
+    overflow:hidden;
+    border:1px solid rgba(26,55,100,.14);
+    box-shadow:0 30px 80px rgba(15,23,42,.28);
+}
+.modal-popup.gcc-confirm-modal .modal-header {
+    padding:22px 22px 10px;
+    border-bottom:0;
+}
+.modal-popup.gcc-confirm-modal .modal-title {
+    font-size:20px;
+    font-weight:800;
+    color:#0f172a;
+}
+.modal-popup.gcc-confirm-modal .modal-content {
+    padding:0 22px 14px;
+    font-size:14px;
+    line-height:1.55;
+    color:#475569;
+}
+.modal-popup.gcc-confirm-modal .modal-footer {
+    display:flex;
+    justify-content:flex-end;
+    align-items:center;
+    gap:12px;
+    padding:0 22px 22px;
+    border-top:0;
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action {
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-width:112px;
+    min-height:44px;
+    margin:0;
+    padding:0 18px;
+    border-radius:12px;
+    font-weight:700;
+    text-decoration:none !important;
+    box-sizing:border-box;
+    transition:transform .15s ease, box-shadow .15s ease, background-color .15s ease, border-color .15s ease;
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action span {
+    line-height:1;
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action-primary {
+    background:linear-gradient(135deg,#1A3764,#0f2f5f);
+    border-color:#1A3764;
+    color:#fff;
+    box-shadow:0 10px 20px rgba(15,47,95,.18);
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action-secondary {
+    background:#fff;
+    color:#1A3764;
+    border-color:rgba(26,55,100,.2);
+    box-shadow:0 8px 16px rgba(15,23,42,.06);
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action:hover {
+    transform:translateY(-1px);
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action-secondary:hover {
+    background:#f8fbff;
+    border-color:rgba(26,55,100,.35);
+}
+.modal-popup.gcc-confirm-modal .modal-footer .action-primary:hover {
+    filter:brightness(1.05);
+}
 
 
 /* ════════════════════════════════════════════════════
@@ -721,13 +1135,139 @@ require(['jquery'], function($){
 }
 
 @media (max-width:576px) {
-    .gcc-container { width:min(100%,calc(100% - 24px)); }
-    .quote-card    { padding:14px; }
-    .product-row, .product-row--compact { grid-template-columns:24px 1fr; gap:12px; }
-    .product-thumb, .product-thumb--small { width:100%; height:160px; }
-    .quote-bottom-bar { flex-direction:column; align-items:stretch; gap:12px; }
-    .bottom-right { justify-content:space-between; flex-wrap:wrap; gap:10px; }
-    .quote-primary-btn { width:100%; }
+    .gcc-container { width:min(100%,calc(100% - 16px)); }
+    .quote-card    { padding:12px; }
+    .vendor-block   { padding:12px; }
+    .vendor-head    { align-items:flex-start; gap:10px; margin-bottom:12px; padding-bottom:12px; }
+    .vendor-left    { gap:10px; min-width:0; }
+    .vendor-name    { flex-wrap:wrap; font-size:15px; line-height:1.25; }
+    .vendor-name strong { line-height:1.2; }
+    .product-row,
+    .product-row--compact {
+        grid-template-columns:28px minmax(0, 1fr);
+        grid-template-areas:
+            "check thumb"
+            "info info"
+            "qty qty";
+        gap:12px;
+        align-items:start;
+        padding-top:4px;
+    }
+    .product-check { grid-area: check; justify-content:flex-start; padding-top:8px; }
+    .product-thumb,
+    .product-thumb--small {
+        grid-area: thumb;
+        width:100%;
+        height:auto;
+        aspect-ratio: 4 / 3;
+        max-height:220px;
+    }
+    .product-thumb img,
+    .product-thumb--small img { padding:10px; }
+    .product-info { grid-area: info; padding-top:0; min-width:0; }
+    .product-title {
+        font-size:15px;
+        line-height:1.35;
+        margin-bottom:6px;
+        overflow-wrap:anywhere;
+        word-break:break-word;
+    }
+    .product-desc-label { font-size:11px; margin-bottom:4px; }
+    .product-desc { font-size:13px; margin-bottom:8px; }
+    .product-attrs { gap:8px; margin-top:2px; }
+    .attr-row {
+        min-width:0;
+        flex:1 1 calc(50% - 4px);
+        padding:8px 10px;
+    }
+    .attr-label { font-size:10px; }
+    .attr-value { font-size:12px; }
+    .product-qty {
+        grid-area: qty;
+        justify-content:flex-start;
+        margin-top:0;
+    }
+    .qty-stepper {
+        width:160px;
+        height:38px;
+        grid-template-columns:40px 1fr 40px;
+    }
+    .qty-btn { font-size:16px; }
+    .quote-bottom-bar { flex-direction:column; align-items:stretch; gap:12px; padding:14px 0 0; }
+    .bottom-left strong { font-size:15px; }
+    .bottom-actions {
+        width:100%;
+        margin-left:0;
+        gap:10px;
+        justify-content:space-between;
+    }
+    .product-count { font-size:15px; font-weight:700; }
+    .quote-primary-btn {
+        height:44px;
+        padding:0 16px;
+        font-size:13px;
+        white-space:normal;
+        line-height:1.15;
+        text-align:center;
+    }
+}
+
+@media (max-width:420px) {
+    .product-row,
+    .product-row--compact {
+        grid-template-columns:24px minmax(0, 1fr);
+        gap:10px;
+    }
+
+    .vendor-head {
+        flex-direction:column;
+    }
+
+    .vendor-trash {
+        align-self:flex-end;
+        margin-top:-36px;
+    }
+
+    .attr-row {
+        flex-basis:100%;
+    }
+
+    .qty-stepper {
+        width:100%;
+        max-width:220px;
+    }
+
+    .bottom-actions {
+        gap:8px;
+    }
+
+    .product-count {
+        font-size:14px;
+    }
+
+    .quote-primary-btn {
+        padding:0 12px;
+        font-size:12px;
+    }
+
+    .modal-popup.gcc-confirm-modal .modal-header {
+        padding:18px 18px 8px;
+    }
+
+    .modal-popup.gcc-confirm-modal .modal-content {
+        padding:0 18px 12px;
+    }
+
+    .modal-popup.gcc-confirm-modal .modal-footer {
+        flex-direction:column-reverse;
+        align-items:stretch;
+        padding:0 18px 18px;
+    }
+
+    .modal-popup.gcc-confirm-modal .modal-footer .action {
+        width:100%;
+        min-width:0;
+    }
 }
 
 </style>
