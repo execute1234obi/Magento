@@ -19,8 +19,6 @@ class ProductCollectionPlugin
     protected $vendorCollectionFactory;
 
     /**
-     * Constructor
-     *
      * @param RequestInterface $request
      * @param CollectionFactory $vendorCollectionFactory
      */
@@ -34,134 +32,98 @@ class ProductCollectionPlugin
 
     /**
      * Apply filter before collection load
-     *
-     * @param Collection $collection
-     * @return void
      */
-   public function beforeLoad(
-    Collection $collection,
-    $printQuery = false,
-    $logQuery = false
-) {
-    $this->applyVendorFilter($collection);
-
-    return [$printQuery, $logQuery];
-}
-
-    /**
-     * Apply filter before size calculation
-     * (Fix pagination/count issue)
-     *
-     * @param Collection $collection
-     * @return void
-     */
-    public function beforeGetSize(Collection $collection)
+    public function beforeLoad(Collection $collection, $printQuery = false, $logQuery = false)
     {
         $this->applyVendorFilter($collection);
+        return [$printQuery, $logQuery];
     }
 
     /**
-     * Common vendor filter logic
-     *
-     * @param Collection $collection
-     * @return void
+     * Overwrite getSize safely using Magento's core clone functionality
+     */
+    public function aroundGetSize(Collection $collection, \Closure $proceed)
+    {
+        $this->applyVendorFilter($collection);
+        
+        $country      = $this->request->getParam('svendor_country_id');
+        $verified     = $this->request->getParam('svendor_is_verified');
+        $businessType = $this->request->getParam('svendor_business_type');
+
+        if (!$country && !$verified && !$businessType) {
+            return $proceed();
+        }
+
+        // Safe Magento Way: Clone select structure to get the precise count
+        $countSelect = clone $collection->getSelect();
+        $countSelect->reset(\Magento\Framework\DB\Select::ORDER);
+        $countSelect->reset(\Magento\Framework\DB\Select::LIMIT_COUNT);
+        $countSelect->reset(\Magento\Framework\DB\Select::LIMIT_OFFSET);
+        $countSelect->reset(\Magento\Framework\DB\Select::COLUMNS);
+        
+        $countSelect->columns(new \Zend_Db_Expr('COUNT(DISTINCT e.entity_id)'));
+        
+        $count = (int)$collection->getConnection()->fetchOne($countSelect);
+
+        // Force Mirasvit/Magento tab components to notice that products are present
+        if ($count > 0 && method_exists($collection, 'setSearchSearchResult')) {
+            $collection->setPageSize($collection->getPageSize());
+        }
+
+        return $count;
+    }
+
+    /**
+     * Core filtration logic
      */
     private function applyVendorFilter(Collection $collection)
     {
-        // Prevent duplicate filter apply
         if ($collection->getFlag('custom_vendor_filter_applied')) {
+            return;
+        }
+
+        $country      = $this->request->getParam('svendor_country_id');
+        $verified     = $this->request->getParam('svendor_is_verified');
+        $businessType = $this->request->getParam('svendor_business_type');
+
+        if (!$country && !$verified && !$businessType) {
             return;
         }
 
         $collection->setFlag('custom_vendor_filter_applied', true);
 
-        // Request params
-        $country      = $this->request->getParam('svendor_country_id');
-        $verified     = $this->request->getParam('svendor_is_verified');
-        $businessType = $this->request->getParam('svendor_business_type');
-
-        // Skip if no filter selected
-        if (!$country && !$verified && !$businessType) {
-            return;
-        }
-
-        // Vendor collection
+        // Fetch Matching Vendor IDs
         $vendorCollection = $this->vendorCollectionFactory->create();
-
-        /**
-         * Country filter
-         */
         if ($country) {
-            $vendorCollection->addFieldToFilter(
-                'country_id',
-                $country
-            );
+            $vendorCollection->addFieldToFilter('country_id', $country);
         }
-
-        /**
-         * Verified filter
-         */
         if ($verified) {
-            $vendorCollection->addFieldToFilter(
-                'status',
-                $verified
-            );
+            $vendorCollection->addFieldToFilter('status', $verified);
         }
-
-        /**
-         * Business type filter
-         */
         if ($businessType) {
-            $vendorCollection->addAttributeToFilter(
-                'business_type',
-                $businessType
-            );
+            $vendorCollection->addAttributeToFilter('business_type', $businessType);
         }
 
-        // Get matching vendor IDs
         $vendorIds = $vendorCollection->getAllIds();
-
-        // No vendors found
         if (empty($vendorIds)) {
-            $collection->addFieldToFilter('entity_id', 0);
-            return;
+            $vendorIds = [0];
         }
 
-        /**
-         * Remove existing vendor filters
-         * added by Vnecom/Mirasvit
-         */
-        $where = $collection->getSelect()->getPart(
-            \Zend_Db_Select::WHERE
-        );
-
+        // Clean out any rogue multi-vendor overlapping clauses safely
+        $where = $collection->getSelect()->getPart(\Zend_Db_Select::WHERE);
         foreach ($where as $key => $condition) {
-
-            if (strpos($condition, 'e.vendor_id') !== false) {
+            if (strpos($condition, 'vendor_id') !== false) {
                 unset($where[$key]);
             }
         }
+        $collection->getSelect()->setPart(\Zend_Db_Select::WHERE, $where);
 
-        $collection->getSelect()->setPart(
-            \Zend_Db_Select::WHERE,
-            $where
-        );
+        // Apply vendor filter constraint
+        $collection->getSelect()->where('e.vendor_id IN (?)', $vendorIds);
 
-        /**
-         * Apply custom vendor filter
-         */
-        $collection->getSelect()->where(
-            'e.vendor_id IN (?)',
-            $vendorIds
-        );
-
-        /**
-         * Debug query
-         */
-        /*
-        echo "<pre>";
-        echo $collection->getSelect()->__toString();
-        exit;
-        */
+        // EXTRA FIX: Force layout state block override
+        if ($collection->getSelect()->getPart(\Zend_Db_Select::LIMIT_COUNT) == null) {
+            $collection->getSelect()->limit(20); // Default items limit ensure fallback
+        }
     }
 }
