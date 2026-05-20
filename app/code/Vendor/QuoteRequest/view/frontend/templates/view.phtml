@@ -587,7 +587,13 @@ require(['jquery'], function($){
 <style>
 
 /* ── Page ───────────────────────────────────────────── */
-.gcc-quote-page { background:#F9FAFB; padding-top:103px; }
+body.quoterequest-view-index,
+body.quoterequest-view-index .page-wrapper,
+body.quoterequest-view-index .page-main,
+body.quoterequest-view-index .columns,
+body.quoterequest-view-index .column.main,
+.gcc-quote-page { background:#F9FAFB !important; }
+.gcc-quote-page { padding-top:103px; min-height:calc(100vh - 103px); }
 .gcc-container  { width:min(1200px,calc(100% - 48px)); margin:0 auto; }
 .quote-page     { font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; color:#111827; }
 

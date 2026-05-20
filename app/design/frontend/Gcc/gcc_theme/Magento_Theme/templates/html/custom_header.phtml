@@ -68,7 +68,7 @@ else
         </a>
       </div>
 
-      <nav class="hidden lg:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font">
+      <nav class="hidden lg:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font header-desktop-nav">
         <div class="relative group">
           <a href="<?= $block->escapeUrl($block->getUrl('vendor-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;">
             <button type="button" onclick="toggleDropdown('vendorMenu')" id="vendorBtn"
@@ -363,7 +363,7 @@ if ($storeCode === 'default') {
 
       </div>
 
-      <button type="button" onclick="toggleMobileMenu()" class="lg:hidden focus:outline-none bg-transparent border-0">
+      <button type="button" onclick="toggleMobileMenu()" class="lg:hidden focus:outline-none bg-transparent border-0 header-mobile-toggle">
         <svg id="hamburgerIcon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         <svg id="closeIcon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
@@ -651,6 +651,14 @@ $layout = $block->getLayout();
     display:flex;
     align-items:center;
     gap:16px;
+}
+#customHeader .header-desktop-nav{
+    display:none;
+}
+#customHeader .header-mobile-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 }
 #customHeader .header-auth-divider{
     width:1px;
@@ -1400,6 +1408,14 @@ header .sign-in-btn {
 /* ============================= */
 
 @media (min-width: 1024px) {
+
+    #customHeader .header-desktop-nav {
+        display: flex !important;
+    }
+
+    #customHeader .header-mobile-toggle {
+        display: none !important;
+    }
 
     /* Reduce nav spacing at smaller desktop */
     #customHeader nav {
