@@ -57,6 +57,16 @@
             </argument>
         </arguments>
     </type>
+    <!-- for product collection plugin -->
+     <!-- <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
+        <plugin
+            name="custom_product_collection_filter"
+            type="Custom\SearchExtended\Plugin\ProductCollectionPlugin"
+            sortOrder="10"/>
+    </type> -->
+    <type name="Magento\Elasticsearch\SearchAdapter\Mapper">
+        <plugin name="custom_vendor_search_filter" type="Custom\SearchExtended\Plugin\ElasticsearchMapperPlugin" />
+    </type>
     <!-- Add this to fix the DI error -->
    <preference for="Magento\Catalog\Model\Layer\FilterableAttributeListInterface" type="Magento\Catalog\Model\Layer\Category\FilterableAttributeList" />
 

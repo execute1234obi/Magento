@@ -127,7 +127,9 @@ class Vendors extends Template
             if (!empty($productVendorIds)) {
                 $searchFilters[] = ['attribute' => 'entity_id', 'in' => $productVendorIds];
             }
-
+           // echo '<pre>';
+           // print_r($productVendorIds);
+           // exit;
             $collection->addAttributeToFilter($searchFilters);
         }
         

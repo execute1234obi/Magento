@@ -78,29 +78,90 @@ class VendorFilter
      * * @param string $query
      * @return array
      */
-    public function getVendorIdsByProductQuery($query)
-    {
-        if (empty($query)) {
-            return [];
-        }
+    // public function getVendorIdsByProductQuery($query)
+    // {
+    //     if (empty($query)) {
+    //         return [];
+    //     }
 
-        /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
-        $productCollection = $this->productCollectionFactory->create();
-        $productCollection->addAttributeToSelect('vendor_id');
+    //     /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $productCollection */
+    //     $productCollection = $this->productCollectionFactory->create();
+    //     $productCollection->addAttributeToSelect('vendor_id');
         
-        // Search in Name, SKU, and Description (consistent everywhere)
-        $productCollection->addAttributeToFilter([
-            ['attribute' => 'name', 'like' => "%$query%"],
-            ['attribute' => 'sku', 'like' => "%$query%"],
-            ['attribute' => 'description', 'like' => "%$query%"],
-            ['attribute' => 'short_description', 'like' => "%$query%"]
-        ]);
+    //     // Search in Name, SKU, and Description (consistent everywhere)
+    //     $productCollection->addAttributeToFilter([
+    //         ['attribute' => 'name', 'like' => "%$query%"],
+    //         ['attribute' => 'sku', 'like' => "%$query%"],
+    //         ['attribute' => 'description', 'like' => "%$query%"],
+    //         ['attribute' => 'short_description', 'like' => "%$query%"]
+    //     ]);
 
-        $productCollection->addAttributeToFilter('vendor_id', ['notnull' => true]);
+    //     $productCollection->addAttributeToFilter('vendor_id', ['notnull' => true]);
 
-        $vendorIds = $productCollection->getColumnValues('vendor_id');
-        return array_unique(array_filter($vendorIds));
+    //     $vendorIds = $productCollection->getColumnValues('vendor_id');
+    //     return array_unique(array_filter($vendorIds));
+    // }
+public function getVendorIdsByProductQuery($query)
+{
+    if (empty($query)) {
+        return [];
     }
+
+
+    $productCollection = $this->productCollectionFactory->create();
+
+$productCollection->addAttributeToSelect([
+    'name',
+    'vendor_id'
+]);
+
+$productCollection = $this->productCollectionFactory->create();
+
+$nameTable = $productCollection->getTable('catalog_product_entity_varchar');
+$textTable = $productCollection->getTable('catalog_product_entity_text');
+
+$productCollection->getSelect()->joinLeft(
+    ['name_table' => $nameTable],
+    "e.entity_id = name_table.entity_id
+    AND name_table.attribute_id = 73
+    AND name_table.store_id = 0",
+    []
+);
+
+$productCollection->getSelect()->joinLeft(
+    ['desc_table' => $textTable],
+    "e.entity_id = desc_table.entity_id
+    AND desc_table.attribute_id = 75
+    AND desc_table.store_id = 0",
+    []
+);
+
+$productCollection->getSelect()->joinLeft(
+    ['short_desc_table' => $textTable],
+    "e.entity_id = short_desc_table.entity_id
+    AND short_desc_table.attribute_id = 76
+    AND short_desc_table.store_id = 0",
+    []
+);
+
+$productCollection->getSelect()->where(
+    "(name_table.value LIKE '%{$query}%'
+    OR e.sku LIKE '%{$query}%'
+    OR desc_table.value LIKE '%{$query}%'
+    OR short_desc_table.value LIKE '%{$query}%')"
+);
+
+$productCollection->addFieldToFilter(
+    'vendor_id',
+    ['notnull' => true]
+);
+
+//echo $productCollection->getSelect()->__toString();
+//exit;
+    return array_unique(
+        array_filter($productCollection->getColumnValues('vendor_id'))
+    );
+}
 
     /**
      * Utility to validate a specific set of IDs against the main filter rules
