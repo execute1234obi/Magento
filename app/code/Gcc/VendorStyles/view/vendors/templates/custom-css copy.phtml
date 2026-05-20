@@ -70,7 +70,6 @@ try {
       href="<?= $block->getViewFileUrl('Gcc_VendorStyles::css/vendor-mobile-layout.css'); ?>" />
 <link rel="stylesheet" type="text/css"
       href="<?= $block->getViewFileUrl('Gcc_VendorStyles::css/vendor-product-grid.css'); ?>" />
-      <div class="vendor-result-count">test</div>
 <?php if ($vendorProductFallbackAddUrl): ?>
 <!-- <div id="vendor-product-fallback-actions" hidden>
     <div class="vendor-product-grid-page-actions vendor-product-grid-page-actions--fallback">
@@ -84,35 +83,6 @@ try {
 </div> -->
 <?php endif; ?>
 <style>
-    /*added by vru  */
-    /* Hide last 3 inventory actions */
-/* 1. Aakhri ke 3 elements ko hide karo */
-.action-menu-items > ul.action-menu > li:nth-child(3),
-.action-menu-items > ul.action-menu > li:nth-child(4),
-.action-menu-items > ul.action-menu > li:nth-child(5) {
-    display: none !important;
-}
-
-/* 2. Main menu ka overflow set karo taaki sub-menu crop na ho */
-.action-menu-items,
-.action-menu-items > ul.action-menu {
-    overflow: visible !important;
-}
-
-/* 3. By default sub-menu (Enable/Disable) ko HIDE rakho */
-.action-menu-items ul.action-submenu {
-    display: none !important;
-}
-
-/* 4. Jab "Change status" (2nd li) par click ho (ya active class aaye), tabhi show karo */
-.action-menu-items > ul.action-menu > li:nth-child(2)._active ul.action-submenu,
-.action-menu-items > ul.action-menu > li:nth-child(2):focus-within ul.action-submenu,
-.action-menu-items > ul.action-menu > li:nth-child(2):hover ul.action-submenu {
-    display: block !important;
-    position: absolute; /* Taaki layout ke bahar proper khule */
-    z-index: 999;
-}
-    /*end*/
 body.subaccount-user-index main.page-content,
 body[class*="subaccount-user-index"] main.page-content {
     background: #ffffff;
@@ -3709,32 +3679,7 @@ body[class*="catalog-product-index"] table.data-grid .badge.bg-red {
         display: none !important;
     }
 }
-/* Overlap content container ko full width dene aur auto wrap karne ke liye */
-.vendor-product-grid-filter-panel .admin__data-grid-filters {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    width: 100% !important;
-    gap: 15px !important;
-    position: relative !important;
-}
 
-/* Har ek filter field/dropdown element ko proper layout inline block dene ke liye */
-.vendor-product-grid-filter-panel .admin__data-grid-filters .admin__form-field {
-    flex: 1 1 200px !important; /* Yeh crash inputs ko single inline lines me distribute karega */
-    max-width: 100% !important;
-    position: relative !important;
-    left: unset !important;
-    right: unset !important;
-    transform: none !important;
-}
-/*for pager */
-.gcc-hidden-native-pager {
-    position: absolute !important;
-    left: -9999px !important;
-    width: 1px !important;
-    height: 1px !important;
-    overflow: hidden !important;
-}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -3801,7 +3746,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }) || null;
     }
 
-
     function ensureVendorProductFilterBackdrop() {
         if (vendorProductFilterDrawerBackdrop && document.body.contains(vendorProductFilterDrawerBackdrop)) {
             return vendorProductFilterDrawerBackdrop;
@@ -3829,7 +3773,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         return vendorProductFilterDrawerBackdrop;
     }
-
 
     function bindVendorProductFilterScroll(scrollContainer) {
         if (!scrollContainer || scrollContainer.dataset.vendorProductScrollBound) {
@@ -3955,211 +3898,109 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // function ensureVendorProductFilterPanel(filterWrap) {
-    //     var header;
-    //     var filterBody;
-    //     var filterViewport;
-    //     var filters;
-    //     var footer;
-    //     var title;
-    //     var actions;
-    //     var clearButton;
-    //     var legend;
-    //     var cancelButton;
-    //     var applyButton;
-    //     var cancelLabel;
-    //     var applyLabel;
+    function ensureVendorProductFilterPanel(filterWrap) {
+        var header;
+        var filterBody;
+        var filterViewport;
+        var filters;
+        var footer;
+        var title;
+        var actions;
+        var clearButton;
+        var legend;
+        var cancelButton;
+        var applyButton;
+        var cancelLabel;
+        var applyLabel;
 
-    //     if (!filterWrap) {
-    //         return;
-    //     }
-
-    //     filterWrap.classList.add('vendor-product-grid-filter-panel');
-    //     header = filterWrap.querySelector('.vendor-product-grid-filter-panel__head');
-
-    //     if (!header) {
-    //         header = document.createElement('div');
-    //         header.className = 'vendor-product-grid-filter-panel__head';
-
-    //         title = document.createElement('h3');
-    //         title.className = 'vendor-product-grid-filter-panel__title';
-    //         title.textContent = 'Filter';
-    //         header.appendChild(title);
-
-    //         actions = document.createElement('div');
-    //         actions.className = 'vendor-product-grid-filter-panel__actions';
-
-    //         clearButton = document.createElement('button');
-    //         clearButton.type = 'button';
-    //         clearButton.className = 'vendor-product-grid-filter-panel__clear';
-    //         clearButton.textContent = 'Clear Filter';
-    //         clearButton.addEventListener('click', function (event) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //             clearVendorProductGridFilters();
-    //         });
-    //         actions.appendChild(clearButton);
-    //         header.appendChild(actions);
-
-    //         filterWrap.insertBefore(header, filterWrap.firstChild);
-    //     }
-
-    //     filters = filterWrap.querySelector('.admin__data-grid-filters');
-    //     footer = filterWrap.querySelector('.admin__data-grid-filters-footer');
-    //     filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
-    //     filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
-
-    //     if (!filterBody) {
-    //         filterBody = document.createElement('div');
-    //         filterBody.className = 'vendor-product-grid-filter-panel__body';
-    //     }
-
-    //     if (!filterViewport) {
-    //         filterViewport = document.createElement('div');
-    //         filterViewport.className = 'vendor-product-grid-filter-panel__viewport';
-    //     }
-
-    //     if (filterViewport.parentNode !== filterBody) {
-    //         filterBody.appendChild(filterViewport);
-    //     }
-
-    //     if (footer) {
-    //         filterWrap.insertBefore(filterBody, footer);
-    //     } else if (filterBody.parentNode !== filterWrap) {
-    //         filterWrap.appendChild(filterBody);
-    //     }
-
-    //     if (filters && filters.parentNode !== filterViewport) {
-    //         filterViewport.appendChild(filters);
-    //     }
-
-    //     arrangeVendorProductFilterSections(filterWrap, filterViewport);
-    //     markVendorProductFilterRangeGroups(filterWrap);
-    //     bindVendorProductFilterScroll(filterBody);
-
-    //     legend = filterWrap.querySelector('.admin__filters-legend');
-
-    //     if (legend) {
-    //         legend.textContent = 'Filter';
-    //         legend.style.display = 'none';
-    //     }
-
-    //     cancelButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-tertiary, [data-action="grid-filter-cancel"]');
-    //     applyButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-secondary, [data-action="grid-filter-apply"]');
-
-    //     if (cancelButton) {
-    //         cancelLabel = cancelButton.querySelector('span') || cancelButton;
-    //         cancelLabel.textContent = 'Cancel';
-    //     }
-
-    //     if (applyButton) {
-    //         applyLabel = applyButton.querySelector('span') || applyButton;
-    //         applyLabel.textContent = 'Apply Filter';
-    //     }
-    // }
-    //added by vru
-function ensureVendorProductFilterPanel(filterWrap) {
-    if (!filterWrap) return;
-
-    // 1. Core container layout class
-    filterWrap.classList.add('vendor-product-grid-filter-panel');
-
-    // 2. Clear Header Handling safely
-    var header = filterWrap.querySelector('.vendor-product-grid-filter-panel__head');
-    if (!header) {
-        header = document.createElement('div');
-        header.className = 'vendor-product-grid-filter-panel__head';
-
-        var title = document.createElement('h3');
-        title.className = 'vendor-product-grid-filter-panel__title';
-        title.textContent = 'Filter';
-        header.appendChild(title);
-
-        var actions = document.createElement('div');
-        actions.className = 'vendor-product-grid-filter-panel__actions';
-
-        var clearButton = document.createElement('button');
-        clearButton.type = 'button';
-        clearButton.className = 'vendor-product-grid-filter-panel__clear';
-        clearButton.textContent = 'Clear Filter';
-        
-        clearButton.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            if (typeof clearVendorProductGridFilters === 'function') {
-                clearVendorProductGridFilters();
-            }
-        });
-        
-        actions.appendChild(clearButton);
-        header.appendChild(actions);
-        filterWrap.insertBefore(header, filterWrap.firstChild);
-    }
-
-    // 3. TARGET THE CONTAINER INNER WRAPPERS CAREFULLY
-    var filters = filterWrap.querySelector('.admin__data-grid-filters');
-    var filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
-    var filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
-
-    // Agar wrapper elements missing hain toh unhe create karein par nested structural format me rakhein
-    if (!filterBody) {
-        filterBody = document.createElement('div');
-        filterBody.className = 'vendor-product-grid-filter-panel__body';
-    }
-
-    if (!filterViewport) {
-        filterViewport = document.createElement('div');
-        filterViewport.className = 'vendor-product-grid-filter-panel__viewport';
-    }
-
-    // Append to parent hierarchy properly
-    if (filterViewport.parentNode !== filterBody) {
-        filterBody.appendChild(filterViewport);
-    }
-
-    var footer = filterWrap.querySelector('.admin__data-grid-filters-footer');
-    if (footer && footer.parentNode) {
-        if (filterBody.parentNode !== footer.parentNode) {
-            footer.parentNode.insertBefore(filterBody, footer);
+        if (!filterWrap) {
+            return;
         }
-    } else if (filterBody.parentNode !== filterWrap) {
-        filterWrap.appendChild(filterBody);
-    }
 
-    // CRITICAL FIX FOR OVERLAPPING: 
-    // Filters component ko append karte waqt default magento structure classes remove nahi honi chahiye
-    if (filters && filters.parentNode !== filterViewport) {
-        filterViewport.appendChild(filters);
-    }
+        filterWrap.classList.add('vendor-product-grid-filter-panel');
+        header = filterWrap.querySelector('.vendor-product-grid-filter-panel__head');
 
-    // 4. Helper Layout Adjustments (Calling functions safely)
-    if (typeof arrangeVendorProductFilterSections === 'function') {
+        if (!header) {
+            header = document.createElement('div');
+            header.className = 'vendor-product-grid-filter-panel__head';
+
+            title = document.createElement('h3');
+            title.className = 'vendor-product-grid-filter-panel__title';
+            title.textContent = 'Filter';
+            header.appendChild(title);
+
+            actions = document.createElement('div');
+            actions.className = 'vendor-product-grid-filter-panel__actions';
+
+            clearButton = document.createElement('button');
+            clearButton.type = 'button';
+            clearButton.className = 'vendor-product-grid-filter-panel__clear';
+            clearButton.textContent = 'Clear Filter';
+            clearButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+                clearVendorProductGridFilters();
+            });
+            actions.appendChild(clearButton);
+            header.appendChild(actions);
+
+            filterWrap.insertBefore(header, filterWrap.firstChild);
+        }
+
+        filters = filterWrap.querySelector('.admin__data-grid-filters');
+        footer = filterWrap.querySelector('.admin__data-grid-filters-footer');
+        filterBody = filterWrap.querySelector('.vendor-product-grid-filter-panel__body');
+        filterViewport = filterWrap.querySelector('.vendor-product-grid-filter-panel__viewport');
+
+        if (!filterBody) {
+            filterBody = document.createElement('div');
+            filterBody.className = 'vendor-product-grid-filter-panel__body';
+        }
+
+        if (!filterViewport) {
+            filterViewport = document.createElement('div');
+            filterViewport.className = 'vendor-product-grid-filter-panel__viewport';
+        }
+
+        if (filterViewport.parentNode !== filterBody) {
+            filterBody.appendChild(filterViewport);
+        }
+
+        if (footer) {
+            filterWrap.insertBefore(filterBody, footer);
+        } else if (filterBody.parentNode !== filterWrap) {
+            filterWrap.appendChild(filterBody);
+        }
+
+        if (filters && filters.parentNode !== filterViewport) {
+            filterViewport.appendChild(filters);
+        }
+
         arrangeVendorProductFilterSections(filterWrap, filterViewport);
-    }
-    if (typeof markVendorProductFilterRangeGroups === 'function') {
         markVendorProductFilterRangeGroups(filterWrap);
-    }
-    if (typeof bindVendorProductFilterScroll === 'function') {
         bindVendorProductFilterScroll(filterBody);
+
+        legend = filterWrap.querySelector('.admin__filters-legend');
+
+        if (legend) {
+            legend.textContent = 'Filter';
+            legend.style.display = 'none';
+        }
+
+        cancelButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-tertiary, [data-action="grid-filter-cancel"]');
+        applyButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-secondary, [data-action="grid-filter-apply"]');
+
+        if (cancelButton) {
+            cancelLabel = cancelButton.querySelector('span') || cancelButton;
+            cancelLabel.textContent = 'Cancel';
+        }
+
+        if (applyButton) {
+            applyLabel = applyButton.querySelector('span') || applyButton;
+            applyLabel.textContent = 'Apply Filter';
+        }
     }
 
-    // 5. Labels and Button Layout Fixes
-    var legend = filterWrap.querySelector('.admin__filters-legend');
-    if (legend) legend.style.display = 'none';
-
-    var cancelButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-tertiary, [data-action="grid-filter-cancel"]');
-    var applyButton = filterWrap.querySelector('.admin__data-grid-filters-footer .action-secondary, [data-action="grid-filter-apply"]');
-
-    if (cancelButton) {
-        var cancelLabel = cancelButton.querySelector('span') || cancelButton;
-        cancelLabel.textContent = 'Cancel';
-    }
-
-    if (applyButton) {
-        var applyLabel = applyButton.querySelector('span') || applyButton;
-        applyLabel.textContent = 'Apply Filter';
-    }
-}
     function clearVendorProductGridFilters() {
         var filterWrap = findVendorProductFilterWrap();
         var applyButton;
@@ -4925,402 +4766,407 @@ function ensureVendorProductFilterPanel(filterWrap) {
                 !candidate.closest('td');
         }) || null;
     }
-  function normalizeText(value) {
-        return (value || '').replace(/\s+/g, ' ').trim();
-    }
-    //added by vru 
 
-    function getResultsCount(header, scope) {
+    function normalizeVendorProductReferenceHeader() {
+        var gridWrap;
+        var scope;
+        var gridOuterWrap;
+        var gridHeaderParent;
+        var pageActions;
+        var pageActionShell;
+        var header;
+        var referenceHeader;
+        var referenceHead;
+        var referenceTitle;
+        var referenceActions;
+        var referenceToolbar;
+        var referenceResults;
+        var referenceControls;
+        var actionWrap;
+        var searchWrap;
+        var filterWrap;
+        var actionButton;
+        var actionLabel;
+        var searchInput;
+        var filterButton;
+        var resultCount;
+        var titleText;
+        var topbarTitle;
+        var mobileTopbarTitle;
+        var quickButton;
+        var quickCandidates;
+        var fallbackActionShell;
+        var realAddButton;
+        var fallbackReferenceAction;
 
-    var count = NaN;
-    var text = '';
-    var countNode = null;
-
-    scope = scope || document;
-
-    /* Magento pager count */
-    countNode = scope.querySelector(
-        '.data-grid-pager .admin__control-support-text'
-    );
-
-    if (countNode) {
-
-        text = (countNode.textContent || '').trim();
-
-        /*
-            Example:
-            "1-20 of 124"
-            "124 records found"
-        */
-
-        var matches = text.match(/\d+/g);
-
-        if (matches && matches.length) {
-
-            /* take LAST number */
-            count = parseInt(
-                matches[matches.length - 1],
-                10
-            );
+        if (!isVendorProductGridPage) {
+            return;
         }
-    }
 
-    /* UI component fallback */
-    if (
-        (isNaN(count) || count < 0) &&
-        typeof pagingComponent !== 'undefined' &&
-        pagingComponent &&
-        pagingComponent.totalRecords
-    ) {
+        gridWrap = Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap')).find(function (candidate) {
+            return candidate &&
+                candidate.getAttribute('data-role') !== 'sticky-el-root' &&
+                candidate.querySelector('table.data-grid');
+        }) || null;
 
-        count = parseInt(
-            pagingComponent.totalRecords,
-            10
-        );
-    }
+        if (!gridWrap) {
+            return;
+        }
 
-    /* visible rows fallback */
-    if (isNaN(count) || count < 0) {
+        scope = findVendorProductGridScope(gridWrap) || gridWrap.parentElement;
+        gridOuterWrap = scope ? scope.querySelector('.admin__data-grid-outer-wrap') : null;
 
-        count = getVisibleGridRowCount(scope);
-    }
+        if (!scope) {
+            return;
+        }
 
-    return count >= 0 ? count : 0;
-}
+        Array.prototype.forEach.call(document.querySelectorAll('.vendor-product-grid-reference-header'), function (existingHeader) {
+            if (existingHeader && !scope.contains(existingHeader)) {
+                existingHeader.remove();
+            }
+        });
 
-// Fallback safety helper function
-function getVisibleGridRowCount(scope) {
-    if (!scope) return 0;
-    var rows = scope.querySelectorAll('table.data-grid tbody tr:not(.data-grid-tr-no-records)');
-    return rows ? rows.length : 0;
-}
+        pageActions = findVendorProductTopPageActions() || scope.querySelector('.page-actions:not(.vendor-product-grid-footer-controls)');
+        pageActionShell = pageActions ? pageActions.closest('.page-main-actions') : null;
+        header = scope.querySelector('.admin__data-grid-header');
+        referenceHeader = scope.querySelector('.vendor-product-grid-reference-header');
+        gridHeaderParent = header && header.parentNode ? header.parentNode : (gridOuterWrap && gridOuterWrap.parentNode ? gridOuterWrap.parentNode : scope);
 
-function normalizeVendorProductReferenceHeader() {
-    var gridWrap;
-    var scope;
-    var header;
-    var referenceHeader;
-    var referenceToolbar;
-    var referenceResults;
-    var referenceControls;
-    var filterWrap;
-    var filterButton;
-    var clearButton;
-    var resultCount;
-    var searchWrap;
+        if (!referenceHeader) {
+            referenceHeader = document.createElement('div');
+            referenceHeader.className = 'vendor-product-grid-reference-header';
 
-    if (!isVendorProductGridPage) {
-        return;
-    }
+            referenceHead = document.createElement('div');
+            referenceHead.className = 'vendor-product-grid-reference-head';
+            referenceHeader.appendChild(referenceHead);
 
-    gridWrap = Array.prototype.slice.call(
-        document.querySelectorAll('.admin__data-grid-wrap')
-    ).find(function (candidate) {
-        return candidate &&
-            candidate.getAttribute('data-role') !== 'sticky-el-root' &&
-            candidate.querySelector('table.data-grid');
-    }) || null;
+            referenceTitle = document.createElement('h2');
+            referenceTitle.className = 'vendor-product-grid-reference-title';
+            referenceHead.appendChild(referenceTitle);
 
-    if (!gridWrap) {
-        return;
-    }
+            referenceActions = document.createElement('div');
+            referenceActions.className = 'vendor-product-grid-reference-actions';
+            referenceHead.appendChild(referenceActions);
 
-    scope = findVendorProductGridScope(gridWrap) || gridWrap.parentElement;
-    if (!scope) {
-        return;
-    }
+            referenceToolbar = document.createElement('div');
+            referenceToolbar.className = 'vendor-product-grid-reference-toolbar';
+            referenceHeader.appendChild(referenceToolbar);
 
-    header = scope.querySelector('.admin__data-grid-header');
-    referenceHeader = scope.querySelector('.vendor-product-grid-reference-header');
+            referenceResults = document.createElement('div');
+            referenceResults.className = 'vendor-product-grid-reference-results';
+            referenceToolbar.appendChild(referenceResults);
 
-    // If Magento re-rendered the header and deleted our section, create it again safely
-    if (!referenceHeader) {
-        referenceHeader = document.createElement('div');
-        referenceHeader.className = 'vendor-product-grid-reference-header';
+            referenceControls = document.createElement('div');
+            referenceControls.className = 'vendor-product-grid-reference-controls';
+            referenceToolbar.appendChild(referenceControls);
 
-        referenceToolbar = document.createElement('div');
-        referenceToolbar.className = 'vendor-product-grid-reference-toolbar';
-        referenceHeader.appendChild(referenceToolbar);
-
-        /* RESULT SECTION */
-        referenceResults = document.createElement('div');
-        referenceResults.className = 'vendor-product-grid-reference-results';
-        referenceToolbar.appendChild(referenceResults);
-
-        /* CONTROL SECTION */
-        referenceControls = document.createElement('div');
-        referenceControls.className = 'vendor-product-grid-reference-controls';
-        referenceToolbar.appendChild(referenceControls);
-
-        if (header && header.parentNode) {
-            header.parentNode.insertBefore(referenceHeader, header);
+            if (header && header.parentNode) {
+                header.parentNode.insertBefore(referenceHeader, header);
+            } else if (gridOuterWrap && gridOuterWrap.parentNode) {
+                gridOuterWrap.parentNode.insertBefore(referenceHeader, gridOuterWrap);
+            } else {
+                scope.insertBefore(referenceHeader, gridWrap);
+            }
         } else {
-            scope.insertBefore(referenceHeader, gridWrap);
+            referenceHead = referenceHeader.querySelector('.vendor-product-grid-reference-head');
+            referenceTitle = referenceHeader.querySelector('.vendor-product-grid-reference-title');
+            referenceActions = referenceHeader.querySelector('.vendor-product-grid-reference-actions');
+            referenceToolbar = referenceHeader.querySelector('.vendor-product-grid-reference-toolbar');
+            referenceResults = referenceHeader.querySelector('.vendor-product-grid-reference-results');
+            referenceControls = referenceHeader.querySelector('.vendor-product-grid-reference-controls');
         }
-    } else {
-        referenceToolbar = referenceHeader.querySelector('.vendor-product-grid-reference-toolbar');
-        referenceResults = referenceHeader.querySelector('.vendor-product-grid-reference-results');
-        referenceControls = referenceHeader.querySelector('.vendor-product-grid-reference-controls');
-    }
 
-    /* SEARCH CONTROL */
-    searchWrap = findVendorProductHeaderControl(scope, '.data-grid-search-control-wrap');
-    if (searchWrap && referenceControls && searchWrap.parentNode !== referenceControls) {
-        searchWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--search');
-        referenceControls.appendChild(searchWrap);
-        
-        var searchInput = searchWrap.querySelector('.data-grid-search-control');
+        if (referenceHeader && gridHeaderParent && referenceHeader.parentNode !== gridHeaderParent) {
+            if (header && header.parentNode === gridHeaderParent) {
+                gridHeaderParent.insertBefore(referenceHeader, header);
+            } else if (gridOuterWrap && gridOuterWrap.parentNode === gridHeaderParent) {
+                gridHeaderParent.insertBefore(referenceHeader, gridOuterWrap);
+            } else {
+                gridHeaderParent.insertBefore(referenceHeader, gridHeaderParent.firstChild || null);
+            }
+        }
+
+        titleText = getVendorProductReferenceTitle();
+
+        if (referenceTitle) {
+            referenceTitle.textContent = titleText;
+        }
+
+        topbarTitle = document.querySelector('.vendor-topbar__title');
+        mobileTopbarTitle = document.querySelector('.vendor-mobile-topbar__page-title');
+
+        if (topbarTitle) {
+            topbarTitle.textContent = titleText;
+        }
+
+        if (mobileTopbarTitle) {
+            mobileTopbarTitle.textContent = titleText;
+        }
+
+        if (pageActions && referenceActions && pageActions.parentNode !== referenceActions) {
+            referenceActions.appendChild(pageActions);
+        }
+
+        if (pageActionShell && pageActions && pageActions.parentNode !== pageActionShell) {
+            pageActionShell.classList.add('vendor-product-grid-page-actions-shell--detached');
+        }
+
+        if (pageActions) {
+            pageActions.classList.add('vendor-product-grid-page-actions');
+            pageActions.classList.remove('_fixed');
+            quickCandidates = Array.prototype.slice.call(pageActions.querySelectorAll('#add_product_form_btn, button[onclick*="addProduct()"], button, a, span'));
+
+            quickCandidates.forEach(function (element) {
+                var elementText = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
+                var directWrapper = element.parentElement && element.parentElement.parentElement && element.parentElement.parentElement.classList.contains('page-actions-buttons')
+                    ? element.parentElement
+                    : null;
+
+                if (element.id === 'add_product_form_btn' || elementText === 'quick new product' || elementText.indexOf('quick new product') !== -1) {
+                    element.classList.add('vendor-product-grid-hide-quick');
+
+                    if (element.parentElement) {
+                        element.parentElement.classList.add('vendor-product-grid-hide-quick');
+                    }
+
+                    if (directWrapper) {
+                        directWrapper.classList.add('vendor-product-grid-hide-quick');
+                    }
+
+                    if (element.closest('.actions-split')) {
+                        element.closest('.actions-split').classList.add('vendor-product-grid-hide-quick');
+                    }
+                }
+            });
+        }
+
+        if (referenceActions) {
+            realAddButton = findVisibleVendorProductAddButton(referenceActions);
+            fallbackReferenceAction = referenceActions.querySelector('.vendor-product-grid-page-actions--fallback');
+
+            if (realAddButton) {
+                if (fallbackReferenceAction) {
+                    fallbackReferenceAction.remove();
+                }
+            } else {
+                if (!fallbackReferenceAction) {
+                    fallbackActionShell = createVendorProductFallbackAddAction();
+
+                    if (fallbackActionShell) {
+                        referenceActions.appendChild(fallbackActionShell);
+                    }
+                }
+            }
+        }
+
+        actionWrap = findVendorProductHeaderControl(scope, '.action-select-wrap');
+        searchWrap = findVendorProductHeaderControl(scope, '.data-grid-search-control-wrap');
+        filterWrap = findVendorProductHeaderControl(scope, '.data-grid-filters-actions-wrap');
+
+        if (actionWrap) {
+            actionWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--action');
+        }
+
+        if (searchWrap) {
+            searchWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--search');
+        }
+
+        if (filterWrap) {
+            filterWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--filter');
+        }
+
+        // if (actionWrap && referenceControls && actionWrap.parentNode !== referenceControls) {
+        //     referenceControls.appendChild(actionWrap);
+        // }
+
+        // if (searchWrap && referenceControls && searchWrap.parentNode !== referenceControls) {
+        //     referenceControls.appendChild(searchWrap);
+        // }
+
+        // if (filterWrap && referenceControls && filterWrap.parentNode !== referenceControls) {
+        //     referenceControls.appendChild(filterWrap);
+        // }
+
+        actionButton = referenceControls ? referenceControls.querySelector('.action-select') : null;
+        actionLabel = actionButton ? actionButton.querySelector('span') : null;
+
+        if (actionLabel) {
+            actionLabel.textContent = 'Action';
+        }
+
+        if (actionButton) {
+            if (!actionLabel) {
+                actionButton.textContent = 'Action';
+            }
+
+            actionButton.setAttribute('title', 'Action');
+        }
+
+        searchInput = referenceControls ? referenceControls.querySelector('.data-grid-search-control') : null;
+
         if (searchInput) {
             searchInput.setAttribute('placeholder', 'Search Product');
             searchInput.setAttribute('aria-label', 'Search Product');
         }
-    }
 
-    /* FILTER BUTTON */
-    filterWrap = findVendorProductHeaderControl(scope, '.data-grid-filters-actions-wrap');
-    if (filterWrap && referenceControls && filterWrap.parentNode !== referenceControls) {
-        filterWrap.classList.add('vendor-product-grid-reference-control', 'vendor-product-grid-reference-control--filter');
-        referenceControls.appendChild(filterWrap);
-    }
+        filterButton = referenceControls ? referenceControls.querySelector('.data-grid-filters-action-wrap .action-default') : null;
 
-    filterButton = referenceControls ? referenceControls.querySelector('.data-grid-filters-action-wrap .action-default') : null;
-    if (filterButton && filterButton.textContent.trim() !== 'Filters') {
-        filterButton.textContent = 'Filters';
-    }
-    /* ACTION DROPDOWN */
-        var actionSelectWrap = Array.from(
-            document.querySelectorAll('.action-select-wrap')
-        ).find(function (el) {
-
-            var buttonText = el.querySelector('.action-select span');
-
-            return buttonText &&
-                buttonText.textContent.trim() === 'Actions';
-        });
-        Array.prototype.forEach.call(
-            referenceControls.querySelectorAll('.action-select-wrap'),
-    function (item) {
-
-        var text = item.textContent.trim();
-
-        if (text.indexOf('Select') !== -1 && text.indexOf('Actions') === -1) {
-            item.style.display = 'none';
+        if (filterButton) {
+            filterButton.textContent = 'Filters';
         }
-    }
-);
-if (
-    actionSelectWrap &&
-    referenceControls &&
-    actionSelectWrap.parentNode !== referenceControls
-) {
-    actionSelectWrap.classList.add(
-        'vendor-product-grid-reference-control',
-        'vendor-product-grid-reference-control--actions'
-    );
 
-    referenceControls.appendChild(actionSelectWrap);
-}
-    /* ACTIVE FILTERS (CURRENT FILTER CHIPS) */
-   var actionSelectWrap = scope.querySelector(
-    '.admin__data-grid-header .action-select-wrap'
-);
+        Array.prototype.forEach.call(scope.querySelectorAll('.action-select-wrap .action-select span'), function (element) {
+            var labelText = (element.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase();
 
-if (
-    actionSelectWrap &&
-    referenceControls &&
-    actionSelectWrap.parentNode !== referenceControls
-) {
-    actionSelectWrap.classList.add(
-        'vendor-product-grid-reference-control',
-        'vendor-product-grid-reference-control--actions'
-    );
-
-    referenceControls.appendChild(actionSelectWrap);
-}
-
-    /* UPDATE RESULTS AT THE VERY END */
-    if (referenceResults) {
-        var countSpan = referenceResults.querySelector('.dynamic-result-count-span');
-        if (!countSpan) {
-            countSpan = document.createElement('span');
-            countSpan.className = 'dynamic-result-count-span';
-            referenceResults.appendChild(countSpan);
-        }
-        
-        resultCount = parseInt(getResultsCount(header || scope, scope), 10);
-        countSpan.textContent = (isNaN(resultCount) || resultCount < 0 ? 0 : resultCount) + ' Results';
-    }
-
-    // ─── CRITICAL AUTOMATION FIX ──────────────────────────────────────
-    // Jab bhi filter change hoga ya data reload hoga, yeh code automatic runs trigger karega
-    if (!scope.hasProductFilterObserver) {
-        scope.hasProductFilterObserver = true;
-        
-        var observer = new MutationObserver(function (mutations) {
-            // Thoda sa delay taaki Magento apna HTML final kar le
-            setTimeout(function() {
-                normalizeVendorProductReferenceHeader();
-            }, 100);
+            if (labelText === 'actions') {
+                element.textContent = 'Action';
+            }
         });
 
-        // Grid contents aur header updates dono ko dynamic look me monitor karein
+            resultCount = getVendorProductGridResultCount(header || scope, scope);
+
+            if (referenceResults) {
+                referenceResults.textContent = resultCount ? resultCount + ' Results' : '';
+            }
+
         if (header) {
-            observer.observe(header, { childList: true, subtree: true });
-        }
-        if (gridWrap) {
-            observer.observe(gridWrap, { childList: true, subtree: true });
+            header.classList.add('vendor-product-grid-header-shell');
         }
     }
-}
 
+    function normalizeVendorProductGridHeader() {
+        Array.prototype.forEach.call(document.querySelectorAll('.admin__data-grid-header'), function (header) {
+            var toolbarRow;
+            var meta;
+            var controls;
+            var sourceRows;
+            var actionWrap;
+            var searchWrap;
+            var filterWrap;
+            var actionButton;
+            var actionLabel;
+            var searchInput;
+            var filterButton;
+            var resultCount;
+            var controlsFound;
 
-//     
-//     function normalizeVendorProductGridHeader() {
-//         Array.prototype.forEach.call(document.querySelectorAll('.admin__data-grid-header'), function (header) {
-//             var toolbarRow;
-//             var meta;
-//             var controls;
-//             var sourceRows;
-//             var actionWrap;
-//             var searchWrap;
-//             var filterWrap;
-//             var actionButton;
-//             var actionLabel;
-//             var searchInput;
-//             var filterButton;
-//             var resultCount;
-//             var controlsFound;
+            if (header.closest('.sticky-header')) {
+                return;
+            }
 
-//             if (header.closest('.sticky-header')) {
-//                 return;
-//             }
+            if (!document.querySelector('.admin__data-grid-wrap table.data-grid')) {
+                return;
+            }
 
-//             if (!document.querySelector('.admin__data-grid-wrap table.data-grid')) {
-//                 return;
-//             }
+            if (document.querySelector('.vendor-product-grid-reference-header')) {
+                toolbarRow = header.querySelector('.vendor-product-grid-toolbar-row');
 
-//             if (document.querySelector('.vendor-product-grid-reference-header')) {
-//                 toolbarRow = header.querySelector('.vendor-product-grid-toolbar-row');
+                if (toolbarRow) {
+                    toolbarRow.remove();
+                }
 
-//                 if (toolbarRow) {
-//                     toolbarRow.remove();
-//                 }
+                header.classList.add('vendor-product-grid-header-shell');
+                return;
+            }
 
-//                 header.classList.add('vendor-product-grid-header-shell');
-//                 return;
-//             }
+            toolbarRow = header.querySelector('.vendor-product-grid-toolbar-row');
 
-//             toolbarRow = header.querySelector('.vendor-product-grid-toolbar-row');
+            if (!toolbarRow) {
+                toolbarRow = document.createElement('div');
+                toolbarRow.className = 'vendor-product-grid-toolbar-row';
 
-//             if (!toolbarRow) {
-//                 toolbarRow = document.createElement('div');
-//                 toolbarRow.className = 'vendor-product-grid-toolbar-row';
+                meta = document.createElement('div');
+                meta.className = 'vendor-product-grid-toolbar-meta';
+                toolbarRow.appendChild(meta);
 
-//                 meta = document.createElement('div');
-//                 meta.className = 'vendor-product-grid-toolbar-meta';
-//                 toolbarRow.appendChild(meta);
+                controls = document.createElement('div');
+                controls.className = 'vendor-product-grid-toolbar-controls';
+                toolbarRow.appendChild(controls);
 
-//                 controls = document.createElement('div');
-//                 controls.className = 'vendor-product-grid-toolbar-controls';
-//                 toolbarRow.appendChild(controls);
+                header.insertBefore(toolbarRow, header.firstChild);
+            } else {
+                meta = toolbarRow.querySelector('.vendor-product-grid-toolbar-meta');
+                controls = toolbarRow.querySelector('.vendor-product-grid-toolbar-controls');
+            }
 
-//                 header.insertBefore(toolbarRow, header.firstChild);
-//             } else {
-//                 meta = toolbarRow.querySelector('.vendor-product-grid-toolbar-meta');
-//                 controls = toolbarRow.querySelector('.vendor-product-grid-toolbar-controls');
-//             }
+            sourceRows = Array.prototype.slice.call(header.querySelectorAll('.admin__data-grid-header-row'));
+            actionWrap = header.querySelector('.action-select-wrap');
+            searchWrap = header.querySelector('.data-grid-search-control-wrap');
+            filterWrap = header.querySelector('.data-grid-filters-actions-wrap');
+            controlsFound = 0;
 
-//             sourceRows = Array.prototype.slice.call(header.querySelectorAll('.admin__data-grid-header-row'));
-//             actionWrap = header.querySelector('.action-select-wrap');
-//             searchWrap = header.querySelector('.data-grid-search-control-wrap');
-//             filterWrap = header.querySelector('.data-grid-filters-actions-wrap');
-//             controlsFound = 0;
+            if (actionWrap && actionWrap.parentNode !== controls) {
+                controls.appendChild(actionWrap);
+            }
 
-//             // if (actionWrap && actionWrap.parentNode !== controls) {
-//             //     controls.appendChild(actionWrap);
-//             // }
-//             if (actionWrap) {
-//     actionWrap.classList.add(
-//         'vendor-product-grid-toolbar-action'
-//     );
-// }
-//             if (actionWrap) {
-//                 controlsFound++;
-//             }
+            if (actionWrap) {
+                controlsFound++;
+            }
 
-//             // if (searchWrap && searchWrap.parentNode !== controls) {
-//             //     controls.appendChild(searchWrap);
-//             // }
-//             if (searchWrap) {
-//     searchWrap.classList.add(
-//         'vendor-product-grid-toolbar-search'
-//     );
-// }
-//             if (searchWrap) {
-//                 controlsFound++;
-//             }
+            if (searchWrap && searchWrap.parentNode !== controls) {
+                controls.appendChild(searchWrap);
+            }
 
-//             // if (filterWrap && filterWrap.parentNode !== controls) {
-//             //     controls.appendChild(filterWrap);
-//             // }
-//             if (filterWrap) {
-//     filterWrap.classList.add(
-//         'vendor-product-grid-toolbar-filter'
-//     );
-// }
+            if (searchWrap) {
+                controlsFound++;
+            }
 
-//             if (filterWrap) {
-//                 controlsFound++;
-//             }
+            if (filterWrap && filterWrap.parentNode !== controls) {
+                controls.appendChild(filterWrap);
+            }
 
-//             actionButton = header.querySelector('.action-select');
-//             actionLabel = actionButton ? actionButton.querySelector('span') : null;
+            if (filterWrap) {
+                controlsFound++;
+            }
 
-//             if (actionLabel) {
-//                 actionLabel.textContent = 'Action';
-//             }
+            actionButton = header.querySelector('.action-select');
+            actionLabel = actionButton ? actionButton.querySelector('span') : null;
 
-//             if (actionButton) {
-//                 actionButton.setAttribute('title', 'Action');
-//             }
+            if (actionLabel) {
+                actionLabel.textContent = 'Action';
+            }
 
-//             searchInput = header.querySelector('.data-grid-search-control');
+            if (actionButton) {
+                actionButton.setAttribute('title', 'Action');
+            }
 
-//             if (searchInput) {
-//                 searchInput.setAttribute('placeholder', 'Search Product');
-//                 searchInput.setAttribute('aria-label', 'Search Product');
-//             }
+            searchInput = header.querySelector('.data-grid-search-control');
 
-//             filterButton = header.querySelector('.data-grid-filters-action-wrap .action-default');
+            if (searchInput) {
+                searchInput.setAttribute('placeholder', 'Search Product');
+                searchInput.setAttribute('aria-label', 'Search Product');
+            }
 
-//             if (filterButton) {
-//                 filterButton.textContent = 'Filters';
-//             }
+            filterButton = header.querySelector('.data-grid-filters-action-wrap .action-default');
 
-//             resultCount = getVendorProductGridResultCount(header, header ? header.parentElement : null);
-//             meta.textContent = resultCount ? resultCount + ' Results' : '';
+            if (filterButton) {
+                filterButton.textContent = 'Filters';
+            }
 
-//             if (controlsFound || resultCount) {
-//                 header.classList.add('vendor-product-grid-header-ready');
-//             }
+            resultCount = getVendorProductGridResultCount(header, header ? header.parentElement : null);
+            meta.textContent = resultCount ? resultCount + ' Results' : '';
 
-//             sourceRows.forEach(function (row) {
-//                 if (!row || row.parentNode !== header) {
-//                     return;
-//                 }
+            if (controlsFound || resultCount) {
+                header.classList.add('vendor-product-grid-header-ready');
+            }
 
-//                 row.classList.add('vendor-product-grid-toolbar-source-row');
+            sourceRows.forEach(function (row) {
+                if (!row || row.parentNode !== header) {
+                    return;
+                }
 
-//                 if (header.classList.contains('vendor-product-grid-header-ready')) {
-//                     row.style.display = 'none';
-//                 }
-//             });
+                row.classList.add('vendor-product-grid-toolbar-source-row');
 
-//             if (!controlsFound && !resultCount) {
-//                 header.classList.remove('vendor-product-grid-header-ready');
-//             }
-//         });
-//     }
+                if (header.classList.contains('vendor-product-grid-header-ready')) {
+                    row.style.display = 'none';
+                }
+            });
+
+            if (!controlsFound && !resultCount) {
+                header.classList.remove('vendor-product-grid-header-ready');
+            }
+        });
+    }
 
     function normalizeVendorProductNameCells() {
         var gridTable = Array.prototype.slice.call(document.querySelectorAll('.admin__data-grid-wrap table.data-grid')).find(function (candidate) {
@@ -5772,7 +5618,7 @@ if (
             syncTimer = setTimeout(function () {
                 normalizeVendorProductPageActions();
                 normalizeVendorProductReferenceHeader();
-                //normalizeVendorProductGridHeader();
+                normalizeVendorProductGridHeader();
                 ensureVendorProductFilterDrawer();
                 ensureVendorProductSelectionColumn();
                 normalizeVendorProductNameCells();
@@ -5794,11 +5640,6 @@ if (
         });
 
         window.addEventListener('resize', scheduleSync);
-        //added by vru
-        window.addEventListener('load', function () {
-
-    setTimeout(scheduleSync, 1000);
-});
     }
 
     initVendorProductGridFooter();
@@ -6476,34 +6317,6 @@ body[class*="subaccount-user-index"] table.data-grid .gcc-subaccount-user-action
         flex: 0 0 auto;
     }
 }
-/*# sourceURL=vendor-subaccount-user-grid.js */
-.vendor-product-grid-reference-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-}
-
-.admin__data-grid-header-row {
-    display: flex !important;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.action-select-wrap {
-    order: 1;
-}
-
-.data-grid-search-control-wrap {
-    order: 2;
-}
-
-.data-grid-filters-actions-wrap {
-    order: 3;
-}
 </style>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -6517,7 +6330,11 @@ document.addEventListener('DOMContentLoaded', function () {
             document.body.className.indexOf('subaccount-user-index') !== -1
         );
     }
-  
+
+    function normalizeText(value) {
+        return (value || '').replace(/\s+/g, ' ').trim();
+    }
+
     function getMessagesNode() {
         return Array.prototype.slice.call(document.querySelectorAll(
             'main.page-content > #messages, main.page-content > .messages, #messages, .messages'
@@ -6614,7 +6431,54 @@ document.addEventListener('DOMContentLoaded', function () {
         return scope ? scope.querySelector('.admin__data-grid-pager-wrap') : null;
     }
 
-   
+    function getResultsCount(header, scope) {
+        var count = pagingComponent ? parseGridCountValue(pagingComponent.totalRecords) : NaN;
+        var text;
+        var rowCount;
+        var countNode;
+        var searchScope = scope || (header ? header.parentElement : null);
+
+        if (!isNaN(count) && count > 0) {
+            rowCount = getVisibleGridRowCount(searchScope);
+
+            return rowCount > count ? rowCount : count;
+        }
+
+        if (header) {
+            countNode = header.querySelector('.col-xs-3 .admin__control-support-text');
+
+            if (countNode) {
+                text = normalizeText(countNode.textContent);
+                count = parseGridCountFromText(text);
+
+                if (!isNaN(count) && count > 0) {
+                    rowCount = getVisibleGridRowCount(searchScope);
+
+                    return rowCount > count ? rowCount : count;
+                }
+            }
+
+            text = normalizeText(header.textContent || '');
+            count = parseGridCountFromText(text);
+
+            if (!isNaN(count) && count > 0) {
+                rowCount = getVisibleGridRowCount(searchScope);
+
+                return rowCount > count ? rowCount : count;
+            }
+        }
+
+        if (searchScope) {
+            rowCount = getVisibleGridRowCount(searchScope);
+
+            if (rowCount) {
+                return rowCount;
+            }
+        }
+
+        return 0;
+    }
+
     function getGridState(pagerWrap) {
         var pager = pagerWrap ? pagerWrap.querySelector('.admin__data-grid-pager') : null;
         var currentInput = pager ? pager.querySelector('.admin__control-text') : null;
@@ -6769,74 +6633,86 @@ document.addEventListener('DOMContentLoaded', function () {
         }, current >= total);
     }
 
-    //added by vru 
-function ensureTopBar(header, scope) {
-    // 1. Validation check sabse upar hona chahiye crash se bachne ke liye
-    // if (!header || !scope) {
-    //     return;
-    // }
+    function ensureTopBar(header, scope) {
+        var topBar = scope.querySelector('.gcc-subaccount-user-grid-toolbar');
+        var resultsWrap;
+        var controlsWrap;
+        var searchWrap;
+        var filterWrap;
+        var searchInput;
+        var filterButton;
+        var resultText;
+        var hasContent;
 
-    // var topBar = scope.querySelector('.gcc-subaccount-user-grid-toolbar');
-    // var resultsWrap;
-    // var resultTextSpan;
+        if (!topBar) {
+            topBar = document.createElement('div');
+            topBar.className = 'gcc-subaccount-user-grid-toolbar';
 
-    // if (!topBar) {
-    //     topBar = document.createElement('div');
-    //     topBar.className = 'gcc-subaccount-user-grid-toolbar';
+            resultsWrap = document.createElement('div');
+            resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
+            topBar.appendChild(resultsWrap);
 
-    //     resultsWrap = document.createElement('div');
-    //     resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
+            controlsWrap = document.createElement('div');
+            controlsWrap.className = 'gcc-subaccount-user-grid-toolbar__controls';
+            topBar.appendChild(controlsWrap);
 
-    //     topBar.appendChild(resultsWrap);
-    //     header.parentNode.insertBefore(topBar, header);
-    // } else {
-    //     resultsWrap = topBar.querySelector('.gcc-subaccount-user-grid-toolbar__results');
-    // }
+            header.parentNode.insertBefore(topBar, header);
+        } else {
+            resultsWrap = topBar.querySelector('.gcc-subaccount-user-grid-toolbar__results');
+            controlsWrap = topBar.querySelector('.gcc-subaccount-user-grid-toolbar__controls');
+        }
 
-    // if (!resultsWrap) {
-    //     resultsWrap = document.createElement('div');
-    //     resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
-    //     topBar.appendChild(resultsWrap);
-    // }
+        if (!resultsWrap) {
+            resultsWrap = document.createElement('div');
+            resultsWrap.className = 'gcc-subaccount-user-grid-toolbar__results';
+            topBar.appendChild(resultsWrap);
+        }
 
-    // // 2. SAFE TEXT UPDATE: Pure element ko overwrite karne ke badle sirf text span ko target karein
-    // resultTextSpan = resultsWrap.querySelector('.results-count-text');
-    // if (!resultTextSpan) {
-    //     resultTextSpan = document.createElement('span');
-    //     resultTextSpan.className = 'results-count-text';
-    //     resultsWrap.appendChild(resultTextSpan);
-    // }
+        if (!controlsWrap) {
+            controlsWrap = document.createElement('div');
+            controlsWrap.className = 'gcc-subaccount-user-grid-toolbar__controls';
+            topBar.appendChild(controlsWrap);
+        }
 
-    // var resultCount = parseInt(getResultsCount(header, scope), 10);
-    // if (isNaN(resultCount) || resultCount < 0) {
-    //     resultCount = 0;
-    // }
+        resultText = getResultsCount(header, scope) + ' Results';
+        resultsWrap.textContent = resultText;
 
-    // // Ab sirf span ke andar ka text change hoga, filter options safe rahenge
-    // resultTextSpan.textContent = resultCount + ' Results';
+        searchWrap = header.querySelector('.data-grid-search-control-wrap');
+        filterWrap = header.querySelector('.data-grid-filters-actions-wrap');
 
-    // /* KEEP ORIGINAL HEADER */
-    // header.style.display = '';
+        if (searchWrap && searchWrap.parentNode !== controlsWrap) {
+            controlsWrap.appendChild(searchWrap);
+        }
 
-    // /* ADD CUSTOM CLASS FOR STYLING */
-    // header.classList.add('gcc-subaccount-user-grid-header-shell');
+        if (filterWrap && filterWrap.parentNode !== controlsWrap) {
+            controlsWrap.appendChild(filterWrap);
+        }
 
-    // /* SEARCH INPUT */
-    // var searchInput = header.querySelector('.data-grid-search-control');
-    // if (searchInput) {
-    //     searchInput.setAttribute('placeholder', 'Search User');
-    //     searchInput.setAttribute('aria-label', 'Search User');
-    // }
+        searchInput = topBar.querySelector('.data-grid-search-control');
 
-    // /* FILTER BUTTON */
-    // var filterButton = header.querySelector('.data-grid-filters-action-wrap .action-default');
-    // if (filterButton) {
-    //     // textContent badalne se agar filter icon ya arrow gayab ho raha tha, toh use bachaega
-    //     if (filterButton.textContent.trim() !== 'Filters') {
-    //         filterButton.textContent = 'Filters';
-    //     }
-    // }
-}
+        if (searchInput) {
+            searchInput.setAttribute('placeholder', 'Search User');
+            searchInput.setAttribute('aria-label', 'Search User');
+        }
+
+        filterButton = topBar.querySelector('.data-grid-filters-action-wrap .action-default');
+
+        if (filterButton) {
+            filterButton.textContent = 'Filters';
+        }
+
+        hasContent = !!normalizeText(resultsWrap.textContent) && controlsWrap.children.length > 0;
+        topBar.classList.toggle('gcc-subaccount-user-grid-toolbar--hidden', !hasContent);
+
+        if (hasContent) {
+            header.classList.add('gcc-subaccount-user-grid-header-shell');
+            header.style.display = 'none';
+        } else {
+            header.classList.remove('gcc-subaccount-user-grid-header-shell');
+            header.style.display = '';
+        }
+    }
+
     function ensurePagerFooter(scope, gridWrap) {
         var footer = scope.querySelector('.gcc-subaccount-user-grid-footer');
         var nativePager = findPagerWrap(scope);
@@ -6864,29 +6740,11 @@ function ensureTopBar(header, scope) {
         }
 
         if (nativePager) {
-            //nativePager.style.display = 'none';
-            nativePager.classList.add(
-    'gcc-hidden-native-pager'
-);
+            nativePager.style.display = 'none';
         }
 
         state = getGridState(null);
-        if (
-    state.pages <= 1 &&
-    pagingComponent &&
-    !scope.dataset.vendorPagerRetry
-) {
 
-    scope.dataset.vendorPagerRetry = 'true';
-
-    setTimeout(function () {
-
-        syncVendorProductGridFooter();
-
-        delete scope.dataset.vendorPagerRetry;
-
-    }, 500);
-}
         if (sizeComponent && sizeComponent.optionsArray && sizeComponent.optionsArray.length) {
             for (i = 0; i < sizeComponent.optionsArray.length; i++) {
                 item = sizeComponent.optionsArray[i];
@@ -7004,7 +6862,6 @@ function ensureTopBar(header, scope) {
                 renderPages(state, rightWrap);
             }
         }
-
     }
 
     function sync() {

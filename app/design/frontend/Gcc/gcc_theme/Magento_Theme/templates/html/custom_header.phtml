@@ -586,6 +586,35 @@ $layout = $block->getLayout();
 </header>
 
 <style>
+  /*for language dropdown crop issue */
+  /* #languageMenu{
+    z-index: 99999 !important;
+}
+
+#customHeader{
+    overflow: visible !important;
+}
+
+.header-main,
+.header-actions,
+.relative{
+    overflow: visible !important;
+} */
+    #vendorMenu,
+#customerMenu,
+#languageMenu,
+#userMenuProfile{
+    z-index: 99999 !important;
+}
+
+#customHeader,
+.header-main,
+.brand-nav,
+.header-actions,
+.group,
+.relative{
+    overflow: visible !important;
+}
 /* ===== your existing styles (kept) ===== */
 .dropdown-active{color:#3B82F6!important;font-weight:600!important;}
 
