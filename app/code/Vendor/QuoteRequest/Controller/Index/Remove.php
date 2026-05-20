@@ -35,28 +35,42 @@ class Remove extends Action
     //     return $resultRedirect->setPath('quoterequest/view/index');
     // }
     public function execute()
-{
-    $productId = (int)$this->getRequest()->getParam('id');
+    {
+        $productId = (int) $this->getRequest()->getParam('id');
+        $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
 
-    $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
+        foreach ($quoteItems as $index => $item) {
+            $storedItem = $this->normalizeQuoteItem($item);
 
-    //echo "Removing product ID: " . $productId;
-    //print_r($quoteItems);
+            if (
+                $storedItem['product_id'] === $productId ||
+                $storedItem['selected_product_id'] === $productId
+            ) {
+                unset($quoteItems[$index]);
+                break;
+            }
+        }
 
-    if (($key = array_search($productId, $quoteItems)) !== false) {
+        $this->catalogSession->setQuoteItems(array_values($quoteItems));
 
-        unset($quoteItems[$key]);
-
+        $resultRedirect = $this->resultRedirectFactory->create();
+        return $resultRedirect->setPath('quoterequest/view/index');
     }
 
-    // reindex
-    $quoteItems = array_values($quoteItems);
+    private function normalizeQuoteItem($item)
+    {
+        if (is_array($item)) {
+            return [
+                'product_id' => (int) ($item['product_id'] ?? 0),
+                'selected_product_id' => (int) ($item['selected_product_id'] ?? 0),
+                'qty' => (int) ($item['qty'] ?? 1)
+            ];
+        }
 
-    //print_r($quoteItems); // debug
-    //exit;
-    $this->catalogSession->setQuoteItems($quoteItems);
-
-    $resultRedirect = $this->resultRedirectFactory->create();
-    return $resultRedirect->setPath('quoterequest/view/index');
-}
+        return [
+            'product_id' => (int) $item,
+            'selected_product_id' => 0,
+            'qty' => 1
+        ];
+    }
 }

@@ -81,6 +81,7 @@ public function execute()
     $currentCustomerId = $this->customerSession->getCustomerId();
     $customer = $this->customerSession->getCustomer();
     $customerName = $customer->getFirstname();
+    $countryId = trim((string) ($post['country_id'] ?? ''));
 
     $currentVendorId = 0;
     if ($this->_vendorSession->isLoggedIn()) {
@@ -92,10 +93,25 @@ public function execute()
         $quantities = $post['qty'] ?? [];
         $vendorWiseProducts = [];
 
+        if (empty($selectedProducts) && $countryId === '') {
+            $this->messageManager->addErrorMessage(__('Please add your product and choose a country before continuing.'));
+            return $this->resultRedirectFactory->create()->setPath('quoterequest/view/index', [
+                'validation' => 'both'
+            ]);
+        }
 
         if (empty($selectedProducts)) {
-            $this->messageManager->addErrorMessage(__('Please select at least one product.'));
-            return $this->resultRedirectFactory->create()->setRefererUrl();
+            $this->messageManager->addErrorMessage(__('Please add your product before continuing.'));
+            return $this->resultRedirectFactory->create()->setPath('quoterequest/view/index', [
+                'validation' => 'products'
+            ]);
+        }
+
+        if ($countryId === '') {
+            $this->messageManager->addErrorMessage(__('Please choose a country before continuing.'));
+            return $this->resultRedirectFactory->create()->setPath('quoterequest/view/index', [
+                'validation' => 'country'
+            ]);
         }
 
         foreach ($selectedProducts as $productId) {
@@ -150,7 +166,7 @@ public function execute()
                 'customer_id' => $currentCustomerId,
                 'vendor_id' => $vId,
                 'status' => 'pending',
-                'country_id' => $post['country_id'] ?? '',
+                'country_id' => $countryId,
                 'region_id' => $post['region_id'] ?? 0,
                 'customer_note' => $post['customer_note'] ?? ''
             ]);
