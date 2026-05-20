@@ -228,6 +228,50 @@ body.customer-account .page-main {
     background: #ffffff;
 }
 
+.customer-account .sidebar .box-actions .action.primary,
+.customer-account .sidebar .box-actions .action.tocart,
+.customer-account .sidebar .block .action.primary,
+.customer-account .sidebar .block button.action.primary {
+    background: #1a3764 !important;
+    background-color: #1a3764 !important;
+    background-image: none !important;
+    border-color: #1a3764 !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(26, 55, 100, 0.18) !important;
+}
+
+.customer-account .sidebar .box-actions .action.primary:hover,
+.customer-account .sidebar .box-actions .action.tocart:hover,
+.customer-account .sidebar .block .action.primary:hover,
+.customer-account .sidebar .block button.action.primary:hover {
+    background: #153057 !important;
+    background-color: #153057 !important;
+    background-image: none !important;
+    border-color: #153057 !important;
+    color: #ffffff !important;
+}
+
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart.primary,
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart,
+.customer-account .block-reorder .actions-toolbar > .primary button.action.primary {
+    background: #1a3764 !important;
+    background-color: #1a3764 !important;
+    background-image: none !important;
+    border-color: #1a3764 !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(26, 55, 100, 0.18) !important;
+}
+
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart.primary:hover,
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart:hover,
+.customer-account .block-reorder .actions-toolbar > .primary button.action.primary:hover {
+    background: #153057 !important;
+    background-color: #153057 !important;
+    background-image: none !important;
+    border-color: #153057 !important;
+    color: #ffffff !important;
+}
+
 .customer-account .box-actions .action:hover {
     border-color: #2f65c8;
     background: #eef5ff;

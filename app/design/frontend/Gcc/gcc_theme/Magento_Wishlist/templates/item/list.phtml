@@ -1,0 +1,62 @@
+<?php
+/**
+ * GCC themed wishlist item grid.
+ */
+
+/** @var \Magento\Wishlist\Block\Customer\Wishlist\Items $block */
+$items = $block->getItems();
+$imageHelper = $this->helper(\Magento\Catalog\Helper\Image::class);
+$priceHelper = $this->helper(\Magento\Framework\Pricing\Helper\Data::class);
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$wishlistHelper = $objectManager->get(\Magento\Wishlist\Helper\Data::class);
+?>
+
+<?php if ($items && count($items)) : ?>
+    <div class="gcc-wishlist-grid">
+        <?php foreach ($items as $item) : ?>
+            <?php
+                $_product = $item->getProduct();
+                $productName = (string) $_product->getName();
+                $productUrl = $wishlistHelper->getProductUrl($item);
+                $removeParams = $wishlistHelper->getRemoveParams($item);
+                $productImage = $imageHelper->init($_product, 'wishlist_thumbnail')->getUrl();
+                $priceHtml = $priceHelper->currency((float) $_product->getFinalPrice(), true, false);
+            ?>
+            <article class="gcc-card gcc-wishlist-card" id="item_<?= $block->escapeHtmlAttr($item->getId()) ?>">
+                <div class="gcc-card__media gcc-wishlist-card__media">
+                    <a class="gcc-card__image-link gcc-wishlist-card__image-link"
+                       href="<?= $block->escapeUrl($productUrl) ?>"
+                       aria-label="<?= $block->escapeHtmlAttr($productName) ?>">
+                        <img class="gcc-wishlist-card__image"
+                             src="<?= $block->escapeUrl($productImage) ?>"
+                             alt="<?= $block->escapeHtmlAttr($productName) ?>"
+                             loading="lazy"
+                             decoding="async">
+                    </a>
+
+                    <button class="gcc-card__wish gcc-wishlist-card__remove"
+                            type="button"
+                            data-role="remove"
+                            data-post-remove='<?= /* @noEscape */ $removeParams ?>'
+                            aria-label="<?= $block->escapeHtmlAttr(__('Remove from wishlist')) ?>"
+                            title="<?= $block->escapeHtmlAttr(__('Remove from wishlist')) ?>">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="gcc-card__body gcc-wishlist-card__body">
+                    <h3 class="gcc-card__name gcc-wishlist-card__title">
+                        <a href="<?= $block->escapeUrl($productUrl) ?>">
+                            <?= $block->escapeHtml($productName) ?>
+                        </a>
+                    </h3>
+                    <div class="gcc-card__price gcc-wishlist-card__price">
+                        <span class="gcc-card__price-amount"><?= /* @noEscape */ $priceHtml ?></span>
+                    </div>
+                </div>
+            </article>
+        <?php endforeach; ?>
+    </div>
+<?php endif; ?>
