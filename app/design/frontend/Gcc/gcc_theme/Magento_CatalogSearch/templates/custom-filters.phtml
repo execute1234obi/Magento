@@ -1088,29 +1088,98 @@ require(['jquery', 'domReady!'], function($){
        TAB COUNT FIX (IMPORTANT FIX)
        REAL FILTER COUNT FROM URL
     ============================== */
-function updateTabCounts() {
+// function updateTabCounts() {
 
    
                    
-    $('.mst-search__result-tabs li').each(function () {
-     var count = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
-        var $tab = $(this);
-        var label = $tab.find('.mst-search__tab-label').text().trim().toLowerCase();
+//     $('.mst-search__result-tabs li').each(function () {
+//      var count = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
+//         var $tab = $(this);
+//         var label = $tab.find('.mst-search__tab-label').text().trim().toLowerCase();
 
+//         if (label.includes('vendor')) {
+
+//             var $badge = $tab.find('.mst-search__tab-count');
+
+//             if ($badge.length) {
+//                 $badge.text(count);   // ONLY update number
+//             } else {
+//                 $tab.find('.mst-search__tab-label').after(
+//                     '<span class="mst-search__tab-count">' + count + '</span>'
+//                 );
+//             }
+//         }
+//     });
+// }
+function updateTabCounts() {
+
+    // hidden input se total count
+    var totalCount = $('#search-total-count').val() || 0;
+
+    // vendor count (existing logic)
+    var vendorCount = <?= (int)($block->getSearchCollection() ? $block->getSearchCollection()->getSize() : 0) ?>;
+
+    $('.mst-search__result-tabs li').each(function () {
+
+        var $tab = $(this);
+
+        var label = $tab.find('.mst-search__tab-label')
+            .text()
+            .trim()
+            .toLowerCase();
+
+        /* =========================
+           VENDOR TAB
+        ========================= */
         if (label.includes('vendor')) {
 
             var $badge = $tab.find('.mst-search__tab-count');
 
             if ($badge.length) {
-                $badge.text(count);   // ONLY update number
+
+                $badge.text(vendorCount);
+
             } else {
+
                 $tab.find('.mst-search__tab-label').after(
-                    '<span class="mst-search__tab-count">' + count + '</span>'
+                    '<span class="mst-search__tab-count">' +
+                    vendorCount +
+                    '</span>'
+                );
+            }
+        }
+
+        /* =========================
+           PRODUCT TAB
+        ========================= */
+        if (label.includes('product')) {
+
+            var $badge = $tab.find('.mst-search__tab-count');
+
+            if ($badge.length) {
+
+                $badge.text(totalCount);
+
+            } else {
+
+                $tab.find('.mst-search__tab-label').after(
+                    '<span class="mst-search__tab-count">' +
+                    totalCount +
+                    '</span>'
                 );
             }
         }
     });
 }
+
+// run once page load
+require(['jquery'], function ($) {
+
+    $(document).ready(function () {
+        updateTabCounts();
+    });
+
+});
 
     setTimeout(updateTabCounts, 500);
 

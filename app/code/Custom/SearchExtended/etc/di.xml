@@ -58,16 +58,16 @@
         </arguments>
     </type>
     <!-- for product collection plugin -->
-    <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
+    <!-- <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
         <plugin name="custom_vendor_product_collection" type="Custom\SearchExtended\Plugin\ProductCollectionPlugin" />
-    </type>
+    </type> -->
 
-    <type name="Magento\Framework\Search\Adapter\Mysql\Response\Builder">
+    <!-- <type name="Magento\Framework\Search\Adapter\Mysql\Response\Builder">
         <plugin name="fix_mirasvit_search_response_count" type="Custom\SearchExtended\Plugin\SearchResponseCountPlugin" />
-    </type>
-    <type name="Mirasvit\Search\Block\Index\Base">
+    </type> -->
+    <!-- <type name="Mirasvit\Search\Block\Index\Base">
         <plugin name="force_mirasvit_product_tab_render" type="Custom\SearchExtended\Plugin\MirasvitBlockPlugin" />
-    </type>
+    </type> -->
     <!-- Add this to fix the DI error -->
    <preference for="Magento\Catalog\Model\Layer\FilterableAttributeListInterface" type="Magento\Catalog\Model\Layer\Category\FilterableAttributeList" />
 

@@ -1,0 +1,47 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+// Sirf tabhi chalao jab vendor filter active ho
+echo '<!-- Vendor filter active, applying JS fixes -->';    exit;
+$country = $this->getRequest()->getParam('svendor_country_id');
+if ($country): 
+    
+?>
+<script type="text/javascript">
+    require(['jquery', 'domReady!'], function ($) {
+        // 1. Giniye ki product grid ke andar sach mein kitne products hain
+        var realProductCount = $('.products.grid .product-item').length;
+        
+        if (realProductCount === 0) {
+            // Agar list khali dikh rahi ho toh check karein list class ko
+            realProductCount = $('.products.list .product-item').length;
+        }
+
+        // 2. Mirasvit Tab Count Change Karein
+        // Note: Agar aapke tab ki class alag hai, toh .mst-search__index-tabs-item ko badal sakte hain
+        var tabElement = $('.mst-search__index-tabs-item.active a, .search.tabs .active a, .mst-search__index-tab._active');
+        if (tabElement.length > 0) {
+            var tabText = tabElement.text();
+            // Agar text "Products (8)" hai toh use badalkar "Products (1)" kar dega
+            if (tabText.indexOf('(') !== -1) {
+                var cleanTitle = tabText.split('(')[0].trim();
+                tabElement.html(cleanTitle + ' <span class="count">(' + realProductCount + ')</span>');
+            }
+        }
+
+        // Toolbar/Toolbar-amount text fix (e.g., "1 Item" instead of "8 Items")
+        var toolbarAmount = $('.toolbar-amount, .mst-search__toolbar-amount');
+        if (toolbarAmount.length > 0) {
+            if (realProductCount === 1) {
+                toolbarAmount.html('<span>1 Item</span>');
+            } else {
+                toolbarAmount.html('<span>' + realProductCount + ' Items</span>');
+            }
+        }
+
+        // 3. Galat Pagination (Page 1, 2 links) ko hide/remove karein agar product 1 hi hai
+        if (realProductCount <= 1) {
+            $('.pages, .toolbar-number, .pager').hide();
+        }
+    });
+</script>
+<?php endif; ?>

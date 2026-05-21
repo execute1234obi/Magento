@@ -19,4 +19,10 @@
                 type="Custom\SearchExtended\Plugin\Catalog\ProductList"
                 sortOrder="10"/>
     </type>
+
+   <type name="Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection">
+        <plugin name="custom_vendor_product_collection" 
+                type="Custom\SearchExtended\Plugin\ProductCollectionPlugin" 
+                sortOrder="1"/>
+    </type>
 </config>

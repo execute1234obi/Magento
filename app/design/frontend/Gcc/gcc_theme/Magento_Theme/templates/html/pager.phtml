@@ -21,6 +21,11 @@ try {
 }
 ?>
 <?php if ($block->getCollection()->getSize()): ?>
+    <?php if ($isSearchPage): ?>
+    <input type="hidden"
+           id="search-total-count"
+           value="<?= (int)$block->getTotalNum() ?>">
+<?php endif; ?>
 
 <?php if ($block->getUseContainer()): ?>
     <div class="pager<?= $isSearchPage ? ' pager--search-inner' : '' ?>"<?= $isSearchPage ? ' data-search-pager="bottom"' : '' ?>>

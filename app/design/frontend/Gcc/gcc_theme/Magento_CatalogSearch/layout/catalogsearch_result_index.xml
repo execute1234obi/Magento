@@ -14,11 +14,16 @@
         <!-- <attribute name="class" value="page-with-filter"/> -->
         <!-- <referenceBlock name="catalogsearch.leftnav" remove="true"/> -->
           <!-- FULL WIDTH HEADER -->
+         
         <referenceContainer name="content">
             <block class="Magento\Framework\View\Element\Template"
                    name="gcc.search.header"
                    template="Magento_CatalogSearch::search-header.phtml"
                    before="-"/>
+                   <!-- <block class="Magento\Framework\View\Element\Template" 
+                   name="custom_vendor_search_js_fix" 
+                   template="Custom_SearchExtended::search_js_fix.phtml" 
+                   after="-"/> -->
    </referenceContainer>
    <referenceBlock name="search_filters">
     <block class="Magento\LayeredNavigation\Block\Navigation\Search"

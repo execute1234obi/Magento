@@ -4,92 +4,102 @@ namespace Custom\SearchExtended\Plugin;
 
 use Magento\Framework\App\RequestInterface;
 use Vnecoms\Vendors\Model\ResourceModel\Vendor\CollectionFactory as VendorCollectionFactory;
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Search\Adapter\Mysql\Response\Builder as ResponseBuilder;
 
 class SearchResponseCountPlugin
 {
     protected $request;
     protected $vendorCollectionFactory;
-    protected $productCollectionFactory;
+    protected $resourceConnection;
 
     public function __construct(
         RequestInterface $request,
         VendorCollectionFactory $vendorCollectionFactory,
-        ProductCollectionFactory $productCollectionFactory
+        ResourceConnection $resourceConnection
     ) {
         $this->request = $request;
         $this->vendorCollectionFactory = $vendorCollectionFactory;
-        $this->productCollectionFactory = $productCollectionFactory;
+        $this->resourceConnection = $resourceConnection;
     }
 
-    /**
-     * Intercept Mirasvit Search Engine raw output to fix global counters
-     */
     public function afterBuild(ResponseBuilder $subject, $response)
     {
-        $country      = $this->request->getParam('svendor_country_id');
-        $verified     = $this->request->getParam('svendor_is_verified');
-        $businessType = $this->request->getParam('svendor_business_type');
-
-        if (!$country && !$verified && !$businessType) {
+        $country = $this->request->getParam('svendor_country_id');
+        
+        // Agar koi country filter nahi hai toh standard chalne do
+        if (!$country) {
             return $response;
         }
 
+        // 1. Get Selected Country Vendor IDs
         $vendorCollection = $this->vendorCollectionFactory->create();
-        if ($country) {
-            $vendorCollection->addFieldToFilter('country_id', $country);
-        }
-        if ($verified) {
-            $vendorCollection->addFieldToFilter('status', $verified);
-        }
-        if ($businessType) {
-            $vendorCollection->addAttributeToFilter('business_type', $businessType);
-        }
-
+        $vendorCollection->addFieldToFilter('country_id', $country);
         $vendorIds = $vendorCollection->getAllIds();
+
         if (empty($vendorIds)) {
             $vendorIds = [0];
         }
 
         try {
-            // Get original search documents returned by Elasticsearch/Mirasvit
             $reflection = new \ReflectionClass($response);
+            
+            // 2. Unlock Mirasvit documents property safely
             $documentsProp = $reflection->getProperty('documents');
             $documentsProp->setAccessible(true);
             $documents = $documentsProp->getValue($response);
 
-            if (empty($documents)) {
-                return $response;
-            }
+            // 3. Direct DB Connection se un vendors ke saare valid product IDs nikal lo
+            $connection = $this->resourceConnection->getConnection();
+            $tableName = $this->resourceConnection->getTableName('catalog_product_entity');
+            
+            $select = $connection->select()
+                ->from($tableName, ['entity_id'])
+                ->where('vendor_id IN (?)', $vendorIds);
+                
+            $validDbProductIds = $connection->fetchCol($select);
 
-            $searchIds = [];
-            foreach ($documents as $doc) {
-                $searchIds[] = (int)$doc->getId();
-            }
-
-            // Find matching valid items
-            $productCollection = $this->productCollectionFactory->create();
-            $productCollection->addFieldToFilter('entity_id', ['in' => $searchIds]);
-            $productCollection->getSelect()->where('e.vendor_id IN (?)', $vendorIds);
-            $validIds = $productCollection->getAllIds();
-
+            // 4. DATA INJECTION: Agar Mirasvit ke paas documents hain, toh filter karo
+            // Agar Mirasvit ke paas nahi hain (jaise Argentina empty chunk), toh khud naya document inject karo
             $filteredDocuments = [];
-            foreach ($documents as $doc) {
-                if (in_array((int)$doc->getId(), $validIds)) {
-                    $filteredDocuments[] = $doc;
+            
+            if (!empty($documents)) {
+                foreach ($documents as $doc) {
+                    if (in_array((int)$doc->getId(), $validDbProductIds)) {
+                        $filteredDocuments[] = $doc;
+                    }
                 }
             }
 
-            // Override original data rows and counters directly inside object
+            // Agar hamare paas DB mein products hain (jaise Product ID 98) par Mirasvit ke docs khali the
+            if (empty($filteredDocuments) && !empty($validDbProductIds)) {
+                // Mirasvit ke generic document factory class ko inject karne ke bajaye, 
+                // hum direct existing document object clone karke IDs force alter kar dete hain
+                
+                // Ek dummy baseline layout document banate hain block bypass ke liye
+                $om = \Magento\Framework\App\ObjectManager::getInstance();
+                $docFactory = $om->get(\Magento\Framework\Search\DocumentFactory::class);
+                
+                foreach ($validDbProductIds as $pId) {
+                    $filteredDocuments[] = $docFactory->create([
+                        'data' => [
+                            'id' => $pId,
+                            'score' => 1.0000
+                        ]
+                    ]);
+                }
+            }
+
+            // 5. Force Overwrite Response Array Data
             $documentsProp->setValue($response, $filteredDocuments);
             
+            // 6. Force Overwrite Response Count Parameter
             $countProp = $reflection->getProperty('count');
             $countProp->setAccessible(true);
             $countProp->setValue($response, count($filteredDocuments));
 
         } catch (\Exception $e) {
-            // Safe fallback
+            // Anti-crash fallback
         }
 
         return $response;
