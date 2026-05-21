@@ -1,0 +1,107 @@
+<?php
+/**
+ * GCC themed wishlist page override.
+ */
+
+/** @var \Magento\Wishlist\Block\Customer\Wishlist $block */
+$wishlist = $block->getWishlistInstance();
+$continueUrl = $block->getUrl('');
+?>
+
+<?php if ($this->helper(\Magento\Wishlist\Helper\Data::class)->isAllow()) : ?>
+    <style>
+        body.account.wishlist-index-index.page-layout-2columns-left .gcc-wishlist-page .gcc-wishlist-grid,
+        body.account.wishlist-index-index.page-layout-2columns-left .products-grid.wishlist .product-items {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 18px !important;
+            align-items: stretch !important;
+            width: 100% !important;
+        }
+
+        body.account.wishlist-index-index.page-layout-2columns-left .gcc-wishlist-page .gcc-wishlist-grid > *,
+        body.account.wishlist-index-index.page-layout-2columns-left .products-grid.wishlist .product-items > .product-item {
+            flex: 0 0 calc((100% - 36px) / 3) !important;
+            width: calc((100% - 36px) / 3) !important;
+            max-width: calc((100% - 36px) / 3) !important;
+            min-width: 0 !important;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 1024px) {
+            body.account.wishlist-index-index.page-layout-2columns-left .gcc-wishlist-page .gcc-wishlist-grid > *,
+            body.account.wishlist-index-index.page-layout-2columns-left .products-grid.wishlist .product-items > .product-item {
+                flex-basis: calc((100% - 18px) / 2) !important;
+                width: calc((100% - 18px) / 2) !important;
+                max-width: calc((100% - 18px) / 2) !important;
+            }
+        }
+
+        @media (max-width: 767px) {
+            body.account.wishlist-index-index.page-layout-2columns-left .gcc-wishlist-page .gcc-wishlist-grid > *,
+            body.account.wishlist-index-index.page-layout-2columns-left .products-grid.wishlist .product-items > .product-item {
+                flex-basis: 100% !important;
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+    </style>
+
+    <div class="gcc-wishlist-page">
+        <div class="gcc-container">
+            <section class="wishlist-board">
+                <div class="wishlist-board__top">
+                    <div class="wishlist-board__pager">
+                        <div class="toolbar wishlist-toolbar">
+                            <?= $block->getChildHtml('wishlist_item_pager'); ?>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="form-wishlist-items wishlist-form"
+                      id="wishlist-view-form"
+                      data-mage-init='{"wishlist":{
+                      "addToCartUrl":<?= /* @noEscape */ $block->getItemAddToCartParams("%item%") ?>,
+                      "addAllToCartUrl":<?= /* @noEscape */ $block->getAddAllToCartParams() ?>,
+                      "commentString":""},
+                      "validation": {}}'
+                      action="<?= $block->escapeUrl($block->getUrl('wishlist/index/update', ['wishlist_id' => $block->getWishlistInstance()->getId()])) ?>"
+                      method="post">
+                    <?php if ($block->hasWishlistItems()) : ?>
+                        <?= $block->getBlockHtml('formkey') ?>
+                        <?php $block->getChildBlock('items')->setItems($block->getWishlistItems()); ?>
+                        <?= $block->getChildHtml('items') ?>
+                    <?php else : ?>
+                        <div class="gcc-wishlist-empty">
+                            <div class="gcc-wishlist-empty__icon" aria-hidden="true">GCC</div>
+                            <h2><?= $block->escapeHtml(__('Your wish list is empty')) ?></h2>
+                            <p>
+                                <?= $block->escapeHtml(__('Start collecting products you like and build a clean shortlist inside your GCC account.')) ?>
+                            </p>
+                            <a class="action primary gcc-wishlist-empty__action" href="<?= $block->escapeUrl($continueUrl) ?>">
+                                <span><?= $block->escapeHtml(__('Browse Products')) ?></span>
+                            </a>
+                        </div>
+                    <?php endif ?>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script id="form-tmpl" type="text/x-magento-template">
+      <form id="wishlist-hidden-form" method="post" action="<%- data.url %>" class="no-display">
+          <% if (data.qty) { %>
+          <input name="qty" value="<%- data.qty %>">
+          <% } %>
+
+          <% if (data.item) { %>
+          <input name="item" value="<%- data.item %>">
+          <% } %>
+
+          <% if (data.entity) { %>
+          <input name="entity" value="<%- data.entity %>">
+          <% } %>
+      </form>
+    </script>
+
+<?php endif ?>
