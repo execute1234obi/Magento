@@ -6067,8 +6067,11 @@ $vendorUrl = $baseUrl. 'shop/' . $vendor_shop_Id; // /shop/<vendor_id>/ ?>
     // );
     ?>
 
-   <button type="button" id="add-to-quote-btn" class="add-quote-btn"
-        onclick="location.href='<?= $quoteUrl ?>'">
+   <button type="button"
+           id="add-to-quote-btn"
+           class="add-quote-btn"
+           data-product-id="<?= (int) $product->getId() ?>"
+           data-quote-url="<?= $block->escapeUrl($quoteUrl) ?>">
     <?= __("Add To Quote") ?>
 </button>
                     <!-- <button type="submit" id="add-to-quote-btn" class="add-quote-btn"><?= __("Add To Quote") ?></button> -->
@@ -6480,17 +6483,71 @@ require(['jquery'], function($) {
 <?php endif; ?>
 
 <script type="text/javascript">
-    
-require([
-    'jquery',
-    'mage/url',
-    'Magento_Catalog/js/catalog-add-to-cart'
-], function ($, urlBuilder) {
-    // Empty block for Add to Quote logic placeholder (as in your original code)
-    $('#add-to-quote-btn').on('click', function(e) {
+require(['jquery'], function ($) {
+    'use strict';
+
+    if (window.__gccAddToQuoteHandlerBound) {
+        return;
+    }
+
+    window.__gccAddToQuoteHandlerBound = true;
+
+    var quoteCreateUrl = <?= /* @noEscape */ json_encode($block->getUrl('quoterequest/index/create')); ?>;
+
+    function updateQuoteCounters(count) {
+        if (count === undefined || count === null) {
+            return;
+        }
+
+        $('#quote-counter').text(count).show();
+        $('#mobile-quote-counter').text(count).show();
+    }
+
+    $(document).on('click', '.add-quote-btn', function (e) {
         e.preventDefault();
-        // Placeholder for Add to Quote functionality
-        //alert('Add to Quote functionality triggered.');
+
+        var $button = $(this);
+        var productId = parseInt(
+            $button.data('productId') ||
+            $button.data('parentProductId') ||
+            $('#product_addtocart_form input[name="product_id"]').val(),
+            10
+        );
+        var state = window.gccSelectedConfigurableProduct || {};
+        var selectedProductId = parseInt(state.selectedProductId, 10) || 0;
+        var payload = {};
+
+        if (selectedProductId) {
+            payload.product_id = productId || selectedProductId;
+            payload.selected_product_id = selectedProductId;
+        } else if (productId) {
+            payload.product_id = productId;
+        }
+
+        if (!payload.product_id) {
+            return;
+        }
+
+        $button.prop('disabled', true);
+
+        $.ajax({
+            url: quoteCreateUrl,
+            type: 'POST',
+            data: payload,
+            showLoader: true
+        }).done(function (response) {
+            if (response && response.count !== undefined) {
+                updateQuoteCounters(response.count);
+            }
+        }).fail(function (xhr) {
+            if (window.console && window.console.error) {
+                window.console.error(xhr);
+            }
+
+            alert(<?= /* @noEscape */ json_encode((string) __('Error while adding to quote')); ?>);
+        }).always(function () {
+            $button.prop('disabled', false);
+        });
     });
 });
 </script>

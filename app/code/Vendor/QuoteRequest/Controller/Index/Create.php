@@ -1,9 +1,9 @@
 <?php
 namespace Vendor\QuoteRequest\Controller\Index;
 
+use Magento\Catalog\Model\Session as CatalogSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Catalog\Model\Session as CatalogSession;
 use Magento\Framework\Controller\Result\JsonFactory;
 
 class Create extends Action
@@ -27,6 +27,7 @@ class Create extends Action
         $selectedProductId = (int) $this->getRequest()->getParam('selected_product_id');
         $baseProductId = $productId ?: $selectedProductId;
         $quoteItems = $this->catalogSession->getQuoteItems() ?: [];
+
         $quoteItem = [
             'product_id' => $baseProductId,
             'selected_product_id' => $selectedProductId && $selectedProductId !== $baseProductId ? $selectedProductId : 0,
@@ -46,11 +47,8 @@ class Create extends Action
         $quoteItems = array_values($quoteItems);
         $this->catalogSession->setQuoteItems($quoteItems);
 
-        // ✅ check if ajax
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $resultJson = $this->resultJsonFactory->create();
-
-            return $resultJson->setData([
+            return $this->resultJsonFactory->create()->setData([
                 'success' => true,
                 'product_id' => $baseProductId,
                 'selected_product_id' => $selectedProductId,
@@ -59,7 +57,6 @@ class Create extends Action
             ]);
         }
 
-        // ✅ normal request → redirect
         return $this->resultRedirectFactory
             ->create()
             ->setPath('quoterequest/view/index');
