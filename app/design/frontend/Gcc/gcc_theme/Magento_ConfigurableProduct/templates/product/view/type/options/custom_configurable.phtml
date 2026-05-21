@@ -29,6 +29,39 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
     }
 }
 </script>
+<script>
+require(['jquery', 'js/gcc-feedback'], function ($, feedback) {
+    'use strict';
+
+    var optionAlert = <?= /* @noEscape */ json_encode((string) __('Please select product options before adding to quote.')); ?>;
+    var addedToastMessage = <?= /* @noEscape */ json_encode((string) __('Product added to quotation.')); ?>;
+    var addedToastTitle = <?= /* @noEscape */ json_encode((string) __('Added to Quote')); ?>;
+
+    $(document).on('click', '#add-to-quote-btn', function (e) {
+        e.preventDefault();
+
+        var $button = $(this),
+            quoteUrl = $button.data('quote-url'),
+            parentProductId = parseInt($button.data('parent-product-id'), 10) || <?= (int) $product->getId() ?>,
+            state = window.gccSelectedConfigurableProduct || {},
+            selectedProductId = parseInt(state.selectedProductId, 10);
+
+        if (!selectedProductId) {
+            feedback.toast(optionAlert, 'warning', <?= /* @noEscape */ json_encode((string) __('Options required')); ?>);
+            return;
+        }
+
+        if (!quoteUrl) {
+            return;
+        }
+
+        feedback.setPendingToast(addedToastMessage, 'success', addedToastTitle);
+        window.location.href = quoteUrl + (quoteUrl.indexOf('?') === -1 ? '?' : '&') + $.param({
+            selected_product_id: selectedProductId
+        });
+    });
+});
+</script>
 <?php endif; ?>
 <!-- <pre> -->
 <?php //print_r(json_decode($configurableJsonConfig, true)); ?>
@@ -628,8 +661,11 @@ if ($product->getTypeId() == \Magento\ConfigurableProduct\Model\Product\Type\Con
         <p><?= __("No configurable attributes found") ?>.</p>
     <?php endif; ?>
 
-     <button type="button" id="add-to-quote-btn" class="add-quote-btn"
-        onclick="location.href='<?= $quoteUrl ?>'">
+     <button type="button"
+             id="add-to-quote-btn"
+             class="add-quote-btn"
+             data-quote-url="<?= $block->escapeUrl($quoteUrl) ?>"
+             data-parent-product-id="<?= (int) $product->getId() ?>">
     <?= __("Add To Quote") ?>
 </button>
 </form>
@@ -751,6 +787,10 @@ require(['jquery'], function($) {
     var spConfig = <?= /* @noEscape */ $configurableJsonConfig ?>;
     var selectedAttributes = {};
     var simpleProducts = window.simpleProducts = window.simpleProducts || {};
+    var quoteState = window.gccSelectedConfigurableProduct = window.gccSelectedConfigurableProduct || {
+        parentProductId: <?= (int) $product->getId() ?>,
+        selectedProductId: null
+    };
 
     function findMatchingProduct() {
         var matched = null;
@@ -768,6 +808,12 @@ require(['jquery'], function($) {
             }
         });
         return matched;
+    }
+
+    function syncQuoteState(productId) {
+        quoteState.parentProductId = <?= (int) $product->getId() ?>;
+        quoteState.selectedProductId = productId ? parseInt(productId, 10) : null;
+        window.gccSelectedConfigurableProduct = quoteState;
     }
 
     // function updatePrice(productId) {
@@ -961,7 +1007,14 @@ require(['jquery'], function($) {
                 }
 
                 var attributeCode = match[1];
+                var attrId = null;
                 var $container = $('.attribute-options[data-attribute-code="' + attributeCode + '"]');
+
+                $.each(spConfig.attributes, function (i, attr) {
+                    if (attr.code === attributeCode) {
+                        attrId = attr.id;
+                    }
+                });
 
                 $container.find('.option-btn').each(function () {
                     var $optionBtn = $(this);
@@ -969,6 +1022,10 @@ require(['jquery'], function($) {
                         $optionBtn.addClass('active').attr('aria-pressed', 'true');
                     }
                 });
+
+                if (attrId) {
+                    selectedAttributes[attrId] = currentValue;
+                }
             });
 
             $('#product-options-wrapper .attribute-options').each(function () {
@@ -977,6 +1034,8 @@ require(['jquery'], function($) {
                     $container.find('.option-btn').first().trigger('click');
                 }
             });
+
+            syncQuoteState(findMatchingProduct());
         }, 0);
     });
 
@@ -1006,6 +1065,7 @@ require(['jquery'], function($) {
         if (attrId) {
             selectedAttributes[attrId] = optionId;
             var productId = findMatchingProduct();
+            syncQuoteState(productId);
 
             if (productId) {
                 updatePrice(productId);

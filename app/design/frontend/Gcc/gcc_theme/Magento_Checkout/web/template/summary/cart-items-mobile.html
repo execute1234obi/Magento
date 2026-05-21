@@ -1,0 +1,13 @@
+<!-- ko if: items().length -->
+<div class="checkout-items-list-wrap">
+    <ul class="checkout-items-list">
+        <each args="items()">
+            <li class="checkout-items-list__item">
+                <div class="product checkout-item-row">
+                    <each args="$parent.elems()" render=""></each>
+                </div>
+            </li>
+        </each>
+    </ul>
+</div>
+<!-- /ko -->

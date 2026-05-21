@@ -228,6 +228,50 @@ body.customer-account .page-main {
     background: #ffffff;
 }
 
+.customer-account .sidebar .box-actions .action.primary,
+.customer-account .sidebar .box-actions .action.tocart,
+.customer-account .sidebar .block .action.primary,
+.customer-account .sidebar .block button.action.primary {
+    background: #1a3764 !important;
+    background-color: #1a3764 !important;
+    background-image: none !important;
+    border-color: #1a3764 !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(26, 55, 100, 0.18) !important;
+}
+
+.customer-account .sidebar .box-actions .action.primary:hover,
+.customer-account .sidebar .box-actions .action.tocart:hover,
+.customer-account .sidebar .block .action.primary:hover,
+.customer-account .sidebar .block button.action.primary:hover {
+    background: #153057 !important;
+    background-color: #153057 !important;
+    background-image: none !important;
+    border-color: #153057 !important;
+    color: #ffffff !important;
+}
+
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart.primary,
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart,
+.customer-account .block-reorder .actions-toolbar > .primary button.action.primary {
+    background: #1a3764 !important;
+    background-color: #1a3764 !important;
+    background-image: none !important;
+    border-color: #1a3764 !important;
+    color: #ffffff !important;
+    box-shadow: 0 10px 22px rgba(26, 55, 100, 0.18) !important;
+}
+
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart.primary:hover,
+.customer-account .block-reorder .actions-toolbar > .primary .action.tocart:hover,
+.customer-account .block-reorder .actions-toolbar > .primary button.action.primary:hover {
+    background: #153057 !important;
+    background-color: #153057 !important;
+    background-image: none !important;
+    border-color: #153057 !important;
+    color: #ffffff !important;
+}
+
 .customer-account .box-actions .action:hover {
     border-color: #2f65c8;
     background: #eef5ff;
@@ -1690,5 +1734,683 @@ body.customer-account .page-main {
 
     .customer-account .box-actions .action {
         width: 100%;
+    }
+}
+
+/* ==================================================
+   CUSTOMER MESSAGES
+   Inbox / Sent / Trash
+================================================== */
+body.customer-message-index .page-main,
+body.customer-message-sent .page-main,
+body.customer-message-trash .page-main {
+    padding-top: 150px !important;
+    padding-bottom: 48px;
+    background: #f9fafb;
+}
+
+body.customer-message-index .columns,
+body.customer-message-sent .columns,
+body.customer-message-trash .columns {
+    max-width: 1560px;
+    margin: 0 auto;
+    padding: 28px 24px 0;
+    gap: 28px;
+    align-items: flex-start;
+}
+
+body.customer-message-index .page-title-wrapper,
+body.customer-message-sent .page-title-wrapper,
+body.customer-message-trash .page-title-wrapper {
+    margin: 0 0 20px;
+}
+
+body.customer-message-index .page-title-wrapper .page-title,
+body.customer-message-sent .page-title-wrapper .page-title,
+body.customer-message-trash .page-title-wrapper .page-title {
+    color: #102a43;
+    font-size: clamp(30px, 3vw, 46px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+    margin: 0;
+}
+
+body.customer-message-index .sidebar.sidebar-main,
+body.customer-message-sent .sidebar.sidebar-main,
+body.customer-message-trash .sidebar.sidebar-main {
+    width: 100%;
+}
+
+body.customer-message-index .sidebar .block,
+body.customer-message-sent .sidebar .block,
+body.customer-message-trash .sidebar .block {
+    background: #ffffff;
+    border: 1px solid #dbe5f0;
+    border-radius: 24px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+    overflow: hidden;
+}
+
+body.customer-message-index .message-folders,
+body.customer-message-sent .message-folders,
+body.customer-message-trash .message-folders {
+    position: static;
+    top: auto;
+}
+
+body.customer-message-index .message-folders .box-header,
+body.customer-message-sent .message-folders .box-header,
+body.customer-message-trash .message-folders .box-header {
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid #e8eef6;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+}
+
+body.customer-message-index .message-folders .box-title,
+body.customer-message-sent .message-folders .box-title,
+body.customer-message-trash .message-folders .box-title {
+    color: #102a43;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0;
+}
+
+body.customer-message-index .message-folders .box-body,
+body.customer-message-sent .message-folders .box-body,
+body.customer-message-trash .message-folders .box-body {
+    padding: 12px;
+}
+
+body.customer-message-index .message-folders .nav,
+body.customer-message-sent .message-folders .nav,
+body.customer-message-trash .message-folders .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+}
+
+body.customer-message-index .message-folders .nav > li,
+body.customer-message-sent .message-folders .nav > li,
+body.customer-message-trash .message-folders .nav > li {
+    margin: 0;
+}
+
+body.customer-message-index .message-folders .nav > li > a,
+body.customer-message-sent .message-folders .nav > li > a,
+body.customer-message-trash .message-folders .nav > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 48px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    color: #334155;
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+body.customer-message-index .message-folders .nav > li > a:hover,
+body.customer-message-sent .message-folders .nav > li > a:hover,
+body.customer-message-trash .message-folders .nav > li > a:hover {
+    background: #eef5ff;
+    color: #1a3764;
+    transform: translateX(2px);
+}
+
+body.customer-message-index .message-folders .nav > li.active > a,
+body.customer-message-sent .message-folders .nav > li.active > a,
+body.customer-message-trash .message-folders .nav > li.active > a {
+    background: linear-gradient(135deg, #1a3764 0%, #2f65c8 100%);
+    color: #ffffff;
+    box-shadow: 0 12px 28px rgba(26, 55, 100, 0.2);
+    transform: none;
+}
+
+body.customer-message-index .message-folders .nav > li.active > a:hover,
+body.customer-message-sent .message-folders .nav > li.active > a:hover,
+body.customer-message-trash .message-folders .nav > li.active > a:hover {
+    background: linear-gradient(135deg, #1a3764 0%, #2f65c8 100%);
+    transform: none;
+}
+
+body.customer-message-index .message-folders .nav > li > a i,
+body.customer-message-sent .message-folders .nav > li > a i,
+body.customer-message-trash .message-folders .nav > li > a i {
+    font-size: 16px;
+    margin-right: 8px;
+    color: currentColor;
+}
+
+body.customer-message-index .message-folders .vnecoms-message-count-right,
+body.customer-message-sent .message-folders .vnecoms-message-count-right,
+body.customer-message-trash .message-folders .vnecoms-message-count-right {
+    float: none;
+    margin-left: auto;
+    min-width: 28px !important;
+    height: 24px !important;
+    width: auto !important;
+    padding: 0 8px !important;
+    border-radius: 999px;
+    background-color: #ffffff !important;
+    color: #1a3764 !important;
+    font-size: 12px !important;
+    font-weight: 800;
+    line-height: 24px !important;
+    text-align: center;
+}
+
+body.customer-message-index .vnecoms-message-container,
+body.customer-message-sent .vnecoms-message-container,
+body.customer-message-trash .vnecoms-message-container {
+    width: 100%;
+}
+
+body.customer-message-index .message-list,
+body.customer-message-sent .message-list,
+body.customer-message-trash .message-list {
+    width: 100%;
+}
+
+body.customer-message-index .message-list-wrapper,
+body.customer-message-sent .message-list-wrapper,
+body.customer-message-trash .message-list-wrapper {
+    background: #ffffff;
+    border: 1px solid #dbe5f0;
+    border-radius: 28px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+    padding: 22px;
+    overflow: hidden;
+}
+
+body.customer-message-index .message-toolbar,
+body.customer-message-sent .message-toolbar,
+body.customer-message-trash .message-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+body.customer-message-index .message-select-all,
+body.customer-message-sent .message-select-all,
+body.customer-message-trash .message-select-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    padding: 10px 14px;
+    background: #f8fbff;
+    border: 1px solid #dbe5f0;
+    border-radius: 12px;
+    color: #1a3764;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    user-select: none;
+}
+
+body.customer-message-index .message-select-all input,
+body.customer-message-sent .message-select-all input,
+body.customer-message-trash .message-select-all input {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: #1a3764;
+}
+
+body.customer-message-index .message-icon-trash,
+body.customer-message-sent .message-icon-trash,
+body.customer-message-trash .message-icon-trash {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 10px 18px;
+    border: 1px solid rgba(26, 55, 100, 0.14);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #1a3764 0%, #0f2f5f 100%);
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0;
+    box-shadow: 0 12px 24px rgba(26, 55, 100, 0.14);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+body.customer-message-index .message-icon-trash:hover,
+body.customer-message-sent .message-icon-trash:hover,
+body.customer-message-trash .message-icon-trash:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow: 0 16px 28px rgba(26, 55, 100, 0.18);
+}
+
+body.customer-message-index .message-icon-trash span,
+body.customer-message-sent .message-icon-trash span,
+body.customer-message-trash .message-icon-trash span {
+    display: inline-flex;
+    align-items: center;
+}
+
+body.customer-message-index .table-message-items,
+body.customer-message-sent .table-message-items,
+body.customer-message-trash .table-message-items {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+}
+
+body.customer-message-index .table-message-items caption,
+body.customer-message-sent .table-message-items caption,
+body.customer-message-trash .table-message-items caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+body.customer-message-index .table-message-items thead th,
+body.customer-message-sent .table-message-items thead th,
+body.customer-message-trash .table-message-items thead th {
+    padding: 15px 16px;
+    border-bottom: 1px solid #dbe5f0;
+    background: #f8fbff;
+    color: #102a43;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+body.customer-message-index .table-message-items tbody td,
+body.customer-message-sent .table-message-items tbody td,
+body.customer-message-trash .table-message-items tbody td {
+    padding: 16px;
+    border-bottom: 1px solid #edf2f7;
+    color: #334155;
+    font-size: 15px;
+    vertical-align: middle;
+}
+
+body.customer-message-index .table-message-items tbody tr,
+body.customer-message-sent .table-message-items tbody tr,
+body.customer-message-trash .table-message-items tbody tr {
+    transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.customer-message-index .table-message-items tbody tr:hover,
+body.customer-message-sent .table-message-items tbody tr:hover,
+body.customer-message-trash .table-message-items tbody tr:hover {
+    background: #f8fbff;
+}
+
+body.customer-message-index .table-message-items tbody tr.unread,
+body.customer-message-sent .table-message-items tbody tr.unread,
+body.customer-message-trash .table-message-items tbody tr.unread {
+    background: #eef5ff;
+    box-shadow: inset 4px 0 0 #1a3764;
+}
+
+body.customer-message-index .table-message-items tbody tr.unread td,
+body.customer-message-sent .table-message-items tbody tr.unread td,
+body.customer-message-trash .table-message-items tbody tr.unread td {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+body.customer-message-index .table-message-items tbody td.control,
+body.customer-message-sent .table-message-items tbody td.control,
+body.customer-message-trash .table-message-items tbody td.control {
+    width: 54px;
+}
+
+body.customer-message-index .table-message-items tbody td.control input,
+body.customer-message-sent .table-message-items tbody td.control input,
+body.customer-message-trash .table-message-items tbody td.control input {
+    width: 18px;
+    height: 18px;
+    accent-color: #1a3764;
+}
+
+body.customer-message-index .table-message-items tbody td.sender,
+body.customer-message-sent .table-message-items tbody td.sender,
+body.customer-message-trash .table-message-items tbody td.sender {
+    color: #102a43;
+    font-weight: 700;
+}
+
+body.customer-message-index .table-message-items tbody td.message,
+body.customer-message-sent .table-message-items tbody td.message,
+body.customer-message-trash .table-message-items tbody td.message {
+    color: #334155;
+    font-weight: 500;
+}
+
+body.customer-message-index .table-message-items tbody td.action a,
+body.customer-message-sent .table-message-items tbody td.action a,
+body.customer-message-trash .table-message-items tbody td.action a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 0 14px;
+    border-radius: 10px;
+    background: #1a3764;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+body.customer-message-index .table-message-items tbody td.action a:hover,
+body.customer-message-sent .table-message-items tbody td.action a:hover,
+body.customer-message-trash .table-message-items tbody td.action a:hover {
+    background: #153e75;
+    transform: translateY(-1px);
+}
+
+body.customer-message-index .message-list-wrapper .toolbar.bottom,
+body.customer-message-sent .message-list-wrapper .toolbar.bottom,
+body.customer-message-trash .message-list-wrapper .toolbar.bottom {
+    margin-top: 18px;
+    padding-top: 0;
+}
+
+body.customer-message-index .message-list-wrapper .toolbar.bottom .pages,
+body.customer-message-sent .message-list-wrapper .toolbar.bottom .pages,
+body.customer-message-trash .message-list-wrapper .toolbar.bottom .pages {
+    margin: 0;
+}
+
+body.customer-message-index .message-list-wrapper .toolbar.bottom .pages .items,
+body.customer-message-sent .message-list-wrapper .toolbar.bottom .pages .items,
+body.customer-message-trash .message-list-wrapper .toolbar.bottom .pages .items {
+    justify-content: center;
+}
+
+body.customer-message-index .message-list-wrapper .toolbar.bottom .limiter,
+body.customer-message-sent .message-list-wrapper .toolbar.bottom .limiter,
+body.customer-message-trash .message-list-wrapper .toolbar.bottom .limiter {
+    margin-top: 0;
+}
+
+body.customer-message-index .message.info.empty,
+body.customer-message-sent .message.info.empty,
+body.customer-message-trash .message.info.empty {
+    background: #ffffff;
+    border: 1px dashed #dbe5f0;
+    border-radius: 20px;
+    padding: 24px;
+    color: #64748b;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+@media (min-width: 1025px) {
+    body.customer-message-index .columns,
+    body.customer-message-sent .columns,
+    body.customer-message-trash .columns {
+        display: grid;
+        grid-template-columns: 304px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+    }
+
+    body.customer-message-index .column.main,
+    body.customer-message-sent .column.main,
+    body.customer-message-trash .column.main {
+        min-width: 0;
+    }
+
+    body.customer-message-index .sidebar.sidebar-main,
+    body.customer-message-sent .sidebar.sidebar-main,
+    body.customer-message-trash .sidebar.sidebar-main {
+        position: sticky;
+        top: 28px;
+        width: 100%;
+    }
+
+    body.customer-message-index .message-folders,
+    body.customer-message-sent .message-folders,
+    body.customer-message-trash .message-folders {
+        position: static;
+        top: auto;
+    }
+}
+
+@media (max-width: 1199px) {
+    body.customer-message-index .columns,
+    body.customer-message-sent .columns,
+    body.customer-message-trash .columns {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 991px) {
+    body.customer-message-index .columns,
+    body.customer-message-sent .columns,
+    body.customer-message-trash .columns {
+        display: block;
+        gap: 18px;
+    }
+
+    body.customer-message-index .column.main,
+    body.customer-message-sent .column.main,
+    body.customer-message-trash .column.main {
+        width: 100%;
+        float: none;
+        max-width: 100%;
+    }
+
+    body.customer-message-index .sidebar.sidebar-main,
+    body.customer-message-sent .sidebar.sidebar-main,
+    body.customer-message-trash .sidebar.sidebar-main {
+        width: 100%;
+    }
+
+    body.customer-message-index .message-folders,
+    body.customer-message-sent .message-folders,
+    body.customer-message-trash .message-folders {
+        position: static;
+    }
+}
+
+@media (max-width: 767px) {
+    body.customer-message-index .page-main,
+    body.customer-message-sent .page-main,
+    body.customer-message-trash .page-main {
+        padding-top: 130px !important;
+        padding-bottom: 32px;
+    }
+
+    body.customer-message-index .columns,
+    body.customer-message-sent .columns,
+    body.customer-message-trash .columns {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    body.customer-message-index .page-title-wrapper,
+    body.customer-message-sent .page-title-wrapper,
+    body.customer-message-trash .page-title-wrapper {
+        margin-bottom: 16px;
+    }
+
+    body.customer-message-index .page-title-wrapper .page-title,
+    body.customer-message-sent .page-title-wrapper .page-title,
+    body.customer-message-trash .page-title-wrapper .page-title {
+        font-size: 28px;
+    }
+
+    body.customer-message-index .sidebar .block,
+    body.customer-message-sent .sidebar .block,
+    body.customer-message-trash .sidebar .block {
+        border-radius: 20px;
+    }
+
+    body.customer-message-index .message-list-wrapper,
+    body.customer-message-sent .message-list-wrapper,
+    body.customer-message-trash .message-list-wrapper {
+        padding: 16px 14px;
+        border-radius: 20px;
+    }
+
+    body.customer-message-index .message-toolbar,
+    body.customer-message-sent .message-toolbar,
+    body.customer-message-trash .message-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    body.customer-message-index .message-select-all,
+    body.customer-message-sent .message-select-all,
+    body.customer-message-trash .message-select-all,
+    body.customer-message-index .message-icon-trash,
+    body.customer-message-sent .message-icon-trash,
+    body.customer-message-trash .message-icon-trash {
+        width: 100%;
+        justify-content: center;
+    }
+
+    body.customer-message-index .table-message-items,
+    body.customer-message-sent .table-message-items,
+    body.customer-message-trash .table-message-items,
+    body.customer-message-index .table-message-items tbody,
+    body.customer-message-sent .table-message-items tbody,
+    body.customer-message-trash .table-message-items tbody,
+    body.customer-message-index .table-message-items tr,
+    body.customer-message-sent .table-message-items tr,
+    body.customer-message-trash .table-message-items tr,
+    body.customer-message-index .table-message-items td,
+    body.customer-message-sent .table-message-items td,
+    body.customer-message-trash .table-message-items td {
+        display: block;
+        width: 100%;
+    }
+
+    body.customer-message-index .table-message-items thead,
+    body.customer-message-sent .table-message-items thead,
+    body.customer-message-trash .table-message-items thead {
+        display: none;
+    }
+
+    body.customer-message-index .table-message-items tbody tr,
+    body.customer-message-sent .table-message-items tbody tr,
+    body.customer-message-trash .table-message-items tbody tr {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        margin: 0 0 14px;
+        padding: 14px;
+        background: #ffffff;
+        border: 1px solid #dbe5f0;
+        border-radius: 18px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    body.customer-message-index .table-message-items tbody td,
+    body.customer-message-sent .table-message-items tbody td,
+    body.customer-message-trash .table-message-items tbody td {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 9px 0;
+        border: 0;
+        min-width: 0;
+    }
+
+    body.customer-message-index .table-message-items tbody td::before,
+    body.customer-message-sent .table-message-items tbody td::before,
+    body.customer-message-trash .table-message-items tbody td::before {
+        flex: 0 0 92px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 1.3;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        content: attr(data-th);
+    }
+
+    body.customer-message-index .table-message-items tbody td.control::before,
+    body.customer-message-sent .table-message-items tbody td.control::before,
+    body.customer-message-trash .table-message-items tbody td.control::before {
+        content: "";
+        flex: 0 0 0;
+    }
+
+    body.customer-message-index .table-message-items tbody td.sender::before,
+    body.customer-message-trash .table-message-items tbody td.sender::before {
+        content: "Sender";
+    }
+
+    body.customer-message-sent .table-message-items tbody td.sender::before {
+        content: "Receiver";
+    }
+
+    body.customer-message-index .table-message-items tbody td.message,
+    body.customer-message-sent .table-message-items tbody td.message,
+    body.customer-message-trash .table-message-items tbody td.message {
+        font-size: 14px;
+        font-weight: 600;
+        color: #102a43;
+    }
+
+    body.customer-message-index .table-message-items tbody td.control,
+    body.customer-message-sent .table-message-items tbody td.control,
+    body.customer-message-trash .table-message-items tbody td.control {
+        justify-content: flex-start;
+        padding-top: 0;
+        padding-bottom: 4px;
+    }
+
+    body.customer-message-index .table-message-items tbody td.action,
+    body.customer-message-sent .table-message-items tbody td.action,
+    body.customer-message-trash .table-message-items tbody td.action {
+        margin-top: 4px;
+        padding-top: 12px;
+        border-top: 1px solid #edf2f7;
+        justify-content: flex-end;
+    }
+
+    body.customer-message-index .table-message-items tbody td.action::before,
+    body.customer-message-sent .table-message-items tbody td.action::before,
+    body.customer-message-trash .table-message-items tbody td.action::before {
+        content: "";
+        flex: 0 0 0;
+    }
+
+    body.customer-message-index .table-message-items tbody td.action a,
+    body.customer-message-sent .table-message-items tbody td.action a,
+    body.customer-message-trash .table-message-items tbody td.action a {
+        width: 100%;
+        justify-content: center;
+    }
+
+    body.customer-message-index .table-message-items tbody tr.unread,
+    body.customer-message-sent .table-message-items tbody tr.unread,
+    body.customer-message-trash .table-message-items tbody tr.unread {
+        box-shadow: inset 4px 0 0 #1a3764, 0 10px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    body.customer-message-index .message-list-wrapper .toolbar.bottom,
+    body.customer-message-sent .message-list-wrapper .toolbar.bottom,
+    body.customer-message-trash .message-list-wrapper .toolbar.bottom {
+        margin-top: 14px;
     }
 }

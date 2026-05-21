@@ -13,14 +13,18 @@ $customerId = $block->getCustomerId();
 <?php if ($_messages && count($_messages)): ?>
 <form id="message-list-form" action="<?php echo $block->getDeleteMessagesURL()?>" method="post">
     <div class="message-list-wrapper">
-        <div class="message-action">
-            <button class="button message-icon-trash" type="submit"><span><?php echo __("Delete");?></span></button>
+        <div class="message-action message-toolbar">
+            <label class="message-select-all" for="vnecoms-msg-checkall">
+                <input type="checkbox" id="vnecoms-msg-checkall" />
+                <span><?php echo __("Select all");?></span>
+            </label>
+            <button class="button message-icon-trash" type="submit"><span><?php echo __("Delete selected");?></span></button>
         </div>
         <table class="data table table-message-items" id="message-list">
             <caption class="table-caption"><?php /* @escapeNotVerified */ echo __('Messages') ?></caption>
             <thead>
                 <tr>
-                    <th scope="col" class="col control"><input type="checkbox" id="vnecoms-msg-checkall" /></th>
+                    <th scope="col" class="col control"></th>
                     <th scope="col" class="col sender"><?php /* @escapeNotVerified */ echo __('Sender') ?></th>
                     <th scope="col" class="col message"><?php /* @escapeNotVerified */ echo __('Subject') ?></th>
                     <th scope="col" class="col last-update"><?php /* @escapeNotVerified */ echo __('Creation Date') ?></th>

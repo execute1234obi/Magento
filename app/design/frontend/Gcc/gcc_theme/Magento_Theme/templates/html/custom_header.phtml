@@ -68,7 +68,7 @@ else
         </a>
       </div>
 
-      <nav class="hidden md:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font">
+      <nav class="hidden lg:flex items-center gap-[2.2vw] space-x-6 text-gray-700 relative font-sans final-font header-desktop-nav">
         <div class="relative group">
           <a href="<?= $block->escapeUrl($block->getUrl('vendor-page')) ?>" class="hover:text-[#3B82F6] nav-text-color" style="text-decoration:none;">
             <button type="button" onclick="toggleDropdown('vendorMenu')" id="vendorBtn"
@@ -78,7 +78,7 @@ else
             </button>
           </a>
           <!-- add helper class so we can flip anchor side in RTL -->
-          <div id="vendorMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
+          <div id="vendorMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:9999">
             <a href="<?= $block->escapeUrl($block->getUrl('vendors/dashboard')) ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="Customer Menu" style="width:60px;">
               <div>
@@ -103,7 +103,7 @@ else
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
           </a>
-          <div id="customerMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:1">
+          <div id="customerMenu" class="hidden absolute left-0 mt-3 w-96 bg-white rounded-xl shadow-lg p-4 space-y-4 dropdown-start" style="border:1px solid #E2E8F0; z-index:9999">
             <a href="<?= $block->getUrl('quoterequest/view/index') ?>" class="flex items-center space-x-3 hover:bg-[#F3F4F6] p-2 rounded-lg" style="text-decoration:none;">
              <img src="<?= $mediaUrl ?>wysiwyg/customer-menu-1.png" alt="Customer Menu" style="width:60px;">
               <div>
@@ -134,7 +134,7 @@ else
     </div>
 
     <div class="flex items-center gap-6 header-actions">
-      <div class="hidden md:flex items-center final-font header-auth-group">
+      <div class="hidden lg:flex items-center final-font header-auth-group">
        <?php if ($block->isLoggedIn()): ?>
   <?php
     $layout = $block->getLayout();
@@ -217,7 +217,7 @@ else
 
     <div id="userMenuProfile" class="hidden absolute mt-3 dropdown-start"
          role="menu"
-         style="border:1px solid #E2E8F0; z-index:999; top:100%; right:0; left:auto;">
+         style="border:1px solid #E2E8F0; z-index:9999; top:100%; right:0; left:auto;">
       <div class="profile-dropdown__header">
         <div class="profile-dropdown__avatar<?= empty($vendorLogoUrl) ? ' profile-dropdown__avatar--initials' : '' ?>">
           <?php if (!empty($vendorLogoUrl)): ?>
@@ -363,14 +363,14 @@ if ($storeCode === 'default') {
 
       </div>
 
-      <button type="button" onclick="toggleMobileMenu()" class="md:hidden focus:outline-none bg-transparent border-0">
+      <button type="button" onclick="toggleMobileMenu()" class="lg:hidden focus:outline-none bg-transparent border-0 header-mobile-toggle">
         <svg id="hamburgerIcon" class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         <svg id="closeIcon" class="w-7 h-7 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
       </button>
     </div>
   </div>
 
-  <div id="mobileMenu" class="hidden md:hidden mobile-menu-drawer">
+  <div id="mobileMenu" class="hidden lg:hidden mobile-menu-drawer">
     <div class="mobile-menu-shell">
       <div class="mobile-menu-topbar">
         <a href="<?= $baseUrl; ?>" class="mobile-menu-logo-link" aria-label="<?= __('GCC Trading home') ?>">
@@ -586,6 +586,35 @@ $layout = $block->getLayout();
 </header>
 
 <style>
+  /*for language dropdown crop issue */
+  /* #languageMenu{
+    z-index: 99999 !important;
+}
+
+#customHeader{
+    overflow: visible !important;
+}
+
+.header-main,
+.header-actions,
+.relative{
+    overflow: visible !important;
+} */
+    #vendorMenu,
+#customerMenu,
+#languageMenu,
+#userMenuProfile{
+    z-index: 99999 !important;
+}
+
+#customHeader,
+.header-main,
+.brand-nav,
+.header-actions,
+.group,
+.relative{
+    overflow: visible !important;
+}
 /* ===== your existing styles (kept) ===== */
 .dropdown-active{color:#3B82F6!important;font-weight:600!important;}
 
@@ -651,6 +680,14 @@ $layout = $block->getLayout();
     display:flex;
     align-items:center;
     gap:16px;
+}
+#customHeader .header-desktop-nav{
+    display:none;
+}
+#customHeader .header-mobile-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
 }
 #customHeader .header-auth-divider{
     width:1px;
@@ -738,121 +775,178 @@ header .sign-in-btn {
     color: #3B82F6 !important; /* Optional hover color */
 }
 
+/* Ensure all header dropdowns always render above page content on every page */
+#vendorMenu,
+#customerMenu,
+#userMenuProfile,
+#languageMenu {
+    background: #ffffff !important;
+    z-index: 9999 !important;
+    isolation: isolate;
+}
+
+#vendorMenu,
+#customerMenu {
+    box-shadow: 0 8px 24px rgba(15,23,42,.15), 0 2px 6px rgba(15,23,42,.08) !important;
+}
+
 #userMenuProfile{
-    width:300px !important;
+    width:240px !important;
     max-width:calc(100vw - 12px) !important;
     padding:0 !important;
     border:1px solid #e5e7eb !important;
     border-radius:18px !important;
     background:#ffffff !important;
-    box-shadow:0 16px 32px rgba(15,23,42,.10) !important;
+    box-shadow:0 8px 24px rgba(15,23,42,.15), 0 2px 6px rgba(15,23,42,.08) !important;
     overflow:hidden;
+    position:absolute !important;
+    isolation:isolate;
 }
 
 #userMenuProfile .profile-dropdown__header{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    padding:12px 14px 10px;
-    background:#ffffff;
+    display:flex !important;
+    align-items:center !important;
+    gap:10px !important;
+    padding:16px !important;
+    background:#ffffff !important;
+    margin:0 !important;
+    border:none !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__avatar{
-    flex:0 0 auto;
-    width:auto;
-    height:auto;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:visible;
-    border-radius:0;
-    background:transparent;
-    border:none;
-    box-shadow:none;
-    color:#ef4444;
-    font-size:18px;
-    font-weight:800;
-    letter-spacing:.06em;
+    flex:0 0 auto !important;
+    width:auto !important;
+    height:auto !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    overflow:visible !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    color:#ef4444 !important;
+    font-size:18px !important;
+    font-weight:800 !important;
+    letter-spacing:.06em !important;
+    padding:0 !important;
+    margin:0 !important;
 }
 
 #userMenuProfile .profile-dropdown__avatar--initials{
-    background:transparent;
-    border:none;
-    color:#ef4444;
-    box-shadow:none;
+    background:transparent !important;
+    border:none !important;
+    color:#ef4444 !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__avatar img{
-    width:auto;
-    height:56px;
+    width:auto !important;
+    height:48px !important;
     max-height:none !important;
     max-width:none !important;
-    object-fit:contain;
-    display:block;
+    object-fit:contain !important;
+    display:block !important;
+    border:none !important;
+    border-radius:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__meta{
-    min-width:0;
+    min-width:0 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__name{
-    color:#374151;
-    font-size:15px;
-    font-weight:700;
-    line-height:1.2;
-    word-break:break-word;
+    color:#374151 !important;
+    font-size:15px !important;
+    font-weight:700 !important;
+    line-height:1.2 !important;
+    word-break:break-word !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__email{
-    margin-top:4px;
-    color:#6b7280;
-    font-size:11px;
-    font-weight:500;
-    line-height:1.35;
-    word-break:break-word;
+    margin-top:4px !important;
+    margin-bottom:0 !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    color:#6b7280 !important;
+    font-size:11px !important;
+    font-weight:500 !important;
+    line-height:1.35 !important;
+    word-break:break-word !important;
+    padding:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__divider{
-    height:1px;
-    background:#e5e7eb;
+    height:1px !important;
+    min-height:1px !important;
+    background:#e5e7eb !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
 }
 
 #userMenuProfile .profile-dropdown__item:nth-of-type(2) + .profile-dropdown__divider{
-    height:3px;
-    background:#e5e7eb;
+    height:3px !important;
+    min-height:3px !important;
+    background:#e5e7eb !important;
 }
 
 #userMenuProfile .profile-dropdown__item{
-    display:flex;
-    align-items:center;
-    gap:12px;
-    min-height:50px;
-    padding:0 12px 0 14px;
-    color:#414651;
-    text-decoration:none;
-    transition:background-color .2s ease,color .2s ease;
+    display:flex !important;
+    align-items:center !important;
+    gap:12px !important;
+    min-height:50px !important;
+    padding:0 16px !important;
+    margin:0 !important;
+    color:#414651 !important;
+    text-decoration:none !important;
+    background:#ffffff !important;
+    border:none !important;
+    box-shadow:none !important;
+    transition:background-color .2s ease,color .2s ease !important;
+    font-family:inherit !important;
 }
 
 #userMenuProfile .profile-dropdown__item:hover{
-    background:#f9fafb;
+    background:#f9fafb !important;
+    color:#414651 !important;
 }
 
 #userMenuProfile .profile-dropdown__icon{
-    flex:0 0 18px;
-    width:18px;
-    height:18px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    border-radius:0;
-    background:transparent;
-    border:none;
-    box-shadow:none;
-    color:#414651;
+    flex:0 0 18px !important;
+    width:18px !important;
+    height:18px !important;
+    display:inline-flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    border-radius:0 !important;
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    color:#414651 !important;
+    padding:0 !important;
+    margin:0 !important;
 }
 
 #userMenuProfile .profile-dropdown__icon svg{
-    display:block;
+    display:block !important;
+    width:18px !important;
+    height:18px !important;
+    flex-shrink:0 !important;
 }
 
 #userMenuProfile .profile-dropdown__icon path{
@@ -860,18 +954,30 @@ header .sign-in-btn {
 }
 
 #userMenuProfile .profile-dropdown__label{
-    color:inherit;
-    font-size:14px;
-    font-weight:600;
-    line-height:1.25;
+    color:inherit !important;
+    font-size:14px !important;
+    font-weight:600 !important;
+    line-height:1.25 !important;
+    padding:0 !important;
+    margin:0 !important;
+    border:none !important;
+    background:transparent !important;
 }
 
 #userMenuProfile .profile-dropdown__item--logout{
-    color:#414651;
+    color:#414651 !important;
 }
 
 #userMenuProfile .profile-dropdown__item--logout:hover{
-    background:#f9fafb;
+    background:#f9fafb !important;
+    color:#414651 !important;
+}
+
+#userMenuProfile .profile-dropdown__item--logout .profile-dropdown__icon{
+    background:transparent !important;
+    border:none !important;
+    color:#414651 !important;
+    box-shadow:none !important;
 }
 
 #userMenuProfile .profile-dropdown__item--logout .profile-dropdown__icon{
@@ -1199,8 +1305,8 @@ header .sign-in-btn {
     }
 }
 
-/* Tablets */
-@media (max-width: 1024px) {
+/* Desktop < 1280px */
+@media (max-width: 1280px) and (min-width: 1024px) {
 
     /* Reduce nav spacing */
     #customHeader nav {
@@ -1284,44 +1390,77 @@ header .sign-in-btn {
     }
 }
 /* ============================= */
-/* ===== TABLET FIX ONLY ====== */
+/* ===== TABLET (768–1024px) === */
+/* ===== hamburger layout    === */
 /* ============================= */
 
-@media (min-width: 768px) and (max-width: 1024px) {
+@media (min-width: 768px) and (max-width: 1023px) {
 
-    /* Reduce container padding */
+    /* Comfortable padding for tablet */
     #customHeader .header-main {
-        padding-left: 20px !important;
-        padding-right: 20px !important;
-        gap: 10px;
+        padding-left: 24px !important;
+        padding-right: 24px !important;
+        gap: 12px;
         flex-wrap: nowrap;
     }
 
-    /* Reduce logo size */
+    /* Slightly larger logo than mobile */
     #customHeader img {
-        max-height: 30px;
+        max-height: 34px;
     }
 
-    /* Reduce nav spacing */
+    /* Hamburger icon sizing */
+    #customHeader button svg.w-7 {
+        width: 28px !important;
+        height: 28px !important;
+    }
+
+    /* Language toggle stays visible on tablet */
+    #langToggle {
+        display: inline-flex !important;
+        align-items: center;
+    }
+
+    #langToggle span {
+        font-size: 13px !important;
+    }
+
+    /* Profile dropdown fits tablet screen */
+    #userMenuProfile {
+        width: 240px !important;
+        max-width: calc(100vw - 24px) !important;
+    }
+}
+
+/* ============================= */
+/* ===== DESKTOP (1024px+)  ==== */
+/* ============================= */
+
+@media (min-width: 1024px) {
+
+    #customHeader .header-desktop-nav {
+        display: flex !important;
+    }
+
+    #customHeader .header-mobile-toggle {
+        display: none !important;
+    }
+
+    /* Reduce nav spacing at smaller desktop */
     #customHeader nav {
         gap: 16px !important;
         font-size: 14px !important;
     }
 
-    /* Reduce dropdown width */
+    /* Reduce dropdown width on smaller desktop */
     #vendorMenu,
-    #customerMenu{
+    #customerMenu {
         width: 280px !important;
     }
 
     #userMenuProfile {
-        width: 392px !important;
+        width: 240px !important;
         max-width: calc(100vw - 24px) !important;
-    }
-
-    /* Reduce right section spacing */
-    #customHeader .space-x-6 {
-        gap: 12px !important;
     }
 
     /* Adjust sign buttons */

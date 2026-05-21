@@ -173,6 +173,8 @@ $wrapperClass = $carouselId === 'related-carousel'
     line-height: 1.2;
     font-weight: 700;
     color: var(--gcc-carousel-text);
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .gcc-carousel__controls {
@@ -569,6 +571,27 @@ $wrapperClass = $carouselId === 'related-carousel'
     .gcc-carousel__slide {
         flex-basis: 100%;
         max-width: 100%;
+    }
+
+    /* Keep both mobile carousel sections in a two-card layout to match the reference design. */
+    .gcc-carousel-shell:not(.gcc-carousel-shell--related) .gcc-carousel__title {
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .gcc-carousel-shell:not(.gcc-carousel-shell--related) .gcc-carousel__slide {
+        flex-basis: calc((100% - 10px) / 2);
+        max-width: calc((100% - 10px) / 2);
+    }
+
+    .gcc-carousel-shell--related .gcc-carousel__title {
+        font-size: 18px;
+        line-height: 1.25;
+    }
+
+    .gcc-carousel-shell--related .gcc-carousel__slide {
+        flex-basis: calc((100% - 10px) / 2);
+        max-width: calc((100% - 10px) / 2);
     }
 
     .gcc-card__media {

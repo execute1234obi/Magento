@@ -12,13 +12,14 @@
 <!-- ko template: getTemplate() --><!-- /ko -->
 <!--/ko-->
 
-<!-- ko foreach: getRegion('estimation') -->
-    <!-- ko template: getTemplate() --><!-- /ko -->
-<!--/ko-->
-
 <!-- ko foreach: getRegion('messages') -->
     <!-- ko template: getTemplate() --><!-- /ko -->
 <!--/ko-->
+
+<!-- ko foreach: getRegion('sidebar') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!--/ko-->
+
 <div class="opc-wrapper">
     <ol class="opc" id="checkoutSteps">
     <!-- ko foreach: getRegion('steps') -->
@@ -26,7 +27,3 @@
     <!--/ko-->
     </ol>
 </div>
-
-<!-- ko foreach: getRegion('sidebar') -->
-    <!-- ko template: getTemplate() --><!-- /ko -->
-<!--/ko-->

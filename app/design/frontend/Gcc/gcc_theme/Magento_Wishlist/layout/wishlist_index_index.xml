@@ -1,12 +1,16 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/wishlist.css"/>
+    </head>
     <body>
-     
-         <!-- Remove Add to Cart from Wishlist items -->
+        <!-- Remove default wishlist actions that do not fit the GCC card layout -->
+        <referenceBlock name="wishlist.rss.link" remove="true"/>
+        <referenceBlock name="customer.wishlist.item.review" remove="true"/>
+        <referenceBlock name="customer.wishlist.item.edit" remove="true"/>
         <referenceBlock name="customer.wishlist.item.cart" remove="true"/>
-
-        <!-- Remove Add All to Cart button at top -->
         <referenceBlock name="customer.wishlist.button.toCart" remove="true"/>
+        <referenceContainer name="customer.wishlist.buttons" remove="true"/>
     </body>
 </page>
