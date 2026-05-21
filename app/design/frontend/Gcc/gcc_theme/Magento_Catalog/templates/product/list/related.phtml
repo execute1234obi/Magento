@@ -2,6 +2,8 @@
 /** @var \Magento\Catalog\Block\Product\ProductList\Related $block */
 $items = $block->getItems();
 $viewModel = $block->getData('view_model');
+$wishlistHelper = $this->helper(\Magento\Wishlist\Helper\Data::class);
+$wishlistItems = $wishlistHelper->isAllow() ? $wishlistHelper->getWishlistItemCollection() : null;
 $carouselId = $block->getData('carousel_id') ?: 'related-carousel';
 $blockTitle = $block->getData('block_title') ?: __('Similar Products');
 $itemCount = is_countable($items) ? count($items) : 0;
@@ -34,6 +36,11 @@ $wrapperClass = $carouselId === 'related-carousel'
                 <?php foreach ($items as $_item): ?>
                     <?php
                         $imgUrl = $block->getImage($_item, 'product_page_image_large')->getImageUrl();
+                        $isWishlisted = false;
+
+                        if ($wishlistItems) {
+                            $isWishlisted = (bool) $wishlistItems->getItemByColumnValue('product_id', (int) $_item->getId());
+                        }
 
                         $brandValue = $_item->getAttributeText('manufacturer');
                         if (is_array($brandValue)) {
@@ -61,11 +68,20 @@ $wrapperClass = $carouselId === 'related-carousel'
                                          decoding="async">
                                 </a>
 
-                                <button class="gcc-card__wish" type="button" aria-label="<?= $block->escapeHtmlAttr(__('Save')); ?>">
-                                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" fill="none" stroke="currentColor" stroke-width="2"></path>
-                                    </svg>
-                                </button>
+                                <?php if ($wishlistHelper->isAllow()): ?>
+                                    <?php $wishlistPostData = $wishlistHelper->getAddParams($_item); ?>
+                                    <button class="gcc-card__wish action towishlist<?= $isWishlisted ? ' is-selected' : '' ?>"
+                                            type="button"
+                                            aria-label="<?= $block->escapeHtmlAttr($isWishlisted ? __('In Wish List') : __('Add to Wish List')); ?>"
+                                            aria-pressed="<?= $isWishlisted ? 'true' : 'false' ?>"
+                                            title="<?= $block->escapeHtmlAttr($isWishlisted ? __('In Wish List') : __('Add to Wish List')); ?>"
+                                            data-action="add-to-wishlist"
+                                            data-post='<?= /* @noEscape */ $wishlistPostData ?>'>
+                                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                            <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z" fill="none" stroke="currentColor" stroke-width="2"></path>
+                                        </svg>
+                                    </button>
+                                <?php endif; ?>
                             </div>
 
                             <div class="gcc-card__body">
@@ -319,6 +335,17 @@ $wrapperClass = $carouselId === 'related-carousel'
     background: #f8fafc;
     border-color: rgba(26, 55, 100, 0.3);
     transform: translateY(-1px);
+}
+
+.gcc-card__wish.is-selected {
+    background: var(--gcc-carousel-blue);
+    border-color: var(--gcc-carousel-blue);
+    color: #fff;
+}
+
+.gcc-card__wish.is-selected svg path {
+    fill: currentColor;
+    stroke: currentColor;
 }
 
 .gcc-card__body {
