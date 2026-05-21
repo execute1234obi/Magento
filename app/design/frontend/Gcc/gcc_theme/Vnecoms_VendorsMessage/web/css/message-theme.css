@@ -108,9 +108,9 @@ body.customer-message-trash .message-select-all input {
     accent-color: #1a3764;
 }
 
-body.customer-message-index .message-icon-trash,
-body.customer-message-sent .message-icon-trash,
-body.customer-message-trash .message-icon-trash {
+body.customer-message-index .message-list-wrapper .message-icon-trash,
+body.customer-message-sent .message-list-wrapper .message-icon-trash,
+body.customer-message-trash .message-list-wrapper .message-icon-trash {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -127,12 +127,19 @@ body.customer-message-trash .message-icon-trash {
     transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
 }
 
-body.customer-message-index .message-icon-trash:hover,
-body.customer-message-sent .message-icon-trash:hover,
-body.customer-message-trash .message-icon-trash:hover {
+body.customer-message-index .message-list-wrapper .message-icon-trash:hover,
+body.customer-message-sent .message-list-wrapper .message-icon-trash:hover,
+body.customer-message-trash .message-list-wrapper .message-icon-trash:hover {
     transform: translateY(-1px);
     filter: brightness(1.05);
     box-shadow: 0 16px 28px rgba(26, 55, 100, 0.18);
+}
+
+body.customer-message-index .message-list-wrapper .message-icon-trash span,
+body.customer-message-sent .message-list-wrapper .message-icon-trash span,
+body.customer-message-trash .message-list-wrapper .message-icon-trash span {
+    display: inline-flex;
+    align-items: center;
 }
 
 .message-list .unread .sender,
@@ -405,22 +412,6 @@ body.customer-message-trash .message.info.empty {
     line-height: 1;
 }
 
-body.customer-message-index .sidebar .customer-vnecoms-message-link,
-body.customer-message-sent .sidebar .customer-vnecoms-message-link,
-body.customer-message-trash .sidebar .customer-vnecoms-message-link {
-    position: relative;
-    padding-right: 56px !important;
-}
-
-body.customer-message-index .sidebar .customer-vnecoms-message-link .vnecoms-unread-message-count,
-body.customer-message-sent .sidebar .customer-vnecoms-message-link .vnecoms-unread-message-count,
-body.customer-message-trash .sidebar .customer-vnecoms-message-link .vnecoms-unread-message-count {
-    position: absolute;
-    top: 50%;
-    right: 14px;
-    transform: translateY(-50%);
-}
-
 .hide {
     display: none !important;
 }
@@ -470,9 +461,6 @@ body.customer-message-trash .sidebar .customer-vnecoms-message-link .vnecoms-unr
         font-size: 28px;
     }
 
-    body.customer-message-index .sidebar .block,
-    body.customer-message-sent .sidebar .block,
-    body.customer-message-trash .sidebar .block,
     .message-list-wrapper {
         border-radius: 20px;
     }
@@ -491,9 +479,9 @@ body.customer-message-trash .sidebar .customer-vnecoms-message-link .vnecoms-unr
     body.customer-message-index .message-select-all,
     body.customer-message-sent .message-select-all,
     body.customer-message-trash .message-select-all,
-    body.customer-message-index .message-icon-trash,
-    body.customer-message-sent .message-icon-trash,
-    body.customer-message-trash .message-icon-trash {
+    body.customer-message-index .message-list-wrapper .message-icon-trash,
+    body.customer-message-sent .message-list-wrapper .message-icon-trash,
+    body.customer-message-trash .message-list-wrapper .message-icon-trash {
         width: 100%;
         justify-content: center;
     }

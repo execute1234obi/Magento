@@ -883,6 +883,22 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
         background: var(--vendor-brand-blue-soft) !important;
     }
 
+    body[class*="page-vendor"] .main-sidebar,
+    body[class*="page-vendor"] .left-side {
+        width: 260px !important;
+        min-width: 260px !important;
+        max-width: 260px !important;
+    }
+
+    body[class*="page-vendor"] .content-wrapper,
+    body[class*="page-vendor"] .right-side,
+    body[class*="page-vendor"] .main-footer,
+    body[class*="page-vendor"] .page-footer,
+    body[class*="page-vendor"] .page-content,
+    body[class*="page-vendor"] .main-col {
+        margin-left: 260px !important;
+    }
+
     body[class*="page-vendor"] .sidebar .user-panel,
     body[class*="page-vendor"] .sidebar .divider,
     body[class*="page-vendor"] #knockout-avatar-load {
@@ -907,18 +923,19 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
     }
 
     .sidebar-menu {
-        padding: 14px 0 20px;
+        padding: 24px 0 24px;
     }
 
     .sidebar-menu > li {
-        margin: 2px 0;
+        margin: 5px 0;
     }
 
     .sidebar-menu > li > a {
         display: flex;
         align-items: center;
-        gap: 12px;
-        padding: 13px 22px;
+        gap: 16px;
+        min-height: 48px;
+        padding: 14px 28px 14px 30px;
         color: rgba(255, 255, 255, 0.95) !important;
         font-size: 15px;
         font-weight: 500;
@@ -928,6 +945,10 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
     .sidebar-menu > li > a > span {
         flex: 1 1 auto;
         min-width: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: calc(100% - 56px);
     }
 
     .sidebar-menu > li.parent > a > .pull-right.fa-angle-left {
@@ -959,11 +980,12 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
     .skin-blue .sidebar-menu > li.menu-open > a {
         background: #1f5aa6 !important;
         color: #ffffff !important;
+                padding-top: 20px !important;
     }
 
     .sidebar-menu > li > .treeview-menu {
         margin: 0;
-        padding: 6px 12px 10px 36px;
+        padding: 8px 12px 12px 38px;
         background: transparent !important;
         position: relative;
     }
@@ -1455,18 +1477,19 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
     }
 
     .sidebar-menu {
-        padding: 14px 0 20px;
+        padding: 18px 0 20px;
     }
 
     .sidebar-menu > li {
-        margin: 2px 0;
+        margin: 4px 0;
     }
 
     .sidebar-menu > li > a {
         display: flex;
         align-items: center;
         gap: 12px;
-        padding: 13px 22px;
+        min-height: 46px;
+        padding: 13px 20px 13px 22px;
         font-size: 15px;
         font-weight: 500;
         line-height: 1.35;
@@ -1478,6 +1501,9 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
         min-width: 0;
         display: block;
         max-width: none;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 
     .sidebar-menu > li.active > a,
@@ -1488,6 +1514,7 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
     .skin-blue .sidebar-menu > li.menu-open > a {
         background: #1f5aa6 !important;
         color: #ffffff !important;
+        padding-top: 20px !important;
     }
 
     .sidebar-menu > li.parent > a > .pull-right.fa-angle-left {
@@ -1513,7 +1540,7 @@ body[class*="subaccount-user-index"] .admin__data-grid-filters-footer .action-te
 
     .sidebar-menu > li > .treeview-menu {
         margin: 0;
-        padding: 6px 12px 10px 36px;
+        padding: 8px 12px 12px 36px;
         background: transparent !important;
         position: relative;
     }
