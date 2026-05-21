@@ -1779,8 +1779,7 @@ body.customer-message-trash .page-title-wrapper .page-title {
 body.customer-message-index .sidebar.sidebar-main,
 body.customer-message-sent .sidebar.sidebar-main,
 body.customer-message-trash .sidebar.sidebar-main {
-    width: 320px;
-    flex-shrink: 0;
+    width: 100%;
 }
 
 body.customer-message-index .sidebar .block,
@@ -1796,8 +1795,8 @@ body.customer-message-trash .sidebar .block {
 body.customer-message-index .message-folders,
 body.customer-message-sent .message-folders,
 body.customer-message-trash .message-folders {
-    position: sticky;
-    top: 180px;
+    position: static;
+    top: auto;
 }
 
 body.customer-message-index .message-folders .box-header,
@@ -2161,6 +2160,38 @@ body.customer-message-trash .message.info.empty {
     box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
 }
 
+@media (min-width: 1025px) {
+    body.customer-message-index .columns,
+    body.customer-message-sent .columns,
+    body.customer-message-trash .columns {
+        display: grid;
+        grid-template-columns: 304px minmax(0, 1fr);
+        gap: 28px;
+        align-items: start;
+    }
+
+    body.customer-message-index .column.main,
+    body.customer-message-sent .column.main,
+    body.customer-message-trash .column.main {
+        min-width: 0;
+    }
+
+    body.customer-message-index .sidebar.sidebar-main,
+    body.customer-message-sent .sidebar.sidebar-main,
+    body.customer-message-trash .sidebar.sidebar-main {
+        position: sticky;
+        top: 28px;
+        width: 100%;
+    }
+
+    body.customer-message-index .message-folders,
+    body.customer-message-sent .message-folders,
+    body.customer-message-trash .message-folders {
+        position: static;
+        top: auto;
+    }
+}
+
 @media (max-width: 1199px) {
     body.customer-message-index .columns,
     body.customer-message-sent .columns,
@@ -2174,7 +2205,16 @@ body.customer-message-trash .message.info.empty {
     body.customer-message-index .columns,
     body.customer-message-sent .columns,
     body.customer-message-trash .columns {
+        display: block;
         gap: 18px;
+    }
+
+    body.customer-message-index .column.main,
+    body.customer-message-sent .column.main,
+    body.customer-message-trash .column.main {
+        width: 100%;
+        float: none;
+        max-width: 100%;
     }
 
     body.customer-message-index .sidebar.sidebar-main,
